@@ -194,7 +194,7 @@ export function BibliothequePage() {
       level: '🟡'
     },
 
-    // Préparation - 5 documents
+    // Préparation - 4 documents (RHM retiré car inexistant)
     {
       id: 20,
       name: 'Cartons vides Dernier Prélèvement',
@@ -235,20 +235,10 @@ export function BibliothequePage() {
       keywords: 'rolls, montage, préparation',
       level: '🟢'
     },
-    {
-      id: 24,
-      name: 'Formation à l\'intégration',
-      file: 'RHM-0001-1-I Formation à l\'intégration.docx',
-      category: 'Préparation',
-      type: 'docx',
-      description: 'Document obligatoire de formation nouveaux arrivants',
-      keywords: 'formation, intégration, RHM',
-      level: '🟡'
-    },
 
     // Chef d'équipe - 5 documents
     {
-      id: 25,
+      id: 24,
       name: 'Création conditionnement PRD',
       file: 'CREATION CONDITTIONNEMENT PRD .docx',
       category: 'Chef d\'équipe',
