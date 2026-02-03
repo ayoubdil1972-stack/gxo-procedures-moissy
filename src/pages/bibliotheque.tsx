@@ -300,7 +300,7 @@ export function BibliothequePage() {
       level: '🟡'
     },
     {
-      id: 31,
+      id: 30,
       name: 'Decision tree produits cassés/expirés',
       file: '0.6 Decision tree broken expired goods Regular,ZIDC,ZEXT,HUB, A-Br V3.pdf',
       category: 'Anomalies',
@@ -308,6 +308,38 @@ export function BibliothequePage() {
       description: 'Arbre de décision pour produits cassés ou expirés',
       keywords: 'decision tree, cassés, expirés, anomalies',
       level: '🔴'
+    },
+
+    // Retours - 3 documents
+    {
+      id: 31,
+      name: 'Rappel petits contenants PAPREC/BIONERVAL',
+      file: 'Rappel des petits contenants installés par PAPREC ou BIONERVAL.docx',
+      category: 'Retours',
+      type: 'docx',
+      description: 'Collecte biodéchets (9 palboxs rouges) et déchets spéciaux',
+      keywords: 'PAPREC, BIONERVAL, biodéchets, palbox, collecte',
+      level: '🟢'
+    },
+    {
+      id: 32,
+      name: 'Clôture livraison retour',
+      file: 'cloture livraison new.docx',
+      category: 'Retours',
+      type: 'docx',
+      description: 'Clôture de livraison retour via portail ASN',
+      keywords: 'clôture, livraison, retour, ASN, reject',
+      level: '🟢'
+    },
+    {
+      id: 33,
+      name: 'Procédure transfert roll',
+      file: 'procédure transfert.docx',
+      category: 'Retours',
+      type: 'docx',
+      description: 'Transfert de rolls via TRM Manipulation (RET_PICK_01)',
+      keywords: 'transfert, roll, TRM, RET_PICK_01, manipulation',
+      level: '🟡'
     }
   ]
 
@@ -398,6 +430,13 @@ export function BibliothequePage() {
           >
             <i class="fas fa-exclamation-circle mr-2"></i>Anomalies ({documents.filter(d => d.category === 'Anomalies').length})
           </button>
+          <button 
+            onclick="filterByCategory('Retours')"
+            class="filter-btn bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 transition-colors"
+            data-category="Retours"
+          >
+            <i class="fas fa-undo-alt mr-2"></i>Retours ({documents.filter(d => d.category === 'Retours').length})
+          </button>
         </div>
       </div>
 
@@ -409,7 +448,8 @@ export function BibliothequePage() {
             'IPL': 'border-green-500 bg-green-50',
             'Préparation': 'border-purple-500 bg-purple-50',
             "Chef d'équipe": 'border-orange-500 bg-orange-50',
-            'Anomalies': 'border-red-500 bg-red-50'
+            'Anomalies': 'border-red-500 bg-red-50',
+            'Retours': 'border-yellow-500 bg-yellow-50'
           }
 
           const categoryIcons = {
@@ -417,7 +457,8 @@ export function BibliothequePage() {
             'IPL': 'fa-forklift',
             'Préparation': 'fa-dolly',
             "Chef d'équipe": 'fa-user-tie',
-            'Anomalies': 'fa-exclamation-circle'
+            'Anomalies': 'fa-exclamation-circle',
+            'Retours': 'fa-undo-alt'
           }
 
           const fileIcons = {

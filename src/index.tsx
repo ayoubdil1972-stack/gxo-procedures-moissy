@@ -9,6 +9,7 @@ import { ChefEquipePage } from './pages/chef-equipe'
 import { NouveauPage } from './pages/nouveau'
 import { AnomaliesPage } from './pages/anomalies'
 import { BibliothequePage } from './pages/bibliotheque'
+import { RetoursPage } from './pages/retours'
 
 const app = new Hono()
 
@@ -27,5 +28,6 @@ app.get('/chef-equipe', (c) => c.render(<ChefEquipePage />))
 app.get('/nouveau', (c) => c.render(<NouveauPage />))
 app.get('/anomalies', (c) => c.render(<AnomaliesPage />))
 app.get('/bibliotheque', (c) => c.render(<BibliothequePage />))
+app.get('/retours', (c) => c.render(<RetoursPage />))
 
 export default app

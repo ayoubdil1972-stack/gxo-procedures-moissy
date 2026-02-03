@@ -25,6 +25,14 @@ export function HomePage() {
       processes: 5
     },
     {
+      id: 'retours',
+      title: 'Retours',
+      icon: 'fa-undo-alt',
+      color: 'bg-yellow-500',
+      description: 'Gestion retours, collecte déchets, transferts',
+      processes: 3
+    },
+    {
       id: 'chef-equipe',
       title: 'Chef d\'équipe',
       icon: 'fa-user-tie',
