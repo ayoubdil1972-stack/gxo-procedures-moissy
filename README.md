@@ -7,13 +7,19 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 ## ✨ Fonctionnalités actuelles
 
 ### Pages métiers complètes
-- ✅ **Page d'accueil** : HUB métiers avec tuiles cliquables et accès rapide
+- ✅ **Page d'accueil** : HUB métiers avec logo GXO, illustration entrepôt animée et accès rapide
 - ✅ **Réception** : 10 procédures (réception standard, déchargement, clôture livraison/TU, changement batterie, etc.)
-- ✅ **IPL (Intra Plant Logistics)** : 7 procédures avec checklists interactives (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
+- ✅ **IPL (Intra Plant Logistics)** : 7 procédures avec checklists interactives et illustration chariot élévateur (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
 - ✅ **Manutention** : Section en construction
 - ✅ **Chef d'équipe** : 4 procédures (EOP checks, ICPE, conditionnement, packspeck)
 - ✅ **Nouvel arrivant** : Parcours d'intégration complet en 5 étapes
 - ✅ **Anomalies/FAQ** : 3 procédures anomalies + 8 questions/réponses fréquentes
+
+### Design et branding
+- ✅ **Logo GXO** : Logo officiel intégré dans la navigation et page d'accueil
+- ✅ **Couleurs GXO** : Bleu GXO (#00205B) et Orange (#FF6B35)
+- ✅ **Illustrations personnalisées** : Illustration entrepôt avec chariot élévateur et rayonnages pour IPL
+- ✅ **Animation arrière-plan** : Entrepôt en SVG avec chariot élévateur sur la page d'accueil
 
 ### Fonctionnalités interactives
 - ✅ **Checklists interactives** : Cases à cocher, barre de progression, animation de complétion
@@ -50,6 +56,7 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 │       ├── app.js             # JavaScript interactif
 │       ├── style.css          # Styles personnalisés
 │       ├── gxo-logo.svg       # Logo GXO officiel
+│       ├── ipl-illustration.svg # Illustration chariot élévateur IPL
 │       └── documents/         # 26 documents procédures
 └── dist/                      # Build production
 ```
@@ -146,6 +153,7 @@ wrangler pages deploy dist --project-name gxo-intranet
 - **Niveaux** : 🟢 Vert / 🟡 Jaune / 🔴 Rouge
 - **Police** : System fonts (-apple-system, Segoe UI, etc.)
 - **Logo** : GXO Logistics officiel avec ligne orange
+- **Illustrations** : SVG personnalisés (entrepôt, chariot élévateur, rayonnages)
 
 ## 📞 Support
 
