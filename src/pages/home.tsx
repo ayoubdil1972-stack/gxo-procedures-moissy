@@ -53,16 +53,51 @@ export function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white rounded-lg shadow-xl p-8 mb-8">
-        <div class="flex items-center justify-between">
-          <div>
-            <h1 class="text-4xl font-bold mb-3">
-              <i class="fas fa-warehouse mr-3"></i>
-              HUB Procédures Logistiques
-            </h1>
-            <p class="text-xl opacity-90">
-              Centre de ressources opérationnelles - GXO Moissy-Cramayel
-            </p>
+      <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white rounded-lg shadow-xl p-8 mb-8 relative overflow-hidden">
+        {/* Background illustration */}
+        <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
+          <svg viewBox="0 0 400 300" class="w-full h-full">
+            {/* Warehouse shelves */}
+            <rect x="50" y="80" width="80" height="40" fill="currentColor" opacity="0.8"/>
+            <rect x="50" y="130" width="80" height="40" fill="currentColor" opacity="0.8"/>
+            <rect x="50" y="180" width="80" height="40" fill="currentColor" opacity="0.8"/>
+            <rect x="150" y="80" width="80" height="40" fill="currentColor" opacity="0.6"/>
+            <rect x="150" y="130" width="80" height="40" fill="currentColor" opacity="0.6"/>
+            <rect x="150" y="180" width="80" height="40" fill="currentColor" opacity="0.6"/>
+            
+            {/* Forklift */}
+            <g transform="translate(270, 180)">
+              {/* Forklift body */}
+              <rect x="0" y="20" width="60" height="30" fill="#FF6B35" opacity="0.9"/>
+              {/* Cabin */}
+              <rect x="35" y="5" width="25" height="15" fill="#FF6B35" opacity="0.9"/>
+              {/* Wheels */}
+              <circle cx="15" cy="55" r="8" fill="currentColor"/>
+              <circle cx="50" cy="55" r="8" fill="currentColor"/>
+              {/* Fork */}
+              <rect x="-15" y="25" width="10" height="30" fill="currentColor" opacity="0.8"/>
+              {/* Mast */}
+              <rect x="-5" y="-20" width="5" height="45" fill="currentColor" opacity="0.7"/>
+            </g>
+            
+            {/* Pallets */}
+            <rect x="60" y="90" width="15" height="20" fill="#FF6B35" opacity="0.7"/>
+            <rect x="80" y="90" width="15" height="20" fill="#FF6B35" opacity="0.5"/>
+            <rect x="160" y="140" width="15" height="20" fill="#FF6B35" opacity="0.6"/>
+          </svg>
+        </div>
+        
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-start space-x-6">
+            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-16 mt-2" />
+            <div>
+              <h1 class="text-4xl font-bold mb-3">
+                HUB Procédures Logistiques
+              </h1>
+              <p class="text-xl opacity-90">
+                Centre de ressources opérationnelles - GXO Moissy-Cramayel
+              </p>
+            </div>
           </div>
           <div class="text-right">
             <div class="text-5xl font-bold">{metiers.reduce((sum, m) => sum + m.processes, 0)}</div>
@@ -115,9 +150,15 @@ export function HomePage() {
               <div class={`gxo-card bg-white rounded-lg shadow-lg overflow-hidden border-t-4 ${metier.color.replace('bg-', 'border-')}`}>
                 <div class="p-6">
                   <div class="flex items-start justify-between mb-4">
-                    <div class={`${metier.color} text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl`}>
-                      <i class={`fas ${metier.icon}`}></i>
-                    </div>
+                    {metier.id === 'cariste' ? (
+                      <div class="w-16 h-16 rounded-lg overflow-hidden bg-green-50 flex items-center justify-center">
+                        <img src="/static/ipl-illustration.svg" alt="IPL" class="w-full h-full object-cover" />
+                      </div>
+                    ) : (
+                      <div class={`${metier.color} text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl`}>
+                        <i class={`fas ${metier.icon}`}></i>
+                      </div>
+                    )}
                     <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">
                       {metier.processes} process
                     </span>
