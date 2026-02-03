@@ -151,8 +151,8 @@ export function HomePage() {
                 <div class="p-6">
                   <div class="flex items-start justify-between mb-4">
                     {metier.id === 'cariste' ? (
-                      <div class="w-16 h-16 rounded-lg overflow-hidden bg-green-50 flex items-center justify-center">
-                        <img src="/static/ipl-illustration.svg" alt="IPL" class="w-full h-full object-cover" />
+                      <div class="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center">
+                        <img src="/static/ipl-icon.svg" alt="IPL" class="w-full h-full" />
                       </div>
                     ) : (
                       <div class={`${metier.color} text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl`}>
