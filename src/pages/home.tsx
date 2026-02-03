@@ -18,11 +18,11 @@ export function HomePage() {
     },
     {
       id: 'manutention',
-      title: 'Manutention',
+      title: 'Préparation',
       icon: 'fa-dolly',
       color: 'bg-purple-500',
-      description: 'Préparation commandes, emballage, palettisation',
-      processes: 10
+      description: 'Préparation commandes, prélèvement, montage rolls',
+      processes: 5
     },
     {
       id: 'chef-equipe',
