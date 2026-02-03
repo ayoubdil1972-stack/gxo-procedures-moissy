@@ -8,8 +8,8 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 
 ### Pages métiers complètes
 - ✅ **Page d'accueil** : HUB métiers avec tuiles cliquables et accès rapide
-- ✅ **Réception** : 9 procédures (réception standard, déchargement, clôture livraison/TU, etc.)
-- ✅ **Cariste** : 8 procédures avec checklists interactives (relancer tâche, mise en stock, picking, etc.)
+- ✅ **Réception** : 10 procédures (réception standard, déchargement, clôture livraison/TU, changement batterie, etc.)
+- ✅ **IPL (Intra Plant Logistics)** : 7 procédures avec checklists interactives (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
 - ✅ **Manutention** : Section en construction
 - ✅ **Chef d'équipe** : 4 procédures (EOP checks, ICPE, conditionnement, packspeck)
 - ✅ **Nouvel arrivant** : Parcours d'intégration complet en 5 étapes
@@ -19,7 +19,7 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 - ✅ **Checklists interactives** : Cases à cocher, barre de progression, animation de complétion
 - ✅ **FAQ intelligente** : Accordéons dépliables avec niveaux d'urgence
 - ✅ **Système de niveaux** : 🟢 Essentiel / 🟡 Standard / 🔴 Avancé
-- ✅ **Liens documents** : 18 documents accessibles directement depuis les procédures
+- ✅ **Liens documents** : 26 documents accessibles directement depuis les procédures
 - ✅ **Responsive design** : Optimisé mobile, tablette et PC
 - ✅ **Mode impression** : Checklists imprimables
 - ✅ **Animations** : Effets visuels et confettis de complétion
@@ -39,8 +39,8 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 │   ├── renderer.tsx           # Layout HTML global
 │   └── pages/                 # Pages métiers
 │       ├── home.tsx           # Page d'accueil
-│       ├── reception.tsx      # Réception
-│       ├── cariste.tsx        # Cariste
+│       ├── reception.tsx      # Réception (10 procédures)
+│       ├── cariste.tsx        # IPL - Intra Plant Logistics (7 procédures)
 │       ├── manutention.tsx    # Manutention
 │       ├── chef-equipe.tsx    # Chef d'équipe
 │       ├── nouveau.tsx        # Nouvel arrivant
@@ -49,7 +49,8 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 │   └── static/
 │       ├── app.js             # JavaScript interactif
 │       ├── style.css          # Styles personnalisés
-│       └── documents/         # 18 documents procédures
+│       ├── gxo-logo.svg       # Logo GXO officiel
+│       └── documents/         # 26 documents procédures
 └── dist/                      # Build production
 ```
 
@@ -80,13 +81,14 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 
 ### ✅ Fonctionnalités complétées (100%)
 - Structure complète du site
+- Logo et identité GXO officielle (bleu #00205B + orange #FF6B35)
 - 6 pages métiers développées
-- 24+ procédures documentées
+- 27 procédures documentées
 - Checklists interactives fonctionnelles
 - FAQ avec arbres de décision
 - Système de niveaux de complexité
 - Responsive design mobile/tablette
-- 18 documents intégrés
+- 26 documents intégrés (Word, Excel, PDF)
 - Mode impression
 - Animations et effets visuels
 
@@ -139,10 +141,11 @@ wrangler pages deploy dist --project-name gxo-intranet
 
 ## 🎨 Charte graphique
 
-- **Bleu GXO** : #003DA5
-- **Orange GXO** : #FF6B35
+- **Bleu GXO** : #00205B (couleur principale)
+- **Orange GXO** : #FF6B35 (accent)
 - **Niveaux** : 🟢 Vert / 🟡 Jaune / 🔴 Rouge
 - **Police** : System fonts (-apple-system, Segoe UI, etc.)
+- **Logo** : GXO Logistics officiel avec ligne orange
 
 ## 📞 Support
 
