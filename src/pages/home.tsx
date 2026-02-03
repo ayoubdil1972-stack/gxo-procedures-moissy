@@ -6,7 +6,7 @@ export function HomePage() {
       icon: 'fa-truck-loading',
       color: 'bg-blue-500',
       description: 'Réception marchandises, contrôle BL, déchargement',
-      processes: 13
+      processes: 28
     },
     {
       id: 'cariste',
@@ -31,14 +31,6 @@ export function HomePage() {
       color: 'bg-yellow-500',
       description: 'Gestion retours, collecte déchets, transferts',
       processes: 3
-    },
-    {
-      id: 'chef-equipe',
-      title: 'Chef d\'équipe',
-      icon: 'fa-user-tie',
-      color: 'bg-orange-500',
-      description: 'Supervision, reporting, gestion équipe',
-      processes: 15
     },
     {
       id: 'nouveau',

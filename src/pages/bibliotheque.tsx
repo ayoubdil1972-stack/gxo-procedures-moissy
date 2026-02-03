@@ -241,7 +241,7 @@ export function BibliothequePage() {
       id: 24,
       name: 'Création conditionnement PRD',
       file: 'CREATION CONDITTIONNEMENT PRD .docx',
-      category: 'Chef d\'équipe',
+      category: 'Réception',
       type: 'docx',
       description: 'Création de conditionnement produit',
       keywords: 'conditionnement, PRD, création',
@@ -251,7 +251,7 @@ export function BibliothequePage() {
       id: 26,
       name: 'Créer packspeck',
       file: 'Créer packspeck.docx',
-      category: 'Chef d\'équipe',
+      category: 'Réception',
       type: 'docx',
       description: 'Création d\'un packspeck dans le système',
       keywords: 'packspeck, création, système',
@@ -261,7 +261,7 @@ export function BibliothequePage() {
       id: 27,
       name: 'EOP checks',
       file: 'EOP checks.docx',
-      category: 'Chef d\'équipe',
+      category: 'Réception',
       type: 'docx',
       description: 'Contrôles de fin de production (End Of Production)',
       keywords: 'EOP, contrôle, production',
@@ -271,7 +271,7 @@ export function BibliothequePage() {
       id: 28,
       name: 'Extraction ICPE',
       file: 'EXTRACTION ICPE.docx',
-      category: 'Chef d\'équipe',
+      category: 'Réception',
       type: 'docx',
       description: 'Extraction de données ICPE',
       keywords: 'ICPE, extraction, données',
@@ -281,7 +281,7 @@ export function BibliothequePage() {
       id: 29,
       name: 'Étêtage et container',
       file: 'Mettre en forme et renseigner le fichier étêtage et container.docx',
-      category: 'Chef d\'équipe',
+      category: 'Réception',
       type: 'docx',
       description: 'Renseignement du fichier étêtage et container',
       keywords: 'étêtage, container, fichier',
@@ -417,13 +417,6 @@ export function BibliothequePage() {
             <i class="fas fa-dolly mr-2"></i>Préparation ({documents.filter(d => d.category === 'Préparation').length})
           </button>
           <button 
-            onclick="filterByCategory('Chef d\\'équipe')"
-            class="filter-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 transition-colors"
-            data-category="Chef d'équipe"
-          >
-            <i class="fas fa-user-tie mr-2"></i>Chef d'équipe ({documents.filter(d => d.category === "Chef d'équipe").length})
-          </button>
-          <button 
             onclick="filterByCategory('Anomalies')"
             class="filter-btn bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors"
             data-category="Anomalies"
@@ -447,7 +440,6 @@ export function BibliothequePage() {
             'Réception': 'border-blue-500 bg-blue-50',
             'IPL': 'border-green-500 bg-green-50',
             'Préparation': 'border-purple-500 bg-purple-50',
-            "Chef d'équipe": 'border-orange-500 bg-orange-50',
             'Anomalies': 'border-red-500 bg-red-50',
             'Retours': 'border-yellow-500 bg-yellow-50'
           }
@@ -456,7 +448,6 @@ export function BibliothequePage() {
             'Réception': 'fa-truck-loading',
             'IPL': 'fa-forklift',
             'Préparation': 'fa-dolly',
-            "Chef d'équipe": 'fa-user-tie',
             'Anomalies': 'fa-exclamation-circle',
             'Retours': 'fa-undo-alt'
           }
