@@ -147,7 +147,7 @@ export function CaristePage() {
           <div>
             <h1 class="text-4xl font-bold mb-3">
               <i class="fas fa-forklift mr-3"></i>
-              IPL (Intra Plant Logistics)
+              IPL
             </h1>
             <p class="text-xl opacity-90">
               Gestion des tâches, affectation, priorisation

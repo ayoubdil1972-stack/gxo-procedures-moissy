@@ -8,7 +8,7 @@ La bibliothèque centralise **30 documents** essentiels pour les opérations GXO
 
 ### Documents par rubrique
 - **Réception** : 10 documents (Word)
-- **IPL (Intra Plant Logistics)** : 9 documents (7 Word + 1 Excel + 1 Template)
+- **IPL** : 9 documents (7 Word + 1 Excel + 1 Template)
 - **Préparation** : 5 documents (Word)
 - **Chef d'équipe** : 5 documents (Word)
 - **Anomalies** : 2 documents (1 Word + 1 PDF)

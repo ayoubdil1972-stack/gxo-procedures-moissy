@@ -9,7 +9,7 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 ### Pages métiers complètes
 - ✅ **Page d'accueil** : HUB métiers avec logo GXO, illustration entrepôt animée et accès rapide
 - ✅ **Réception** : 10 procédures (réception standard, déchargement, clôture livraison/TU, changement batterie, etc.)
-- ✅ **IPL (Intra Plant Logistics)** : 7 procédures avec checklists interactives et illustration chariot élévateur (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
+- ✅ **IPL** : 7 procédures avec checklists interactives et illustration chariot élévateur (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
 - ✅ **Préparation** : 5 procédures complètes avec checklists interactives (dernier prélèvement, écart prélèvement, quai fictif, monteur de rolls, formation intégration)
 - ✅ **Chef d'équipe** : 4 procédures (EOP checks, ICPE, conditionnement, packspeck)
 - ✅ **Nouvel arrivant** : Parcours d'intégration complet en 5 étapes

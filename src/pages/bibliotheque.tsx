@@ -102,7 +102,7 @@ export function BibliothequePage() {
       level: '🟢'
     },
 
-    // IPL (Intra Plant Logistics) - 7 documents
+    // IPL - 9 documents
     {
       id: 11,
       name: 'Affectation de tâche dans LTRMS',

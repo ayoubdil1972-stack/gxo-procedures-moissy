@@ -39,7 +39,7 @@ Documents renumérotés de 1 à 30 (au lieu de 1 à 31)
 9. Fausses  étiquettes date du jour .docx
 10. Réediter une étiquette.docx
 
-### 🏗️ IPL - Intra Plant Logistics (9 documents)
+### 🏗️ IPL (9 documents)
 1. Affectation de tache a un cariste dans le LTRMS.docx
 2. Annuler une tache affecter.docx
 3. CONNECTION.docx

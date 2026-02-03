@@ -108,31 +108,31 @@ export function HomePage() {
 
       {/* Quick Stats */}
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-gray-500 text-sm">Accès rapide</p>
-              <p class="text-2xl font-bold text-gray-800">En 2 clics</p>
+              <p class="text-gray-500 text-xs">Accès rapide</p>
+              <p class="text-xl font-bold text-gray-800">En 2 clics</p>
             </div>
-            <i class="fas fa-mouse-pointer text-4xl text-blue-500"></i>
+            <i class="fas fa-mouse-pointer text-3xl text-blue-500"></i>
           </div>
         </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-gray-500 text-sm">Support</p>
-              <p class="text-2xl font-bold text-gray-800">24/7</p>
+              <p class="text-gray-500 text-xs">Assistance</p>
+              <p class="text-xl font-bold text-gray-800">24h/24</p>
             </div>
-            <i class="fas fa-headset text-4xl text-green-500"></i>
+            <i class="fas fa-headset text-3xl text-green-500"></i>
           </div>
         </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-orange-500">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-gray-500 text-sm">Responsive</p>
-              <p class="text-2xl font-bold text-gray-800">Mobile OK</p>
+              <p class="text-gray-500 text-xs">Compatible</p>
+              <p class="text-xl font-bold text-gray-800">Mobile</p>
             </div>
-            <i class="fas fa-mobile-alt text-4xl text-orange-500"></i>
+            <i class="fas fa-mobile-alt text-3xl text-orange-500"></i>
           </div>
         </div>
       </div>
