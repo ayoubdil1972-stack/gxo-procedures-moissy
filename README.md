@@ -14,6 +14,7 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 - ✅ **Chef d'équipe** : 4 procédures (EOP checks, ICPE, conditionnement, packspeck)
 - ✅ **Nouvel arrivant** : Parcours d'intégration complet en 5 étapes
 - ✅ **Anomalies/FAQ** : 3 procédures anomalies + 8 questions/réponses fréquentes
+- ✅ **Bibliothèque** : 30 documents classés par rubrique avec recherche intelligente
 
 ### Design et branding
 - ✅ **Logo GXO** : Logo officiel intégré dans la navigation et page d'accueil
