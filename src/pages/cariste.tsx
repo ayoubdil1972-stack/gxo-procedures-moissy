@@ -1,6 +1,124 @@
 export function CaristePage() {
   const processes = [
     {
+      id: 'affectation-tache',
+      title: 'Affectation de tâche à un cariste dans le LTRMS',
+      icon: 'fa-user-check',
+      duration: '3-5 min',
+      level: '🟢',
+      vigilance: ['Ne pas affecter de tâche en bulk', 'Vérifier le code article ou N° OT', 'Confirmer le cariste avant validation'],
+      document: 'Affectation de tache a un cariste dans le LTRMS.docx',
+      checklist: [
+        'Sélectionner la colonne article ou N° OT',
+        'Activer le filtre',
+        'Renseigner le code article ou le N° OT',
+        'Valider',
+        'Sélectionner la ligne',
+        'Sélectionner (affecter) en haut à gauche',
+        'Valider avec oui',
+        'Sélectionner la ligne du cariste à qui vous désirez affecter la tâche',
+        'Valider avec l\'icône de disquette en bas à droite'
+      ]
+    },
+    {
+      id: 'annuler-tache',
+      title: 'Annuler une tâche affectée',
+      icon: 'fa-times-circle',
+      duration: '2-3 min',
+      level: '🟢',
+      vigilance: ['Vérifier le code article', 'Utiliser l\'icône MÉTHODE', 'Confirmer l\'annulation'],
+      document: 'Annuler une tache affecter.docx',
+      checklist: [
+        'Sélectionner la colonne article',
+        'Activer le filtre en haut à gauche',
+        'Renseigner le code article',
+        'Valider',
+        'Sélectionner la ligne',
+        'Sélectionner l\'icône MÉTHODE (à droite de PROBLÈME)',
+        'Annuler l\'affectation'
+      ]
+    },
+    {
+      id: 'priorisation-taches',
+      title: 'Priorisation de tâches dans le LTRMS',
+      icon: 'fa-sort-amount-up',
+      duration: '3-5 min',
+      level: '🟡',
+      vigilance: ['Ne pas prioriser sans en référer au chef d\'équipe IPL', 'Modifier de +30 à -30', 'Valider avec l\'icône disquette'],
+      document: 'Priorisation de taches dans le LTRMS.docx',
+      checklist: [
+        'ATTENTION : Ne pas prioriser sans en référer au chef d\'équipe IPL',
+        'Sélectionner la ou les lignes pour augmenter ou baisser la priorité',
+        'Sélectionner l\'icône priorité en haut à gauche',
+        'Modifier selon le besoin de +30 à -30',
+        'Valider avec l\'icône de disquette en bas à droite'
+      ]
+    },
+    {
+      id: 'sortir-tache-ltra',
+      title: 'Sortir une tâche du LTRA',
+      icon: 'fa-box-open',
+      duration: '5-8 min',
+      level: '🟡',
+      vigilance: ['Utiliser OBJETS DE GESTION', 'Sélectionner TÂCHE PROBLÉMATIQUE', 'Valider pour réapparition'],
+      document: 'Sortir une tache du LTRA.docx',
+      checklist: [
+        'Sélectionner OBJETS DE GESTION',
+        'Sélectionner TÂCHE PROBLÉMATIQUES',
+        'Sélectionner la colonne article',
+        'Activer le filtre',
+        'Renseigner le code article',
+        'Valider',
+        'Sélectionner la ligne',
+        'Sélectionner l\'icône MÉTHODE',
+        'Sélectionner la fonction VALIDER',
+        'La tâche réapparaîtra dans le LTRMS'
+      ]
+    },
+    {
+      id: 'visualisation-stocks',
+      title: 'Visualisation des stocks LS03N',
+      icon: 'fa-boxes',
+      duration: '2-3 min',
+      level: '🟢',
+      vigilance: ['Type de magasin : pick (100,110,115) ou bulk (300)', 'Renseigner l\'emplacement correct', 'Valider avec entrée'],
+      document: 'Visualisation des stocks LS03N.docx',
+      checklist: [
+        'Renseigner le type de magasin :',
+        '• Pick : 100, 110, 115',
+        '• Bulk : 300',
+        'Renseigner l\'emplacement',
+        'Valider avec (entrée)',
+        'Les articles devant être à l\'emplacement apparaissent dans l\'encadré (stock par emplacement)'
+      ]
+    },
+    {
+      id: 'connection-terminal',
+      title: 'Connexion / Déconnexion terminal',
+      icon: 'fa-sign-in-alt',
+      duration: '2 min',
+      level: '🟢',
+      vigilance: ['Noter le N° d\'appareil', 'Respecter la séquence de déconnexion', 'Écrire EXIT à la fin'],
+      document: 'CONNECTION.docx',
+      checklist: [
+        'CONNEXION :',
+        'LOGIN : IPL - -',
+        'Entrer le mot de passe',
+        'Appuyer sur Entrée',
+        'Appuyer sur F1',
+        'Appuyer 1 puis Entrée',
+        'N° d\'appareil : r-.. (pour le – appuyer func puis 2)',
+        'Appuyer sur F1',
+        'Appuyer 1 puis Entrée',
+        'Appuyer 1 puis Entrée',
+        'DÉCONNEXION :',
+        'Appuyer F3-F8-01-F8-F8',
+        'Flèche du haut pour sélectionner oui',
+        'Appuyer sur Entrée',
+        'Puis écrire EXIT'
+      ]
+    },
+    {
       id: 'relancer-tache',
       title: 'Relancer tâche cariste',
       icon: 'fa-redo',
@@ -18,145 +136,6 @@ export function CaristePage() {
         'Voir message en bas de l\'écran "warehouse task created"',
         'Valider la tâche'
       ]
-    },
-    {
-      id: 'mise-en-stock',
-      title: 'Mise en stock standard',
-      icon: 'fa-warehouse',
-      duration: '10-15 min',
-      level: '🟢',
-      vigilance: ['Vérifier zone stockage', 'Scanner emplacement', 'Confirmer HU'],
-      checklist: [
-        'Scanner le code-barres de la palette (HU)',
-        'Vérifier l\'écran du terminal - tâche affichée',
-        'Se rendre à l\'emplacement indiqué',
-        'Vérifier que l\'emplacement est libre',
-        'Déposer la palette avec précaution',
-        'Scanner le code-barres de l\'emplacement',
-        'Confirmer la mise en stock sur le terminal',
-        'Vérifier le message de validation'
-      ]
-    },
-    {
-      id: 'picking',
-      title: 'Picking direct',
-      icon: 'fa-hand-holding-box',
-      duration: '5-10 min',
-      level: '🟢',
-      vigilance: ['Vérifier quantité', 'Zone picking correcte', 'Étiquetage clair'],
-      checklist: [
-        'Récupérer la liste de picking sur le terminal',
-        'Se rendre à l\'emplacement indiqué',
-        'Vérifier le code article sur l\'étiquette',
-        'Scanner le HU à prélever',
-        'Saisir ou confirmer la quantité',
-        'Déplacer vers la zone de préparation',
-        'Scanner l\'emplacement de destination',
-        'Valider le picking sur le terminal'
-      ]
-    },
-    {
-      id: 'deplacer-palette',
-      title: 'Déplacer une palette',
-      icon: 'fa-arrows-alt',
-      duration: '5-8 min',
-      level: '🟢',
-      vigilance: ['Vérifier stabilité', 'Respecter hauteur max', 'Zone autorisée'],
-      checklist: [
-        'Recevoir l\'ordre de déplacement',
-        'Se rendre à l\'emplacement source',
-        'Scanner le HU de la palette',
-        'Vérifier la stabilité de la palette',
-        'Lever la palette avec précaution',
-        'Se déplacer vers l\'emplacement destination',
-        'Vérifier que l\'emplacement est correct et libre',
-        'Déposer la palette',
-        'Scanner l\'emplacement destination',
-        'Confirmer le déplacement'
-      ]
-    },
-    {
-      id: 'palette-hazardous',
-      title: 'Manutention palette hazardous',
-      icon: 'fa-exclamation-triangle',
-      duration: '15-20 min',
-      level: '🔴',
-      vigilance: ['EPI obligatoires', 'Zone hazardous uniquement', 'Signalétique visible'],
-      checklist: [
-        'STOP - Vérifier que vous avez les EPI nécessaires',
-        'Vérifier la signalétique hazardous sur la palette',
-        'Scanner le HU avec précaution',
-        'Vérifier zone destination = T220 ou T120 UNIQUEMENT',
-        'Ne PAS mélanger avec palettes normales',
-        'Manipuler avec précaution accrue',
-        'Déposer dans la zone hazardous désignée',
-        'Scanner l\'emplacement hazardous',
-        'Confirmer et signaler si anomalie',
-        'Laver les mains après manipulation'
-      ]
-    },
-    {
-      id: 'inventaire',
-      title: 'Inventaire tournant',
-      icon: 'fa-clipboard-list',
-      duration: '20-30 min',
-      level: '🟡',
-      vigilance: ['Compter avec précision', 'Vérifier références', 'Signaler écarts'],
-      checklist: [
-        'Récupérer la liste d\'inventaire du jour',
-        'Se rendre à la première zone à inventorier',
-        'Scanner le code zone',
-        'Compter physiquement toutes les palettes',
-        'Pour chaque palette : scanner le HU',
-        'Saisir la quantité comptée',
-        'Vérifier les références articles',
-        'Signaler immédiatement tout écart > 5%',
-        'Passer à la zone suivante',
-        'Valider l\'inventaire complet'
-      ]
-    },
-    {
-      id: 'charger-batterie',
-      title: 'Changement/Charge batterie',
-      icon: 'fa-battery-three-quarters',
-      duration: '10-15 min',
-      level: '🟢',
-      vigilance: ['Sécurité électrique', 'Niveau charge > 20%', 'Brancher correctement'],
-      checklist: [
-        'Surveiller le niveau de batterie du chariot',
-        'Si niveau < 20% → aller à la zone de charge',
-        'Stationner le chariot sur zone de charge',
-        'Couper le contact du chariot',
-        'Ouvrir le compartiment batterie',
-        'Débrancher les câbles (respecter l\'ordre)',
-        'Soulever la batterie avec le palan',
-        'Installer la batterie chargée',
-        'Brancher les câbles (respecter polarité)',
-        'Vérifier le voyant de charge',
-        'Refermer le compartiment',
-        'Tester le chariot'
-      ]
-    },
-    {
-      id: 'anomalie-palette',
-      title: 'Signaler anomalie palette',
-      icon: 'fa-flag',
-      duration: '5-10 min',
-      level: '🟢',
-      vigilance: ['Photo obligatoire', 'Mettre en quarantaine', 'Signaler immédiatement'],
-      checklist: [
-        'STOP - Ne pas ranger la palette',
-        'Prendre une photo claire de l\'anomalie',
-        'Noter le numéro HU de la palette',
-        'Déplacer vers zone QUARANTAINE',
-        'Scanner HU + zone quarantaine',
-        'Ouvrir le formulaire anomalie sur le terminal',
-        'Sélectionner le type d\'anomalie',
-        'Joindre la photo',
-        'Ajouter un commentaire descriptif',
-        'Valider et envoyer',
-        'Informer le chef d\'équipe verbalement'
-      ]
     }
   ]
 
@@ -168,10 +147,10 @@ export function CaristePage() {
           <div>
             <h1 class="text-4xl font-bold mb-3">
               <i class="fas fa-forklift mr-3"></i>
-              Cariste
+              IPL (Intra Plant Logistics)
             </h1>
             <p class="text-xl opacity-90">
-              Manutention, rangement, picking
+              Gestion des tâches, affectation, priorisation
             </p>
           </div>
           <a href="/" class="bg-white text-green-600 px-4 py-2 rounded-lg font-semibold hover:bg-green-50 transition-colors">
@@ -181,17 +160,16 @@ export function CaristePage() {
       </div>
 
       {/* Safety Warning */}
-      <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-8">
+      <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-6 mb-8">
         <div class="flex items-start">
-          <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-4 mt-1"></i>
+          <i class="fas fa-info-circle text-yellow-500 text-2xl mr-4 mt-1"></i>
           <div>
-            <h3 class="text-lg font-bold text-red-800 mb-2">Consignes de sécurité</h3>
-            <ul class="space-y-1 text-red-700">
-              <li>• Port du casque et chaussures de sécurité OBLIGATOIRE</li>
-              <li>• Respecter les limitations de vitesse (10 km/h en entrepôt)</li>
-              <li>• Klaxonner aux intersections et portes</li>
-              <li>• Ne jamais transporter de personnes sur le chariot</li>
-              <li>• Vérifier la stabilité de la charge avant de lever</li>
+            <h3 class="text-lg font-bold text-yellow-800 mb-2">Consignes importantes</h3>
+            <ul class="space-y-1 text-yellow-700">
+              <li>• Ne JAMAIS affecter de tâches en bulk</li>
+              <li>• Toujours consulter le chef d'équipe IPL avant de prioriser</li>
+              <li>• Vérifier les codes articles avant toute action</li>
+              <li>• Respecter les procédures de connexion/déconnexion</li>
             </ul>
           </div>
         </div>

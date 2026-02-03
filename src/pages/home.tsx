@@ -6,15 +6,15 @@ export function HomePage() {
       icon: 'fa-truck-loading',
       color: 'bg-blue-500',
       description: 'Réception marchandises, contrôle BL, déchargement',
-      processes: 12
+      processes: 13
     },
     {
       id: 'cariste',
-      title: 'Cariste',
+      title: 'IPL',
       icon: 'fa-forklift',
       color: 'bg-green-500',
-      description: 'Manutention, rangement, picking',
-      processes: 8
+      description: 'Gestion des tâches, affectation, priorisation',
+      processes: 7
     },
     {
       id: 'manutention',
@@ -53,7 +53,7 @@ export function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <div class="bg-gradient-to-r from-[#003DA5] to-[#0052CC] text-white rounded-lg shadow-xl p-8 mb-8">
+      <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white rounded-lg shadow-xl p-8 mb-8">
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-4xl font-bold mb-3">
@@ -159,7 +159,7 @@ export function HomePage() {
           
           <a href="/cariste#relancer-tache" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
             <i class="fas fa-tasks text-green-500 text-2xl mr-3"></i>
-            <span class="font-semibold text-gray-800">Relancer tâche cariste</span>
+            <span class="font-semibold text-gray-800">Affectation tâche IPL</span>
           </a>
           
           <a href="/anomalies#retour-fournisseur" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">

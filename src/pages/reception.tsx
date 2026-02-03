@@ -80,6 +80,28 @@ export function ReceptionPage() {
       level: '🔴',
       vigilance: ['Filtrer containers uniquement', 'Trier par date appointment', 'Export Excel'],
       document: 'Mettre en forme et renseigner le fichier étêtage et container.docx'
+    },
+    {
+      id: 'charger-batterie',
+      title: 'Changement / Charge batterie',
+      icon: 'fa-battery-three-quarters',
+      duration: '10-15 min',
+      level: '🟢',
+      vigilance: ['Sécurité électrique', 'Niveau charge > 20%', 'Brancher correctement'],
+      checklist: [
+        'Surveiller le niveau de batterie du chariot',
+        'Si niveau < 20% → aller à la zone de charge',
+        'Stationner le chariot sur zone de charge',
+        'Couper le contact du chariot',
+        'Ouvrir le compartiment batterie',
+        'Débrancher les câbles (respecter l\'ordre)',
+        'Soulever la batterie avec le palan',
+        'Installer la batterie chargée',
+        'Brancher les câbles (respecter polarité)',
+        'Vérifier le voyant de charge',
+        'Refermer le compartiment',
+        'Tester le chariot'
+      ]
     }
   ]
 
@@ -176,22 +198,34 @@ export function ReceptionPage() {
 
               {/* Actions */}
               <div class="flex flex-wrap gap-2 mt-4">
-                <button 
-                  onclick={`showChecklist('${process.id}')`}
-                  class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
-                >
-                  <i class="fas fa-list-check mr-2"></i>
-                  Checklist
-                </button>
+                {process.checklist ? (
+                  <button 
+                    onclick={`showChecklistInteractive('${process.id}', ${JSON.stringify(process.checklist)})`}
+                    class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
+                  >
+                    <i class="fas fa-list-check mr-2"></i>
+                    Checklist interactive
+                  </button>
+                ) : (
+                  <button 
+                    onclick={`showChecklist('${process.id}')`}
+                    class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
+                  >
+                    <i class="fas fa-list-check mr-2"></i>
+                    Checklist
+                  </button>
+                )}
                 
-                <a 
-                  href={`/static/documents/${process.document}`}
-                  target="_blank"
-                  class="gxo-btn bg-gray-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-600 flex items-center"
-                >
-                  <i class="fas fa-file-download mr-2"></i>
-                  Document
-                </a>
+                {process.document && (
+                  <a 
+                    href={`/static/documents/${process.document}`}
+                    target="_blank"
+                    class="gxo-btn bg-gray-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-600 flex items-center"
+                  >
+                    <i class="fas fa-file-download mr-2"></i>
+                    Document
+                  </a>
+                )}
                 
                 <button 
                   onclick={`showDecisionTree('${process.id}')`}

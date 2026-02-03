@@ -12,7 +12,7 @@ export const renderer = jsxRenderer(({ children }) => {
         <link href="/static/style.css" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
-            --gxo-blue: #003DA5;
+            --gxo-blue: #00205B;
             --gxo-orange: #FF6B35;
             --gxo-dark: #1a1a1a;
             --gxo-light: #f5f5f5;
@@ -47,13 +47,12 @@ export const renderer = jsxRenderer(({ children }) => {
         ` }} />
       </head>
       <body class="bg-gray-50">
-        <nav class="bg-[#003DA5] text-white shadow-lg no-print">
+        <nav class="bg-[#00205B] text-white shadow-lg no-print">
           <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="/" class="flex items-center space-x-3">
-              <i class="fas fa-warehouse text-2xl"></i>
-              <div>
-                <div class="text-xl font-bold">GXO Logistics</div>
-                <div class="text-sm opacity-90">Intranet Moissy-Cramayel</div>
+            <a href="/" class="flex items-center space-x-3 hover:opacity-90 transition-opacity">
+              <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-10" />
+              <div class="border-l border-white/30 pl-3">
+                <div class="text-sm font-semibold">Intranet Moissy-Cramayel</div>
               </div>
             </a>
             <div class="flex items-center space-x-4">
