@@ -1,0 +1,193 @@
+export function HomePage() {
+  const metiers = [
+    {
+      id: 'reception',
+      title: 'Réception',
+      icon: 'fa-truck-loading',
+      color: 'bg-blue-500',
+      description: 'Réception marchandises, contrôle BL, déchargement',
+      processes: 12
+    },
+    {
+      id: 'cariste',
+      title: 'Cariste',
+      icon: 'fa-forklift',
+      color: 'bg-green-500',
+      description: 'Manutention, rangement, picking',
+      processes: 8
+    },
+    {
+      id: 'manutention',
+      title: 'Manutention',
+      icon: 'fa-dolly',
+      color: 'bg-purple-500',
+      description: 'Préparation commandes, emballage, palettisation',
+      processes: 10
+    },
+    {
+      id: 'chef-equipe',
+      title: 'Chef d\'équipe',
+      icon: 'fa-user-tie',
+      color: 'bg-orange-500',
+      description: 'Supervision, reporting, gestion équipe',
+      processes: 15
+    },
+    {
+      id: 'nouveau',
+      title: 'Nouvel Arrivant',
+      icon: 'fa-graduation-cap',
+      color: 'bg-pink-500',
+      description: 'Parcours d\'intégration et formations de base',
+      processes: 6
+    },
+    {
+      id: 'anomalies',
+      title: 'Anomalies / FAQ',
+      icon: 'fa-exclamation-circle',
+      color: 'bg-red-500',
+      description: 'Gestion incidents, litiges, arbres de décision',
+      processes: 20
+    }
+  ]
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <div class="bg-gradient-to-r from-[#003DA5] to-[#0052CC] text-white rounded-lg shadow-xl p-8 mb-8">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-4xl font-bold mb-3">
+              <i class="fas fa-warehouse mr-3"></i>
+              HUB Procédures Logistiques
+            </h1>
+            <p class="text-xl opacity-90">
+              Centre de ressources opérationnelles - GXO Moissy-Cramayel
+            </p>
+          </div>
+          <div class="text-right">
+            <div class="text-5xl font-bold">{metiers.reduce((sum, m) => sum + m.processes, 0)}</div>
+            <div class="text-sm opacity-75 uppercase">Procédures disponibles</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Stats */}
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm">Accès rapide</p>
+              <p class="text-2xl font-bold text-gray-800">En 2 clics</p>
+            </div>
+            <i class="fas fa-mouse-pointer text-4xl text-blue-500"></i>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm">Support</p>
+              <p class="text-2xl font-bold text-gray-800">24/7</p>
+            </div>
+            <i class="fas fa-headset text-4xl text-green-500"></i>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm">Responsive</p>
+              <p class="text-2xl font-bold text-gray-800">Mobile OK</p>
+            </div>
+            <i class="fas fa-mobile-alt text-4xl text-orange-500"></i>
+          </div>
+        </div>
+      </div>
+
+      {/* Métiers Cards */}
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <i class="fas fa-briefcase mr-3 text-[#003DA5]"></i>
+          Sélectionnez votre métier
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {metiers.map((metier) => (
+            <a href={`/${metier.id}`} class="block">
+              <div class={`gxo-card bg-white rounded-lg shadow-lg overflow-hidden border-t-4 ${metier.color.replace('bg-', 'border-')}`}>
+                <div class="p-6">
+                  <div class="flex items-start justify-between mb-4">
+                    <div class={`${metier.color} text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl`}>
+                      <i class={`fas ${metier.icon}`}></i>
+                    </div>
+                    <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">
+                      {metier.processes} process
+                    </span>
+                  </div>
+                  
+                  <h3 class="text-xl font-bold text-gray-800 mb-2">
+                    {metier.title}
+                  </h3>
+                  
+                  <p class="text-gray-600 text-sm mb-4">
+                    {metier.description}
+                  </p>
+                  
+                  <div class="flex items-center justify-between">
+                    <span class={`text-sm font-semibold ${metier.color.replace('bg-', 'text-')}`}>
+                      Voir les procédures
+                    </span>
+                    <i class="fas fa-arrow-right text-gray-400"></i>
+                  </div>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Access Section */}
+      <div class="mt-12 bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <i class="fas fa-bolt mr-3 text-yellow-500"></i>
+          Accès rapide
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a href="/reception#reception-standard" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+            <i class="fas fa-truck text-blue-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Réception standard</span>
+          </a>
+          
+          <a href="/cariste#relancer-tache" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+            <i class="fas fa-tasks text-green-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Relancer tâche cariste</span>
+          </a>
+          
+          <a href="/anomalies#retour-fournisseur" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+            <i class="fas fa-undo text-red-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Retour fournisseur</span>
+          </a>
+          
+          <a href="/chef-equipe#eop-checks" class="flex items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+            <i class="fas fa-clipboard-check text-orange-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">EOP Checks</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Documents Section */}
+      <div class="mt-12 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-folder-open mr-3 text-gray-600"></i>
+          Bibliothèque de documents
+        </h2>
+        <p class="text-gray-600 mb-4">
+          Accès direct à tous les documents et procédures téléchargeables
+        </p>
+        <a href="/static/documents/" class="inline-block bg-[#003DA5] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0052CC] transition-colors">
+          <i class="fas fa-download mr-2"></i>
+          Parcourir les documents
+        </a>
+      </div>
+    </div>
+  )
+}

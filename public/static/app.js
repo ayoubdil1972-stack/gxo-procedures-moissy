@@ -1,0 +1,271 @@
+// GXO Intranet - Interactive Checklists and Features
+
+// Toggle FAQ items
+function toggleFaq(index) {
+  const content = document.getElementById(`faq-content-${index}`);
+  const icon = document.getElementById(`faq-icon-${index}`);
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    icon.style.transform = 'rotate(180deg)';
+  } else {
+    content.classList.add('hidden');
+    icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+// Show interactive checklist
+function showChecklistInteractive(processId, checklistItems) {
+  const modal = document.getElementById('modal-container');
+  const modalContent = document.getElementById('modal-content');
+  
+  let checklistHtml = `
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-list-check mr-3 text-green-500"></i>
+          Checklist interactive
+        </h3>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+        <p class="text-sm text-blue-800">
+          <i class="fas fa-info-circle mr-2"></i>
+          Cochez chaque étape au fur et à mesure de votre progression
+        </p>
+      </div>
+      
+      <div class="space-y-3" id="checklist-items">
+  `;
+  
+  checklistItems.forEach((item, index) => {
+    checklistHtml += `
+      <div class="checklist-item bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-green-500 transition-all cursor-pointer" onclick="toggleChecklistItem(${index})">
+        <label class="flex items-start cursor-pointer">
+          <input type="checkbox" id="check-${index}" class="mt-1 mr-4 w-5 h-5 text-green-500 rounded focus:ring-green-500" onchange="updateProgress()">
+          <span class="flex-1 text-gray-700">
+            <span class="font-semibold text-gray-800">${index + 1}.</span> ${item}
+          </span>
+        </label>
+      </div>
+    `;
+  });
+  
+  checklistHtml += `
+      </div>
+      
+      <div class="mt-6 bg-gray-100 rounded-lg p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-semibold text-gray-700">Progression</span>
+          <span id="progress-text" class="text-sm font-bold text-green-600">0 / ${checklistItems.length}</span>
+        </div>
+        <div class="w-full bg-gray-300 rounded-full h-4 overflow-hidden">
+          <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-green-600 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="mt-6 flex gap-3">
+        <button onclick="printChecklist()" class="flex-1 bg-gray-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors">
+          <i class="fas fa-print mr-2"></i>Imprimer
+        </button>
+        <button onclick="resetChecklist(${checklistItems.length})" class="flex-1 bg-orange-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors">
+          <i class="fas fa-redo mr-2"></i>Réinitialiser
+        </button>
+        <button onclick="closeModal()" class="flex-1 bg-green-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors">
+          <i class="fas fa-check mr-2"></i>Terminer
+        </button>
+      </div>
+    </div>
+  `;
+  
+  modalContent.innerHTML = checklistHtml;
+  modal.classList.remove('hidden');
+  
+  // Add click outside to close
+  modal.onclick = function(e) {
+    if (e.target === modal) {
+      closeModal();
+    }
+  }
+}
+
+// Toggle checklist item
+function toggleChecklistItem(index) {
+  const checkbox = document.getElementById(`check-${index}`);
+  checkbox.checked = !checkbox.checked;
+  updateProgress();
+}
+
+// Update progress bar
+function updateProgress() {
+  const checkboxes = document.querySelectorAll('#checklist-items input[type="checkbox"]');
+  const total = checkboxes.length;
+  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const percentage = (checked / total) * 100;
+  
+  document.getElementById('progress-bar').style.width = percentage + '%';
+  document.getElementById('progress-text').textContent = `${checked} / ${total}`;
+  
+  // Update checklist item styles
+  checkboxes.forEach((checkbox, index) => {
+    const item = checkbox.closest('.checklist-item');
+    if (checkbox.checked) {
+      item.classList.add('checked', 'bg-green-50', 'border-green-500');
+      item.classList.remove('bg-white', 'border-gray-200');
+    } else {
+      item.classList.remove('checked', 'bg-green-50', 'border-green-500');
+      item.classList.add('bg-white', 'border-gray-200');
+    }
+  });
+  
+  // Celebration animation when all checked
+  if (checked === total && total > 0) {
+    confetti();
+  }
+}
+
+// Reset checklist
+function resetChecklist(total) {
+  for (let i = 0; i < total; i++) {
+    const checkbox = document.getElementById(`check-${i}`);
+    if (checkbox) {
+      checkbox.checked = false;
+    }
+  }
+  updateProgress();
+}
+
+// Print checklist
+function printChecklist() {
+  window.print();
+}
+
+// Simple confetti effect
+function confetti() {
+  const duration = 2000;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    const timeLeft = end - Date.now();
+    
+    if (timeLeft <= 0) return;
+    
+    const particleCount = 2;
+    
+    // Create confetti
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.style.position = 'fixed';
+      particle.style.width = '10px';
+      particle.style.height = '10px';
+      particle.style.background = ['#ff6b35', '#003da5', '#00cc88', '#ffd700'][Math.floor(Math.random() * 4)];
+      particle.style.left = Math.random() * window.innerWidth + 'px';
+      particle.style.top = '-10px';
+      particle.style.borderRadius = '50%';
+      particle.style.pointerEvents = 'none';
+      particle.style.zIndex = '9999';
+      document.body.appendChild(particle);
+      
+      const animation = particle.animate([
+        { transform: 'translateY(0px) rotate(0deg)', opacity: 1 },
+        { transform: `translateY(${window.innerHeight + 20}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+      ], {
+        duration: 1500 + Math.random() * 1000,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      });
+      
+      animation.onfinish = () => particle.remove();
+    }
+    
+    requestAnimationFrame(frame);
+  }());
+}
+
+// Close modal
+function closeModal() {
+  const modal = document.getElementById('modal-container');
+  modal.classList.add('hidden');
+}
+
+// Show decision tree (placeholder for now)
+function showDecisionTree(processId) {
+  alert('Arbre de décision pour: ' + processId + '\n\nCette fonctionnalité sera bientôt disponible avec des diagrammes interactifs.');
+}
+
+// Show basic checklist (non-interactive)
+function showChecklist(processId) {
+  alert('Checklist pour: ' + processId + '\n\nConsultez le document associé pour voir la procédure détaillée.');
+}
+
+// Smooth scroll to anchors
+document.addEventListener('DOMContentLoaded', function() {
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+  
+  // Add keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    // ESC to close modal
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+    
+    // Ctrl+H to go home
+    if (e.ctrlKey && e.key === 'h') {
+      e.preventDefault();
+      window.location.href = '/';
+    }
+  });
+  
+  // Add service worker for offline support (optional)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Silent fail - not critical
+    });
+  }
+});
+
+// Print-friendly styles
+const style = document.createElement('style');
+style.textContent = `
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    body {
+      background: white !important;
+    }
+    .checklist-item {
+      page-break-inside: avoid;
+      border: 1px solid #ccc !important;
+      background: white !important;
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// Make functions globally available
+window.toggleFaq = toggleFaq;
+window.showChecklistInteractive = showChecklistInteractive;
+window.toggleChecklistItem = toggleChecklistItem;
+window.updateProgress = updateProgress;
+window.resetChecklist = resetChecklist;
+window.printChecklist = printChecklist;
+window.closeModal = closeModal;
+window.showDecisionTree = showDecisionTree;
+window.showChecklist = showChecklist;
+
+console.log('GXO Intranet loaded successfully ✓');
