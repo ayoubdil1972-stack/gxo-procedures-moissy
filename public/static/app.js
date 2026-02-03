@@ -1,5 +1,96 @@
 // GXO Intranet - Interactive Checklists and Features
 
+// ========================================
+// BIBLIOTHEQUE - Search and Filter
+// ========================================
+
+function filterDocuments() {
+  const searchInput = document.getElementById('search-input');
+  const searchTerm = searchInput.value.toLowerCase().trim();
+  const documentCards = document.querySelectorAll('.document-card');
+  const noResults = document.getElementById('no-results');
+  let visibleCount = 0;
+
+  documentCards.forEach(card => {
+    const name = card.dataset.name || '';
+    const category = card.dataset.category || '';
+    const keywords = card.dataset.keywords || '';
+    const description = card.dataset.description || '';
+    
+    const matches = !searchTerm || 
+      name.includes(searchTerm) || 
+      category.toLowerCase().includes(searchTerm) ||
+      keywords.includes(searchTerm) ||
+      description.includes(searchTerm);
+    
+    if (matches) {
+      card.style.display = 'block';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // Show/hide no results message
+  if (visibleCount === 0) {
+    noResults.classList.remove('hidden');
+  } else {
+    noResults.classList.add('hidden');
+  }
+}
+
+function filterByCategory(category) {
+  const searchInput = document.getElementById('search-input');
+  searchInput.value = ''; // Clear search
+  
+  const documentCards = document.querySelectorAll('.document-card');
+  const noResults = document.getElementById('no-results');
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  let visibleCount = 0;
+
+  // Update button states
+  filterButtons.forEach(btn => {
+    if (btn.dataset.category === category) {
+      btn.classList.add('ring-4', 'ring-opacity-50');
+      btn.classList.add(category === 'all' ? 'ring-gray-300' : 
+                       category === 'Réception' ? 'ring-blue-300' :
+                       category === 'IPL' ? 'ring-green-300' :
+                       category === 'Préparation' ? 'ring-purple-300' :
+                       category === "Chef d'équipe" ? 'ring-orange-300' : 'ring-red-300');
+    } else {
+      btn.classList.remove('ring-4', 'ring-opacity-50', 'ring-gray-300', 'ring-blue-300', 'ring-green-300', 'ring-purple-300', 'ring-orange-300', 'ring-red-300');
+    }
+  });
+
+  documentCards.forEach(card => {
+    const cardCategory = card.dataset.category;
+    
+    if (category === 'all' || cardCategory === category) {
+      card.style.display = 'block';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // Show/hide no results message
+  if (visibleCount === 0) {
+    noResults.classList.remove('hidden');
+  } else {
+    noResults.classList.add('hidden');
+  }
+}
+
+function clearSearch() {
+  const searchInput = document.getElementById('search-input');
+  searchInput.value = '';
+  filterByCategory('all');
+}
+
+// ========================================
+// CHECKLISTS - Interactive Features
+// ========================================
+
 // Toggle FAQ items
 function toggleFaq(index) {
   const content = document.getElementById(`faq-content-${index}`);

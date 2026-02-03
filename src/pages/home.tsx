@@ -222,12 +222,18 @@ export function HomePage() {
           Bibliothèque de documents
         </h2>
         <p class="text-gray-600 mb-4">
-          Accès direct à tous les documents et procédures téléchargeables
+          Accès direct à tous les 30 documents classés par rubrique avec recherche intelligente
         </p>
-        <a href="/static/documents/" class="inline-block bg-[#003DA5] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0052CC] transition-colors">
-          <i class="fas fa-download mr-2"></i>
-          Parcourir les documents
-        </a>
+        <div class="flex gap-4">
+          <a href="/bibliotheque" class="inline-block bg-[#003DA5] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0052CC] transition-colors">
+            <i class="fas fa-book mr-2"></i>
+            Accéder à la bibliothèque
+          </a>
+          <a href="/static/documents/" class="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+            <i class="fas fa-folder mr-2"></i>
+            Parcourir les dossiers
+          </a>
+        </div>
       </div>
     </div>
   )
