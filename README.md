@@ -10,7 +10,7 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 - ✅ **Page d'accueil** : HUB métiers avec logo GXO, illustration entrepôt animée et accès rapide
 - ✅ **Réception** : 10 procédures (réception standard, déchargement, clôture livraison/TU, changement batterie, etc.)
 - ✅ **IPL (Intra Plant Logistics)** : 7 procédures avec checklists interactives et illustration chariot élévateur (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
-- ✅ **Manutention** : Section en construction
+- ✅ **Préparation** : 5 procédures complètes avec checklists interactives (dernier prélèvement, écart prélèvement, quai fictif, monteur de rolls, formation intégration)
 - ✅ **Chef d'équipe** : 4 procédures (EOP checks, ICPE, conditionnement, packspeck)
 - ✅ **Nouvel arrivant** : Parcours d'intégration complet en 5 étapes
 - ✅ **Anomalies/FAQ** : 3 procédures anomalies + 8 questions/réponses fréquentes
@@ -25,7 +25,7 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 - ✅ **Checklists interactives** : Cases à cocher, barre de progression, animation de complétion
 - ✅ **FAQ intelligente** : Accordéons dépliables avec niveaux d'urgence
 - ✅ **Système de niveaux** : 🟢 Essentiel / 🟡 Standard / 🔴 Avancé
-- ✅ **Liens documents** : 26 documents accessibles directement depuis les procédures
+- ✅ **Liens documents** : 30 documents accessibles directement depuis les procédures
 - ✅ **Responsive design** : Optimisé mobile, tablette et PC
 - ✅ **Mode impression** : Checklists imprimables
 - ✅ **Animations** : Effets visuels et confettis de complétion
@@ -47,7 +47,7 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 │       ├── home.tsx           # Page d'accueil
 │       ├── reception.tsx      # Réception (10 procédures)
 │       ├── cariste.tsx        # IPL - Intra Plant Logistics (7 procédures)
-│       ├── manutention.tsx    # Manutention
+│       ├── manutention.tsx    # Préparation (5 procédures)
 │       ├── chef-equipe.tsx    # Chef d'équipe
 │       ├── nouveau.tsx        # Nouvel arrivant
 │       └── anomalies.tsx      # Anomalies/FAQ
