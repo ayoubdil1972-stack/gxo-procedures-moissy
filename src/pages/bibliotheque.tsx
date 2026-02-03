@@ -468,13 +468,12 @@ export function BibliothequePage() {
 
                 {/* Actions */}
                 <div class="flex gap-2">
-                  <a 
-                    href={`/static/documents/${doc.file}`}
-                    target="_blank"
+                  <button 
+                    onclick={`openDocumentPreview('${doc.file}', '${doc.type}', '${doc.name.replace(/'/g, "\\'")}')`}
                     class="flex-1 bg-[#00205B] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#003DA5] transition-colors text-center"
                   >
-                    <i class="fas fa-eye mr-2"></i>Ouvrir
-                  </a>
+                    <i class="fas fa-eye mr-2"></i>Aperçu
+                  </button>
                   <a 
                     href={`/static/documents/${doc.file}`}
                     download
@@ -495,6 +494,40 @@ export function BibliothequePage() {
         <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
         <h3 class="text-2xl font-bold text-gray-600 mb-2">Aucun document trouvé</h3>
         <p class="text-gray-500">Essayez avec d'autres mots-clés ou filtres</p>
+      </div>
+
+      {/* Document Preview Modal */}
+      <div id="preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg w-full max-w-6xl h-[90vh] flex flex-col">
+          {/* Modal Header */}
+          <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <div class="flex-1">
+              <h3 id="preview-title" class="text-xl font-bold text-gray-800"></h3>
+              <p class="text-sm text-gray-500 mt-1">Aperçu du document</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <a 
+                id="preview-download-btn"
+                href="#"
+                download
+                class="bg-[#FF6B35] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors"
+              >
+                <i class="fas fa-download mr-2"></i>Télécharger
+              </a>
+              <button 
+                onclick="closePreview()"
+                class="text-gray-500 hover:text-gray-700 text-2xl px-3"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          {/* Modal Content */}
+          <div id="preview-content" class="flex-1 overflow-hidden bg-gray-100">
+            {/* Content will be injected here */}
+          </div>
+        </div>
       </div>
     </div>
   )

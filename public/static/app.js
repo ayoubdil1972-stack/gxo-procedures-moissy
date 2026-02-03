@@ -1,6 +1,108 @@
 // GXO Intranet - Interactive Checklists and Features
 
 // ========================================
+// BIBLIOTHEQUE - Document Preview
+// ========================================
+
+function openDocumentPreview(filename, type, title) {
+  const modal = document.getElementById('preview-modal');
+  const titleEl = document.getElementById('preview-title');
+  const contentEl = document.getElementById('preview-content');
+  const downloadBtn = document.getElementById('preview-download-btn');
+  
+  // Update title and download button
+  titleEl.textContent = title;
+  downloadBtn.href = `/static/documents/${filename}`;
+  downloadBtn.download = filename;
+  
+  // Clear previous content
+  contentEl.innerHTML = '';
+  
+  const documentUrl = `/static/documents/${filename}`;
+  
+  if (type === 'pdf') {
+    // PDF: Use iframe for direct viewing
+    contentEl.innerHTML = `
+      <iframe 
+        src="${documentUrl}" 
+        class="w-full h-full border-0"
+        title="${title}"
+      ></iframe>
+    `;
+  } else if (type === 'docx') {
+    // Word: Use Microsoft Office Online Viewer
+    const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(window.location.origin + documentUrl)}`;
+    contentEl.innerHTML = `
+      <div class="w-full h-full flex flex-col">
+        <iframe 
+          src="${officeViewerUrl}" 
+          class="w-full h-full border-0"
+          title="${title}"
+        ></iframe>
+        <div class="p-4 bg-yellow-50 border-t border-yellow-200 text-sm text-yellow-800">
+          <i class="fas fa-info-circle mr-2"></i>
+          Si l'aperçu ne s'affiche pas, cliquez sur "Télécharger" pour ouvrir le document localement.
+        </div>
+      </div>
+    `;
+  } else if (type === 'xlsx' || type === 'xltm') {
+    // Excel: Use Microsoft Office Online Viewer
+    const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(window.location.origin + documentUrl)}`;
+    contentEl.innerHTML = `
+      <div class="w-full h-full flex flex-col">
+        <iframe 
+          src="${officeViewerUrl}" 
+          class="w-full h-full border-0"
+          title="${title}"
+        ></iframe>
+        <div class="p-4 bg-yellow-50 border-t border-yellow-200 text-sm text-yellow-800">
+          <i class="fas fa-info-circle mr-2"></i>
+          Si l'aperçu ne s'affiche pas, cliquez sur "Télécharger" pour ouvrir le document localement.
+        </div>
+      </div>
+    `;
+  } else {
+    // Fallback for unsupported types
+    contentEl.innerHTML = `
+      <div class="flex items-center justify-center h-full">
+        <div class="text-center p-8">
+          <i class="fas fa-file text-6xl text-gray-300 mb-4"></i>
+          <h3 class="text-xl font-bold text-gray-700 mb-2">Aperçu non disponible</h3>
+          <p class="text-gray-600 mb-4">Ce type de fichier ne peut pas être prévisualisé dans le navigateur.</p>
+          <a 
+            href="${documentUrl}"
+            download="${filename}"
+            class="inline-block bg-[#FF6B35] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#FF8555] transition-colors"
+          >
+            <i class="fas fa-download mr-2"></i>Télécharger le document
+          </a>
+        </div>
+      </div>
+    `;
+  }
+  
+  // Show modal
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreview() {
+  const modal = document.getElementById('preview-modal');
+  modal.classList.add('hidden');
+  document.body.style.overflow = 'auto';
+}
+
+// Close preview with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('preview-modal');
+    if (modal && !modal.classList.contains('hidden')) {
+      closePreview();
+    }
+  }
+});
+
+// ========================================
 // BIBLIOTHEQUE - Search and Filter
 // ========================================
 
