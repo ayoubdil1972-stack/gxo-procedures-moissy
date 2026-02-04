@@ -223,18 +223,337 @@ export const renderer = jsxRenderer(({ children }) => {
           }
           
           /* Mode Mobile Simulator */
+          /* Mode Mobile - Optimisé pour petits écrans */
           body.mobile-mode {
             max-width: 430px;
             margin: 0 auto;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+            font-size: 15px;
+            line-height: 1.6;
           }
           body.mobile-mode .container {
             max-width: 100%;
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
           }
+          
+          /* Navigation mobile compacte */
           body.mobile-mode nav {
             border-radius: 0;
+          }
+          body.mobile-mode nav #nav-container {
+            flex-direction: column;
+            padding: 0.75rem;
+            gap: 0.75rem;
+            align-items: center;
+          }
+          
+          /* Logo et titre centrés en mobile */
+          body.mobile-mode nav #nav-container > a {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          body.mobile-mode nav #nav-container > a .flex {
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+          }
+          body.mobile-mode nav img {
+            height: 40px;
+            margin: 0 auto;
+          }
+          body.mobile-mode nav .border-l {
+            border-left: none;
+            padding-left: 0;
+            text-align: center;
+            width: 100%;
+          }
+          body.mobile-mode nav .text-sm {
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+          }
+          
+          /* Menu de navigation mobile */
+          body.mobile-mode nav #nav-links {
+            flex-direction: column;
+            width: 100%;
+            margin-top: 0;
+            gap: 0;
+            align-items: stretch;
+          }
+          body.mobile-mode nav #nav-links a {
+            width: 100%;
+            text-align: left;
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 48px;
+          }
+          body.mobile-mode nav #nav-links a:last-child {
+            border-bottom: none;
+          }
+          body.mobile-mode nav #nav-links a i {
+            margin-right: 0.75rem;
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+          }
+          body.mobile-mode nav #nav-links a span {
+            font-size: 1rem;
+          }
+          
+          /* Typographie mobile */
+          body.mobile-mode h1 {
+            font-size: 1.75rem;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+          }
+          body.mobile-mode h2 {
+            font-size: 1.4rem;
+            line-height: 1.3;
+            margin-bottom: 0.875rem;
+          }
+          body.mobile-mode h3 {
+            font-size: 1.15rem;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+          }
+          
+          /* Cartes mobile */
+          body.mobile-mode .gxo-card,
+          body.mobile-mode .bg-white.rounded-lg.shadow-md {
+            padding: 1rem;
+            margin-bottom: 0.875rem;
+          }
+          
+          /* Alignement des éléments dans les cartes */
+          body.mobile-mode .gxo-card > *,
+          body.mobile-mode .bg-white > * {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            text-align: left;
+          }
+          
+          /* Flex items en mobile - tout aligner à gauche */
+          body.mobile-mode .flex {
+            align-items: flex-start;
+          }
+          body.mobile-mode .flex.items-center {
+            align-items: center;
+          }
+          
+          /* Corriger les marges négatives */
+          body.mobile-mode [class*="-mx-"],
+          body.mobile-mode [class*="mx-"] {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+          
+          /* Corriger les paddings négatifs */
+          body.mobile-mode [class*="-px-"] {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+          }
+          
+          /* Boutons mobile */
+          body.mobile-mode button,
+          body.mobile-mode .gxo-btn {
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            min-height: 44px;
+          }
+          
+          /* Inputs mobile */
+          body.mobile-mode input,
+          body.mobile-mode textarea,
+          body.mobile-mode select {
+            font-size: 16px !important;
+            padding: 0.75rem !important;
+            min-height: 48px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          
+          /* Groupes de formulaire mobile */
+          body.mobile-mode .form-group,
+          body.mobile-mode .input-group {
+            margin-bottom: 1rem;
+            width: 100%;
+          }
+          
+          /* Labels mobile plus lisibles */
+          body.mobile-mode label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+          }
+          
+          /* Grilles mobile - empilage vertical */
+          body.mobile-mode .grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.875rem;
+          }
+          
+          /* Espacement mobile réduit */
+          body.mobile-mode main {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+          }
+          
+          /* Tableaux mobile - scroll horizontal */
+          body.mobile-mode table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+          }
+          body.mobile-mode table td,
+          body.mobile-mode table th {
+            padding: 0.5rem 0.75rem;
+            min-width: 100px;
+          }
+          
+          /* Listes mobile */
+          body.mobile-mode ul,
+          body.mobile-mode ol {
+            padding-left: 1.25rem;
+            margin-bottom: 1rem;
+          }
+          body.mobile-mode li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+          }
+          
+          /* Images mobile responsive */
+          body.mobile-mode img {
+            max-width: 100%;
+            height: auto;
+          }
+          
+          /* Footer mobile compact */
+          body.mobile-mode footer {
+            font-size: 0.85rem;
+            padding: 1rem 0.75rem;
+          }
+          
+          /* Modals mobile plein écran */
+          body.mobile-mode .fixed.inset-0 > div {
+            max-width: 100% !important;
+            max-height: 100% !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+          }
+          
+          /* Badges et tags mobile */
+          body.mobile-mode .badge,
+          body.mobile-mode .inline-flex.items-center {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+          }
+          
+          /* Icônes mobile légèrement plus grandes */
+          body.mobile-mode i.fas,
+          body.mobile-mode i.far {
+            font-size: 1.1em;
+          }
+          
+          /* Liens mobile avec zone tactile */
+          body.mobile-mode a {
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+          }
+          
+          /* PAGE CONTACTS - Mobile optimisé */
+          body.mobile-mode #contacts-grid {
+            grid-template-columns: 1fr !important;
+          }
+          body.mobile-mode .contact-card {
+            padding: 1rem;
+          }
+          body.mobile-mode .contact-card h3 {
+            font-size: 1.1rem;
+          }
+          body.mobile-mode .contact-info {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          body.mobile-mode .contact-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+          body.mobile-mode .contact-actions button {
+            width: 100%;
+          }
+          
+          /* PAGE BIBLIOTHÈQUE - Mobile optimisé */
+          body.mobile-mode #documents-grid {
+            grid-template-columns: 1fr !important;
+          }
+          body.mobile-mode .document-card {
+            padding: 1rem;
+          }
+          body.mobile-mode .document-card h3 {
+            font-size: 1rem;
+            line-height: 1.3;
+          }
+          body.mobile-mode .document-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          body.mobile-mode .document-actions button {
+            width: 100%;
+          }
+          
+          /* Filtres mobile - Stack vertical */
+          body.mobile-mode .filter-buttons,
+          body.mobile-mode .service-filters {
+            flex-direction: column !important;
+            gap: 0.5rem;
+          }
+          body.mobile-mode .filter-buttons button {
+            width: 100%;
+            justify-content: center;
+          }
+          
+          /* Barre de recherche mobile */
+          body.mobile-mode .search-container {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          body.mobile-mode .search-container input {
+            width: 100%;
+          }
+          body.mobile-mode .search-container button {
+            width: 100%;
+          }
+          
+          /* Checklist mobile */
+          body.mobile-mode .checklist-item {
+            padding: 0.75rem;
+            font-size: 0.95rem;
+          }
+          body.mobile-mode .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+          }
+          
+          /* Arbre de décision mobile */
+          body.mobile-mode .decision-tree-node {
+            padding: 0.875rem;
+            font-size: 0.95rem;
+          }
+          body.mobile-mode .decision-tree-option {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
           }
           
           /* Bouton Toggle Desktop/Mobile */
@@ -270,26 +589,26 @@ export const renderer = jsxRenderer(({ children }) => {
         ` }} />
       </head>
       <body class="bg-gray-50">
-        <nav class="bg-[#00205B] text-white shadow-lg no-print">
-          <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <nav class="bg-[#00205B] text-white shadow-lg no-print" id="main-nav">
+          <div class="container mx-auto px-4 py-3 flex items-center justify-between" id="nav-container">
             <a href="/" class="flex items-center space-x-3 hover:opacity-90 transition-opacity">
               <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-10" />
               <div class="border-l border-white/30 pl-3">
                 <div class="text-sm font-semibold">Intranet Moissy-Cramayel</div>
               </div>
             </a>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4" id="nav-links">
               <a href="/" class="hover:text-[#FF6B35] transition-colors">
-                <i class="fas fa-home mr-2"></i>Accueil
+                <i class="fas fa-home mr-2"></i><span>Accueil</span>
               </a>
               <a href="/bibliotheque" class="hover:text-[#FF6B35] transition-colors">
-                <i class="fas fa-book mr-2"></i>Bibliothèque
+                <i class="fas fa-book mr-2"></i><span>Bibliothèque</span>
               </a>
               <a href="/contacts" class="hover:text-[#FF6B35] transition-colors">
-                <i class="fas fa-address-book mr-2"></i>Contacts
+                <i class="fas fa-address-book mr-2"></i><span>Contacts</span>
               </a>
               <a href="/anomalies" class="hover:text-[#FF6B35] transition-colors">
-                <i class="fas fa-exclamation-triangle mr-2"></i>Anomalies
+                <i class="fas fa-exclamation-triangle mr-2"></i><span>Anomalies</span>
               </a>
             </div>
           </div>

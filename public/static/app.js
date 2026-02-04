@@ -16,12 +16,64 @@ function toggleViewportMode() {
     icon.className = 'fas fa-desktop';
     button.title = 'Passer en mode ordinateur';
     localStorage.setItem('viewportMode', 'mobile');
+    
+    // Ajuster les éléments pour mobile
+    optimizeForMobile();
   } else {
     // Mode Desktop
     icon.className = 'fas fa-mobile-alt';
     button.title = 'Passer en mode portable';
     localStorage.setItem('viewportMode', 'desktop');
+    
+    // Restaurer les éléments desktop
+    restoreDesktopLayout();
   }
+}
+
+// Optimiser l'interface pour mobile
+function optimizeForMobile() {
+  // Rendre les grilles en une colonne
+  const grids = document.querySelectorAll('.grid');
+  grids.forEach(grid => {
+    grid.style.gridTemplateColumns = '1fr';
+  });
+  
+  // Rendre les flex en colonne
+  const flexContainers = document.querySelectorAll('.flex.space-x-4, .flex.gap-4');
+  flexContainers.forEach(flex => {
+    if (!flex.classList.contains('items-center')) {
+      flex.style.flexDirection = 'column';
+    }
+  });
+  
+  // Élargir les boutons
+  const buttons = document.querySelectorAll('button:not(.viewport-toggle)');
+  buttons.forEach(btn => {
+    if (!btn.classList.contains('w-full')) {
+      btn.style.width = '100%';
+    }
+  });
+}
+
+// Restaurer le layout desktop
+function restoreDesktopLayout() {
+  // Restaurer les grilles
+  const grids = document.querySelectorAll('.grid');
+  grids.forEach(grid => {
+    grid.style.gridTemplateColumns = '';
+  });
+  
+  // Restaurer les flex
+  const flexContainers = document.querySelectorAll('.flex.space-x-4, .flex.gap-4');
+  flexContainers.forEach(flex => {
+    flex.style.flexDirection = '';
+  });
+  
+  // Restaurer les boutons
+  const buttons = document.querySelectorAll('button:not(.viewport-toggle)');
+  buttons.forEach(btn => {
+    btn.style.width = '';
+  });
 }
 
 // Restaurer le mode au chargement
@@ -33,6 +85,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const button = document.getElementById('viewport-toggle');
     if (icon) icon.className = 'fas fa-desktop';
     if (button) button.title = 'Passer en mode ordinateur';
+    
+    // Appliquer les optimisations mobile
+    setTimeout(() => optimizeForMobile(), 100);
   }
 });
 
