@@ -208,9 +208,9 @@ export function HomePage() {
             <span class="font-semibold text-gray-800">Retour fournisseur</span>
           </a>
           
-          <a href="/chef-equipe#eop-checks" class="flex items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
-            <i class="fas fa-clipboard-check text-orange-500 text-2xl mr-3"></i>
-            <span class="font-semibold text-gray-800">EOP Checks</span>
+          <a href="/contacts" class="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+            <i class="fas fa-address-book text-indigo-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Annuaire Contacts</span>
           </a>
         </div>
       </div>
@@ -219,15 +219,21 @@ export function HomePage() {
       <div class="mt-12 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-8">
         <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
           <i class="fas fa-folder-open mr-3 text-gray-600"></i>
-          Bibliothèque de documents
+          Ressources & Documents
         </h2>
-        <p class="text-gray-600 mb-4">
-          Accès direct à tous les 30 documents classés par rubrique avec recherche intelligente
+        <p class="text-gray-600 mb-6">
+          Accès direct à tous les documents et contacts de l'équipe GXO Moissy-Cramayel
         </p>
-        <a href="/bibliotheque" class="inline-block bg-[#003DA5] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0052CC] transition-colors">
-          <i class="fas fa-book mr-2"></i>
-          Accéder à la bibliothèque
-        </a>
+        <div class="flex flex-wrap gap-4">
+          <a href="/bibliotheque" class="inline-block bg-[#003DA5] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0052CC] transition-colors">
+            <i class="fas fa-book mr-2"></i>
+            Bibliothèque de documents (34)
+          </a>
+          <a href="/contacts" class="inline-block bg-[#00205B] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#003DA5] transition-colors">
+            <i class="fas fa-address-book mr-2"></i>
+            Annuaire des contacts (20)
+          </a>
+        </div>
       </div>
     </div>
   )
