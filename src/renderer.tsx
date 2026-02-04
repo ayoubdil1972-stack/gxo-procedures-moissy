@@ -71,6 +71,48 @@ export const renderer = jsxRenderer(({ children }) => {
           .star-btn:hover {
             filter: brightness(1.2);
           }
+          
+          /* Animations pour le logo de connexion */
+          @keyframes float {
+            0%, 100% {
+              transform: translateY(0px);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
+          }
+          
+          @keyframes shimmer {
+            0% {
+              transform: translateX(-100%);
+            }
+            100% {
+              transform: translateX(100%);
+            }
+          }
+          
+          @keyframes pulse-glow {
+            0%, 100% {
+              opacity: 0.5;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 1;
+              transform: scale(1.05);
+            }
+          }
+          
+          .animate-float {
+            animation: float 3s ease-in-out infinite;
+          }
+          
+          .animate-shimmer {
+            animation: shimmer 3s ease-in-out infinite;
+          }
+          
+          .animate-pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+          }
         ` }} />
       </head>
       <body class="bg-gray-50">

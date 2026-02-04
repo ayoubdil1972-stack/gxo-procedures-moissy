@@ -26,8 +26,21 @@ export function LoginPage() {
         {/* Login form */}
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header with logo */}
-          <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-20 flex items-center justify-center">
-            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-28 w-auto mx-auto" />
+          <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-20 flex items-center justify-center relative overflow-hidden">
+            {/* Animated background glow */}
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"></div>
+            
+            {/* Logo with animations */}
+            <div class="relative group">
+              <img 
+                src="/static/gxo-logo.svg" 
+                alt="GXO Logistics" 
+                class="h-28 w-auto mx-auto transition-all duration-500 ease-in-out transform group-hover:scale-110 group-hover:brightness-125 group-hover:drop-shadow-2xl animate-float cursor-pointer" 
+              />
+              
+              {/* Circular glow effect on hover */}
+              <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 rounded-full blur-2xl transition-all duration-700 -z-10 group-hover:scale-150"></div>
+            </div>
           </div>
 
           {/* Form content */}
