@@ -474,51 +474,81 @@ export const renderer = jsxRenderer(({ children }) => {
             width: 100%;
           }
           
-          /* Aligner les deux logos verticalement avec le compteur 70 */
-          body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 {
+          /* Aligner logo, titre et compteur sur la même ligne horizontale */
+          body.mobile-mode .bg-gradient-to-r .flex.items-center.justify-between {
             flex-direction: row;
-            justify-content: center;
+            gap: 0.5rem;
             align-items: center;
+            justify-content: space-between;
+          }
+          
+          /* Logo GXO à gauche */
+          body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
             gap: 0;
+            flex-shrink: 0;
+            width: auto;
           }
           body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 img {
             height: 3rem;
-            order: 1;
             flex-shrink: 0;
           }
+          
+          /* Titre au centre - sur la même ligne */
           body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 > div {
-            order: 2;
-            flex: 1;
+            display: none;
+          }
+          body.mobile-mode .bg-gradient-to-r h1 {
+            font-size: 1.2rem;
             text-align: center;
+            line-height: 1.2;
+            margin: 0;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 0 0.5rem;
           }
           
-          body.mobile-mode .bg-gradient-to-r h1 {
-            font-size: 1.75rem;
-            text-align: center;
-            line-height: 1.3;
-            margin-bottom: 1rem;
-          }
-          body.mobile-mode .bg-gradient-to-r p {
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 0.5rem;
-          }
+          /* Compteur à droite - sur la même ligne */
           body.mobile-mode .bg-gradient-to-r .text-right {
             text-align: center;
-            width: 100%;
+            width: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0;
+            flex-shrink: 0;
           }
           body.mobile-mode .bg-gradient-to-r .text-5xl {
-            font-size: 3rem;
-            order: 2;
+            font-size: 2.5rem;
+            line-height: 1;
+            margin: 0;
           }
           body.mobile-mode .bg-gradient-to-r .text-sm {
-            font-size: 0.875rem;
-            order: 3;
+            font-size: 0.65rem;
+            margin: 0;
+            white-space: nowrap;
+          }
+          
+          /* Sous-titre en dessous - nouvelle ligne */
+          body.mobile-mode .bg-gradient-to-r p {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 0.75rem;
+            width: 100%;
+            display: block;
+            position: absolute;
+            top: 3.5rem;
+            left: 0;
+            right: 0;
+          }
+          
+          /* Ajouter de l'espace pour le sous-titre */
+          body.mobile-mode .bg-gradient-to-r .flex.items-center.justify-between {
+            padding-bottom: 2rem;
           }
           
           /* Footer mobile compact */
