@@ -460,5 +460,10 @@ window.printChecklist = printChecklist;
 window.closeModal = closeModal;
 window.showDecisionTree = showDecisionTree;
 window.showChecklist = showChecklist;
+window.openDocumentPreview = openDocumentPreview;
+window.closePreview = closePreview;
+window.filterDocuments = filterDocuments;
+window.filterByCategory = filterByCategory;
+window.clearSearch = clearSearch;
 
 console.log('GXO Intranet loaded successfully ✓');
