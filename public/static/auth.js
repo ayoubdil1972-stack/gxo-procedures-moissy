@@ -205,11 +205,17 @@ function loadLockoutState() {
 function showError(message) {
   const errorDiv = document.getElementById('error-message');
   const errorText = document.getElementById('error-text');
+  const errorIcon = errorDiv?.querySelector('i');
   
   if (errorDiv && errorText) {
     errorText.textContent = message;
     errorDiv.classList.remove('hidden', 'bg-green-500');
     errorDiv.classList.add('bg-red-500');
+    
+    // Remettre l'icône d'exclamation pour les erreurs
+    if (errorIcon) {
+      errorIcon.className = 'fas fa-exclamation-circle mr-3 text-xl';
+    }
     
     // Animation
     errorDiv.style.animation = 'none';
@@ -223,11 +229,17 @@ function showError(message) {
 function showSuccess(message) {
   const errorDiv = document.getElementById('error-message');
   const errorText = document.getElementById('error-text');
+  const errorIcon = errorDiv?.querySelector('i');
   
   if (errorDiv && errorText) {
     errorText.textContent = message;
     errorDiv.classList.remove('hidden', 'bg-red-500');
     errorDiv.classList.add('bg-green-500');
+    
+    // Changer l'icône en coche de validation
+    if (errorIcon) {
+      errorIcon.className = 'fas fa-check-circle mr-3 text-xl';
+    }
   }
 }
 
