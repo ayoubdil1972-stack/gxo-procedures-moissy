@@ -360,10 +360,10 @@ export function ReceptionPage() {
                 )}
                 
                 <button 
-                  onclick={`showDecisionTree('${process.id}')`}
+                  onclick="showDecisionTree('root')"
                   class="gxo-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 flex items-center"
                 >
-                  <i class="fas fa-question-circle mr-2"></i>
+                  <i class="fas fa-sitemap mr-2"></i>
                   Que faire si...
                 </button>
               </div>
