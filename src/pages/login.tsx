@@ -26,14 +26,8 @@ export function LoginPage() {
         {/* Login form */}
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header with logo */}
-          <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-8 text-center">
-            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-16 mx-auto mb-4" />
-            <h1 class="text-2xl font-bold text-white mb-2">
-              HUB Procédures Logistiques
-            </h1>
-            <p class="text-sm text-white/80">
-              Plateforme sécurisée - Site de Moissy-Cramayel
-            </p>
+          <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-12 text-center">
+            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-20 mx-auto" />
           </div>
 
           {/* Form content */}
