@@ -44,6 +44,33 @@ export const renderer = jsxRenderer(({ children }) => {
           @media print {
             .no-print { display: none !important; }
           }
+          
+          /* Animations pour notifications */
+          @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes fade-out {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+          }
+          .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+          }
+          .animate-fade-out {
+            animation: fade-out 0.3s ease-out;
+          }
+          
+          /* Styles pour les étoiles */
+          .star-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+          }
+          .star-btn:hover {
+            filter: brightness(1.2);
+          }
         ` }} />
       </head>
       <body class="bg-gray-50">
@@ -76,6 +103,103 @@ export const renderer = jsxRenderer(({ children }) => {
           {children}
         </main>
         
+        {/* Modal Avis et Commentaires */}
+        <div id="review-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 no-print">
+          <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div class="bg-[#00205B] text-white p-6 rounded-t-lg">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-2xl font-bold">Donner votre avis</h3>
+                  <p class="text-sm opacity-75 mt-1" id="review-modal-title">Procédure</p>
+                </div>
+                <button onclick="closeReviewModal()" class="text-white hover:text-[#FF6B35] transition-colors text-2xl">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div class="p-6">
+              {/* Formulaire d'avis */}
+              <form id="review-form" onsubmit="submitReview(event)" class="mb-6">
+                <input type="hidden" id="review-procedure-id" />
+                
+                {/* Note */}
+                <div class="mb-6">
+                  <label class="block text-gray-700 font-semibold mb-2">
+                    <i class="fas fa-star text-yellow-500 mr-2"></i>
+                    Votre note (optionnel)
+                  </label>
+                  <div id="rating-stars">
+                    {/* Les étoiles seront générées par JavaScript */}
+                  </div>
+                </div>
+
+                {/* Nom */}
+                <div class="mb-4">
+                  <label for="review-name" class="block text-gray-700 font-semibold mb-2">
+                    <i class="fas fa-user mr-2"></i>
+                    Votre nom (optionnel)
+                  </label>
+                  <input
+                    type="text"
+                    id="review-name"
+                    placeholder="Anonyme"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#00205B] focus:outline-none"
+                  />
+                </div>
+
+                {/* Commentaire */}
+                <div class="mb-6">
+                  <label for="review-comment" class="block text-gray-700 font-semibold mb-2">
+                    <i class="fas fa-comment mr-2"></i>
+                    Votre commentaire (optionnel)
+                  </label>
+                  <textarea
+                    id="review-comment"
+                    rows="4"
+                    placeholder="Partagez votre expérience, des conseils, ou des suggestions d'amélioration..."
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#00205B] focus:outline-none resize-none"
+                  ></textarea>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Minimum 10 caractères recommandé
+                  </p>
+                </div>
+
+                {/* Boutons */}
+                <div class="flex gap-3">
+                  <button
+                    type="submit"
+                    class="flex-1 bg-[#00205B] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#003DA5] transition-colors"
+                  >
+                    <i class="fas fa-paper-plane mr-2"></i>
+                    Publier
+                  </button>
+                  <button
+                    type="button"
+                    onclick="closeReviewModal()"
+                    class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </form>
+
+              {/* Liste des avis */}
+              <div class="border-t pt-6">
+                <h4 class="text-xl font-bold text-gray-800 mb-4">
+                  <i class="fas fa-comments mr-2"></i>
+                  Avis de la communauté
+                </h4>
+                <div id="reviews-list">
+                  {/* Les avis seront chargés par JavaScript */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <footer class="bg-gray-800 text-white py-6 mt-12 no-print">
           <div class="container mx-auto px-4 text-center">
             <p class="text-sm">© 2026 GXO Logistics - Site de Moissy-Cramayel</p>
@@ -84,6 +208,7 @@ export const renderer = jsxRenderer(({ children }) => {
         </footer>
         
         <script src="/static/app.js"></script>
+        <script src="/static/reviews.js"></script>
       </body>
     </html>
   )
