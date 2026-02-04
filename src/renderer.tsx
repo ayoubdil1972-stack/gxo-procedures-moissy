@@ -360,6 +360,7 @@ export const renderer = jsxRenderer(({ children }) => {
         <script src="/static/auth.js"></script>
         <script src="/static/app.js"></script>
         <script src="/static/reviews.js"></script>
+        <script src="/static/onboarding.js"></script>
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes shake {
             0%, 100% { transform: translateX(0); }

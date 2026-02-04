@@ -27,9 +27,6 @@ export function LoginPage() {
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header with animated logistics scene */}
           <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-20 flex items-center justify-center relative overflow-hidden min-h-[320px]">
-            {/* Animated background glow */}
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"></div>
-            
             {/* Animated logistics scene */}
             <div class="absolute inset-0 opacity-30">
               {/* Manutentionnaire sur chariot (centre-gauche) */}

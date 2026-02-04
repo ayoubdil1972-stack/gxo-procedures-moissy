@@ -24,10 +24,137 @@ export function NouveauPage() {
           Bienvenue chez GXO Logistics !
         </h2>
         <p class="text-gray-700 text-lg mb-6">
-          Ce guide vous accompagne dans vos premiers pas sur le site de Moissy-Cramayel. 
-          Suivez les étapes ci-dessous pour découvrir votre environnement de travail.
+          Pour vous guider au mieux, merci de sélectionner votre situation :
         </p>
+        
+        {/* Questionnaire interactif */}
+        <div id="onboarding-questionnaire" class="space-y-4">
+          <div class="bg-white rounded-lg p-6 shadow-md">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">
+              <i class="fas fa-clipboard-question mr-2 text-pink-500"></i>
+              Quelle est votre situation ?
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button 
+                onclick="showOnboardingPath('nouveau')" 
+                class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all text-left"
+              >
+                <i class="fas fa-user-plus text-2xl mb-2"></i>
+                <div class="font-bold">Nouvelle intégration</div>
+                <div class="text-sm opacity-90">Premier jour dans l'entreprise</div>
+              </button>
+              
+              <button 
+                onclick="showOnboardingPath('changement-poste')" 
+                class="p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transition-all text-left"
+              >
+                <i class="fas fa-exchange-alt text-2xl mb-2"></i>
+                <div class="font-bold">Changement de poste</div>
+                <div class="text-sm opacity-90">Mutation interne vers un nouveau métier</div>
+              </button>
+              
+              <button 
+                onclick="showOnboardingPath('changement-site')" 
+                class="p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all text-left"
+              >
+                <i class="fas fa-building text-2xl mb-2"></i>
+                <div class="font-bold">Changement de site</div>
+                <div class="text-sm opacity-90">Transfert depuis un autre site GXO</div>
+              </button>
+              
+              <button 
+                onclick="showOnboardingPath('retour-conge')" 
+                class="p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all text-left"
+              >
+                <i class="fas fa-calendar-check text-2xl mb-2"></i>
+                <div class="font-bold">Retour après absence</div>
+                <div class="text-sm opacity-90">Retour après congé longue durée ou arrêt</div>
+              </button>
+              
+              <button 
+                onclick="showOnboardingPath('interim')" 
+                class="p-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition-all text-left"
+              >
+                <i class="fas fa-clock text-2xl mb-2"></i>
+                <div class="font-bold">Intérimaire / CDD</div>
+                <div class="text-sm opacity-90">Mission temporaire sur le site</div>
+              </button>
+              
+              <button 
+                onclick="showOnboardingPath('formation')" 
+                class="p-4 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all text-left"
+              >
+                <i class="fas fa-graduation-cap text-2xl mb-2"></i>
+                <div class="font-bold">Formation / Montée en compétence</div>
+                <div class="text-sm opacity-90">Apprentissage d'un nouveau processus</div>
+              </button>
+            </div>
+          </div>
+          
+          {/* Résultats du questionnaire */}
+          <div id="onboarding-result" class="hidden bg-white rounded-lg p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold text-gray-800">
+                <i class="fas fa-route mr-2 text-pink-500"></i>
+                Votre parcours personnalisé
+              </h3>
+              <button onclick="resetOnboarding()" class="text-sm text-gray-500 hover:text-gray-700">
+                <i class="fas fa-redo mr-1"></i>Modifier ma situation
+              </button>
+            </div>
+            <div id="onboarding-content"></div>
+          </div>
+        </div>
       </div>
+
+      {/* Section métier - affichée après sélection */}
+      <div id="metier-selection" class="hidden mb-8">
+        <div class="bg-white rounded-lg p-6 shadow-md">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">
+            <i class="fas fa-briefcase mr-2 text-pink-500"></i>
+            Quel est votre métier ?
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button onclick="showMetierPath('reception')" class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-left transition-colors border-2 border-blue-200">
+              <i class="fas fa-truck-loading text-blue-500 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Réception</div>
+              <div class="text-sm text-gray-600">Déchargement et contrôle</div>
+            </button>
+            
+            <button onclick="showMetierPath('ipl')" class="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-left transition-colors border-2 border-green-200">
+              <i class="fas fa-forklift text-green-500 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">IPL (Cariste)</div>
+              <div class="text-sm text-gray-600">Manutention et stockage</div>
+            </button>
+            
+            <button onclick="showMetierPath('preparation')" class="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-left transition-colors border-2 border-purple-200">
+              <i class="fas fa-dolly text-purple-500 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Préparation</div>
+              <div class="text-sm text-gray-600">Préparation commandes</div>
+            </button>
+            
+            <button onclick="showMetierPath('retours')" class="p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg text-left transition-colors border-2 border-yellow-200">
+              <i class="fas fa-undo-alt text-yellow-600 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Retours</div>
+              <div class="text-sm text-gray-600">Gestion retours et déchets</div>
+            </button>
+            
+            <button onclick="showMetierPath('admin')" class="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors border-2 border-gray-200">
+              <i class="fas fa-user-tie text-gray-600 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Administratif</div>
+              <div class="text-sm text-gray-600">Support et coordination</div>
+            </button>
+            
+            <button onclick="showMetierPath('chef')" class="p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg text-left transition-colors border-2 border-indigo-200">
+              <i class="fas fa-user-cog text-indigo-600 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Chef d'équipe</div>
+              <div class="text-sm text-gray-600">Management terrain</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Contenu standard (toujours visible) */}
 
       <div class="grid grid-cols-1 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-pink-500">
