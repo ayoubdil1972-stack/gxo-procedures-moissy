@@ -31,10 +31,7 @@ export function LoginPage() {
             <div class="absolute inset-0 opacity-30">
               {/* Manutentionnaire sur chariot (centre-gauche) */}
               <div class="absolute left-1/4 top-1/2 -translate-y-1/2 animate-forklift-move">
-                <div class="relative">
-                  <i class="fas fa-forklift text-5xl text-white/70"></i>
-                  <i class="fas fa-user text-2xl text-white/80 absolute -top-6 left-3 animate-worker-wave"></i>
-                </div>
+                <i class="fas fa-forklift text-5xl text-white/70"></i>
               </div>
               
               {/* Tablette avec cases à cocher (droite) */}
