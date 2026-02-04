@@ -1,5 +1,5 @@
 export function ContactsPage() {
-  // Base de données des contacts GXO Moissy-Cramayel - PRÉPARATION & RETOURS uniquement
+  // Base de données des contacts GXO Moissy-Cramayel - PRÉPARATION, EXPÉDITION & RETOURS
   const contacts = [
     
     // Préparation
@@ -214,6 +214,218 @@ export function ContactsPage() {
       keywords: 'preparateur preparation picking prelevement'
     },
     
+    // Expédition
+    {
+      id: 42,
+      nom: 'GENEST',
+      prenom: 'Estelle',
+      fonction: 'Responsable d\'Exploitation',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150307',
+      email: 'estelle.genest@gxo.com',
+      mobile: '',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Zone Expédition',
+      keywords: 'responsable exploitation expedition shipping'
+    },
+    {
+      id: 43,
+      nom: 'DIMITRU',
+      prenom: 'Marius',
+      fonction: 'Responsable d\'Exploitation',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150265',
+      email: 'marius.dimitru@gxo.com',
+      mobile: '',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Zone Expédition',
+      keywords: 'responsable exploitation expedition shipping'
+    },
+    {
+      id: 44,
+      nom: 'MESSINA',
+      prenom: 'Christophe',
+      fonction: 'Chef d\'Exploitation',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150259',
+      email: 'christophe.messina@gxo.com',
+      mobile: '',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Zone Expédition',
+      keywords: 'chef exploitation expedition shipping'
+    },
+    {
+      id: 45,
+      nom: 'CHAUVIN',
+      prenom: 'Thomas',
+      fonction: 'Chef d\'Exploitation',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150211',
+      email: 'thomas.chauvin@gxo.com',
+      mobile: '',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Zone Expédition',
+      keywords: 'chef exploitation expedition shipping'
+    },
+    {
+      id: 46,
+      nom: 'NAJAH',
+      prenom: 'Khadija',
+      fonction: 'Back Up Chef d\'exploitation',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150237',
+      email: 'khadija.najah@gxo.com',
+      mobile: '',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Zone Expédition',
+      keywords: 'backup chef exploitation expedition shipping'
+    },
+    {
+      id: 47,
+      nom: 'TCHOMBA NYEMBO',
+      prenom: 'Blaise',
+      fonction: 'Back Up Chef d\'exploitation',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150244',
+      email: 'blaise.tchomba@gxo.com',
+      mobile: '',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Zone Expédition',
+      keywords: 'backup chef exploitation expedition shipping'
+    },
+    {
+      id: 48,
+      nom: 'LUKUSA',
+      prenom: 'Jean-Paul',
+      fonction: 'Chef d\'équipe AM',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150244',
+      email: 'jeanpaul.lukusa@gxo.com',
+      mobile: '',
+      horaires: 'Matin',
+      bureau: 'Zone Expédition',
+      keywords: 'chef equipe am matin expedition shipping'
+    },
+    {
+      id: 49,
+      nom: 'BINDELT',
+      prenom: 'Lionel',
+      fonction: 'Chef d\'équipe PM',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150244 / 150262',
+      email: 'lionel.bindelt@gxo.com',
+      mobile: '',
+      horaires: 'Après-midi',
+      bureau: 'Zone Expédition',
+      keywords: 'chef equipe pm apres-midi expedition shipping'
+    },
+    {
+      id: 50,
+      nom: 'NDEBEKA MALEKA',
+      prenom: 'Aymar',
+      fonction: 'Chargeur',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150311',
+      email: 'aymar.ndebeka@gxo.com',
+      mobile: '',
+      horaires: 'Variable',
+      bureau: 'Zone Expédition',
+      keywords: 'chargeur expedition shipping chargement'
+    },
+    {
+      id: 51,
+      nom: 'CHARGEUR',
+      prenom: '',
+      fonction: 'Chargeur',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150336',
+      email: 'chargeur336@gxo.com',
+      mobile: '',
+      horaires: 'Variable',
+      bureau: 'Zone Expédition',
+      keywords: 'chargeur expedition shipping chargement'
+    },
+    {
+      id: 52,
+      nom: 'CHARGEUR',
+      prenom: '',
+      fonction: 'Chargeur',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150371',
+      email: 'chargeur371@gxo.com',
+      mobile: '',
+      horaires: 'Variable',
+      bureau: 'Zone Expédition',
+      keywords: 'chargeur expedition shipping chargement'
+    },
+    {
+      id: 53,
+      nom: 'CHARGEUR',
+      prenom: '',
+      fonction: 'Chargeur',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150372',
+      email: 'chargeur372@gxo.com',
+      mobile: '',
+      horaires: 'Variable',
+      bureau: 'Zone Expédition',
+      keywords: 'chargeur expedition shipping chargement'
+    },
+    {
+      id: 54,
+      nom: 'CHARGEUR',
+      prenom: '',
+      fonction: 'Chargeur',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150373',
+      email: 'chargeur373@gxo.com',
+      mobile: '',
+      horaires: 'Variable',
+      bureau: 'Zone Expédition',
+      keywords: 'chargeur expedition shipping chargement'
+    },
+    {
+      id: 55,
+      nom: 'CHARGEUR',
+      prenom: '',
+      fonction: 'Chargeur',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150374',
+      email: 'chargeur374@gxo.com',
+      mobile: '',
+      horaires: 'Variable',
+      bureau: 'Zone Expédition',
+      keywords: 'chargeur expedition shipping chargement'
+    },
+    {
+      id: 56,
+      nom: 'CHARGEUR',
+      prenom: '',
+      fonction: 'Chargeur',
+      service: 'Expédition',
+      telephone: '',
+      extension: '150375',
+      email: 'chargeur375@gxo.com',
+      mobile: '',
+      horaires: 'Variable',
+      bureau: 'Zone Expédition',
+      keywords: 'chargeur expedition shipping chargement'
+    },
+    
     // Retours
     {
       id: 36,
@@ -305,6 +517,7 @@ export function ContactsPage() {
   const services = [
     { name: 'Tous', icon: 'fa-address-book', color: 'bg-gray-500', count: contacts.length },
     { name: 'Préparation', icon: 'fa-dolly', color: 'bg-purple-500', count: contacts.filter(c => c.service === 'Préparation').length },
+    { name: 'Expédition', icon: 'fa-shipping-fast', color: 'bg-indigo-500', count: contacts.filter(c => c.service === 'Expédition').length },
     { name: 'Retours', icon: 'fa-undo-alt', color: 'bg-cyan-500', count: contacts.filter(c => c.service === 'Retours').length }
   ]
 
@@ -316,7 +529,7 @@ export function ContactsPage() {
           <div class="flex items-center mb-4">
             <i class="fas fa-address-book text-5xl mr-4"></i>
             <div>
-              <h1 class="text-4xl font-bold">Contacts PRÉPARATION & RETOURS</h1>
+              <h1 class="text-4xl font-bold">Contacts PRÉPARATION, EXPÉDITION & RETOURS</h1>
               <p class="text-lg mt-2 text-gray-200">Annuaire GXO Moissy-Cramayel - {contacts.length} contacts</p>
             </div>
           </div>
