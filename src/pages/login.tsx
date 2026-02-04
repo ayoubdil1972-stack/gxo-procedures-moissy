@@ -32,15 +32,6 @@ export function LoginPage() {
             
             {/* Animated logistics scene */}
             <div class="absolute inset-0 opacity-30">
-              {/* Camion en déchargement (gauche) */}
-              <div class="absolute left-8 top-1/2 -translate-y-1/2">
-                <i class="fas fa-truck text-6xl text-white/60 animate-truck-bounce"></i>
-                {/* Palettes sortant du camion */}
-                <div class="absolute -right-8 top-1/2 -translate-y-1/2">
-                  <i class="fas fa-boxes text-3xl text-orange-300 animate-box-slide"></i>
-                </div>
-              </div>
-              
               {/* Manutentionnaire sur chariot (centre-gauche) */}
               <div class="absolute left-1/4 top-1/2 -translate-y-1/2 animate-forklift-move">
                 <div class="relative">
