@@ -113,6 +113,114 @@ export const renderer = jsxRenderer(({ children }) => {
           .animate-pulse-glow {
             animation: pulse-glow 2s ease-in-out infinite;
           }
+          
+          /* Animations pour la scène logistique de connexion */
+          @keyframes truck-bounce {
+            0%, 100% {
+              transform: translateY(0px);
+            }
+            50% {
+              transform: translateY(-5px);
+            }
+          }
+          
+          @keyframes box-slide {
+            0% {
+              transform: translateX(0) translateY(0);
+              opacity: 0;
+            }
+            50% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateX(30px) translateY(-10px);
+              opacity: 0;
+            }
+          }
+          
+          @keyframes forklift-move {
+            0%, 100% {
+              transform: translateX(0) translateY(-50%);
+            }
+            50% {
+              transform: translateX(15px) translateY(-50%);
+            }
+          }
+          
+          @keyframes worker-wave {
+            0%, 100% {
+              transform: rotate(0deg);
+            }
+            25% {
+              transform: rotate(15deg);
+            }
+            75% {
+              transform: rotate(-15deg);
+            }
+          }
+          
+          @keyframes check-pop {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 0;
+            }
+            10% {
+              opacity: 1;
+            }
+            50% {
+              transform: scale(1.3);
+            }
+            90% {
+              opacity: 1;
+            }
+          }
+          
+          @keyframes arrow-flow {
+            0%, 100% {
+              opacity: 0.3;
+              transform: translateX(0);
+            }
+            50% {
+              opacity: 1;
+              transform: translateX(10px);
+            }
+          }
+          
+          .animate-truck-bounce {
+            animation: truck-bounce 2s ease-in-out infinite;
+          }
+          
+          .animate-box-slide {
+            animation: box-slide 2s ease-in-out infinite;
+          }
+          
+          .animate-forklift-move {
+            animation: forklift-move 4s ease-in-out infinite;
+          }
+          
+          .animate-worker-wave {
+            animation: worker-wave 1.5s ease-in-out infinite;
+          }
+          
+          .animate-check-pop {
+            animation: check-pop 3s ease-in-out infinite;
+          }
+          
+          .animate-check-1 {
+            animation: fade-in 0.5s ease-out;
+          }
+          
+          .animate-check-2 {
+            animation: fade-in 0.5s ease-out 1s;
+          }
+          
+          .animate-check-3 {
+            animation: fade-in 0.5s ease-out 2s;
+          }
+          
+          .animate-arrow-flow {
+            animation: arrow-flow 2s ease-in-out infinite;
+          }
         ` }} />
       </head>
       <body class="bg-gray-50">
