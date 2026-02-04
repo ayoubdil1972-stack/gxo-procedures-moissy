@@ -26,8 +26,8 @@ export function LoginPage() {
         {/* Login form */}
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header with logo */}
-          <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-16 flex items-center justify-center">
-            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-24 w-auto" />
+          <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-20 flex items-center justify-center">
+            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-28 w-auto mx-auto" />
           </div>
 
           {/* Form content */}
