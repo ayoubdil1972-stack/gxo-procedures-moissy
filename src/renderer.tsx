@@ -457,6 +457,46 @@ export const renderer = jsxRenderer(({ children }) => {
             height: auto;
           }
           
+          /* Header/Ruban page d'accueil - Mobile */
+          body.mobile-mode .bg-gradient-to-r {
+            padding: 1.5rem 1rem;
+          }
+          body.mobile-mode .bg-gradient-to-r .flex.items-center.justify-between {
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+          }
+          body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+            width: 100%;
+          }
+          body.mobile-mode .bg-gradient-to-r h1 {
+            font-size: 1.75rem;
+            text-align: center;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+          }
+          body.mobile-mode .bg-gradient-to-r p {
+            font-size: 1rem;
+            text-align: center;
+          }
+          body.mobile-mode .bg-gradient-to-r .text-right {
+            text-align: center;
+            width: 100%;
+          }
+          body.mobile-mode .bg-gradient-to-r .text-5xl {
+            font-size: 3rem;
+          }
+          body.mobile-mode .bg-gradient-to-r .text-sm {
+            font-size: 0.875rem;
+          }
+          body.mobile-mode .bg-gradient-to-r img {
+            height: 3rem;
+          }
+          
           /* Footer mobile compact */
           body.mobile-mode footer {
             font-size: 0.85rem;
