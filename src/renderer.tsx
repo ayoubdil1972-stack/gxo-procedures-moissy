@@ -222,6 +222,19 @@ export const renderer = jsxRenderer(({ children }) => {
             animation: arrow-flow 2s ease-in-out infinite;
           }
           
+          /* Titre de navigation - Desktop */
+          nav .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.4;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+          }
+          nav .text-xs {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            font-weight: 400;
+          }
+          
           /* Mode Mobile Simulator */
           /* Mode Mobile - Optimisé pour petits écrans */
           body.mobile-mode {
@@ -271,9 +284,15 @@ export const renderer = jsxRenderer(({ children }) => {
             text-align: center;
             width: 100%;
           }
-          body.mobile-mode nav .text-sm {
-            font-size: 0.95rem;
-            margin-top: 0.25rem;
+          
+          /* Titre en mobile - Plus lisible */
+          body.mobile-mode nav .text-lg {
+            font-size: 1.1rem;
+            line-height: 1.3;
+          }
+          body.mobile-mode nav .text-xs {
+            font-size: 0.85rem;
+            margin-top: 0.125rem;
           }
           
           /* Menu de navigation mobile */
@@ -618,7 +637,8 @@ export const renderer = jsxRenderer(({ children }) => {
             <a href="/" class="flex items-center space-x-3 hover:opacity-90 transition-opacity">
               <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-10" />
               <div class="border-l border-white/30 pl-3">
-                <div class="text-sm font-semibold">Intranet Moissy-Cramayel</div>
+                <div class="text-lg font-bold">HUB Procédures Logistique</div>
+                <div class="text-xs opacity-90">Moissy-Cramayel</div>
               </div>
             </a>
             <div class="flex items-center space-x-4" id="nav-links">
