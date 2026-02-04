@@ -575,6 +575,7 @@ export const renderer = jsxRenderer(({ children }) => {
             align-items: center;
             justify-content: center;
             font-size: 24px;
+            position: relative;
           }
           .viewport-toggle:hover {
             transform: scale(1.1) rotate(5deg);
@@ -583,6 +584,29 @@ export const renderer = jsxRenderer(({ children }) => {
           .viewport-toggle:active {
             transform: scale(0.95);
           }
+          
+          /* Indicateur AUTO */
+          .auto-indicator {
+            position: absolute;
+            bottom: -20px;
+            right: 50%;
+            transform: translateX(50%);
+            background: #FF6B35;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(255, 107, 53, 0.4);
+            opacity: 1;
+            transition: opacity 0.3s ease;
+          }
+          .auto-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+          }
+          
           @media print {
             .viewport-toggle { display: none; }
           }
@@ -727,9 +751,10 @@ export const renderer = jsxRenderer(({ children }) => {
           id="viewport-toggle" 
           class="viewport-toggle no-print" 
           onclick="toggleViewportMode()"
-          title="Basculer entre mode ordinateur et portable"
+          title="Mode adaptatif automatique - Cliquez pour forcer un mode"
         >
           <i id="viewport-icon" class="fas fa-mobile-alt"></i>
+          <span id="auto-indicator" class="auto-indicator">AUTO</span>
         </button>
         
         <script src="/static/auth.js"></script>

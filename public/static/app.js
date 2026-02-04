@@ -8,13 +8,22 @@ function toggleViewportMode() {
   const body = document.body;
   const icon = document.getElementById('viewport-icon');
   const button = document.getElementById('viewport-toggle');
+  const autoIndicator = document.getElementById('auto-indicator');
   
   body.classList.toggle('mobile-mode');
+  
+  // Marquer que l'utilisateur a fait un choix manuel
+  localStorage.setItem('viewportModeManual', 'true');
+  
+  // Cacher l'indicateur AUTO car l'utilisateur a forcé un mode
+  if (autoIndicator) {
+    autoIndicator.classList.add('hidden');
+  }
   
   if (body.classList.contains('mobile-mode')) {
     // Mode Mobile
     icon.className = 'fas fa-desktop';
-    button.title = 'Passer en mode ordinateur';
+    button.title = 'Mode mobile forcé - Cliquez pour passer en mode ordinateur';
     localStorage.setItem('viewportMode', 'mobile');
     
     // Ajuster les éléments pour mobile
@@ -22,7 +31,7 @@ function toggleViewportMode() {
   } else {
     // Mode Desktop
     icon.className = 'fas fa-mobile-alt';
-    button.title = 'Passer en mode portable';
+    button.title = 'Mode ordinateur forcé - Cliquez pour passer en mode portable';
     localStorage.setItem('viewportMode', 'desktop');
     
     // Restaurer les éléments desktop
@@ -76,19 +85,109 @@ function restoreDesktopLayout() {
   });
 }
 
+// Détection automatique de la taille d'écran
+function detectScreenSize() {
+  const width = window.innerWidth;
+  const body = document.body;
+  const icon = document.getElementById('viewport-icon');
+  const button = document.getElementById('viewport-toggle');
+  const autoIndicator = document.getElementById('auto-indicator');
+  
+  // Vérifier si l'utilisateur a une préférence manuelle
+  const userPreference = localStorage.getItem('viewportModeManual');
+  
+  if (userPreference === 'true') {
+    // L'utilisateur a fait un choix manuel, ne pas écraser
+    // Cacher l'indicateur AUTO
+    if (autoIndicator) {
+      autoIndicator.classList.add('hidden');
+    }
+    return;
+  }
+  
+  // Afficher l'indicateur AUTO car le mode est automatique
+  if (autoIndicator) {
+    autoIndicator.classList.remove('hidden');
+  }
+  
+  // Détection automatique : mobile si largeur < 768px
+  if (width < 768) {
+    if (!body.classList.contains('mobile-mode')) {
+      body.classList.add('mobile-mode');
+      if (icon) icon.className = 'fas fa-desktop';
+      if (button) button.title = 'Mode adaptatif automatique (< 768px) - Cliquez pour forcer ordinateur';
+      localStorage.setItem('viewportMode', 'mobile');
+      setTimeout(() => optimizeForMobile(), 100);
+    }
+  } else {
+    if (body.classList.contains('mobile-mode')) {
+      body.classList.remove('mobile-mode');
+      if (icon) icon.className = 'fas fa-mobile-alt';
+      if (button) button.title = 'Mode adaptatif automatique (≥ 768px) - Cliquez pour forcer mobile';
+      localStorage.setItem('viewportMode', 'desktop');
+      restoreDesktopLayout();
+    }
+  }
+}
+
+// Réinitialiser en mode automatique (double-clic)
+function resetToAutoMode() {
+  localStorage.removeItem('viewportModeManual');
+  const autoIndicator = document.getElementById('auto-indicator');
+  if (autoIndicator) {
+    autoIndicator.classList.remove('hidden');
+  }
+  detectScreenSize();
+}
+
 // Restaurer le mode au chargement
 document.addEventListener('DOMContentLoaded', function() {
+  // Vérifier d'abord si l'utilisateur a une préférence manuelle
+  const userPreference = localStorage.getItem('viewportModeManual');
   const savedMode = localStorage.getItem('viewportMode');
-  if (savedMode === 'mobile') {
-    document.body.classList.add('mobile-mode');
-    const icon = document.getElementById('viewport-icon');
-    const button = document.getElementById('viewport-toggle');
-    if (icon) icon.className = 'fas fa-desktop';
-    if (button) button.title = 'Passer en mode ordinateur';
+  
+  if (userPreference === 'true' && savedMode) {
+    // Appliquer la préférence manuelle de l'utilisateur
+    const autoIndicator = document.getElementById('auto-indicator');
+    if (autoIndicator) {
+      autoIndicator.classList.add('hidden');
+    }
     
-    // Appliquer les optimisations mobile
-    setTimeout(() => optimizeForMobile(), 100);
+    if (savedMode === 'mobile') {
+      document.body.classList.add('mobile-mode');
+      const icon = document.getElementById('viewport-icon');
+      const button = document.getElementById('viewport-toggle');
+      if (icon) icon.className = 'fas fa-desktop';
+      if (button) button.title = 'Mode mobile forcé - Cliquez pour passer en mode ordinateur';
+      setTimeout(() => optimizeForMobile(), 100);
+    } else {
+      const icon = document.getElementById('viewport-icon');
+      const button = document.getElementById('viewport-toggle');
+      if (icon) icon.className = 'fas fa-mobile-alt';
+      if (button) button.title = 'Mode ordinateur forcé - Cliquez pour passer en mode portable';
+    }
+  } else {
+    // Pas de préférence manuelle : détection automatique
+    detectScreenSize();
   }
+  
+  // Ajouter double-clic pour réinitialiser en mode auto
+  const toggleButton = document.getElementById('viewport-toggle');
+  if (toggleButton) {
+    toggleButton.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+      resetToAutoMode();
+    });
+  }
+  
+  // Écouter les changements de taille d'écran
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      detectScreenSize();
+    }, 250);
+  });
 });
 
 // ========================================
