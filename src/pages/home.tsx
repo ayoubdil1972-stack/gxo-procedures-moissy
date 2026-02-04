@@ -101,7 +101,9 @@ export function HomePage() {
           </div>
           <div class="text-right">
             <div class="text-5xl font-bold">{metiers.reduce((sum, m) => sum + m.processes, 0)}</div>
-            <div class="text-sm opacity-75 uppercase">Procédures disponibles</div>
+            <div class="text-xs opacity-75 uppercase leading-tight mt-1">
+              Accès direct à tous les documents<br />et contacts de l'équipe<br />GXO Moissy-Cramayel
+            </div>
           </div>
         </div>
       </div>

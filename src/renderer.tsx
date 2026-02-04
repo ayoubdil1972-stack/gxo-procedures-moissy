@@ -528,9 +528,16 @@ export const renderer = jsxRenderer(({ children }) => {
             margin: 0;
           }
           body.mobile-mode .bg-gradient-to-r .text-sm {
-            font-size: 0.65rem;
+            font-size: 0.5rem;
             margin: 0;
-            white-space: nowrap;
+            line-height: 1.2;
+            opacity: 0.85;
+          }
+          body.mobile-mode .bg-gradient-to-r .text-xs {
+            font-size: 0.5rem;
+            margin: 0;
+            line-height: 1.2;
+            opacity: 0.85;
           }
           
           /* Sous-titre en dessous - nouvelle ligne */
