@@ -95,7 +95,7 @@ export function HomePage() {
                 HUB Procédures Logistiques
               </h1>
               <p class="text-xl opacity-90">
-                Centre de ressources opérationnelles - GXO Moissy-Cramayel
+                GXO Moissy-Cramayel - Ressources Opérationnelles
               </p>
             </div>
           </div>
