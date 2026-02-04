@@ -473,6 +473,26 @@ export const renderer = jsxRenderer(({ children }) => {
             gap: 1rem;
             width: 100%;
           }
+          
+          /* Aligner les deux logos verticalement avec le compteur 70 */
+          body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 {
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+          }
+          body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 img {
+            height: 3rem;
+            order: 1;
+            flex-shrink: 0;
+          }
+          body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 > div {
+            order: 2;
+            flex: 1;
+            text-align: center;
+            padding: 0 0.5rem;
+          }
+          
           body.mobile-mode .bg-gradient-to-r h1 {
             font-size: 1.75rem;
             text-align: center;
@@ -486,15 +506,18 @@ export const renderer = jsxRenderer(({ children }) => {
           body.mobile-mode .bg-gradient-to-r .text-right {
             text-align: center;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
           }
           body.mobile-mode .bg-gradient-to-r .text-5xl {
             font-size: 3rem;
+            order: 2;
           }
           body.mobile-mode .bg-gradient-to-r .text-sm {
             font-size: 0.875rem;
-          }
-          body.mobile-mode .bg-gradient-to-r img {
-            height: 3rem;
+            order: 3;
           }
           
           /* Footer mobile compact */
