@@ -24,7 +24,17 @@ export function ReceptionPage() {
       duration: '15-20 min',
       level: '🟢',
       vigilance: ['Vérifier état emballage', 'Scanner BL complet', 'Contrôle quantité'],
-      document: 'Assigner camion à quai-2.docx'
+      document: 'Assigner camion à quai-2.docx',
+      checklist: [
+        'Vérifier BL du fournisseur (quantité, références)',
+        'Inspecter visuellement l\'état de l\'emballage',
+        'Scanner le code-barres du BL',
+        'Contrôler le nombre de palettes reçues',
+        'Vérifier la température si produits frais',
+        'Apposer étiquette si nécessaire',
+        'Ranger la palette en zone appropriée',
+        'Clôturer la réception dans le système'
+      ]
     },
     {
       id: 'dechargement',
@@ -33,7 +43,19 @@ export function ReceptionPage() {
       duration: '30-45 min',
       level: '🟢',
       vigilance: ['Sécurité chauffeur', 'Respect zone déchargement', 'Vérifier température si requis'],
-      document: 'Assigner camion à quai-2.docx'
+      document: 'Assigner camion à quai-2.docx',
+      checklist: [
+        'Vérifier l\'assignation du camion au quai',
+        'Sécuriser la zone (calles, signalisation)',
+        'Briefing sécurité avec le chauffeur',
+        'Ouvrir les portes du camion',
+        'Inspecter visuellement le chargement',
+        'Décharger palette par palette avec chariot',
+        'Vérifier chaque palette (état, quantité)',
+        'Ranger les palettes en zone dédiée',
+        'Faire signer le BL au chauffeur',
+        'Libérer le quai et fermer la porte'
+      ]
     },
     {
       id: 'cloture-livraison',
@@ -42,7 +64,17 @@ export function ReceptionPage() {
       duration: '5-10 min',
       level: '🟡',
       vigilance: ['Vérifier ASN', 'Statut NOT STARTED → COMPLETED', 'Récupérer TU'],
-      document: 'cloture livraison new.docx'
+      document: 'cloture livraison new.docx',
+      checklist: [
+        'Ouvrir EWM et accéder à l\'ASN',
+        'Vérifier le statut de la livraison (NOT STARTED)',
+        'Passer le statut à COMPLETED',
+        'Récupérer le numéro TU généré',
+        'Vérifier les HU associés au TU',
+        'Contrôler les quantités',
+        'Valider la clôture',
+        'Imprimer étiquette TU si nécessaire'
+      ]
     },
     {
       id: 'cloture-tu',
@@ -51,7 +83,19 @@ export function ReceptionPage() {
       duration: '10-15 min',
       level: '🟡',
       vigilance: ['Filtrer date J-1', 'Exclure date du jour', 'Vérifier articles, HU et statut'],
-      document: 'Cloture TU actif.docx'
+      document: 'Cloture TU actif.docx',
+      checklist: [
+        'Accéder à MON → Transport Unit Overview',
+        'Filtrer par date J-1 (exclure date du jour)',
+        'Identifier les TU en statut "Active"',
+        'Vérifier les articles associés',
+        'Vérifier les HU (Handling Units)',
+        'Vérifier le statut de chaque TU',
+        'Action : Unload + Finish unloading',
+        'Alternative : Arrival + Departure',
+        'Valider la clôture',
+        'Vérifier que le statut passe à "Completed"'
+      ]
     },
     {
       id: 'creer-tu',
@@ -60,7 +104,17 @@ export function ReceptionPage() {
       duration: '5 min',
       level: '🟢',
       vigilance: ['Numéro de document ou ERP', 'Vérifier zone destination'],
-      document: 'Créer TU.docx'
+      document: 'Créer TU.docx',
+      checklist: [
+        'Récupérer le numéro de document ou ERP',
+        'Accéder à la transaction de création TU',
+        'Saisir le numéro de document',
+        'Sélectionner la zone de destination',
+        'Vérifier les articles à inclure',
+        'Valider la création du TU',
+        'Noter le numéro TU généré',
+        'Imprimer l\'étiquette TU'
+      ]
     },
     {
       id: 'verification-dossier',
@@ -69,7 +123,19 @@ export function ReceptionPage() {
       duration: '10-15 min',
       level: '🔴',
       vigilance: ['Vérifier manco/surplus', 'Comparer avec BL', 'Déclarer surplus sous 48h'],
-      document: 'Verification dossier aprés control.docx'
+      document: 'Verification dossier aprés control.docx',
+      checklist: [
+        'Récupérer le BL et le dossier de réception',
+        'Comparer les quantités BL vs réception physique',
+        'Identifier les mancos (manquants)',
+        'Identifier les surplus (excédents)',
+        'Si surplus : créer fichier GDS pour re-contrôle',
+        'Si manco : signaler à Invoice Moissy sous 48h',
+        'Prendre des photos si nécessaire',
+        'Remplir le rapport d\'écart',
+        'Informer le chef d\'équipe',
+        'Archiver le dossier complété'
+      ]
     },
     {
       id: 'etiquette',
@@ -78,7 +144,18 @@ export function ReceptionPage() {
       duration: '2-3 min',
       level: '🟢',
       vigilance: ['Récupérer HU correct', 'Vérifier imprimante', 'Contrôler impression'],
-      document: 'Réediter une étiquette.docx'
+      document: 'Réediter une étiquette.docx',
+      checklist: [
+        'Récupérer le numéro HU (Handling Unit)',
+        'Accéder à la transaction MON',
+        'Rechercher le HU dans le système',
+        'Vérifier les informations du HU',
+        'Sélectionner l\'option "Imprimer étiquette"',
+        'Choisir l\'imprimante (contrôleur ou bureau)',
+        'Lancer l\'impression',
+        'Contrôler la qualité de l\'étiquette imprimée',
+        'Apposer l\'étiquette sur la palette'
+      ]
     },
     {
       id: 'fermer-quai',
@@ -87,7 +164,17 @@ export function ReceptionPage() {
       duration: '2 min',
       level: '🟢',
       vigilance: ['Vérifier absence camion', 'RFUI transaction'],
-      document: 'Fermer une porte de quai.docx'
+      document: 'Fermer une porte de quai.docx',
+      checklist: [
+        'Vérifier l\'absence de camion au quai',
+        'Vérifier que toutes les palettes sont déchargées',
+        'Fermer les portes du quai',
+        'Accéder à la transaction RFUI',
+        'Saisir le numéro de quai',
+        'Sélectionner l\'action "Fermer quai"',
+        'Valider la fermeture',
+        'Vérifier le statut "Quai fermé" dans le système'
+      ]
     },
     {
       id: 'etetage-container',
@@ -96,7 +183,19 @@ export function ReceptionPage() {
       duration: '20-30 min',
       level: '🔴',
       vigilance: ['Filtrer containers uniquement', 'Trier par date appointment', 'Export Excel'],
-      document: 'Mettre en forme et renseigner le fichier étêtage et container.docx'
+      document: 'Mettre en forme et renseigner le fichier étêtage et container.docx',
+      checklist: [
+        'Ouvrir le fichier modèle "Étêtage et container"',
+        'Accéder au portail Action',
+        'Filtrer les containers uniquement (exclure palettes)',
+        'Trier par date d\'appointment',
+        'Exporter les données en Excel',
+        'Copier les données dans le fichier modèle',
+        'Mettre en forme (couleurs, bordures)',
+        'Vérifier les informations (quantités, dates)',
+        'Ajouter commentaires si nécessaire',
+        'Enregistrer et partager avec le chef d\'équipe'
+      ]
     },
     {
       id: 'charger-batterie',
