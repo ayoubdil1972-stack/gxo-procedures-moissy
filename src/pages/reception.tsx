@@ -181,8 +181,24 @@ export function ReceptionPage() {
               <div class="flex items-start justify-between">
                 <div class="flex-1">
                   <div class="flex items-center mb-2">
-                    <i class={`fas ${process.icon} text-2xl mr-3`}></i>
-                    <h3 class="text-xl font-bold">{process.title}</h3>
+                    <div class="flex flex-col items-center mr-4">
+                      <i class={`fas ${process.icon} text-3xl mb-2`}></i>
+                      {/* Système de notation étoiles */}
+                      <div 
+                        class="flex gap-1 cursor-pointer" 
+                        onclick={`showReviewModal('${process.id}', '${process.title}')`}
+                        title="Cliquez pour donner votre avis"
+                      >
+                        <span class="star-display text-yellow-300 hover:text-yellow-400 transition-colors" data-procedure-id={process.id}>
+                          ☆☆☆☆☆
+                        </span>
+                      </div>
+                      {/* Badge nombre d'avis */}
+                      <div class="text-xs mt-1 opacity-75" data-procedure-rating={process.id}>
+                        Pas encore noté
+                      </div>
+                    </div>
+                    <h3 class="text-xl font-bold flex-1">{process.title}</h3>
                   </div>
                   <div class="flex items-center space-x-4 text-sm opacity-90">
                     <span>

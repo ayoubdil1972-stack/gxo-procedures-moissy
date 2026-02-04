@@ -100,8 +100,24 @@ export function AnomaliesPage() {
             <div id={anomalie.id} class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               <div class="bg-gradient-to-r from-red-500 to-red-600 text-white p-4">
                 <div class="flex items-center mb-2">
-                  <i class={`fas ${anomalie.icon} text-2xl mr-3`}></i>
-                  <h3 class="text-xl font-bold">{anomalie.title}</h3>
+                  <div class="flex flex-col items-center mr-4">
+                    <i class={`fas ${anomalie.icon} text-3xl mb-2`}></i>
+                    {/* Système de notation étoiles */}
+                    <div 
+                      class="flex gap-1 cursor-pointer" 
+                      onclick={`showReviewModal('${anomalie.id}', '${anomalie.title}')`}
+                      title="Cliquez pour donner votre avis"
+                    >
+                      <span class="star-display text-yellow-300 hover:text-yellow-400 transition-colors" data-procedure-id={anomalie.id}>
+                        ☆☆☆☆☆
+                      </span>
+                    </div>
+                    {/* Badge nombre d'avis */}
+                    <div class="text-xs mt-1 opacity-75" data-procedure-rating={anomalie.id}>
+                      Pas encore noté
+                    </div>
+                  </div>
+                  <h3 class="text-xl font-bold flex-1">{anomalie.title}</h3>
                 </div>
                 <div class="text-sm opacity-90">
                   Niveau {anomalie.level}

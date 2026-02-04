@@ -8,6 +8,51 @@ function initReviewSystem() {
   // Charger les avis depuis localStorage
   const reviews = getReviews()
   console.log(`Système d'avis initialisé - ${Object.keys(reviews).length} procédures notées`)
+  
+  // Mettre à jour l'affichage de toutes les étoiles
+  updateAllStarsDisplay()
+}
+
+// Mettre à jour l'affichage des étoiles pour toutes les procédures
+function updateAllStarsDisplay() {
+  document.querySelectorAll('[data-procedure-id]').forEach(element => {
+    const procedureId = element.dataset.procedureId
+    updateStarsDisplay(procedureId)
+  })
+}
+
+// Mettre à jour l'affichage des étoiles pour une procédure
+function updateStarsDisplay(procedureId) {
+  const data = getProcedureReviews(procedureId)
+  const starElement = document.querySelector(`[data-procedure-id="${procedureId}"]`)
+  const badgeElement = document.querySelector(`[data-procedure-rating="${procedureId}"]`)
+  
+  if (starElement) {
+    const rating = parseFloat(data.averageRating) || 0
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 >= 0.5
+    
+    let starsHTML = ''
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        starsHTML += '⭐'
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        starsHTML += '✨'
+      } else {
+        starsHTML += '☆'
+      }
+    }
+    
+    starElement.innerHTML = starsHTML
+  }
+  
+  if (badgeElement) {
+    if (data.totalRatings > 0) {
+      badgeElement.textContent = `${data.averageRating} (${data.totalRatings} avis)`
+    } else {
+      badgeElement.textContent = 'Pas encore noté'
+    }
+  }
 }
 
 // Récupérer tous les avis
@@ -66,6 +111,9 @@ function addRating(procedureId, rating, userName = 'Anonyme') {
 
   saveReviews(reviews)
   
+  // Mettre à jour l'affichage des étoiles
+  updateStarsDisplay(procedureId)
+  
   return reviews[procedureId]
 }
 
@@ -106,6 +154,10 @@ function addComment(procedureId, commentText, userName = 'Anonyme', rating = nul
   }
 
   saveReviews(reviews)
+  
+  // Mettre à jour l'affichage des étoiles
+  updateStarsDisplay(procedureId)
+  
   return reviews[procedureId]
 }
 
