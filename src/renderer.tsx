@@ -497,11 +497,12 @@ export const renderer = jsxRenderer(({ children }) => {
             font-size: 1.75rem;
             text-align: center;
             line-height: 1.3;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
           }
           body.mobile-mode .bg-gradient-to-r p {
             font-size: 1rem;
             text-align: center;
+            margin-top: 0.5rem;
           }
           body.mobile-mode .bg-gradient-to-r .text-right {
             text-align: center;
