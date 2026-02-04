@@ -1,6 +1,23 @@
 export function ReceptionPage() {
   const processes = [
     {
+      id: 'ewm-goods-receipt-manuel',
+      title: 'Manuel EWM Goods Receipt (Référence Complète)',
+      icon: 'fa-book',
+      duration: 'Manuel de référence',
+      level: '🔴',
+      vigilance: [
+        'Document de procédure complet EWM', 
+        'Enregistrement des trucks entrants',
+        'Inspection physique des marchandises',
+        'Gestion des écarts de livraison',
+        'Processus de contrôle qualité',
+        'Flux administratif et physique'
+      ],
+      document: 'EWM Procedure document - 01. Goods Receipt - FR.pdf',
+      description: 'Ce document de procédure EWM décrit en détail tous les processus de réception des marchandises au DC : enregistrement trucks, aiguillage vers quais, réception et inspection physique, enregistrement système, signalement/résolution des écarts, et présentation du flux marchandises.'
+    },
+    {
       id: 'reception-standard',
       title: 'Réception palette fournisseur',
       icon: 'fa-truck-loading',

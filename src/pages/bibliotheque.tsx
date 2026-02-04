@@ -1,8 +1,18 @@
 export function BibliothequePage() {
   const documents = [
-    // Réception - 13 documents
+    // Réception - 16 documents
     {
       id: 1,
+      name: 'EWM Procédures Goods Receipt (Manuel Complet)',
+      file: 'EWM Procedure document - 01. Goods Receipt - FR.pdf',
+      category: 'Réception',
+      type: 'pdf',
+      description: 'Document de procédure EWM complet pour la réception des marchandises - Enregistrement trucks, inspection, contrôle qualité, flux marchandises',
+      keywords: 'EWM, goods receipt, réception, trucks, quai, inspection, contrôle qualité, SAP, manuel, procédures complètes',
+      level: '🔴'
+    },
+    {
+      id: 3,
       name: 'Assigner camion à quai',
       file: 'Assigner camion à quai-2.docx',
       category: 'Réception',
@@ -12,7 +22,7 @@ export function BibliothequePage() {
       level: '🟢'
     },
     {
-      id: 2,
+      id: 3,
       name: 'Clôture livraison',
       file: 'cloture livraison new.docx',
       category: 'Réception',
@@ -32,7 +42,7 @@ export function BibliothequePage() {
       level: '🟡'
     },
     {
-      id: 4,
+      id: 34,
       name: 'Créer TU',
       file: 'Créer TU.docx',
       category: 'Réception',

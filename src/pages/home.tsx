@@ -6,7 +6,7 @@ export function HomePage() {
       icon: 'fa-truck-loading',
       color: 'bg-blue-500',
       description: 'Réception marchandises, contrôle BL, déchargement',
-      processes: 28
+      processes: 29
     },
     {
       id: 'cariste',
