@@ -1,8 +1,8 @@
-# GXO Logistics - Intranet Moissy-Cramayel
+# GXO Logistics - HUB Procédures Moissy-Cramayel
 
 ## 🎯 Vue d'ensemble du projet
 
-Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB centralisé** de procédures opérationnelles destiné aux équipes terrain.
+**HUB Procédures Logistiques** - Intranet pour le site GXO de Moissy-Cramayel, conçu comme un centre de ressources opérationnelles centralisé destiné aux équipes terrain.
 
 ## ✨ Fonctionnalités actuelles
 
@@ -35,8 +35,9 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 
 ## 🌐 URLs
 
-- **Développement local** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- **Production** : _(À déployer sur Cloudflare Pages)_
+- **Développement sandbox** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
+- **Production Cloudflare** : _(À déployer avec `npm run deploy:prod`)_
+- **Nom du projet** : `gxo-procedures-moissy`
 
 ## 📁 Architecture du projet
 
