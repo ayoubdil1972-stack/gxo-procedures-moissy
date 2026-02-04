@@ -8,13 +8,13 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 
 ### Pages métiers complètes
 - ✅ **Page d'accueil** : HUB métiers avec logo GXO, illustration entrepôt animée et accès rapide
-- ✅ **Réception** : 10 procédures (réception standard, déchargement, clôture livraison/TU, changement batterie, etc.)
+- ✅ **Réception** : **29 procédures** incluant le **Manuel EWM Goods Receipt** (PDF 1.5MB), réception standard, déchargement, clôture livraison/TU, changement batterie, EOP checks, ICPE, conditionnement, etc.
 - ✅ **IPL** : 7 procédures avec checklists interactives et illustration chariot élévateur (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
 - ✅ **Préparation** : 5 procédures complètes avec checklists interactives (dernier prélèvement, écart prélèvement, quai fictif, monteur de rolls, formation intégration)
-- ✅ **Chef d'équipe** : 4 procédures (EOP checks, ICPE, conditionnement, packspeck)
+- ✅ **Retours** : 3 procédures (rappel contenants PAPREC/BIONERVAL, clôture livraison retour, transfert roll)
 - ✅ **Nouvel arrivant** : Parcours d'intégration complet en 5 étapes
 - ✅ **Anomalies/FAQ** : 3 procédures anomalies + 8 questions/réponses fréquentes
-- ✅ **Bibliothèque** : 30 documents classés par rubrique avec recherche intelligente
+- ✅ **Bibliothèque intelligente** : **34 documents** classés par rubrique avec recherche temps réel et aperçu PDF natif
 
 ### Design et branding
 - ✅ **Logo GXO** : Logo officiel intégré dans la navigation et page d'accueil
@@ -26,7 +26,9 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 - ✅ **Checklists interactives** : Cases à cocher, barre de progression, animation de complétion
 - ✅ **FAQ intelligente** : Accordéons dépliables avec niveaux d'urgence
 - ✅ **Système de niveaux** : 🟢 Essentiel / 🟡 Standard / 🔴 Avancé
-- ✅ **Liens documents** : 30 documents accessibles directement depuis les procédures
+- ✅ **Liens documents** : 34 documents accessibles directement depuis les procédures
+- ✅ **Aperçu PDF natif** : Visualisation documents PDF dans le navigateur (iframe)
+- ✅ **Bibliothèque intelligente** : Recherche temps réel, filtres par rubrique (Réception 16, IPL 9, Préparation 4, Retours 3, Anomalies 2)
 - ✅ **Responsive design** : Optimisé mobile, tablette et PC
 - ✅ **Mode impression** : Checklists imprimables
 - ✅ **Animations** : Effets visuels et confettis de complétion
@@ -90,25 +92,40 @@ Intranet logistique pour le site GXO de Moissy-Cramayel, conçu comme un **HUB c
 ### ✅ Fonctionnalités complétées (100%)
 - Structure complète du site
 - Logo et identité GXO officielle (bleu #00205B + orange #FF6B35)
-- 6 pages métiers développées
-- 27 procédures documentées
-- Checklists interactives fonctionnelles
+- **6 pages métiers** développées (Réception, IPL, Préparation, Retours, Nouvel Arrivant, Anomalies/FAQ)
+- **65 procédures** documentées (29 Réception, 7 IPL, 5 Préparation, 3 Retours, 6 Nouvel Arrivant, 20 Anomalies/FAQ)
+- **34 documents** intégrés (29 Word, 3 PDF, 1 Excel, 1 Template)
+- **Manuel EWM Goods Receipt** (PDF 1.5MB) - Document de référence complet
+- Checklists interactives fonctionnelles (15+ procédures)
 - FAQ avec arbres de décision
-- Système de niveaux de complexité
-- Responsive design mobile/tablette
-- 26 documents intégrés (Word, Excel, PDF)
+- **Bibliothèque intelligente** : Recherche temps réel, filtres par rubrique, aperçu PDF natif
+- Système de niveaux de complexité (🟢🟡🔴)
+- Responsive design mobile/tablette/PC
 - Mode impression
 - Animations et effets visuels
+- Interface 100% française
+
+### 📊 Statistiques Globales
+- **Pages métiers** : 6
+- **Procédures totales** : 65
+- **Documents** : 34
+  - Réception : 16 documents (10 Word + 5 ex-Chef d'équipe + 1 PDF EWM)
+  - IPL : 9 documents (7 Word + 1 Excel + 1 Template)
+  - Préparation : 4 documents (Word)
+  - Retours : 3 documents (Word)
+  - Anomalies : 2 documents (1 Word + 1 PDF)
+- **Checklists interactives** : 15+
+- **Types de fichiers** : Word (29), PDF (3), Excel (1), Template (1)
 
 ### ⏳ Prochaines étapes recommandées
-1. **Enrichir la page Manutention** : Ajouter les procédures spécifiques
-2. **Améliorer les arbres de décision** : Créer des diagrammes visuels interactifs
-3. **Ajouter une recherche** : Fonction de recherche globale dans les procédures
-4. **Mode hors-ligne** : Progressive Web App (PWA) pour usage sans connexion
-5. **Statistiques d'usage** : Tracker les procédures les plus consultées
-6. **Traductions** : Support multilingue si nécessaire
-7. **Notifications** : Alertes pour nouvelles procédures
-8. **Vidéos tutoriels** : Intégrer des vidéos explicatives
+1. **Déploiement production** : Déployer sur Cloudflare Pages
+2. **Formation utilisateurs** : Sessions de présentation et guide d'utilisation
+3. **Enrichissement contenu** : Ajouter vidéos tutoriels et schémas visuels
+4. **Analytics d'usage** : Tracker les procédures les plus consultées
+5. **Mode hors-ligne** : Progressive Web App (PWA) pour usage sans connexion
+6. **Notifications** : Alertes pour nouvelles procédures
+7. **Feedback utilisateurs** : Système de commentaires et suggestions
+8. **Autres manuels EWM** : Préparation, Expédition, etc.
 
 ## 🛠️ Déploiement
 
@@ -169,6 +186,18 @@ Pour toute question ou amélioration :
 
 ---
 
-**Dernière mise à jour** : 3 février 2026  
-**Version** : 1.0.0  
+**Dernière mise à jour** : 4 février 2026  
+**Version** : 2.5 STABLE  
 **Développé avec** : Hono + Cloudflare Workers + TailwindCSS
+
+---
+
+## 📘 Documents de Référence
+
+- **CHANGELOG_V2.5.md** : Détails de la version 2.5 (intégration Manuel EWM)
+- **GUIDE_MANUEL_EWM.md** : Guide utilisateur pour le Manuel EWM Goods Receipt
+- **CHANGELOG_V2.4.md** : Détails de la version 2.4 (suppression Chef d'équipe)
+- **CHANGELOG_V2.1.md** : Interface française et UI compacte
+- **CORRECTIONS_V2.0.md** : Corrections bibliothèque v2.0
+- **BIBLIOTHEQUE_INFO.md** : Guide bibliothèque intelligente
+- **APERCU_DOCUMENTS.md** : Fonctionnalité aperçu documents
