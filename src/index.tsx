@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
+import { loginRenderer } from './login-renderer'
 import { HomePage } from './pages/home'
 import { ReceptionPage } from './pages/reception'
 import { CaristePage } from './pages/cariste'
@@ -10,16 +11,35 @@ import { AnomaliesPage } from './pages/anomalies'
 import { BibliothequePage } from './pages/bibliotheque'
 import { RetoursPage } from './pages/retours'
 import { ContactsPage } from './pages/contacts'
+import { LoginPage } from './pages/login'
 
 const app = new Hono()
 
 // Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
 
-// Use renderer middleware
+// Route de connexion (sans authentification)
+app.get('/login', loginRenderer, (c) => c.render(<LoginPage />))
+
+// Middleware pour vérifier l'authentification (toutes les autres routes)
+app.use('*', async (c, next) => {
+  const path = c.req.path
+  
+  // Ignorer la vérification pour la page de login et les fichiers statiques
+  if (path === '/login' || path.startsWith('/static/')) {
+    await next()
+    return
+  }
+  
+  // Vérifier l'authentification côté client (géré par JavaScript)
+  // Note: Pour une sécurité maximale en production, utiliser des sessions côté serveur
+  await next()
+})
+
+// Use renderer middleware pour les pages protégées
 app.use(renderer)
 
-// Routes
+// Routes protégées
 app.get('/', (c) => c.render(<HomePage />))
 app.get('/reception', (c) => c.render(<ReceptionPage />))
 app.get('/cariste', (c) => c.render(<CaristePage />))

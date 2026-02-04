@@ -1,0 +1,137 @@
+export function LoginPage() {
+  return (
+    <div class="min-h-screen bg-gradient-to-br from-[#00205B] via-[#003DA5] to-[#0052CC] flex items-center justify-center px-4">
+      {/* Background pattern */}
+      <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100" height="100" fill="url(#grid)" />
+        </svg>
+      </div>
+
+      {/* Login Card */}
+      <div class="relative z-10 w-full max-w-md">
+        {/* Error message container */}
+        <div id="error-message" class="hidden mb-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg animate-shake">
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-circle mr-3 text-xl"></i>
+            <span id="error-text"></span>
+          </div>
+        </div>
+
+        {/* Login form */}
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          {/* Header with logo */}
+          <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] p-8 text-center">
+            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-16 mx-auto mb-4" />
+            <h1 class="text-2xl font-bold text-white mb-2">
+              HUB Procédures Logistiques
+            </h1>
+            <p class="text-sm text-white/80">
+              Plateforme sécurisée - Site de Moissy-Cramayel
+            </p>
+          </div>
+
+          {/* Form content */}
+          <div class="p-8">
+            <form id="login-form" class="space-y-6">
+              {/* Identifiant */}
+              <div>
+                <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-user mr-2 text-[#00205B]"></i>
+                  Identifiant GXO
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  required
+                  autocomplete="username"
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00205B] focus:outline-none transition-colors"
+                  placeholder="Votre identifiant"
+                />
+              </div>
+
+              {/* Mot de passe */}
+              <div>
+                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-lock mr-2 text-[#00205B]"></i>
+                  Mot de passe
+                </label>
+                <div class="relative">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00205B] focus:outline-none transition-colors pr-12"
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onclick="togglePassword()"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#00205B] transition-colors"
+                  >
+                    <i id="password-icon" class="fas fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              {/* Remember me */}
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  name="remember"
+                  class="w-4 h-4 text-[#00205B] border-gray-300 rounded focus:ring-[#00205B]"
+                />
+                <label for="remember" class="ml-2 text-sm text-gray-600">
+                  Se souvenir de moi
+                </label>
+              </div>
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white font-bold py-3 rounded-lg hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <i class="fas fa-sign-in-alt mr-2"></i>
+                Se connecter
+              </button>
+            </form>
+
+            {/* Security info */}
+            <div class="mt-6 pt-6 border-t border-gray-200">
+              <div class="flex items-start text-xs text-gray-500">
+                <i class="fas fa-shield-alt mr-2 mt-1 text-green-600"></i>
+                <div>
+                  <p class="font-semibold text-gray-700 mb-1">Connexion sécurisée</p>
+                  <p>Vos identifiants sont protégés par cryptage. Cette plateforme est réservée aux employés GXO autorisés.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Help link */}
+            <div class="mt-4 text-center">
+              <a href="#" onclick="showHelp(); return false;" class="text-sm text-[#00205B] hover:underline">
+                <i class="fas fa-question-circle mr-1"></i>
+                Besoin d'aide pour vous connecter ?
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div class="text-center mt-6 text-white/60 text-sm">
+          <p>© 2026 GXO Logistics - Tous droits réservés</p>
+          <p class="mt-1">Plateforme interne confidentielle</p>
+        </div>
+      </div>
+    </div>
+  )
+}
