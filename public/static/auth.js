@@ -261,10 +261,99 @@ function showHelp() {
 
 // Déconnexion
 function logout() {
-  if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-    clearSession();
-    window.location.href = '/login';
+  showLogoutModal();
+}
+
+// Afficher la modal de déconnexion
+function showLogoutModal() {
+  // Créer la modal si elle n'existe pas
+  let modal = document.getElementById('logout-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'logout-modal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    modal.innerHTML = `
+      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-fade-in">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white p-6">
+          <div class="flex items-center">
+            <i class="fas fa-sign-out-alt text-3xl mr-4"></i>
+            <div>
+              <h3 class="text-2xl font-bold">Déconnexion</h3>
+              <p class="text-sm opacity-75 mt-1">Confirmation requise</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Body -->
+        <div class="p-6">
+          <div class="flex items-start mb-6">
+            <div class="bg-orange-100 rounded-full p-3 mr-4">
+              <i class="fas fa-exclamation-triangle text-orange-600 text-2xl"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-gray-800 text-lg font-semibold mb-2">
+                Êtes-vous sûr de vouloir vous déconnecter ?
+              </p>
+              <p class="text-gray-600 text-sm">
+                Vous devrez vous reconnecter pour accéder à nouveau aux procédures GXO.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Session info -->
+          <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
+            <div class="flex items-center text-sm text-gray-700">
+              <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+              <span>Votre session sera fermée immédiatement.</span>
+            </div>
+          </div>
+          
+          <!-- Boutons -->
+          <div class="flex gap-3">
+            <button 
+              onclick="confirmLogout()" 
+              class="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-lg font-bold hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <i class="fas fa-sign-out-alt mr-2"></i>
+              Oui, me déconnecter
+            </button>
+            <button 
+              onclick="closeLogoutModal()" 
+              class="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-bold hover:bg-gray-300 transition-colors"
+            >
+              <i class="fas fa-times mr-2"></i>
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
   }
+  
+  // Afficher la modal
+  modal.style.display = 'flex';
+  
+  // Empêcher le scroll
+  document.body.style.overflow = 'hidden';
+}
+
+// Fermer la modal de déconnexion
+function closeLogoutModal() {
+  const modal = document.getElementById('logout-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+  
+  // Réactiver le scroll
+  document.body.style.overflow = '';
+}
+
+// Confirmer la déconnexion
+function confirmLogout() {
+  clearSession();
+  window.location.href = '/login';
 }
 
 // Mettre à jour les informations utilisateur dans l'interface
@@ -288,5 +377,7 @@ function updateUserInfo(session) {
 
 // Exporter les fonctions pour utilisation globale
 window.logout = logout;
+window.closeLogoutModal = closeLogoutModal;
+window.confirmLogout = confirmLogout;
 window.togglePassword = togglePassword;
 window.showHelp = showHelp;
