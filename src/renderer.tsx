@@ -221,6 +221,52 @@ export const renderer = jsxRenderer(({ children }) => {
           .animate-arrow-flow {
             animation: arrow-flow 2s ease-in-out infinite;
           }
+          
+          /* Mode Mobile Simulator */
+          body.mobile-mode {
+            max-width: 430px;
+            margin: 0 auto;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+          }
+          body.mobile-mode .container {
+            max-width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+          body.mobile-mode nav {
+            border-radius: 0;
+          }
+          
+          /* Bouton Toggle Desktop/Mobile */
+          .viewport-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #00205B 0%, #003DA5 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 32, 91, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+          }
+          .viewport-toggle:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 20px rgba(0, 32, 91, 0.6);
+          }
+          .viewport-toggle:active {
+            transform: scale(0.95);
+          }
+          @media print {
+            .viewport-toggle { display: none; }
+          }
         ` }} />
       </head>
       <body class="bg-gray-50">
@@ -356,6 +402,16 @@ export const renderer = jsxRenderer(({ children }) => {
             <p class="text-xs mt-2 opacity-75">Intranet des procédures logistiques</p>
           </div>
         </footer>
+        
+        {/* Bouton Toggle Desktop/Mobile */}
+        <button 
+          id="viewport-toggle" 
+          class="viewport-toggle no-print" 
+          onclick="toggleViewportMode()"
+          title="Basculer entre mode ordinateur et portable"
+        >
+          <i id="viewport-icon" class="fas fa-mobile-alt"></i>
+        </button>
         
         <script src="/static/auth.js"></script>
         <script src="/static/app.js"></script>

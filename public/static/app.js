@@ -1,6 +1,42 @@
 // GXO Intranet - Interactive Checklists and Features
 
 // ========================================
+// VIEWPORT MODE TOGGLE - Desktop/Mobile
+// ========================================
+
+function toggleViewportMode() {
+  const body = document.body;
+  const icon = document.getElementById('viewport-icon');
+  const button = document.getElementById('viewport-toggle');
+  
+  body.classList.toggle('mobile-mode');
+  
+  if (body.classList.contains('mobile-mode')) {
+    // Mode Mobile
+    icon.className = 'fas fa-desktop';
+    button.title = 'Passer en mode ordinateur';
+    localStorage.setItem('viewportMode', 'mobile');
+  } else {
+    // Mode Desktop
+    icon.className = 'fas fa-mobile-alt';
+    button.title = 'Passer en mode portable';
+    localStorage.setItem('viewportMode', 'desktop');
+  }
+}
+
+// Restaurer le mode au chargement
+document.addEventListener('DOMContentLoaded', function() {
+  const savedMode = localStorage.getItem('viewportMode');
+  if (savedMode === 'mobile') {
+    document.body.classList.add('mobile-mode');
+    const icon = document.getElementById('viewport-icon');
+    const button = document.getElementById('viewport-toggle');
+    if (icon) icon.className = 'fas fa-desktop';
+    if (button) button.title = 'Passer en mode ordinateur';
+  }
+});
+
+// ========================================
 // BIBLIOTHEQUE - Document Preview
 // ========================================
 
@@ -465,5 +501,6 @@ window.closePreview = closePreview;
 window.filterDocuments = filterDocuments;
 window.filterByCategory = filterByCategory;
 window.clearSearch = clearSearch;
+window.toggleViewportMode = toggleViewportMode;
 
 console.log('GXO Intranet loaded successfully ✓');
