@@ -69,17 +69,6 @@ export function LoginPage() {
                   </div>
                 </div>
               </div>
-              
-              {/* Flèches de flux logistique */}
-              <div class="absolute left-32 bottom-12 animate-arrow-flow">
-                <i class="fas fa-arrow-right text-3xl text-orange-400"></i>
-              </div>
-              <div class="absolute left-1/2 bottom-12 animate-arrow-flow" style="animation-delay: 0.5s;">
-                <i class="fas fa-arrow-right text-3xl text-orange-400"></i>
-              </div>
-              <div class="absolute right-32 bottom-12 animate-arrow-flow" style="animation-delay: 1s;">
-                <i class="fas fa-arrow-right text-3xl text-orange-400"></i>
-              </div>
             </div>
             
             {/* Logo GXO au centre (par-dessus la scène) */}
