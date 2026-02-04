@@ -89,7 +89,7 @@ export function HomePage() {
         
         <div class="flex items-center justify-between relative z-10">
           <div class="flex items-start space-x-6">
-            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-16 mt-2" />
+            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-16 mt-2" id="hero-logo" />
             <div>
               <h1 class="text-4xl font-bold mb-3">
                 HUB Procédures Logistiques
@@ -99,12 +99,15 @@ export function HomePage() {
               </p>
             </div>
           </div>
-          <div class="text-right">
+          <div class="text-right" id="hero-counter">
             <div class="text-5xl font-bold">{metiers.reduce((sum, m) => sum + m.processes, 0)}</div>
-            <div class="text-xs opacity-75 uppercase leading-tight mt-1">
-              Accès direct à tous les documents<br />et contacts de l'équipe<br />GXO Moissy-Cramayel
+            <div class="text-sm opacity-75 mt-1">
+              Procédures disponibles
             </div>
           </div>
+        </div>
+        <div class="text-center text-xs opacity-75 mt-4 leading-tight" id="hero-description">
+          Accès direct à tous les documents et contacts de l'équipe GXO Moissy-Cramayel
         </div>
       </div>
 
@@ -219,13 +222,10 @@ export function HomePage() {
 
       {/* Documents Section */}
       <div class="mt-12 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
           <i class="fas fa-folder-open mr-3 text-gray-600"></i>
           Ressources & Documents
         </h2>
-        <p class="text-gray-600 mb-6">
-          Accès direct à tous les documents et contacts de l'équipe GXO Moissy-Cramayel
-        </p>
         <div class="flex flex-wrap gap-4">
           <a href="/bibliotheque" class="inline-block bg-[#003DA5] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0052CC] transition-colors">
             <i class="fas fa-book mr-2"></i>

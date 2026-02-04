@@ -459,98 +459,78 @@ export const renderer = jsxRenderer(({ children }) => {
           
           /* Header/Ruban page d'accueil - Mobile */
           body.mobile-mode .bg-gradient-to-r {
-            padding: 1.5rem 1rem;
+            padding: 1.5rem 1rem 2rem;
           }
+          
+          /* Conteneur principal en colonne */
           body.mobile-mode .bg-gradient-to-r .flex.items-center.justify-between {
             flex-direction: column;
-            gap: 1.5rem;
-            align-items: center;
-          }
-          body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 1rem;
+            gap: 1.25rem;
+            align-items: stretch;
             width: 100%;
           }
           
-          /* Aligner logo, titre et compteur sur la même ligne horizontale */
-          body.mobile-mode .bg-gradient-to-r .flex.items-center.justify-between {
-            flex-direction: row;
-            gap: 0.5rem;
-            align-items: center;
-            justify-content: space-between;
-          }
-          
-          /* Logo GXO à gauche */
+          /* Logo GXO centré en haut */
           body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 0;
-            flex-shrink: 0;
-            width: auto;
+            gap: 0.5rem;
+            width: 100%;
           }
           body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 img {
             height: 3rem;
-            flex-shrink: 0;
           }
-          
-          /* Titre au centre - sur la même ligne */
           body.mobile-mode .bg-gradient-to-r .flex.items-start.space-x-6 > div {
-            display: none;
-          }
-          body.mobile-mode .bg-gradient-to-r h1 {
-            font-size: 1.2rem;
-            text-align: center;
-            line-height: 1.2;
-            margin: 0;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 0.5rem;
-          }
-          
-          /* Compteur à droite - sur la même ligne */
-          body.mobile-mode .bg-gradient-to-r .text-right {
-            text-align: center;
-            width: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0;
-            flex-shrink: 0;
+            gap: 0.25rem;
+          }
+          body.mobile-mode .bg-gradient-to-r h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            line-height: 1.3;
+            margin: 0;
+          }
+          body.mobile-mode .bg-gradient-to-r p {
+            font-size: 0.95rem;
+            text-align: center;
+            margin: 0;
+          }
+          
+          /* Texte descriptif au milieu */
+          body.mobile-mode .bg-gradient-to-r #hero-description {
+            order: 2;
+            text-align: center;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+          }
+          
+          /* Compteur en bas */
+          body.mobile-mode .bg-gradient-to-r #hero-counter {
+            order: 3;
+            text-align: center;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
           }
           body.mobile-mode .bg-gradient-to-r .text-5xl {
-            font-size: 2.5rem;
+            font-size: 3rem;
             line-height: 1;
             margin: 0;
           }
           body.mobile-mode .bg-gradient-to-r .text-sm {
-            font-size: 0.5rem;
+            font-size: 0.65rem;
             margin: 0;
             line-height: 1.2;
             opacity: 0.85;
-          }
-          body.mobile-mode .bg-gradient-to-r .text-xs {
-            font-size: 0.5rem;
-            margin: 0;
-            line-height: 1.2;
-            opacity: 0.85;
-          }
-          
-          /* Sous-titre en dessous - nouvelle ligne */
-          body.mobile-mode .bg-gradient-to-r p {
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 0.75rem;
-            width: 100%;
-            display: block;
-            position: absolute;
-            top: 3.5rem;
-            left: 0;
-            right: 0;
           }
           
           /* Ajouter de l'espace pour le sous-titre */
