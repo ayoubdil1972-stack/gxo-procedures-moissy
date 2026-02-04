@@ -62,6 +62,9 @@ export const renderer = jsxRenderer(({ children }) => {
               <a href="/bibliotheque" class="hover:text-[#FF6B35] transition-colors">
                 <i class="fas fa-book mr-2"></i>Bibliothèque
               </a>
+              <a href="/contacts" class="hover:text-[#FF6B35] transition-colors">
+                <i class="fas fa-address-book mr-2"></i>Contacts
+              </a>
               <a href="/anomalies" class="hover:text-[#FF6B35] transition-colors">
                 <i class="fas fa-exclamation-triangle mr-2"></i>Anomalies
               </a>

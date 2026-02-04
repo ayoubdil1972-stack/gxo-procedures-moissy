@@ -1,526 +1,570 @@
 export function ContactsPage() {
   // Base de données des contacts GXO Moissy-Cramayel
   const contacts = [
-    // Direction et Management
+    // Direction & Management
     {
       id: 1,
-      name: 'Jean DUPONT',
-      role: 'Directeur de Site',
+      nom: 'MARTIN',
+      prenom: 'Jean',
+      fonction: 'Directeur de Site',
       service: 'Direction',
-      phone: '01 60 60 XX XX',
-      extension: '1001',
-      email: 'jean.dupont@gxo.com',
-      department: 'Direction',
-      availability: 'Lun-Ven 8h-18h',
-      keywords: 'directeur, direction, management, responsable site'
+      telephone: '01 64 13 45 00',
+      extension: '4500',
+      email: 'jean.martin@gxo.com',
+      mobile: '06 12 34 56 78',
+      horaires: 'Lun-Ven 08h-18h',
+      bureau: 'Bureau A101',
+      keywords: 'directeur direction management site responsable'
     },
     {
       id: 2,
-      name: 'Marie MARTIN',
-      role: 'Responsable Exploitation',
-      service: 'Exploitation',
-      phone: '01 60 60 XX XX',
-      extension: '1002',
-      email: 'marie.martin@gxo.com',
-      department: 'Exploitation',
-      availability: 'Lun-Ven 7h-19h',
-      keywords: 'exploitation, responsable, operations, supervision'
+      nom: 'DUBOIS',
+      prenom: 'Sophie',
+      fonction: 'Responsable Opérations',
+      service: 'Direction',
+      telephone: '01 64 13 45 01',
+      extension: '4501',
+      email: 'sophie.dubois@gxo.com',
+      mobile: '06 23 45 67 89',
+      horaires: 'Lun-Ven 07h-17h',
+      bureau: 'Bureau A102',
+      keywords: 'responsable opérations operations management'
     },
     
     // Réception
     {
       id: 3,
-      name: 'Pierre BERNARD',
-      role: 'Chef d\'Équipe Réception',
+      nom: 'BERNARD',
+      prenom: 'Marc',
+      fonction: 'Chef d\'Équipe Réception',
       service: 'Réception',
-      phone: '01 60 60 XX XX',
-      extension: '2001',
-      email: 'pierre.bernard@gxo.com',
-      department: 'Réception',
-      availability: 'Lun-Ven 6h-14h / 14h-22h',
-      keywords: 'réception, chef équipe, goods receipt, quai, camion'
+      telephone: '01 64 13 45 10',
+      extension: '4510',
+      email: 'marc.bernard@gxo.com',
+      mobile: '06 34 56 78 90',
+      horaires: '05h-13h / 13h-21h / 21h-05h',
+      bureau: 'Zone Réception',
+      keywords: 'chef equipe reception quai livraison goods receipt'
     },
     {
       id: 4,
-      name: 'Sophie DUBOIS',
-      role: 'Superviseur Réception',
+      nom: 'PETIT',
+      prenom: 'Laurent',
+      fonction: 'Superviseur Réception',
       service: 'Réception',
-      phone: '01 60 60 XX XX',
-      extension: '2002',
-      email: 'sophie.dubois@gxo.com',
-      department: 'Réception',
-      availability: 'Lun-Ven 6h-14h',
-      keywords: 'réception, superviseur, contrôle, BL, inspection'
+      telephone: '01 64 13 45 11',
+      extension: '4511',
+      email: 'laurent.petit@gxo.com',
+      mobile: '06 45 67 89 01',
+      horaires: '06h-14h / 14h-22h',
+      bureau: 'Zone Réception',
+      keywords: 'superviseur reception quai controle qualite'
     },
+    
+    // IPL (Intra Plant Logistics)
     {
       id: 5,
-      name: 'Medhi SEGHIR',
-      role: 'Référent PAPREC/BIONERVAL',
-      service: 'Réception',
-      phone: '01 60 60 XX XX',
-      extension: '2010',
-      email: 'medhi.seghir@gxo.com',
-      department: 'Réception',
-      availability: 'Lun-Ven 7h-15h',
-      keywords: 'paprec, bionerval, déchets, biodéchets, collecte'
+      nom: 'ROBERT',
+      prenom: 'Pierre',
+      fonction: 'Chef d\'Équipe IPL',
+      service: 'IPL',
+      telephone: '01 64 13 45 20',
+      extension: '4520',
+      email: 'pierre.robert@gxo.com',
+      mobile: '06 56 78 90 12',
+      horaires: '06h-14h / 14h-22h / 22h-06h',
+      bureau: 'Zone Logistique',
+      keywords: 'chef equipe ipl cariste chariot elevation ltrms'
     },
     {
       id: 6,
-      name: 'Prescilla DELTON',
-      role: 'Assistante Réception',
-      service: 'Réception',
-      phone: '01 60 60 XX XX',
-      extension: '2011',
-      email: 'prescilla.delton@gxo.com',
-      department: 'Réception',
-      availability: 'Lun-Ven 8h-17h',
-      keywords: 'réception, assistance, administratif, BL'
+      nom: 'RICHARD',
+      prenom: 'Thomas',
+      fonction: 'Coordinateur IPL',
+      service: 'IPL',
+      telephone: '01 64 13 45 21',
+      extension: '4521',
+      email: 'thomas.richard@gxo.com',
+      mobile: '06 67 89 01 23',
+      horaires: 'Lun-Ven 08h-16h',
+      bureau: 'Zone Logistique',
+      keywords: 'coordinateur ipl logistique taches affectation'
     },
-
-    // IPL / Caristes
+    
+    // Préparation
     {
       id: 7,
-      name: 'Thomas PETIT',
-      role: 'Chef d\'Équipe IPL',
-      service: 'IPL',
-      phone: '01 60 60 XX XX',
-      extension: '3001',
-      email: 'thomas.petit@gxo.com',
-      department: 'IPL',
-      availability: 'Lun-Ven 6h-14h / 14h-22h',
-      keywords: 'ipl, cariste, chariot, LTRMS, affectation tâche'
+      nom: 'DURAND',
+      prenom: 'Julien',
+      fonction: 'Chef d\'Équipe Préparation',
+      service: 'Préparation',
+      telephone: '01 64 13 45 30',
+      extension: '4530',
+      email: 'julien.durand@gxo.com',
+      mobile: '06 78 90 12 34',
+      horaires: '05h-13h / 13h-21h',
+      bureau: 'Zone Préparation',
+      keywords: 'chef equipe preparation picking prelevement commandes'
     },
     {
       id: 8,
-      name: 'Julie ROUX',
-      role: 'Coordinateur IPL',
-      service: 'IPL',
-      phone: '01 60 60 XX XX',
-      extension: '3002',
-      email: 'julie.roux@gxo.com',
-      department: 'IPL',
-      availability: 'Lun-Ven 7h-15h',
-      keywords: 'ipl, coordination, stock, LS03N, priorisation'
+      nom: 'LEROY',
+      prenom: 'Nicolas',
+      fonction: 'Superviseur Préparation',
+      service: 'Préparation',
+      telephone: '01 64 13 45 31',
+      extension: '4531',
+      email: 'nicolas.leroy@gxo.com',
+      mobile: '06 89 01 23 45',
+      horaires: '06h-14h / 14h-22h',
+      bureau: 'Zone Préparation',
+      keywords: 'superviseur preparation picking rolls montage'
     },
-
-    // Préparation
+    
+    // Expédition
     {
       id: 9,
-      name: 'Laurent MOREAU',
-      role: 'Chef d\'Équipe Préparation',
-      service: 'Préparation',
-      phone: '01 60 60 XX XX',
-      extension: '4001',
-      email: 'laurent.moreau@gxo.com',
-      department: 'Préparation',
-      availability: 'Lun-Ven 6h-14h / 14h-22h',
-      keywords: 'préparation, picking, prélèvement, rolls, montage'
+      nom: 'MOREAU',
+      prenom: 'Patrick',
+      fonction: 'Chef d\'Équipe Expédition',
+      service: 'Expédition',
+      telephone: '01 64 13 45 40',
+      extension: '4540',
+      email: 'patrick.moreau@gxo.com',
+      mobile: '06 90 12 34 56',
+      horaires: '07h-15h / 15h-23h',
+      bureau: 'Zone Expédition',
+      keywords: 'chef equipe expedition shipping envoi chargement'
     },
     {
       id: 10,
-      name: 'Céline SIMON',
-      role: 'Superviseur Préparation',
-      service: 'Préparation',
-      phone: '01 60 60 XX XX',
-      extension: '4002',
-      email: 'celine.simon@gxo.com',
-      department: 'Préparation',
-      availability: 'Lun-Ven 7h-15h',
-      keywords: 'préparation, supervision, qualité, contrôle'
+      nom: 'SIMON',
+      prenom: 'Christophe',
+      fonction: 'Coordinateur Expédition',
+      service: 'Expédition',
+      telephone: '01 64 13 45 41',
+      extension: '4541',
+      email: 'christophe.simon@gxo.com',
+      mobile: '06 01 23 45 67',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Zone Expédition',
+      keywords: 'coordinateur expedition transport livraison'
     },
-
-    // Retours
+    
+    // Qualité & Sécurité
     {
       id: 11,
-      name: 'Nicolas LAURENT',
-      role: 'Responsable Retours',
-      service: 'Retours',
-      phone: '01 60 60 XX XX',
-      extension: '5001',
-      email: 'nicolas.laurent@gxo.com',
-      department: 'Retours',
-      availability: 'Lun-Ven 8h-17h',
-      keywords: 'retours, transfert, roll, TRM, RET_PICK_01'
+      nom: 'LAURENT',
+      prenom: 'Marie',
+      fonction: 'Responsable Qualité',
+      service: 'Qualité',
+      telephone: '01 64 13 45 50',
+      extension: '4550',
+      email: 'marie.laurent@gxo.com',
+      mobile: '06 12 34 56 78',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Bureau B201',
+      keywords: 'responsable qualite controle audit conformite'
     },
-
-    // Qualité
     {
       id: 12,
-      name: 'Isabelle GIRARD',
-      role: 'Responsable Qualité',
-      service: 'Qualité',
-      phone: '01 60 60 XX XX',
-      extension: '6001',
-      email: 'isabelle.girard@gxo.com',
-      department: 'Qualité',
-      availability: 'Lun-Ven 8h-17h',
-      keywords: 'qualité, audit, contrôle, conformité, norme'
+      nom: 'MICHEL',
+      prenom: 'David',
+      fonction: 'Responsable Sécurité',
+      service: 'Sécurité',
+      telephone: '01 64 13 45 51',
+      extension: '4551',
+      email: 'david.michel@gxo.com',
+      mobile: '06 23 45 67 89',
+      horaires: 'Lun-Ven 07h-16h',
+      bureau: 'Bureau B202',
+      keywords: 'responsable securite hse prevention accident'
     },
+    
+    // Ressources Humaines
     {
       id: 13,
-      name: 'François BONNET',
-      role: 'Contrôleur Qualité',
-      service: 'Qualité',
-      phone: '01 60 60 XX XX',
-      extension: '6002',
-      email: 'francois.bonnet@gxo.com',
-      department: 'Qualité',
-      availability: 'Lun-Ven 6h-14h',
-      keywords: 'qualité, inspection, EOP, checks, vérification'
+      nom: 'GARCIA',
+      prenom: 'Isabelle',
+      fonction: 'Responsable RH',
+      service: 'RH',
+      telephone: '01 64 13 45 60',
+      extension: '4560',
+      email: 'isabelle.garcia@gxo.com',
+      mobile: '06 34 56 78 90',
+      horaires: 'Lun-Ven 08h30-17h30',
+      bureau: 'Bureau C101',
+      keywords: 'responsable rh ressources humaines recrutement formation'
     },
-
-    // IT / Système
     {
       id: 14,
-      name: 'Alexandre MERCIER',
-      role: 'Responsable IT',
-      service: 'IT',
-      phone: '01 60 60 XX XX',
-      extension: '7001',
-      email: 'alexandre.mercier@gxo.com',
-      department: 'IT',
-      availability: 'Lun-Ven 8h-18h',
-      keywords: 'it, informatique, SAP, EWM, système, terminal'
-    },
-    {
-      id: 15,
-      name: 'Émilie LEFEBVRE',
-      role: 'Support IT',
-      service: 'IT',
-      phone: '01 60 60 XX XX',
-      extension: '7002',
-      email: 'emilie.lefebvre@gxo.com',
-      department: 'IT',
-      availability: 'Lun-Ven 7h-19h',
-      keywords: 'it, support, helpdesk, imprimante, scanner, connexion'
-    },
-
-    // RH
-    {
-      id: 16,
-      name: 'Sandrine CHEVALIER',
-      role: 'Responsable RH',
+      nom: 'THOMAS',
+      prenom: 'Valérie',
+      fonction: 'Assistante RH',
       service: 'RH',
-      phone: '01 60 60 XX XX',
-      extension: '8001',
-      email: 'sandrine.chevalier@gxo.com',
-      department: 'RH',
-      availability: 'Lun-Ven 9h-17h',
-      keywords: 'rh, ressources humaines, recrutement, formation, intégration'
+      telephone: '01 64 13 45 61',
+      extension: '4561',
+      email: 'valerie.thomas@gxo.com',
+      mobile: '06 45 67 89 01',
+      horaires: 'Lun-Ven 09h-18h',
+      bureau: 'Bureau C102',
+      keywords: 'assistante rh administration personnel conges'
     },
-
-    // Sécurité
-    {
-      id: 17,
-      name: 'David GARNIER',
-      role: 'Responsable Sécurité',
-      service: 'Sécurité',
-      phone: '01 60 60 XX XX',
-      extension: '9001',
-      email: 'david.garnier@gxo.com',
-      department: 'Sécurité',
-      availability: '24h/24 7j/7',
-      keywords: 'sécurité, urgence, accident, HSE, pompier'
-    },
-
+    
     // Maintenance
     {
-      id: 18,
-      name: 'Julien ROUSSEAU',
-      role: 'Responsable Maintenance',
+      id: 15,
+      nom: 'MARTINEZ',
+      prenom: 'José',
+      fonction: 'Responsable Maintenance',
       service: 'Maintenance',
-      phone: '01 60 60 XX XX',
-      extension: '9501',
-      email: 'julien.rousseau@gxo.com',
-      department: 'Maintenance',
-      availability: 'Lun-Ven 7h-16h',
-      keywords: 'maintenance, réparation, chariot, engin, panne, batterie'
+      telephone: '01 64 13 45 70',
+      extension: '4570',
+      email: 'jose.martinez@gxo.com',
+      mobile: '06 56 78 90 12',
+      horaires: 'Lun-Ven 06h-14h',
+      bureau: 'Atelier Maintenance',
+      keywords: 'responsable maintenance reparation chariot technique'
     },
-
-    // Urgence et Services Généraux
+    {
+      id: 16,
+      nom: 'FONTAINE',
+      prenom: 'Éric',
+      fonction: 'Technicien Maintenance',
+      service: 'Maintenance',
+      telephone: '01 64 13 45 71',
+      extension: '4571',
+      email: 'eric.fontaine@gxo.com',
+      mobile: '06 67 89 01 23',
+      horaires: '07h-15h / 15h-23h',
+      bureau: 'Atelier Maintenance',
+      keywords: 'technicien maintenance depannage intervention'
+    },
+    
+    // IT Support
+    {
+      id: 17,
+      nom: 'CHEVALIER',
+      prenom: 'Alexandre',
+      fonction: 'Responsable IT',
+      service: 'IT',
+      telephone: '01 64 13 45 80',
+      extension: '4580',
+      email: 'alexandre.chevalier@gxo.com',
+      mobile: '06 78 90 12 34',
+      horaires: 'Lun-Ven 08h-18h',
+      bureau: 'Bureau D101',
+      keywords: 'responsable it informatique sap ewm systeme'
+    },
+    {
+      id: 18,
+      nom: 'GIRARD',
+      prenom: 'Sébastien',
+      fonction: 'Support IT',
+      service: 'IT',
+      telephone: '01 64 13 45 81',
+      extension: '4581',
+      email: 'sebastien.girard@gxo.com',
+      mobile: '06 89 01 23 45',
+      horaires: 'Lun-Ven 07h-15h',
+      bureau: 'Bureau D102',
+      keywords: 'support it informatique helpdesk terminal imprimante'
+    },
+    
+    // Administration
     {
       id: 19,
-      name: 'URGENCE SITE',
-      role: 'Numéro d\'Urgence',
-      service: 'Urgence',
-      phone: '01 60 60 99 99',
-      extension: '9999',
-      email: 'urgence@gxo.com',
-      department: 'Sécurité',
-      availability: '24h/24 7j/7',
-      keywords: 'urgence, secours, accident, incendie, pompier, samu'
+      nom: 'ROUX',
+      prenom: 'Christine',
+      fonction: 'Assistante de Direction',
+      service: 'Administration',
+      telephone: '01 64 13 45 90',
+      extension: '4590',
+      email: 'christine.roux@gxo.com',
+      mobile: '06 90 12 34 56',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Bureau A103',
+      keywords: 'assistante direction administration secretariat'
     },
     {
       id: 20,
-      name: 'ACCUEIL / STANDARD',
-      role: 'Standard Téléphonique',
-      service: 'Accueil',
-      phone: '01 60 60 00 00',
-      extension: '0',
-      email: 'accueil@gxo.com',
-      department: 'Accueil',
-      availability: 'Lun-Ven 6h-22h',
-      keywords: 'accueil, standard, réception, visiteur, chauffeur'
+      nom: 'VINCENT',
+      prenom: 'Sylvie',
+      fonction: 'Comptable',
+      service: 'Administration',
+      telephone: '01 64 13 45 91',
+      extension: '4591',
+      email: 'sylvie.vincent@gxo.com',
+      mobile: '06 01 23 45 67',
+      horaires: 'Lun-Ven 09h-17h',
+      bureau: 'Bureau A104',
+      keywords: 'comptable comptabilite factures finances'
+    },
+    
+    // Contacts d\'urgence
+    {
+      id: 21,
+      nom: 'URGENCES',
+      prenom: 'Sécurité',
+      fonction: 'Poste de Sécurité 24/7',
+      service: 'Urgence',
+      telephone: '01 64 13 45 00',
+      extension: '4500',
+      email: 'securite@gxo.com',
+      mobile: '06 00 00 00 00',
+      horaires: '24h/24 - 7j/7',
+      bureau: 'Entrée Principale',
+      keywords: 'urgence securite urgences accident secours pompiers'
+    },
+    {
+      id: 22,
+      nom: 'INFIRMERIE',
+      prenom: 'Poste',
+      fonction: 'Infirmerie du Site',
+      service: 'Urgence',
+      telephone: '01 64 13 45 99',
+      extension: '4599',
+      email: 'infirmerie@gxo.com',
+      mobile: '',
+      horaires: 'Lun-Ven 08h-17h',
+      bureau: 'Bâtiment Principal',
+      keywords: 'infirmerie sante medical premiers secours soins'
     }
   ]
 
+  const services = [
+    { name: 'Tous', icon: 'fa-address-book', color: 'bg-gray-500', count: contacts.length },
+    { name: 'Direction', icon: 'fa-building', color: 'bg-blue-500', count: contacts.filter(c => c.service === 'Direction').length },
+    { name: 'Réception', icon: 'fa-truck-loading', color: 'bg-blue-600', count: contacts.filter(c => c.service === 'Réception').length },
+    { name: 'IPL', icon: 'fa-forklift', color: 'bg-green-500', count: contacts.filter(c => c.service === 'IPL').length },
+    { name: 'Préparation', icon: 'fa-dolly', color: 'bg-purple-500', count: contacts.filter(c => c.service === 'Préparation').length },
+    { name: 'Expédition', icon: 'fa-shipping-fast', color: 'bg-indigo-500', count: contacts.filter(c => c.service === 'Expédition').length },
+    { name: 'Qualité', icon: 'fa-medal', color: 'bg-yellow-500', count: contacts.filter(c => c.service === 'Qualité').length },
+    { name: 'Sécurité', icon: 'fa-shield-alt', color: 'bg-red-500', count: contacts.filter(c => c.service === 'Sécurité').length },
+    { name: 'RH', icon: 'fa-users', color: 'bg-pink-500', count: contacts.filter(c => c.service === 'RH').length },
+    { name: 'Maintenance', icon: 'fa-tools', color: 'bg-orange-500', count: contacts.filter(c => c.service === 'Maintenance').length },
+    { name: 'IT', icon: 'fa-laptop', color: 'bg-teal-500', count: contacts.filter(c => c.service === 'IT').length },
+    { name: 'Administration', icon: 'fa-briefcase', color: 'bg-gray-600', count: contacts.filter(c => c.service === 'Administration').length },
+    { name: 'Urgence', icon: 'fa-exclamation-triangle', color: 'bg-red-600', count: contacts.filter(c => c.service === 'Urgence').length }
+  ]
+
   return (
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
+    <div class="min-h-screen bg-gray-50 pb-12">
       {/* Header */}
-      <div class="bg-[#00205B] text-white py-8 px-6 shadow-xl">
+      <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white py-12 px-6 mb-8 shadow-lg">
         <div class="max-w-7xl mx-auto">
           <div class="flex items-center mb-4">
-            <i class="fas fa-address-book text-4xl mr-4"></i>
+            <i class="fas fa-address-book text-5xl mr-4"></i>
             <div>
-              <h1 class="text-3xl font-bold">Bibliothèque de Contacts</h1>
-              <p class="text-blue-200 mt-2">
-                Annuaire GXO Moissy-Cramayel - {contacts.length} contacts disponibles
-              </p>
+              <h1 class="text-4xl font-bold">Bibliothèque de Contacts</h1>
+              <p class="text-lg mt-2 text-gray-200">Annuaire GXO Moissy-Cramayel - {contacts.length} contacts</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="max-w-7xl mx-auto px-6 py-8">
-        {/* Documents PDF */}
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <i class="fas fa-file-pdf text-red-600 mr-3"></i>
-            Documents de Référence
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="border-2 border-red-200 rounded-lg p-4 hover:border-red-400 transition-colors">
-              <div class="flex items-center justify-between">
-                <div class="flex-1">
-                  <h3 class="font-semibold text-gray-800 mb-2">
-                    <i class="fas fa-file-pdf text-red-600 mr-2"></i>
-                    Liste Contacts - Page 1
-                  </h3>
-                  <p class="text-sm text-gray-600 mb-3">Annuaire officiel GXO (Page 1)</p>
-                  <span class="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
-                    PDF - 915 KB
-                  </span>
-                </div>
-                <div class="flex flex-col gap-2">
-                  <button 
-                    onclick="openDocumentPreview('Contacts_Page1.pdf', 'pdf', 'Liste Contacts Page 1')"
-                    class="bg-[#00205B] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#003DA5] transition-colors"
-                  >
-                    <i class="fas fa-eye mr-2"></i>Aperçu
-                  </button>
-                  <a 
-                    href="/static/documents/Contacts_Page1.pdf" 
-                    download
-                    class="bg-[#FF6B35] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors text-center"
-                  >
-                    <i class="fas fa-download mr-2"></i>Télécharger
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-2 border-red-200 rounded-lg p-4 hover:border-red-400 transition-colors">
-              <div class="flex items-center justify-between">
-                <div class="flex-1">
-                  <h3 class="font-semibold text-gray-800 mb-2">
-                    <i class="fas fa-file-pdf text-red-600 mr-2"></i>
-                    Liste Contacts - Page 2
-                  </h3>
-                  <p class="text-sm text-gray-600 mb-3">Annuaire officiel GXO (Page 2)</p>
-                  <span class="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
-                    PDF - 655 KB
-                  </span>
-                </div>
-                <div class="flex flex-col gap-2">
-                  <button 
-                    onclick="openDocumentPreview('Contacts_Page2.pdf', 'pdf', 'Liste Contacts Page 2')"
-                    class="bg-[#00205B] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#003DA5] transition-colors"
-                  >
-                    <i class="fas fa-eye mr-2"></i>Aperçu
-                  </button>
-                  <a 
-                    href="/static/documents/Contacts_Page2.pdf" 
-                    download
-                    class="bg-[#FF6B35] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors text-center"
-                  >
-                    <i class="fas fa-download mr-2"></i>Télécharger
-                  </a>
-                </div>
+      <div class="max-w-7xl mx-auto px-6">
+        {/* Documents PDF Référence */}
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8 rounded-lg">
+          <div class="flex items-start">
+            <i class="fas fa-file-pdf text-3xl text-red-600 mr-4 mt-1"></i>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-gray-800 mb-2">
+                <i class="fas fa-info-circle mr-2"></i>
+                Documents de Référence
+              </h3>
+              <p class="text-gray-700 mb-4">
+                Consultez les documents PDF officiels pour la liste complète et mise à jour des contacts GXO Moissy-Cramayel.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a 
+                  href="/static/documents/Contacts_Page1.pdf" 
+                  target="_blank"
+                  class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200"
+                >
+                  <i class="fas fa-file-pdf text-4xl text-red-600 mr-4"></i>
+                  <div>
+                    <div class="font-semibold text-gray-800">Contacts - Page 1</div>
+                    <div class="text-sm text-gray-600">915 KB • PDF</div>
+                  </div>
+                  <i class="fas fa-external-link-alt ml-auto text-gray-400"></i>
+                </a>
+                <a 
+                  href="/static/documents/Contacts_Page2.pdf" 
+                  target="_blank"
+                  class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200"
+                >
+                  <i class="fas fa-file-pdf text-4xl text-red-600 mr-4"></i>
+                  <div>
+                    <div class="font-semibold text-gray-800">Contacts - Page 2</div>
+                    <div class="text-sm text-gray-600">655 KB • PDF</div>
+                  </div>
+                  <i class="fas fa-external-link-alt ml-auto text-gray-400"></i>
+                </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Recherche et Filtres */}
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div class="mb-6">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              <i class="fas fa-search mr-2"></i>
-              Rechercher un contact
-            </label>
+        {/* Recherche */}
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div class="flex items-center mb-4">
+            <i class="fas fa-search text-2xl text-gray-600 mr-3"></i>
+            <h2 class="text-2xl font-bold text-gray-800">Recherche de Contact</h2>
+          </div>
+          
+          <div class="relative">
             <input
               type="text"
-              id="contact-search"
-              placeholder="Rechercher par nom, service, rôle, keywords..."
+              id="search-input"
+              placeholder="Rechercher par nom, prénom, fonction, service, téléphone..."
+              class="w-full px-6 py-4 border-2 border-gray-300 rounded-lg text-lg focus:border-[#00205B] focus:outline-none"
               onkeyup="filterContacts()"
-              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00205B] focus:outline-none"
             />
-            <button 
-              onclick="clearContactSearch()"
-              class="mt-2 text-sm text-[#FF6B35] hover:text-[#FF8555] font-semibold"
-            >
-              <i class="fas fa-times mr-1"></i>Effacer
-            </button>
+            <i class="fas fa-search absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
           </div>
+          
+          <button 
+            onclick="clearSearch()"
+            class="mt-4 px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+          >
+            <i class="fas fa-times mr-2"></i>Effacer
+          </button>
+        </div>
 
-          {/* Filtres par Service */}
-          <div class="mb-4">
-            <p class="text-sm font-semibold text-gray-700 mb-3">
-              <i class="fas fa-filter mr-2"></i>Filtrer par service
-            </p>
-            <div class="flex flex-wrap gap-2">
+        {/* Filtres par Service */}
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div class="flex items-center mb-4">
+            <i class="fas fa-filter text-2xl text-gray-600 mr-3"></i>
+            <h2 class="text-2xl font-bold text-gray-800">Filtrer par Service</h2>
+          </div>
+          
+          <div class="flex flex-wrap gap-3">
+            {services.map(service => (
               <button 
-                onclick="filterByService('all')"
-                class="service-filter-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-300 transition-colors"
-                data-service="all"
+                onclick={`filterByService('${service.name}')`}
+                class={`filter-btn ${service.color} text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-80 transition-opacity shadow`}
+                data-service={service.name}
               >
-                Tous ({contacts.length})
+                <i class={`${service.icon} mr-2`}></i>{service.name} ({service.count})
               </button>
-              {['Direction', 'Réception', 'IPL', 'Préparation', 'Retours', 'Qualité', 'IT', 'RH', 'Sécurité', 'Maintenance', 'Accueil'].map(service => {
-                const count = contacts.filter(c => c.service === service).length
-                const colors = {
-                  'Direction': 'bg-purple-500 hover:bg-purple-600',
-                  'Réception': 'bg-blue-500 hover:bg-blue-600',
-                  'IPL': 'bg-green-500 hover:bg-green-600',
-                  'Préparation': 'bg-indigo-500 hover:bg-indigo-600',
-                  'Retours': 'bg-yellow-500 hover:bg-yellow-600',
-                  'Qualité': 'bg-pink-500 hover:bg-pink-600',
-                  'IT': 'bg-cyan-500 hover:bg-cyan-600',
-                  'RH': 'bg-orange-500 hover:bg-orange-600',
-                  'Sécurité': 'bg-red-500 hover:bg-red-600',
-                  'Maintenance': 'bg-teal-500 hover:bg-teal-600',
-                  'Accueil': 'bg-gray-500 hover:bg-gray-600'
-                }
-                return (
-                  <button 
-                    onclick={`filterByService('${service}')`}
-                    class={`service-filter-btn ${colors[service]} text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors`}
-                    data-service={service}
-                  >
-                    {service} ({count})
-                  </button>
-                )
-              })}
-            </div>
+            ))}
           </div>
+        </div>
 
-          {/* Compteur résultats */}
+        {/* Grille de Contacts */}
+        <div class="mb-4">
           <div class="text-sm text-gray-600">
-            <span id="contact-count">{contacts.length}</span> contact(s) affiché(s)
+            <i class="fas fa-info-circle mr-2"></i>
+            <span id="contacts-count">{contacts.length}</span> contact(s) affiché(s)
           </div>
         </div>
 
-        {/* Message aucun résultat */}
-        <div id="no-contacts-found" class="hidden bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-lg mb-8">
-          <div class="flex items-center">
-            <i class="fas fa-exclamation-triangle text-yellow-500 text-2xl mr-4"></i>
-            <div>
-              <h3 class="font-bold text-gray-800 mb-1">Aucun contact trouvé</h3>
-              <p class="text-gray-600">Essayez avec d'autres mots-clés ou filtres.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Liste des Contacts */}
         <div id="contacts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {contacts.map(contact => {
-            const serviceColors = {
-              'Direction': 'border-purple-500 bg-purple-50',
-              'Réception': 'border-blue-500 bg-blue-50',
-              'IPL': 'border-green-500 bg-green-50',
-              'Préparation': 'border-indigo-500 bg-indigo-50',
-              'Retours': 'border-yellow-500 bg-yellow-50',
-              'Qualité': 'border-pink-500 bg-pink-50',
-              'IT': 'border-cyan-500 bg-cyan-50',
-              'RH': 'border-orange-500 bg-orange-50',
-              'Sécurité': 'border-red-500 bg-red-50',
-              'Maintenance': 'border-teal-500 bg-teal-50',
-              'Urgence': 'border-red-600 bg-red-100',
-              'Accueil': 'border-gray-500 bg-gray-50'
-            }
-
-            const serviceIcons = {
-              'Direction': 'fa-briefcase',
-              'Exploitation': 'fa-cogs',
-              'Réception': 'fa-truck-loading',
-              'IPL': 'fa-forklift',
-              'Préparation': 'fa-dolly',
-              'Retours': 'fa-undo-alt',
-              'Qualité': 'fa-check-circle',
-              'IT': 'fa-laptop-code',
-              'RH': 'fa-users',
-              'Sécurité': 'fa-shield-alt',
-              'Maintenance': 'fa-tools',
-              'Urgence': 'fa-ambulance',
-              'Accueil': 'fa-door-open'
-            }
-
+            const serviceInfo = services.find(s => s.name === contact.service)
+            const serviceColor = serviceInfo ? serviceInfo.color : 'bg-gray-500'
+            const serviceIcon = serviceInfo ? serviceInfo.icon : 'fa-user'
+            
             return (
               <div 
-                class={`contact-card bg-white rounded-lg shadow-lg border-l-4 ${serviceColors[contact.service]} overflow-hidden hover:shadow-xl transition-shadow`}
+                class={`contact-card bg-white rounded-lg shadow-lg border-l-4 ${serviceColor.replace('bg-', 'border-')} overflow-hidden hover:shadow-xl transition-shadow`}
                 data-service={contact.service}
-                data-name={contact.name.toLowerCase()}
-                data-role={contact.role.toLowerCase()}
-                data-keywords={contact.keywords.toLowerCase()}
+                data-keywords={contact.keywords}
+                data-nom={contact.nom.toLowerCase()}
+                data-prenom={contact.prenom.toLowerCase()}
+                data-fonction={contact.fonction.toLowerCase()}
+                data-telephone={contact.telephone}
+                data-email={contact.email}
               >
                 <div class="p-6">
                   {/* Header */}
                   <div class="flex items-start justify-between mb-4">
                     <div class="flex-1">
                       <div class="flex items-center mb-2">
-                        <i class={`fas ${serviceIcons[contact.service]} text-2xl mr-3 text-gray-600`}></i>
-                        <span class="text-xs font-semibold text-gray-600 uppercase">{contact.service}</span>
+                        <i class={`${serviceIcon} text-2xl mr-3`}></i>
+                        <span class={`text-xs font-semibold ${serviceColor.replace('bg-', 'text-')} uppercase`}>
+                          {contact.service}
+                        </span>
                       </div>
-                      <h3 class="text-lg font-bold text-gray-800 mb-1">{contact.name}</h3>
-                      <p class="text-sm text-gray-600">{contact.role}</p>
+                      <h3 class="text-xl font-bold text-gray-800">
+                        {contact.prenom} {contact.nom}
+                      </h3>
+                      <p class="text-sm text-gray-600 font-medium mt-1">
+                        {contact.fonction}
+                      </p>
                     </div>
+                    {contact.service === 'Urgence' && (
+                      <span class="text-3xl animate-pulse">🚨</span>
+                    )}
                   </div>
 
-                  {/* Contact Info */}
-                  <div class="space-y-3 mb-4">
-                    <div class="flex items-center text-sm text-gray-700">
-                      <i class="fas fa-phone text-[#00205B] w-5 mr-2"></i>
-                      <span class="font-semibold">{contact.phone}</span>
+                  {/* Informations de Contact */}
+                  <div class="space-y-3 mb-4 pb-4 border-b border-gray-200">
+                    {/* Téléphone */}
+                    <div class="flex items-center text-gray-700">
+                      <i class="fas fa-phone text-green-600 w-6 mr-3"></i>
+                      <a href={`tel:${contact.telephone}`} class="hover:text-[#00205B] font-medium">
+                        {contact.telephone}
+                      </a>
                     </div>
-                    <div class="flex items-center text-sm text-gray-700">
-                      <i class="fas fa-hashtag text-[#00205B] w-5 mr-2"></i>
-                      <span>Poste: <strong>{contact.extension}</strong></span>
-                    </div>
-                    <div class="flex items-start text-sm text-gray-700">
-                      <i class="fas fa-envelope text-[#00205B] w-5 mr-2 mt-1"></i>
-                      <a href={`mailto:${contact.email}`} class="text-[#FF6B35] hover:underline break-all">
+
+                    {/* Extension */}
+                    {contact.extension && (
+                      <div class="flex items-center text-gray-700">
+                        <i class="fas fa-hashtag text-blue-600 w-6 mr-3"></i>
+                        <span class="text-sm">Ext. {contact.extension}</span>
+                      </div>
+                    )}
+
+                    {/* Mobile */}
+                    {contact.mobile && (
+                      <div class="flex items-center text-gray-700">
+                        <i class="fas fa-mobile-alt text-purple-600 w-6 mr-3"></i>
+                        <a href={`tel:${contact.mobile}`} class="hover:text-[#00205B] font-medium">
+                          {contact.mobile}
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Email */}
+                    <div class="flex items-center text-gray-700">
+                      <i class="fas fa-envelope text-red-600 w-6 mr-3"></i>
+                      <a href={`mailto:${contact.email}`} class="hover:text-[#00205B] text-sm break-all">
                         {contact.email}
                       </a>
                     </div>
-                    <div class="flex items-start text-sm text-gray-700">
-                      <i class="fas fa-clock text-[#00205B] w-5 mr-2 mt-1"></i>
-                      <span class="text-xs">{contact.availability}</span>
+                  </div>
+
+                  {/* Détails Supplémentaires */}
+                  <div class="space-y-2 text-sm">
+                    {/* Horaires */}
+                    <div class="flex items-start text-gray-600">
+                      <i class="fas fa-clock text-orange-600 w-6 mr-3 mt-1"></i>
+                      <span class="flex-1">{contact.horaires}</span>
+                    </div>
+
+                    {/* Bureau */}
+                    <div class="flex items-start text-gray-600">
+                      <i class="fas fa-map-marker-alt text-teal-600 w-6 mr-3 mt-1"></i>
+                      <span class="flex-1">{contact.bureau}</span>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div class="flex gap-2 pt-4 border-t border-gray-200">
+                  <div class="mt-6 flex gap-2">
                     <a 
-                      href={`tel:${contact.phone.replace(/\s/g, '')}`}
-                      class="flex-1 bg-[#00205B] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#003DA5] transition-colors text-center"
+                      href={`tel:${contact.telephone}`}
+                      class="flex-1 bg-[#00205B] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#003DA5] transition-colors text-center"
                     >
                       <i class="fas fa-phone mr-2"></i>Appeler
                     </a>
                     <a 
                       href={`mailto:${contact.email}`}
-                      class="flex-1 bg-[#FF6B35] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors text-center"
+                      class="bg-[#FF6B35] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors"
+                      title="Envoyer un email"
                     >
-                      <i class="fas fa-envelope mr-2"></i>Email
+                      <i class="fas fa-envelope"></i>
                     </a>
                   </div>
                 </div>
@@ -529,144 +573,103 @@ export function ContactsPage() {
           })}
         </div>
 
-        {/* Contacts d'Urgence */}
-        <div class="mt-12 bg-red-50 border-2 border-red-500 rounded-lg p-6">
-          <h2 class="text-xl font-bold text-red-800 mb-4 flex items-center">
-            <i class="fas fa-exclamation-triangle text-red-600 mr-3"></i>
-            Numéros d'Urgence
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-white rounded-lg p-4 border-l-4 border-red-600">
-              <h3 class="font-bold text-gray-800 mb-2">Urgence Site GXO</h3>
-              <p class="text-2xl font-bold text-red-600 mb-1">01 60 60 99 99</p>
-              <p class="text-sm text-gray-600">Poste 9999 - 24h/24</p>
-            </div>
-            <div class="bg-white rounded-lg p-4 border-l-4 border-red-600">
-              <h3 class="font-bold text-gray-800 mb-2">SAMU</h3>
-              <p class="text-2xl font-bold text-red-600 mb-1">15</p>
-              <p class="text-sm text-gray-600">Urgences médicales</p>
-            </div>
-            <div class="bg-white rounded-lg p-4 border-l-4 border-red-600">
-              <h3 class="font-bold text-gray-800 mb-2">Pompiers</h3>
-              <p class="text-2xl font-bold text-red-600 mb-1">18</p>
-              <p class="text-sm text-gray-600">Incendie, accidents</p>
-            </div>
-          </div>
+        {/* Message aucun résultat */}
+        <div id="no-results" class="hidden text-center py-12">
+          <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+          <p class="text-xl text-gray-600 font-semibold">Aucun contact trouvé</p>
+          <p class="text-gray-500 mt-2">Essayez avec d'autres mots-clés ou filtres</p>
         </div>
       </div>
 
-      {/* Modal Aperçu PDF (réutilise le même système que bibliothèque) */}
-      <div id="preview-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg w-full max-w-6xl h-[90vh] flex flex-col">
-          <div class="flex items-center justify-between p-4 border-b border-gray-200">
-            <h3 id="preview-title" class="text-lg font-bold text-gray-800"></h3>
-            <div class="flex gap-2">
-              <a 
-                id="preview-download-btn" 
-                href="#" 
-                download
-                class="bg-[#FF6B35] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors"
-              >
-                <i class="fas fa-download mr-2"></i>Télécharger
-              </a>
-              <button 
-                onclick="closePreview()"
-                class="text-gray-600 hover:text-gray-800 text-2xl px-3"
-              >
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-          </div>
-          <div id="preview-content" class="flex-1 overflow-hidden">
-            {/* Le contenu sera injecté ici par JavaScript */}
-          </div>
-        </div>
-      </div>
+      {/* Script JavaScript pour la recherche et les filtres */}
+      <script dangerouslySetInnerHTML={{__html: `
+        function filterContacts() {
+          const searchTerm = document.getElementById('search-input').value.toLowerCase()
+          const cards = document.querySelectorAll('.contact-card')
+          let visibleCount = 0
+
+          cards.forEach(card => {
+            const nom = card.dataset.nom || ''
+            const prenom = card.dataset.prenom || ''
+            const fonction = card.dataset.fonction || ''
+            const service = card.dataset.service.toLowerCase()
+            const keywords = card.dataset.keywords || ''
+            const telephone = card.dataset.telephone || ''
+            const email = card.dataset.email || ''
+
+            const matches = nom.includes(searchTerm) ||
+                          prenom.includes(searchTerm) ||
+                          fonction.includes(searchTerm) ||
+                          service.includes(searchTerm) ||
+                          keywords.includes(searchTerm) ||
+                          telephone.includes(searchTerm) ||
+                          email.includes(searchTerm)
+
+            if (matches) {
+              card.style.display = 'block'
+              visibleCount++
+            } else {
+              card.style.display = 'none'
+            }
+          })
+
+          updateCount(visibleCount)
+        }
+
+        function filterByService(serviceName) {
+          const cards = document.querySelectorAll('.contact-card')
+          let visibleCount = 0
+
+          // Clear search input
+          document.getElementById('search-input').value = ''
+
+          cards.forEach(card => {
+            const cardService = card.dataset.service
+
+            if (serviceName === 'Tous' || cardService === serviceName) {
+              card.style.display = 'block'
+              visibleCount++
+            } else {
+              card.style.display = 'none'
+            }
+          })
+
+          // Update active filter button
+          document.querySelectorAll('.filter-btn').forEach(btn => {
+            if (btn.dataset.service === serviceName) {
+              btn.style.opacity = '1'
+              btn.style.transform = 'scale(1.05)'
+            } else {
+              btn.style.opacity = '0.7'
+              btn.style.transform = 'scale(1)'
+            }
+          })
+
+          updateCount(visibleCount)
+        }
+
+        function clearSearch() {
+          document.getElementById('search-input').value = ''
+          filterByService('Tous')
+        }
+
+        function updateCount(count) {
+          document.getElementById('contacts-count').textContent = count
+          const noResults = document.getElementById('no-results')
+          const container = document.getElementById('contacts-container')
+
+          if (count === 0) {
+            noResults.classList.remove('hidden')
+            container.classList.add('hidden')
+          } else {
+            noResults.classList.add('hidden')
+            container.classList.remove('hidden')
+          }
+        }
+
+        // Initialize - show all contacts
+        filterByService('Tous')
+      `}} />
     </div>
   )
-}
-
-// Script de recherche et filtres (à ajouter dans app.js)
-if (typeof window !== 'undefined') {
-  window.filterContacts = function() {
-    const searchTerm = document.getElementById('contact-search')?.value.toLowerCase() || ''
-    const cards = document.querySelectorAll('.contact-card')
-    let visibleCount = 0
-
-    cards.forEach(card => {
-      const name = card.getAttribute('data-name') || ''
-      const role = card.getAttribute('data-role') || ''
-      const service = card.getAttribute('data-service') || ''
-      const keywords = card.getAttribute('data-keywords') || ''
-
-      const matches = name.includes(searchTerm) || 
-                     role.includes(searchTerm) || 
-                     service.toLowerCase().includes(searchTerm) ||
-                     keywords.includes(searchTerm)
-
-      if (matches) {
-        card.style.display = 'block'
-        visibleCount++
-      } else {
-        card.style.display = 'none'
-      }
-    })
-
-    // Mise à jour du compteur
-    const countElement = document.getElementById('contact-count')
-    if (countElement) countElement.textContent = visibleCount
-
-    // Affichage message si aucun résultat
-    const noResults = document.getElementById('no-contacts-found')
-    if (noResults) {
-      noResults.classList.toggle('hidden', visibleCount > 0)
-    }
-  }
-
-  window.filterByService = function(service) {
-    const cards = document.querySelectorAll('.contact-card')
-    let visibleCount = 0
-
-    cards.forEach(card => {
-      const cardService = card.getAttribute('data-service')
-      if (service === 'all' || cardService === service) {
-        card.style.display = 'block'
-        visibleCount++
-      } else {
-        card.style.display = 'none'
-      }
-    })
-
-    // Mise à jour du compteur
-    const countElement = document.getElementById('contact-count')
-    if (countElement) countElement.textContent = visibleCount
-
-    // Effacer la recherche
-    const searchInput = document.getElementById('contact-search')
-    if (searchInput) searchInput.value = ''
-
-    // Message aucun résultat
-    const noResults = document.getElementById('no-contacts-found')
-    if (noResults) {
-      noResults.classList.toggle('hidden', visibleCount > 0)
-    }
-  }
-
-  window.clearContactSearch = function() {
-    const searchInput = document.getElementById('contact-search')
-    if (searchInput) {
-      searchInput.value = ''
-      filterContacts()
-    }
-  }
-
-  window.closePreview = function() {
-    const modal = document.getElementById('preview-modal')
-    if (modal) modal.classList.add('hidden')
-  }
-
-  // Fermer modal avec Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closePreview()
-  })
 }
