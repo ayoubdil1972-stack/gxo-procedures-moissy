@@ -1765,9 +1765,8 @@ export function ContactsPage() {
                   <div class="flex items-start justify-between mb-4">
                     <div class="flex-1">
                       <div class="flex items-center mb-2">
-                        <i class={`${serviceIcon} text-2xl mr-3`}></i>
-                        <span class={`text-xs font-semibold ${serviceColor.replace('bg-', 'text-')} uppercase`}>
-                          {contact.service}
+                        <span class={`text-xs font-bold ${serviceColor.replace('bg-', 'text-')} uppercase tracking-wide`}>
+                          Service : {contact.service}
                         </span>
                       </div>
                       <h3 class="text-xl font-bold text-gray-800">
