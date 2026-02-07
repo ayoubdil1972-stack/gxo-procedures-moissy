@@ -223,6 +223,12 @@ export const renderer = jsxRenderer(({ children }) => {
           }
           
           /* Titre de navigation - Desktop */
+          nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #FF4500;
+          }
           nav .text-lg {
             font-size: 1.125rem;
             line-height: 1.4;
@@ -713,7 +719,7 @@ export const renderer = jsxRenderer(({ children }) => {
         ` }} />
       </head>
       <body class="bg-gray-50">
-        <nav class="bg-[#FF4500] text-white shadow-lg no-print" id="main-nav">
+        <nav class="bg-[#FF4500] text-white shadow-lg no-print sticky top-0 z-50" id="main-nav">
           <div class="container mx-auto px-4 py-3 flex items-center justify-between" id="nav-container">
             <a href="/" class="flex items-center space-x-3 hover:opacity-90 transition-opacity">
               <img src="/static/gxo-logo-official.svg" alt="GXO Logistics" class="h-10" />
