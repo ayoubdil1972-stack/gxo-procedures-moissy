@@ -5,8 +5,40 @@ export function HomePage() {
       title: 'Réception',
       icon: 'fa-truck-loading',
       color: 'bg-orange-500',
-      description: 'Réception marchandises, contrôle BL, déchargement',
+      description: 'Base générale des procédures - Réception marchandises',
       processes: 29
+    },
+    {
+      id: 'accueil-chauffeur',
+      title: 'Accueil Chauffeur',
+      icon: 'fa-truck',
+      color: 'bg-blue-500',
+      description: 'Procédures d\'arrivée et livraison chauffeurs',
+      processes: 4
+    },
+    {
+      id: 'administrateur',
+      title: 'Administrateur',
+      icon: 'fa-user-tie',
+      color: 'bg-purple-500',
+      description: 'Gestion administrative et suivi documentaire',
+      processes: 5
+    },
+    {
+      id: 'controleur',
+      title: 'Contrôleur',
+      icon: 'fa-user-check',
+      color: 'bg-green-500',
+      description: 'Contrôle qualité et conformité réception',
+      processes: 5
+    },
+    {
+      id: 'agent-quai',
+      title: 'Agent de Quai',
+      icon: 'fa-hard-hat',
+      color: 'bg-yellow-500',
+      description: 'Opérations de déchargement et contrôle',
+      processes: 6
     },
     {
       id: 'nouveau',
