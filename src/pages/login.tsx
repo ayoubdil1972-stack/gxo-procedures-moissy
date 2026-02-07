@@ -1,12 +1,12 @@
 export function LoginPage() {
   return (
     <div class="min-h-screen relative flex items-center justify-center px-4">
-      {/* Image d'entrepôt en arrière-plan */}
-      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/static/warehouse-bg.jpg');">
+      {/* Image d'entrepôt en arrière-plan - Site de Moissy-Cramayel */}
+      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/static/warehouse-bg-hd.jpg');">
       </div>
       
-      {/* Overlay orange GXO pour cohérence de marque */}
-      <div class="absolute inset-0 bg-gradient-to-br from-[#FF4500]/85 via-[#FF5A1A]/85 to-[#E53D00]/85">
+      {/* Overlay orange GXO pour cohérence de marque (70% pour voir l'entrepôt) */}
+      <div class="absolute inset-0 bg-gradient-to-br from-[#FF4500]/70 via-[#FF5A1A]/70 to-[#E53D00]/70">
       </div>
       
       {/* Motif grille par-dessus */}
