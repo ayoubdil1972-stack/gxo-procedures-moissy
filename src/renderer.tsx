@@ -12,7 +12,7 @@ export const renderer = jsxRenderer(({ children }) => {
         <link href="/static/style.css" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
-            --gxo-blue: #00205B;
+            --gxo-blue: #FF6B35;
             --gxo-orange: #FF6B35;
             --gxo-dark: #1a1a1a;
             --gxo-light: #f5f5f5;
@@ -662,7 +662,7 @@ export const renderer = jsxRenderer(({ children }) => {
             bottom: 20px;
             right: 20px;
             z-index: 9999;
-            background: linear-gradient(135deg, #00205B 0%, #003DA5 100%);
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8555 100%);
             color: white;
             border: none;
             border-radius: 50%;
@@ -713,7 +713,7 @@ export const renderer = jsxRenderer(({ children }) => {
         ` }} />
       </head>
       <body class="bg-gray-50">
-        <nav class="bg-[#00205B] text-white shadow-lg no-print" id="main-nav">
+        <nav class="bg-[#FF6B35] text-white shadow-lg no-print" id="main-nav">
           <div class="container mx-auto px-4 py-3 flex items-center justify-between" id="nav-container">
             <a href="/" class="flex items-center space-x-3 hover:opacity-90 transition-opacity">
               <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-10" />
@@ -747,7 +747,7 @@ export const renderer = jsxRenderer(({ children }) => {
         <div id="review-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 no-print">
           <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div class="bg-[#00205B] text-white p-6 rounded-t-lg">
+            <div class="bg-[#FF6B35] text-white p-6 rounded-t-lg">
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="text-2xl font-bold">Donner votre avis</h3>
@@ -786,7 +786,7 @@ export const renderer = jsxRenderer(({ children }) => {
                     type="text"
                     id="review-name"
                     placeholder="Anonyme"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#00205B] focus:outline-none"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#FF6B35] focus:outline-none"
                   />
                 </div>
 
@@ -800,7 +800,7 @@ export const renderer = jsxRenderer(({ children }) => {
                     id="review-comment"
                     rows="4"
                     placeholder="Partagez votre expérience, des conseils, ou des suggestions d'amélioration..."
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#00205B] focus:outline-none resize-none"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#FF6B35] focus:outline-none resize-none"
                   ></textarea>
                   <p class="text-xs text-gray-500 mt-1">
                     Minimum 10 caractères recommandé
@@ -811,7 +811,7 @@ export const renderer = jsxRenderer(({ children }) => {
                 <div class="flex gap-3">
                   <button
                     type="submit"
-                    class="flex-1 bg-[#00205B] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#003DA5] transition-colors"
+                    class="flex-1 bg-[#FF6B35] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#FF8555] transition-colors"
                   >
                     <i class="fas fa-paper-plane mr-2"></i>
                     Publier

@@ -179,7 +179,7 @@ export function AnomaliesPage() {
               </button>
               
               <div id={`faq-content-${index}`} class="hidden p-6 pt-0 border-t border-gray-100">
-                <div class="bg-blue-50 rounded-lg p-4">
+                <div class="bg-orange-50 rounded-lg p-4">
                   <h4 class="font-semibold text-blue-800 mb-2 flex items-center">
                     <i class="fas fa-arrow-right mr-2"></i>
                     Solution

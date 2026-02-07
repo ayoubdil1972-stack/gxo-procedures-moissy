@@ -1620,9 +1620,9 @@ export function ContactsPage() {
 
   const services = [
     { name: 'Tous', icon: 'fa-address-book', color: 'bg-gray-500', count: contacts.length },
-    { name: 'Direction', icon: 'fa-building', color: 'bg-blue-500', count: contacts.filter(c => c.service === 'Direction').length },
+    { name: 'Direction', icon: 'fa-building', color: 'bg-orange-500', count: contacts.filter(c => c.service === 'Direction').length },
     { name: 'Process Control', icon: 'fa-clipboard-check', color: 'bg-green-500', count: contacts.filter(c => c.service === 'Process Control').length },
-    { name: 'Réception', icon: 'fa-truck-loading', color: 'bg-blue-600', count: contacts.filter(c => c.service === 'Réception').length },
+    { name: 'Réception', icon: 'fa-truck-loading', color: 'bg-orange-600', count: contacts.filter(c => c.service === 'Réception').length },
     { name: 'IPL', icon: 'fa-forklift', color: 'bg-teal-500', count: contacts.filter(c => c.service === 'IPL').length },
     { name: 'Préparation', icon: 'fa-dolly', color: 'bg-purple-500', count: contacts.filter(c => c.service === 'Préparation').length },
     { name: 'Expédition', icon: 'fa-shipping-fast', color: 'bg-indigo-500', count: contacts.filter(c => c.service === 'Expédition').length },
@@ -1634,7 +1634,7 @@ export function ContactsPage() {
   return (
     <div class="min-h-screen bg-gray-50 pb-12">
       {/* Header */}
-      <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white py-12 px-6 mb-8 shadow-lg">
+      <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8555] text-white py-12 px-6 mb-8 shadow-lg">
         <div class="max-w-7xl mx-auto">
           <div class="flex items-center mb-4">
             <i class="fas fa-address-book text-5xl mr-4"></i>
@@ -1648,7 +1648,7 @@ export function ContactsPage() {
 
       <div class="max-w-7xl mx-auto px-6">
         {/* Documents PDF Référence */}
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8 rounded-lg">
+        <div class="bg-orange-50 border-l-4 border-orange-500 p-6 mb-8 rounded-lg">
           <div class="flex items-start">
             <i class="fas fa-file-pdf text-3xl text-red-600 mr-4 mt-1"></i>
             <div class="flex-1">
@@ -1701,7 +1701,7 @@ export function ContactsPage() {
               type="text"
               id="search-input"
               placeholder="Rechercher par nom, prénom, fonction, service, téléphone..."
-              class="w-full px-6 py-4 border-2 border-gray-300 rounded-lg text-lg focus:border-[#00205B] focus:outline-none"
+              class="w-full px-6 py-4 border-2 border-gray-300 rounded-lg text-lg focus:border-[#FF6B35] focus:outline-none"
               onkeyup="filterContacts()"
             />
             <i class="fas fa-search absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
@@ -1786,7 +1786,7 @@ export function ContactsPage() {
                     {/* Téléphone */}
                     <div class="flex items-center text-gray-700">
                       <i class="fas fa-phone text-green-600 w-6 mr-3"></i>
-                      <a href={`tel:${contact.telephone}`} class="hover:text-[#00205B] font-medium">
+                      <a href={`tel:${contact.telephone}`} class="hover:text-[#FF6B35] font-medium">
                         {contact.telephone}
                       </a>
                     </div>
@@ -1794,7 +1794,7 @@ export function ContactsPage() {
                     {/* Extension */}
                     {contact.extension && (
                       <div class="flex items-center text-gray-700">
-                        <i class="fas fa-hashtag text-blue-600 w-6 mr-3"></i>
+                        <i class="fas fa-hashtag text-orange-600 w-6 mr-3"></i>
                         <span class="text-sm">Ext. {contact.extension}</span>
                       </div>
                     )}
@@ -1803,7 +1803,7 @@ export function ContactsPage() {
                     {contact.mobile && (
                       <div class="flex items-center text-gray-700">
                         <i class="fas fa-mobile-alt text-purple-600 w-6 mr-3"></i>
-                        <a href={`tel:${contact.mobile}`} class="hover:text-[#00205B] font-medium">
+                        <a href={`tel:${contact.mobile}`} class="hover:text-[#FF6B35] font-medium">
                           {contact.mobile}
                         </a>
                       </div>
@@ -1812,7 +1812,7 @@ export function ContactsPage() {
                     {/* Email */}
                     <div class="flex items-center text-gray-700">
                       <i class="fas fa-envelope text-red-600 w-6 mr-3"></i>
-                      <a href={`mailto:${contact.email}`} class="hover:text-[#00205B] text-sm break-all">
+                      <a href={`mailto:${contact.email}`} class="hover:text-[#FF6B35] text-sm break-all">
                         {contact.email}
                       </a>
                     </div>
@@ -1837,7 +1837,7 @@ export function ContactsPage() {
                   <div class="mt-6 flex gap-2">
                     <a 
                       href={`tel:${contact.telephone}`}
-                      class="flex-1 bg-[#00205B] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#003DA5] transition-colors text-center"
+                      class="flex-1 bg-[#FF6B35] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors text-center"
                     >
                       <i class="fas fa-phone mr-2"></i>Appeler
                     </a>

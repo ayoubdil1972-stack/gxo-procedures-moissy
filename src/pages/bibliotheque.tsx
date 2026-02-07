@@ -356,7 +356,7 @@ export function BibliothequePage() {
   return (
     <div>
       {/* Header */}
-      <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white rounded-lg shadow-xl p-8 mb-8">
+      <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8555] text-white rounded-lg shadow-xl p-8 mb-8">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <i class="fas fa-folder-open text-5xl"></i>
@@ -369,7 +369,7 @@ export function BibliothequePage() {
               </p>
             </div>
           </div>
-          <a href="/" class="bg-white text-[#00205B] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+          <a href="/" class="bg-white text-[#FF6B35] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
             <i class="fas fa-home mr-2"></i>Retour
           </a>
         </div>
@@ -384,7 +384,7 @@ export function BibliothequePage() {
               type="text" 
               id="search-input"
               placeholder="Rechercher un document (nom, catégorie, mots-clés)..."
-              class="w-full pl-12 pr-4 py-4 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:outline-none"
+              class="w-full pl-12 pr-4 py-4 border-2 border-gray-300 rounded-lg text-lg focus:border-orange-500 focus:outline-none"
               onkeyup="filterDocuments()"
             />
           </div>
@@ -407,7 +407,7 @@ export function BibliothequePage() {
           </button>
           <button 
             onclick="filterByCategory('Réception')"
-            class="filter-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors"
+            class="filter-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 transition-colors"
             data-category="Réception"
           >
             <i class="fas fa-truck-loading mr-2"></i>Réception ({documents.filter(d => d.category === 'Réception').length})
@@ -447,7 +447,7 @@ export function BibliothequePage() {
       <div id="documents-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {documents.map((doc) => {
           const categoryColors = {
-            'Réception': 'border-blue-500 bg-blue-50',
+            'Réception': 'border-orange-500 bg-orange-50',
             'IPL': 'border-green-500 bg-green-50',
             'Préparation': 'border-purple-500 bg-purple-50',
             'Anomalies': 'border-red-500 bg-red-50',
@@ -463,7 +463,7 @@ export function BibliothequePage() {
           }
 
           const fileIcons = {
-            'docx': 'fa-file-word text-blue-600',
+            'docx': 'fa-file-word text-orange-600',
             'pdf': 'fa-file-pdf text-red-600',
             'xlsx': 'fa-file-excel text-green-600',
             'xltm': 'fa-file-excel text-green-600'
@@ -512,7 +512,7 @@ export function BibliothequePage() {
                 <div class="flex gap-2">
                   <button 
                     onclick={`openDocumentPreview('${doc.file}', '${doc.type}', '${doc.name.replace(/'/g, "\\'")}')`}
-                    class="flex-1 bg-[#00205B] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#003DA5] transition-colors text-center"
+                    class="flex-1 bg-[#FF6B35] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors text-center"
                   >
                     <i class="fas fa-eye mr-2"></i>Aperçu
                   </button>

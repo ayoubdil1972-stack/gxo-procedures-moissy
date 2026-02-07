@@ -235,7 +235,7 @@ export function ReceptionPage() {
               Réception marchandises, contrôle BL, déchargement
             </p>
           </div>
-          <a href="/" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+          <a href="/" class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-orange-50 transition-colors">
             <i class="fas fa-home mr-2"></i>Retour
           </a>
         </div>
@@ -244,7 +244,7 @@ export function ReceptionPage() {
       {/* Légende niveaux */}
       <div class="bg-white rounded-lg shadow p-6 mb-8">
         <h3 class="text-lg font-bold text-gray-800 mb-4">
-          <i class="fas fa-info-circle mr-2 text-blue-500"></i>
+          <i class="fas fa-info-circle mr-2 text-orange-500"></i>
           Niveaux de complexité
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -333,7 +333,7 @@ export function ReceptionPage() {
                 {process.checklist ? (
                   <button 
                     onclick={`showChecklistInteractive('${process.id}', ${JSON.stringify(process.checklist)})`}
-                    class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
+                    class="gxo-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 flex items-center"
                   >
                     <i class="fas fa-list-check mr-2"></i>
                     Checklist interactive
@@ -341,7 +341,7 @@ export function ReceptionPage() {
                 ) : (
                   <button 
                     onclick={`showChecklist('${process.id}')`}
-                    class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
+                    class="gxo-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 flex items-center"
                   >
                     <i class="fas fa-list-check mr-2"></i>
                     Checklist

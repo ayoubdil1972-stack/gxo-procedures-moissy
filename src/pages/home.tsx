@@ -4,7 +4,7 @@ export function HomePage() {
       id: 'reception',
       title: 'Réception',
       icon: 'fa-truck-loading',
-      color: 'bg-blue-500',
+      color: 'bg-orange-500',
       description: 'Réception marchandises, contrôle BL, déchargement',
       processes: 29
     },
@@ -53,7 +53,7 @@ export function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white rounded-lg shadow-xl p-8 mb-8 relative overflow-hidden">
+      <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8555] text-white rounded-lg shadow-xl p-8 mb-8 relative overflow-hidden">
         {/* Background illustration */}
         <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
           <svg viewBox="0 0 400 300" class="w-full h-full">
@@ -113,13 +113,13 @@ export function HomePage() {
 
       {/* Quick Stats */}
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-orange-500">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-500 text-xs">Accès rapide</p>
               <p class="text-xl font-bold text-gray-800">En 2 clics</p>
             </div>
-            <i class="fas fa-mouse-pointer text-3xl text-blue-500"></i>
+            <i class="fas fa-mouse-pointer text-3xl text-orange-500"></i>
           </div>
         </div>
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
@@ -145,7 +145,7 @@ export function HomePage() {
       {/* Métiers Cards */}
       <div>
         <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          <i class="fas fa-briefcase mr-3 text-[#003DA5]"></i>
+          <i class="fas fa-briefcase mr-3 text-[#FF8555]"></i>
           Sélectionnez votre métier
         </h2>
         
@@ -198,8 +198,8 @@ export function HomePage() {
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <a href="/reception#reception-standard" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-            <i class="fas fa-truck text-blue-500 text-2xl mr-3"></i>
+          <a href="/reception#reception-standard" class="flex items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+            <i class="fas fa-truck text-orange-500 text-2xl mr-3"></i>
             <span class="font-semibold text-gray-800">Réception standard</span>
           </a>
           
@@ -227,11 +227,11 @@ export function HomePage() {
           Ressources & Documents
         </h2>
         <div class="flex flex-wrap gap-4">
-          <a href="/bibliotheque" class="inline-block bg-[#003DA5] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0052CC] transition-colors">
+          <a href="/bibliotheque" class="inline-block bg-[#FF8555] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#E55A25] transition-colors">
             <i class="fas fa-book mr-2"></i>
             Bibliothèque de documents (34)
           </a>
-          <a href="/contacts" class="inline-block bg-[#00205B] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#003DA5] transition-colors">
+          <a href="/contacts" class="inline-block bg-[#FF6B35] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#FF8555] transition-colors">
             <i class="fas fa-address-book mr-2"></i>
             Annuaire des contacts (20)
           </a>

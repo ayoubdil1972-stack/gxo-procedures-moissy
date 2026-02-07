@@ -115,8 +115,8 @@ export function NouveauPage() {
             Quel est votre métier ?
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button onclick="showMetierPath('reception')" class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-left transition-colors border-2 border-blue-200">
-              <i class="fas fa-truck-loading text-blue-500 text-xl mb-2"></i>
+            <button onclick="showMetierPath('reception')" class="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-left transition-colors border-2 border-blue-200">
+              <i class="fas fa-truck-loading text-orange-500 text-xl mb-2"></i>
               <div class="font-bold text-gray-800">Réception</div>
               <div class="text-sm text-gray-600">Déchargement et contrôle</div>
             </button>
@@ -186,28 +186,28 @@ export function NouveauPage() {
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+        <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
           <div class="flex items-start">
-            <div class="bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">
+            <div class="bg-orange-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">
               2
             </div>
             <div class="flex-1">
               <h3 class="text-xl font-bold text-gray-800 mb-3">Comprendre le site</h3>
               <ul class="space-y-2 text-gray-600">
                 <li class="flex items-start">
-                  <i class="fas fa-map-marker-alt text-blue-500 mr-2 mt-1"></i>
+                  <i class="fas fa-map-marker-alt text-orange-500 mr-2 mt-1"></i>
                   <span><strong>Zone Réception :</strong> Quais 1-30, déchargement camions</span>
                 </li>
                 <li class="flex items-start">
-                  <i class="fas fa-map-marker-alt text-blue-500 mr-2 mt-1"></i>
+                  <i class="fas fa-map-marker-alt text-orange-500 mr-2 mt-1"></i>
                   <span><strong>Zone Stockage :</strong> Allées A à Z, stockage palettes</span>
                 </li>
                 <li class="flex items-start">
-                  <i class="fas fa-map-marker-alt text-blue-500 mr-2 mt-1"></i>
+                  <i class="fas fa-map-marker-alt text-orange-500 mr-2 mt-1"></i>
                   <span><strong>Zone Hazardous :</strong> Zone rouge, produits dangereux (accès restreint)</span>
                 </li>
                 <li class="flex items-start">
-                  <i class="fas fa-map-marker-alt text-blue-500 mr-2 mt-1"></i>
+                  <i class="fas fa-map-marker-alt text-orange-500 mr-2 mt-1"></i>
                   <span><strong>Zone Expédition :</strong> Quais 50-80, chargement camions</span>
                 </li>
               </ul>
@@ -223,8 +223,8 @@ export function NouveauPage() {
             <div class="flex-1">
               <h3 class="text-xl font-bold text-gray-800 mb-3">Premiers gestes métiers</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                <a href="/reception" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                  <i class="fas fa-truck text-blue-500 text-xl mr-3"></i>
+                <a href="/reception" class="flex items-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                  <i class="fas fa-truck text-orange-500 text-xl mr-3"></i>
                   <span class="font-semibold text-gray-700">Réception de base</span>
                 </a>
                 <a href="/cariste#mise-en-stock" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
