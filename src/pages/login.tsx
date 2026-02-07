@@ -25,7 +25,7 @@ export function LoginPage() {
 
         {/* Login form */}
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          {/* Header with animated logistics scene */}
+          {/* Header with logo */}
           <div class="bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] p-20 flex items-center justify-center relative overflow-hidden min-h-[320px]">
             {/* Animated logistics scene */}
             <div class="absolute inset-0 opacity-30">
@@ -33,39 +33,15 @@ export function LoginPage() {
               <div class="absolute left-1/4 top-1/2 -translate-y-1/2 animate-forklift-move">
                 <i class="fas fa-forklift text-5xl text-white/70"></i>
               </div>
-              
-              {/* Tablette avec cases à cocher (droite) */}
-              <div class="absolute right-12 top-1/2 -translate-y-1/2">
-                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <i class="fas fa-tablet-alt text-4xl text-white/70 mb-2"></i>
-                  <div class="space-y-2">
-                    <div class="flex items-center gap-2 animate-check-1">
-                      <i class="fas fa-check-square text-green-400 text-xl animate-check-pop"></i>
-                      <div class="h-1 w-12 bg-white/40 rounded"></div>
-                    </div>
-                    <div class="flex items-center gap-2 animate-check-2">
-                      <i class="fas fa-check-square text-green-400 text-xl animate-check-pop" style="animation-delay: 1s;"></i>
-                      <div class="h-1 w-12 bg-white/40 rounded"></div>
-                    </div>
-                    <div class="flex items-center gap-2 animate-check-3">
-                      <i class="fas fa-check-square text-green-400 text-xl animate-check-pop" style="animation-delay: 2s;"></i>
-                      <div class="h-1 w-12 bg-white/40 rounded"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
             
             {/* Logo GXO au centre (par-dessus la scène) */}
-            <div class="relative z-10 group">
+            <div class="relative z-10">
               <img 
                 src="/static/gxo-logo-official.svg" 
                 alt="GXO Logistics" 
-                class="h-28 w-auto mx-auto transition-all duration-500 ease-in-out transform group-hover:scale-110 group-hover:brightness-125 group-hover:drop-shadow-2xl animate-float cursor-pointer" 
+                class="h-28 w-auto mx-auto" 
               />
-              
-              {/* Circular glow effect on hover */}
-              <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 rounded-full blur-2xl transition-all duration-700 -z-10 group-hover:scale-150"></div>
             </div>
           </div>
 
