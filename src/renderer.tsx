@@ -723,16 +723,16 @@ export const renderer = jsxRenderer(({ children }) => {
               </div>
             </a>
             <div class="flex items-center space-x-4" id="nav-links">
-              <a href="/" class="hover:text-[#FF4500] transition-colors">
+              <a href="/" class="transition-opacity hover:opacity-80">
                 <i class="fas fa-home mr-2"></i><span>Accueil</span>
               </a>
-              <a href="/bibliotheque" class="hover:text-[#FF4500] transition-colors">
+              <a href="/bibliotheque" class="transition-opacity hover:opacity-80">
                 <i class="fas fa-book mr-2"></i><span>Bibliothèque</span>
               </a>
-              <a href="/contacts" class="hover:text-[#FF4500] transition-colors">
+              <a href="/contacts" class="transition-opacity hover:opacity-80">
                 <i class="fas fa-address-book mr-2"></i><span>Contacts</span>
               </a>
-              <a href="/anomalies" class="hover:text-[#FF4500] transition-colors">
+              <a href="/anomalies" class="transition-opacity hover:opacity-80">
                 <i class="fas fa-exclamation-triangle mr-2"></i><span>Anomalies</span>
               </a>
             </div>
