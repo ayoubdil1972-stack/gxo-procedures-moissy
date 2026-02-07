@@ -53,7 +53,7 @@ export function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8555] text-white rounded-lg shadow-xl p-8 mb-8 relative overflow-hidden">
+      <div class="bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] text-white rounded-lg shadow-xl p-8 mb-8 relative overflow-hidden">
         {/* Background illustration */}
         <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
           <svg viewBox="0 0 400 300" class="w-full h-full">
@@ -68,9 +68,9 @@ export function HomePage() {
             {/* Forklift */}
             <g transform="translate(270, 180)">
               {/* Forklift body */}
-              <rect x="0" y="20" width="60" height="30" fill="#FF6B35" opacity="0.9"/>
+              <rect x="0" y="20" width="60" height="30" fill="#FF4500" opacity="0.9"/>
               {/* Cabin */}
-              <rect x="35" y="5" width="25" height="15" fill="#FF6B35" opacity="0.9"/>
+              <rect x="35" y="5" width="25" height="15" fill="#FF4500" opacity="0.9"/>
               {/* Wheels */}
               <circle cx="15" cy="55" r="8" fill="currentColor"/>
               <circle cx="50" cy="55" r="8" fill="currentColor"/>
@@ -81,15 +81,15 @@ export function HomePage() {
             </g>
             
             {/* Pallets */}
-            <rect x="60" y="90" width="15" height="20" fill="#FF6B35" opacity="0.7"/>
-            <rect x="80" y="90" width="15" height="20" fill="#FF6B35" opacity="0.5"/>
-            <rect x="160" y="140" width="15" height="20" fill="#FF6B35" opacity="0.6"/>
+            <rect x="60" y="90" width="15" height="20" fill="#FF4500" opacity="0.7"/>
+            <rect x="80" y="90" width="15" height="20" fill="#FF4500" opacity="0.5"/>
+            <rect x="160" y="140" width="15" height="20" fill="#FF4500" opacity="0.6"/>
           </svg>
         </div>
         
         <div class="flex items-center justify-between relative z-10">
           <div class="flex items-start space-x-6">
-            <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-16 mt-2" id="hero-logo" />
+            <img src="/static/gxo-logo-official.svg" alt="GXO Logistics" class="h-16 mt-2" id="hero-logo" />
             <div>
               <h1 class="text-4xl font-bold mb-3">
                 HUB Procédures Logistiques
@@ -145,7 +145,7 @@ export function HomePage() {
       {/* Métiers Cards */}
       <div>
         <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          <i class="fas fa-briefcase mr-3 text-[#FF8555]"></i>
+          <i class="fas fa-briefcase mr-3 text-[#FF5A1A]"></i>
           Sélectionnez votre métier
         </h2>
         
@@ -227,11 +227,11 @@ export function HomePage() {
           Ressources & Documents
         </h2>
         <div class="flex flex-wrap gap-4">
-          <a href="/bibliotheque" class="inline-block bg-[#FF8555] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#E55A25] transition-colors">
+          <a href="/bibliotheque" class="inline-block bg-[#FF5A1A] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#E53D00] transition-colors">
             <i class="fas fa-book mr-2"></i>
             Bibliothèque de documents (34)
           </a>
-          <a href="/contacts" class="inline-block bg-[#FF6B35] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#FF8555] transition-colors">
+          <a href="/contacts" class="inline-block bg-[#FF4500] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#FF5A1A] transition-colors">
             <i class="fas fa-address-book mr-2"></i>
             Annuaire des contacts (20)
           </a>

@@ -1,6 +1,6 @@
 export function LoginPage() {
   return (
-    <div class="min-h-screen bg-gradient-to-br from-[#FF6B35] via-[#FF8555] to-[#E55A25] flex items-center justify-center px-4">
+    <div class="min-h-screen bg-gradient-to-br from-[#FF4500] via-[#FF5A1A] to-[#E53D00] flex items-center justify-center px-4">
       {/* Background pattern */}
       <div class="absolute inset-0 opacity-10">
         <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -26,7 +26,7 @@ export function LoginPage() {
         {/* Login form */}
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header with animated logistics scene */}
-          <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8555] p-20 flex items-center justify-center relative overflow-hidden min-h-[320px]">
+          <div class="bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] p-20 flex items-center justify-center relative overflow-hidden min-h-[320px]">
             {/* Animated logistics scene */}
             <div class="absolute inset-0 opacity-30">
               {/* Manutentionnaire sur chariot (centre-gauche) */}
@@ -59,7 +59,7 @@ export function LoginPage() {
             {/* Logo GXO au centre (par-dessus la scène) */}
             <div class="relative z-10 group">
               <img 
-                src="/static/gxo-logo.svg" 
+                src="/static/gxo-logo-official.svg" 
                 alt="GXO Logistics" 
                 class="h-28 w-auto mx-auto transition-all duration-500 ease-in-out transform group-hover:scale-110 group-hover:brightness-125 group-hover:drop-shadow-2xl animate-float cursor-pointer" 
               />
@@ -75,7 +75,7 @@ export function LoginPage() {
               {/* Identifiant */}
               <div>
                 <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-user mr-2 text-[#FF6B35]"></i>
+                  <i class="fas fa-user mr-2 text-[#FF4500]"></i>
                   Identifiant GXO
                 </label>
                 <input
@@ -84,7 +84,7 @@ export function LoginPage() {
                   name="username"
                   required
                   autocomplete="username"
-                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#FF6B35] focus:outline-none transition-colors"
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#FF4500] focus:outline-none transition-colors"
                   placeholder="Votre identifiant"
                 />
               </div>
@@ -92,7 +92,7 @@ export function LoginPage() {
               {/* Mot de passe */}
               <div>
                 <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-lock mr-2 text-[#FF6B35]"></i>
+                  <i class="fas fa-lock mr-2 text-[#FF4500]"></i>
                   Mot de passe
                 </label>
                 <div class="relative">
@@ -102,13 +102,13 @@ export function LoginPage() {
                     name="password"
                     required
                     autocomplete="current-password"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#FF6B35] focus:outline-none transition-colors pr-12"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#FF4500] focus:outline-none transition-colors pr-12"
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onclick="togglePassword()"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FF6B35] transition-colors"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FF4500] transition-colors"
                   >
                     <i id="password-icon" class="fas fa-eye"></i>
                   </button>
@@ -121,7 +121,7 @@ export function LoginPage() {
                   type="checkbox"
                   id="remember"
                   name="remember"
-                  class="w-4 h-4 text-[#FF6B35] border-gray-300 rounded focus:ring-[#FF6B35]"
+                  class="w-4 h-4 text-[#FF4500] border-gray-300 rounded focus:ring-[#FF4500]"
                 />
                 <label for="remember" class="ml-2 text-sm text-gray-600">
                   Se souvenir de moi
@@ -131,7 +131,7 @@ export function LoginPage() {
               {/* Submit button */}
               <button
                 type="submit"
-                class="w-full bg-gradient-to-r from-[#FF6B35] to-[#FF8555] text-white font-bold py-3 rounded-lg hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                class="w-full bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] text-white font-bold py-3 rounded-lg hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <i class="fas fa-sign-in-alt mr-2"></i>
                 Se connecter
@@ -151,7 +151,7 @@ export function LoginPage() {
 
             {/* Help link */}
             <div class="mt-4 text-center">
-              <a href="#" onclick="showHelp(); return false;" class="text-sm text-[#FF6B35] hover:underline">
+              <a href="#" onclick="showHelp(); return false;" class="text-sm text-[#FF4500] hover:underline">
                 <i class="fas fa-question-circle mr-1"></i>
                 Besoin d'aide pour vous connecter ?
               </a>

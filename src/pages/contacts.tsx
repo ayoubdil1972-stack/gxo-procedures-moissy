@@ -1634,7 +1634,7 @@ export function ContactsPage() {
   return (
     <div class="min-h-screen bg-gray-50 pb-12">
       {/* Header */}
-      <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8555] text-white py-12 px-6 mb-8 shadow-lg">
+      <div class="bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] text-white py-12 px-6 mb-8 shadow-lg">
         <div class="max-w-7xl mx-auto">
           <div class="flex items-center mb-4">
             <i class="fas fa-address-book text-5xl mr-4"></i>
@@ -1701,7 +1701,7 @@ export function ContactsPage() {
               type="text"
               id="search-input"
               placeholder="Rechercher par nom, prénom, fonction, service, téléphone..."
-              class="w-full px-6 py-4 border-2 border-gray-300 rounded-lg text-lg focus:border-[#FF6B35] focus:outline-none"
+              class="w-full px-6 py-4 border-2 border-gray-300 rounded-lg text-lg focus:border-[#FF4500] focus:outline-none"
               onkeyup="filterContacts()"
             />
             <i class="fas fa-search absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
@@ -1786,7 +1786,7 @@ export function ContactsPage() {
                     {/* Téléphone */}
                     <div class="flex items-center text-gray-700">
                       <i class="fas fa-phone text-green-600 w-6 mr-3"></i>
-                      <a href={`tel:${contact.telephone}`} class="hover:text-[#FF6B35] font-medium">
+                      <a href={`tel:${contact.telephone}`} class="hover:text-[#FF4500] font-medium">
                         {contact.telephone}
                       </a>
                     </div>
@@ -1803,7 +1803,7 @@ export function ContactsPage() {
                     {contact.mobile && (
                       <div class="flex items-center text-gray-700">
                         <i class="fas fa-mobile-alt text-purple-600 w-6 mr-3"></i>
-                        <a href={`tel:${contact.mobile}`} class="hover:text-[#FF6B35] font-medium">
+                        <a href={`tel:${contact.mobile}`} class="hover:text-[#FF4500] font-medium">
                           {contact.mobile}
                         </a>
                       </div>
@@ -1812,7 +1812,7 @@ export function ContactsPage() {
                     {/* Email */}
                     <div class="flex items-center text-gray-700">
                       <i class="fas fa-envelope text-red-600 w-6 mr-3"></i>
-                      <a href={`mailto:${contact.email}`} class="hover:text-[#FF6B35] text-sm break-all">
+                      <a href={`mailto:${contact.email}`} class="hover:text-[#FF4500] text-sm break-all">
                         {contact.email}
                       </a>
                     </div>
@@ -1837,13 +1837,13 @@ export function ContactsPage() {
                   <div class="mt-6 flex gap-2">
                     <a 
                       href={`tel:${contact.telephone}`}
-                      class="flex-1 bg-[#FF6B35] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors text-center"
+                      class="flex-1 bg-[#FF4500] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF5A1A] transition-colors text-center"
                     >
                       <i class="fas fa-phone mr-2"></i>Appeler
                     </a>
                     <a 
                       href={`mailto:${contact.email}`}
-                      class="bg-[#FF6B35] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors"
+                      class="bg-[#FF4500] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF5A1A] transition-colors"
                       title="Envoyer un email"
                     >
                       <i class="fas fa-envelope"></i>

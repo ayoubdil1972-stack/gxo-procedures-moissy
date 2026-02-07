@@ -356,7 +356,7 @@ export function BibliothequePage() {
   return (
     <div>
       {/* Header */}
-      <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8555] text-white rounded-lg shadow-xl p-8 mb-8">
+      <div class="bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] text-white rounded-lg shadow-xl p-8 mb-8">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <i class="fas fa-folder-open text-5xl"></i>
@@ -369,7 +369,7 @@ export function BibliothequePage() {
               </p>
             </div>
           </div>
-          <a href="/" class="bg-white text-[#FF6B35] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+          <a href="/" class="bg-white text-[#FF4500] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
             <i class="fas fa-home mr-2"></i>Retour
           </a>
         </div>
@@ -512,14 +512,14 @@ export function BibliothequePage() {
                 <div class="flex gap-2">
                   <button 
                     onclick={`openDocumentPreview('${doc.file}', '${doc.type}', '${doc.name.replace(/'/g, "\\'")}')`}
-                    class="flex-1 bg-[#FF6B35] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors text-center"
+                    class="flex-1 bg-[#FF4500] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF5A1A] transition-colors text-center"
                   >
                     <i class="fas fa-eye mr-2"></i>Aperçu
                   </button>
                   <a 
                     href={`/static/documents/${doc.file}`}
                     download
-                    class="bg-[#FF6B35] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors"
+                    class="bg-[#FF4500] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF5A1A] transition-colors"
                     title="Télécharger"
                   >
                     <i class="fas fa-download"></i>
@@ -552,7 +552,7 @@ export function BibliothequePage() {
                 id="preview-download-btn"
                 href="#"
                 download
-                class="bg-[#FF6B35] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF8555] transition-colors"
+                class="bg-[#FF4500] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF5A1A] transition-colors"
               >
                 <i class="fas fa-download mr-2"></i>Télécharger
               </a>

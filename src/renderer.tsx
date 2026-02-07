@@ -12,8 +12,8 @@ export const renderer = jsxRenderer(({ children }) => {
         <link href="/static/style.css" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
-            --gxo-blue: #FF6B35;
-            --gxo-orange: #FF6B35;
+            --gxo-blue: #FF4500;
+            --gxo-orange: #FF4500;
             --gxo-dark: #1a1a1a;
             --gxo-light: #f5f5f5;
           }
@@ -662,7 +662,7 @@ export const renderer = jsxRenderer(({ children }) => {
             bottom: 20px;
             right: 20px;
             z-index: 9999;
-            background: linear-gradient(135deg, #FF6B35 0%, #FF8555 100%);
+            background: linear-gradient(135deg, #FF4500 0%, #FF5A1A 100%);
             color: white;
             border: none;
             border-radius: 50%;
@@ -691,7 +691,7 @@ export const renderer = jsxRenderer(({ children }) => {
             bottom: -20px;
             right: 50%;
             transform: translateX(50%);
-            background: #FF6B35;
+            background: #FF4500;
             color: white;
             font-size: 8px;
             font-weight: bold;
@@ -713,26 +713,26 @@ export const renderer = jsxRenderer(({ children }) => {
         ` }} />
       </head>
       <body class="bg-gray-50">
-        <nav class="bg-[#FF6B35] text-white shadow-lg no-print" id="main-nav">
+        <nav class="bg-[#FF4500] text-white shadow-lg no-print" id="main-nav">
           <div class="container mx-auto px-4 py-3 flex items-center justify-between" id="nav-container">
             <a href="/" class="flex items-center space-x-3 hover:opacity-90 transition-opacity">
-              <img src="/static/gxo-logo.svg" alt="GXO Logistics" class="h-10" />
+              <img src="/static/gxo-logo-official.svg" alt="GXO Logistics" class="h-10" />
               <div class="border-l border-white/30 pl-3">
                 <div class="text-lg font-bold">HUB Procédures Logistique</div>
                 <div class="text-xs opacity-90">Moissy-Cramayel</div>
               </div>
             </a>
             <div class="flex items-center space-x-4" id="nav-links">
-              <a href="/" class="hover:text-[#FF6B35] transition-colors">
+              <a href="/" class="hover:text-[#FF4500] transition-colors">
                 <i class="fas fa-home mr-2"></i><span>Accueil</span>
               </a>
-              <a href="/bibliotheque" class="hover:text-[#FF6B35] transition-colors">
+              <a href="/bibliotheque" class="hover:text-[#FF4500] transition-colors">
                 <i class="fas fa-book mr-2"></i><span>Bibliothèque</span>
               </a>
-              <a href="/contacts" class="hover:text-[#FF6B35] transition-colors">
+              <a href="/contacts" class="hover:text-[#FF4500] transition-colors">
                 <i class="fas fa-address-book mr-2"></i><span>Contacts</span>
               </a>
-              <a href="/anomalies" class="hover:text-[#FF6B35] transition-colors">
+              <a href="/anomalies" class="hover:text-[#FF4500] transition-colors">
                 <i class="fas fa-exclamation-triangle mr-2"></i><span>Anomalies</span>
               </a>
             </div>
@@ -747,13 +747,13 @@ export const renderer = jsxRenderer(({ children }) => {
         <div id="review-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 no-print">
           <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div class="bg-[#FF6B35] text-white p-6 rounded-t-lg">
+            <div class="bg-[#FF4500] text-white p-6 rounded-t-lg">
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="text-2xl font-bold">Donner votre avis</h3>
                   <p class="text-sm opacity-75 mt-1" id="review-modal-title">Procédure</p>
                 </div>
-                <button onclick="closeReviewModal()" class="text-white hover:text-[#FF6B35] transition-colors text-2xl">
+                <button onclick="closeReviewModal()" class="text-white hover:text-[#FF4500] transition-colors text-2xl">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
@@ -786,7 +786,7 @@ export const renderer = jsxRenderer(({ children }) => {
                     type="text"
                     id="review-name"
                     placeholder="Anonyme"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#FF6B35] focus:outline-none"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#FF4500] focus:outline-none"
                   />
                 </div>
 
@@ -800,7 +800,7 @@ export const renderer = jsxRenderer(({ children }) => {
                     id="review-comment"
                     rows="4"
                     placeholder="Partagez votre expérience, des conseils, ou des suggestions d'amélioration..."
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#FF6B35] focus:outline-none resize-none"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-[#FF4500] focus:outline-none resize-none"
                   ></textarea>
                   <p class="text-xs text-gray-500 mt-1">
                     Minimum 10 caractères recommandé
@@ -811,7 +811,7 @@ export const renderer = jsxRenderer(({ children }) => {
                 <div class="flex gap-3">
                   <button
                     type="submit"
-                    class="flex-1 bg-[#FF6B35] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#FF8555] transition-colors"
+                    class="flex-1 bg-[#FF4500] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#FF5A1A] transition-colors"
                   >
                     <i class="fas fa-paper-plane mr-2"></i>
                     Publier
