@@ -9,30 +9,6 @@ export function HomePage() {
       processes: 29
     },
     {
-      id: 'cariste',
-      title: 'IPL',
-      icon: 'fa-forklift',
-      color: 'bg-green-500',
-      description: 'Gestion des tâches, affectation, priorisation',
-      processes: 7
-    },
-    {
-      id: 'manutention',
-      title: 'Préparation',
-      icon: 'fa-dolly',
-      color: 'bg-purple-500',
-      description: 'Préparation commandes, prélèvement, montage rolls',
-      processes: 5
-    },
-    {
-      id: 'retours',
-      title: 'Retours',
-      icon: 'fa-undo-alt',
-      color: 'bg-yellow-500',
-      description: 'Gestion retours, collecte déchets, transferts',
-      processes: 3
-    },
-    {
       id: 'nouveau',
       title: 'Nouvel Arrivant',
       icon: 'fa-graduation-cap',
