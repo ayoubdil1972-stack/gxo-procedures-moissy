@@ -1,7 +1,15 @@
 export function LoginPage() {
   return (
-    <div class="min-h-screen bg-gradient-to-br from-[#FF4500] via-[#FF5A1A] to-[#E53D00] flex items-center justify-center px-4">
-      {/* Background pattern */}
+    <div class="min-h-screen relative flex items-center justify-center px-4">
+      {/* Image d'entrepôt en arrière-plan */}
+      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/static/warehouse-bg.jpg');">
+      </div>
+      
+      {/* Overlay orange GXO pour cohérence de marque */}
+      <div class="absolute inset-0 bg-gradient-to-br from-[#FF4500]/85 via-[#FF5A1A]/85 to-[#E53D00]/85">
+      </div>
+      
+      {/* Motif grille par-dessus */}
       <div class="absolute inset-0 opacity-10">
         <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
