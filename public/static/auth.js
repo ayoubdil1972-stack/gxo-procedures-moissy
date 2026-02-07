@@ -287,7 +287,7 @@ function showLogoutModal() {
     modal.innerHTML = `
       <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-fade-in">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-[#00205B] to-[#003DA5] text-white p-6">
+        <div class="bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] text-white p-6">
           <div class="flex items-center">
             <i class="fas fa-sign-out-alt text-3xl mr-4"></i>
             <div>
@@ -314,9 +314,9 @@ function showLogoutModal() {
           </div>
           
           <!-- Session info -->
-          <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
+          <div class="bg-orange-50 border-l-4 border-orange-500 p-4 mb-6 rounded">
             <div class="flex items-center text-sm text-gray-700">
-              <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+              <i class="fas fa-info-circle text-orange-500 mr-2"></i>
               <span>Votre session sera fermée immédiatement.</span>
             </div>
           </div>
@@ -325,7 +325,7 @@ function showLogoutModal() {
           <div class="flex gap-3">
             <button 
               onclick="confirmLogout()" 
-              class="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-lg font-bold hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+              class="flex-1 bg-gradient-to-r from-[#FF4500] to-[#FF5A1A] text-white px-6 py-3 rounded-lg font-bold hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
             >
               <i class="fas fa-sign-out-alt mr-2"></i>
               Oui, me déconnecter
@@ -375,7 +375,7 @@ function updateUserInfo(session) {
   if (nav && !document.getElementById('logout-btn')) {
     const logoutBtn = document.createElement('button');
     logoutBtn.id = 'logout-btn';
-    logoutBtn.className = 'hover:text-[#FF6B35] transition-colors text-sm';
+    logoutBtn.className = 'hover:text-[#FF4500] transition-colors text-sm';
     logoutBtn.innerHTML = `
       <i class="fas fa-user-circle mr-2"></i>
       <span class="hidden md:inline">${session.name}</span>
