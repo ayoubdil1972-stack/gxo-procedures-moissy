@@ -112,7 +112,7 @@ export function BibliothequePage() {
       level: '🟢'
     },
 
-    // IPL - 9 documents
+    // Accueil Chauffeur - 9 documents
     {
       id: 11,
       name: 'Affectation de tâche dans LTRMS',
@@ -204,7 +204,7 @@ export function BibliothequePage() {
       level: '🟡'
     },
 
-    // Préparation - 4 documents (RHM retiré car inexistant)
+    // Administrateur - 4 documents
     {
       id: 20,
       name: 'Cartons vides Dernier Prélèvement',
@@ -320,9 +320,71 @@ export function BibliothequePage() {
       level: '🔴'
     },
 
-    // Retours - 3 documents
+    // Agent de Quai - 6 documents
     {
       id: 31,
+      name: 'Assigner camion à quai',
+      file: 'Assigner camion à quai-2.docx',
+      category: 'Agent de Quai',
+      type: 'docx',
+      description: 'Procédure d\'assignation de camion aux quais de déchargement',
+      keywords: 'camion, quai, assignation, réception',
+      level: '🟢'
+    },
+    {
+      id: 32,
+      name: 'Fermer une porte de quai',
+      file: 'Fermer une porte de quai.docx',
+      category: 'Agent de Quai',
+      type: 'docx',
+      description: 'Procédure de fermeture d\'une porte de quai',
+      keywords: 'quai, porte, fermeture',
+      level: '🟢'
+    },
+    {
+      id: 33,
+      name: 'Déchargement camion',
+      file: 'Assigner camion à quai-2.docx',
+      category: 'Agent de Quai',
+      type: 'docx',
+      description: 'Procédure de déchargement des camions',
+      keywords: 'déchargement, camion, quai',
+      level: '🟢'
+    },
+    {
+      id: 34,
+      name: 'Contrôle qualité réception',
+      file: 'Verification dossier aprés control.docx',
+      category: 'Agent de Quai',
+      type: 'docx',
+      description: 'Vérification du dossier après contrôle qualité',
+      keywords: 'vérification, contrôle, dossier',
+      level: '🟡'
+    },
+    {
+      id: 35,
+      name: 'Gestion des palettes',
+      file: 'Créer TU.docx',
+      category: 'Agent de Quai',
+      type: 'docx',
+      description: 'Création et gestion des unités de transport',
+      keywords: 'palette, TU, transport',
+      level: '🟢'
+    },
+    {
+      id: 36,
+      name: 'Clôture livraison',
+      file: 'cloture livraison new.docx',
+      category: 'Agent de Quai',
+      type: 'docx',
+      description: 'Procédure de clôture de livraison dans le système',
+      keywords: 'clôture, livraison, réception',
+      level: '🟢'
+    },
+
+    // Contrôleur - 3 documents
+    {
+      id: 37,
       name: 'Rappel petits contenants PAPREC/BIONERVAL',
       file: 'Rappel des petits contenants installés par PAPREC ou BIONERVAL.docx',
       category: 'Contrôleur',
@@ -413,18 +475,32 @@ export function BibliothequePage() {
             <i class="fas fa-truck-loading mr-2"></i>Réception ({documents.filter(d => d.category === 'Réception').length})
           </button>
           <button 
-            onclick="filterByCategory('IPL')"
-            class="filter-btn bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-600 transition-colors"
-            data-category="IPL"
+            onclick="filterByCategory('Accueil Chauffeur')"
+            class="filter-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors"
+            data-category="Accueil Chauffeur"
           >
-            <i class="fas fa-forklift mr-2"></i>IPL ({documents.filter(d => d.category === 'IPL').length})
+            <i class="fas fa-truck mr-2"></i>Accueil Chauffeur ({documents.filter(d => d.category === 'Accueil Chauffeur').length})
           </button>
           <button 
-            onclick="filterByCategory('Préparation')"
+            onclick="filterByCategory('Administrateur')"
             class="filter-btn bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-600 transition-colors"
-            data-category="Préparation"
+            data-category="Administrateur"
           >
-            <i class="fas fa-dolly mr-2"></i>Préparation ({documents.filter(d => d.category === 'Préparation').length})
+            <i class="fas fa-user-tie mr-2"></i>Administrateur ({documents.filter(d => d.category === 'Administrateur').length})
+          </button>
+          <button 
+            onclick="filterByCategory('Contrôleur')"
+            class="filter-btn bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-600 transition-colors"
+            data-category="Contrôleur"
+          >
+            <i class="fas fa-clipboard-check mr-2"></i>Contrôleur ({documents.filter(d => d.category === 'Contrôleur').length})
+          </button>
+          <button 
+            onclick="filterByCategory('Agent de Quai')"
+            class="filter-btn bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 transition-colors"
+            data-category="Agent de Quai"
+          >
+            <i class="fas fa-hard-hat mr-2"></i>Agent de Quai ({documents.filter(d => d.category === 'Agent de Quai').length})
           </button>
           <button 
             onclick="filterByCategory('Anomalies')"
@@ -432,13 +508,6 @@ export function BibliothequePage() {
             data-category="Anomalies"
           >
             <i class="fas fa-exclamation-circle mr-2"></i>Anomalies ({documents.filter(d => d.category === 'Anomalies').length})
-          </button>
-          <button 
-            onclick="filterByCategory('Retours')"
-            class="filter-btn bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 transition-colors"
-            data-category="Retours"
-          >
-            <i class="fas fa-undo-alt mr-2"></i>Retours ({documents.filter(d => d.category === 'Retours').length})
           </button>
         </div>
       </div>
@@ -448,18 +517,20 @@ export function BibliothequePage() {
         {documents.map((doc) => {
           const categoryColors = {
             'Réception': 'border-orange-500 bg-orange-50',
-            'IPL': 'border-green-500 bg-green-50',
-            'Préparation': 'border-purple-500 bg-purple-50',
-            'Anomalies': 'border-red-500 bg-red-50',
-            'Retours': 'border-yellow-500 bg-yellow-50'
+            'Accueil Chauffeur': 'border-blue-500 bg-blue-50',
+            'Administrateur': 'border-purple-500 bg-purple-50',
+            'Contrôleur': 'border-green-500 bg-green-50',
+            'Agent de Quai': 'border-yellow-500 bg-yellow-50',
+            'Anomalies': 'border-red-500 bg-red-50'
           }
 
           const categoryIcons = {
             'Réception': 'fa-truck-loading',
-            'IPL': 'fa-forklift',
-            'Préparation': 'fa-dolly',
-            'Anomalies': 'fa-exclamation-circle',
-            'Retours': 'fa-undo-alt'
+            'Accueil Chauffeur': 'fa-truck',
+            'Administrateur': 'fa-user-tie',
+            'Contrôleur': 'fa-clipboard-check',
+            'Agent de Quai': 'fa-hard-hat',
+            'Anomalies': 'fa-exclamation-circle'
           }
 
           const fileIcons = {
