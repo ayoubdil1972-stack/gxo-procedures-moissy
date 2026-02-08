@@ -115,34 +115,34 @@ export function NouveauPage() {
             Quel est votre métier ?
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button onclick="showMetierPath('reception')" class="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-left transition-colors border-2 border-blue-200">
+            <button onclick="showMetierPath('reception')" class="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-left transition-colors border-2 border-orange-200">
               <i class="fas fa-truck-loading text-orange-500 text-xl mb-2"></i>
               <div class="font-bold text-gray-800">Réception</div>
               <div class="text-sm text-gray-600">Déchargement et contrôle</div>
             </button>
             
-            <button onclick="showMetierPath('ipl')" class="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-left transition-colors border-2 border-green-200">
-              <i class="fas fa-forklift text-green-500 text-xl mb-2"></i>
-              <div class="font-bold text-gray-800">IPL (Cariste)</div>
-              <div class="text-sm text-gray-600">Manutention et stockage</div>
+            <button onclick="showMetierPath('agent-quai')" class="p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg text-left transition-colors border-2 border-yellow-200">
+              <i class="fas fa-hard-hat text-yellow-500 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Agent de Quai</div>
+              <div class="text-sm text-gray-600">Opérations quai</div>
             </button>
             
-            <button onclick="showMetierPath('preparation')" class="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-left transition-colors border-2 border-purple-200">
-              <i class="fas fa-dolly text-purple-500 text-xl mb-2"></i>
-              <div class="font-bold text-gray-800">Préparation</div>
-              <div class="text-sm text-gray-600">Préparation commandes</div>
+            <button onclick="showMetierPath('controleur')" class="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-left transition-colors border-2 border-green-200">
+              <i class="fas fa-clipboard-check text-green-500 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Contrôleur</div>
+              <div class="text-sm text-gray-600">Contrôle qualité</div>
             </button>
             
-            <button onclick="showMetierPath('retours')" class="p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg text-left transition-colors border-2 border-yellow-200">
-              <i class="fas fa-undo-alt text-yellow-600 text-xl mb-2"></i>
-              <div class="font-bold text-gray-800">Retours</div>
-              <div class="text-sm text-gray-600">Gestion retours et déchets</div>
-            </button>
-            
-            <button onclick="showMetierPath('admin')" class="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors border-2 border-gray-200">
-              <i class="fas fa-user-tie text-gray-600 text-xl mb-2"></i>
-              <div class="font-bold text-gray-800">Administratif</div>
+            <button onclick="showMetierPath('administrateur')" class="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-left transition-colors border-2 border-purple-200">
+              <i class="fas fa-user-tie text-purple-500 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Administrateur</div>
               <div class="text-sm text-gray-600">Support et coordination</div>
+            </button>
+            
+            <button onclick="showMetierPath('accueil-chauffeur')" class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-left transition-colors border-2 border-blue-200">
+              <i class="fas fa-truck text-blue-500 text-xl mb-2"></i>
+              <div class="font-bold text-gray-800">Accueil Chauffeur</div>
+              <div class="text-sm text-gray-600">Arrivée et livraison</div>
             </button>
             
             <button onclick="showMetierPath('chef')" class="p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg text-left transition-colors border-2 border-indigo-200">
@@ -223,21 +223,21 @@ export function NouveauPage() {
             <div class="flex-1">
               <h3 class="text-xl font-bold text-gray-800 mb-3">Premiers gestes métiers</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                <a href="/reception" class="flex items-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
-                  <i class="fas fa-truck text-orange-500 text-xl mr-3"></i>
-                  <span class="font-semibold text-gray-700">Réception de base</span>
+                <a href="/agent-quai" class="flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
+                  <i class="fas fa-hard-hat text-yellow-500 text-xl mr-3"></i>
+                  <span class="font-semibold text-gray-700">Agent de Quai</span>
                 </a>
-                <a href="/cariste#mise-en-stock" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                  <i class="fas fa-warehouse text-green-500 text-xl mr-3"></i>
-                  <span class="font-semibold text-gray-700">Mise en stock</span>
+                <a href="/controleur" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                  <i class="fas fa-clipboard-check text-green-500 text-xl mr-3"></i>
+                  <span class="font-semibold text-gray-700">Contrôleur</span>
                 </a>
-                <a href="/cariste#relancer-tache" class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                  <i class="fas fa-tasks text-purple-500 text-xl mr-3"></i>
-                  <span class="font-semibold text-gray-700">Relancer une tâche</span>
+                <a href="/administrateur" class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                  <i class="fas fa-user-tie text-purple-500 text-xl mr-3"></i>
+                  <span class="font-semibold text-gray-700">Administrateur</span>
                 </a>
-                <a href="/anomalies" class="flex items-center p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
-                  <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-                  <span class="font-semibold text-gray-700">Signaler une anomalie</span>
+                <a href="/accueil-chauffeur" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                  <i class="fas fa-truck text-blue-500 text-xl mr-3"></i>
+                  <span class="font-semibold text-gray-700">Accueil Chauffeur</span>
                 </a>
               </div>
             </div>
