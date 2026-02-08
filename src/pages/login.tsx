@@ -43,8 +43,8 @@ export function LoginPage() {
               </div>
             </div>
             
-            {/* Logo GXO au centre (par-dessus la scène) - Décalé 1cm vers la droite */}
-            <div class="relative z-10" style="margin-left: 1cm;">
+            {/* Logo GXO au centre (par-dessus la scène) */}
+            <div class="relative z-10">
               <img 
                 src="/static/gxo-logo-official.svg" 
                 alt="GXO Logistics" 
