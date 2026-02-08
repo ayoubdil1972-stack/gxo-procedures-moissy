@@ -224,7 +224,7 @@ export function ReceptionPage() {
   return (
     <div>
       {/* Header */}
-      <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-xl p-8 mb-8">
+      <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg shadow-xl p-8 mb-8">
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-4xl font-bold mb-3">
@@ -276,7 +276,7 @@ export function ReceptionPage() {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {processes.map((process) => (
           <div id={process.id} class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4">
+            <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4">
               <div class="flex items-start justify-between">
                 <div class="flex-1">
                   <div class="flex items-center mb-2">
