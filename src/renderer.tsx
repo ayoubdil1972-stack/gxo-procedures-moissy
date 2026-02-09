@@ -7,6 +7,14 @@ export const renderer = jsxRenderer(({ children }) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>GXO Logistics - Intranet Moissy</title>
+        <script dangerouslySetInnerHTML={{ __html: `
+          // Désactiver l'avertissement Tailwind CDN
+          const originalWarn = console.warn;
+          console.warn = function(...args) {
+            if (args[0] && args[0].includes && args[0].includes('cdn.tailwindcss.com')) return;
+            originalWarn.apply(console, args);
+          };
+        ` }} />
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
         <link href="/static/style.css" rel="stylesheet" />
