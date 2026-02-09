@@ -85,14 +85,32 @@ const competencesData = {
 
 // Fonction principale : Afficher le questionnaire selon la situation
 function showSituationQuestionnaire(situation) {
+  console.log('🎯 showSituationQuestionnaire appelée avec:', situation);
+  
   currentSituation = situation;
   
   // Masquer la sélection initiale
-  document.getElementById('onboarding-questionnaire').classList.add('hidden');
+  const onboardingDiv = document.getElementById('onboarding-questionnaire');
+  console.log('📋 Element onboarding-questionnaire:', onboardingDiv);
+  
+  if (onboardingDiv) {
+    onboardingDiv.classList.add('hidden');
+    console.log('✅ Section initiale masquée');
+  } else {
+    console.error('❌ Element onboarding-questionnaire introuvable !');
+  }
   
   // Afficher le questionnaire
   const questionnaire = document.getElementById('situation-questionnaire');
-  questionnaire.classList.remove('hidden');
+  console.log('📋 Element situation-questionnaire:', questionnaire);
+  
+  if (questionnaire) {
+    questionnaire.classList.remove('hidden');
+    console.log('✅ Questionnaire affiché');
+  } else {
+    console.error('❌ Element situation-questionnaire introuvable !');
+    return;
+  }
   
   // Mettre à jour le titre selon la situation
   const titles = {
@@ -379,5 +397,35 @@ function resetOnboarding() {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Onboarding system v4.7 loaded');
+  console.log('✅ Onboarding system v4.8 loaded');
+  
+  // Rendre les fonctions globales pour onclick
+  window.showSituationQuestionnaire = showSituationQuestionnaire;
+  window.selectPoste = selectPoste;
+  window.selectExperience = selectExperience;
+  window.validateCompetences = validateCompetences;
+  window.resetQuestionnaire = resetQuestionnaire;
+  window.resetOnboarding = resetOnboarding;
+  window.backToMetierSelection = backToMetierSelection;
+  
+  console.log('✅ Fonctions globales enregistrées');
+  
+  // Test de présence des éléments
+  const testElements = [
+    'onboarding-questionnaire',
+    'situation-questionnaire',
+    'question-poste',
+    'question-experience',
+    'question-competences',
+    'formations-recommandees'
+  ];
+  
+  testElements.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      console.log(`✅ Element #${id} trouvé`);
+    } else {
+      console.warn(`⚠️ Element #${id} introuvable`);
+    }
+  });
 });
