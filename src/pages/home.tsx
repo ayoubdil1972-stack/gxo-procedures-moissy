@@ -199,132 +199,59 @@ export function HomePage() {
       </div>
 
       {/* Quick Access Section */}
-      <div class="mt-12 bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-xl p-8 border-t-4 border-[#FF5A1A]">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+      <div class="mt-12 bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
           <i class="fas fa-bolt mr-3 text-yellow-500"></i>
           Accès rapide
         </h2>
-        <p class="text-gray-600 text-sm mb-6">Les raccourcis les plus utilisés par l'équipe</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Nouvel Arrivant - Questionnaire Intelligent */}
-          <a href="/nouveau" class="group block bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-pink-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-pink-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-graduation-cap"></i>
-              </div>
-              <span class="bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">NOUVEAU</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Nouvel Arrivant</h3>
-            <p class="text-gray-600 text-xs mb-2">Questionnaire intelligent pour formations personnalisées</p>
-            <div class="flex items-center text-pink-600 text-sm font-semibold">
-              <span>Démarrer →</span>
-            </div>
-          </a>
-
           {/* Réception Standard */}
-          <a href="/reception#reception-standard" class="group block bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-orange-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-orange-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-truck-loading"></i>
-              </div>
-              <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2 py-1 rounded-full">29 docs</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Réception Standard</h3>
-            <p class="text-gray-600 text-xs mb-2">Procédures de réception et déchargement marchandises</p>
-            <div class="flex items-center text-orange-600 text-sm font-semibold">
-              <span>Accéder →</span>
-            </div>
+          <a href="/reception#reception-standard" class="flex items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+            <i class="fas fa-truck-loading text-orange-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Réception standard</span>
           </a>
-
-          {/* Anomalies & FAQ */}
-          <a href="/anomalies" class="group block bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-red-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-red-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-exclamation-triangle"></i>
-              </div>
-              <span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">20 docs</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Anomalies & FAQ</h3>
-            <p class="text-gray-600 text-xs mb-2">Gestion incidents, litiges et arbres de décision</p>
-            <div class="flex items-center text-red-600 text-sm font-semibold">
-              <span>Résoudre →</span>
-            </div>
+          
+          {/* Agent de Quai - Chargement */}
+          <a href="/agent-quai#chargement-camion" class="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
+            <i class="fas fa-dolly text-yellow-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Chargement camion</span>
           </a>
-
-          {/* Contacts */}
-          <a href="/contacts" class="group block bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-indigo-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-indigo-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-address-book"></i>
-              </div>
-              <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">20 contacts</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Annuaire</h3>
-            <p class="text-gray-600 text-xs mb-2">Contacts de l'équipe : expédition, retours, litiges...</p>
-            <div class="flex items-center text-indigo-600 text-sm font-semibold">
-              <span>Contacter →</span>
-            </div>
+          
+          {/* Contrôleur - Contrôle Qualité */}
+          <a href="/controleur#controle-qualite" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+            <i class="fas fa-clipboard-check text-green-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Contrôle qualité</span>
           </a>
-
-          {/* Agent de Quai */}
-          <a href="/agent-quai" class="group block bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-yellow-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-yellow-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-hard-hat"></i>
-              </div>
-              <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-1 rounded-full">6 docs</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Agent de Quai</h3>
-            <p class="text-gray-600 text-xs mb-2">Opérations de déchargement et contrôle quai</p>
-            <div class="flex items-center text-yellow-600 text-sm font-semibold">
-              <span>Voir →</span>
-            </div>
-          </a>
-
-          {/* Contrôleur Qualité */}
-          <a href="/controleur" class="group block bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-green-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-green-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-user-check"></i>
-              </div>
-              <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">5 docs</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Contrôleur</h3>
-            <p class="text-gray-600 text-xs mb-2">Contrôle qualité et conformité réception</p>
-            <div class="flex items-center text-green-600 text-sm font-semibold">
-              <span>Contrôler →</span>
-            </div>
-          </a>
-
-          {/* Bibliothèque */}
-          <a href="/bibliotheque" class="group block bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-purple-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-purple-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-book"></i>
-              </div>
-              <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-1 rounded-full">34 docs</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Bibliothèque</h3>
-            <p class="text-gray-600 text-xs mb-2">Tous les documents et procédures centralisés</p>
-            <div class="flex items-center text-purple-600 text-sm font-semibold">
-              <span>Explorer →</span>
-            </div>
-          </a>
-
+          
           {/* Accueil Chauffeur */}
-          <a href="/accueil-chauffeur" class="group block bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 border border-blue-200">
-            <div class="flex items-start justify-between mb-3">
-              <div class="bg-blue-500 text-white rounded-lg w-12 h-12 flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition-transform">
-                <i class="fas fa-truck"></i>
-              </div>
-              <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">4 docs</span>
-            </div>
-            <h3 class="font-bold text-gray-800 mb-1 text-lg">Accueil Chauffeur</h3>
-            <p class="text-gray-600 text-xs mb-2">Procédures d'arrivée et livraison chauffeurs</p>
-            <div class="flex items-center text-blue-600 text-sm font-semibold">
-              <span>Accueillir →</span>
-            </div>
+          <a href="/accueil-chauffeur#accueil-standard" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+            <i class="fas fa-truck text-blue-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Accueil chauffeur</span>
+          </a>
+          
+          {/* Administrateur - Gestion Documents */}
+          <a href="/administrateur#gestion-documents" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+            <i class="fas fa-file-invoice text-purple-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Gestion documents</span>
+          </a>
+          
+          {/* Anomalies - Retour Fournisseur */}
+          <a href="/anomalies#retour-fournisseur" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+            <i class="fas fa-undo text-red-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Retour fournisseur</span>
+          </a>
+          
+          {/* Nouvel Arrivant - Questionnaire */}
+          <a href="/nouveau" class="flex items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
+            <i class="fas fa-graduation-cap text-pink-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Parcours intégration</span>
+          </a>
+          
+          {/* Contacts */}
+          <a href="/contacts" class="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+            <i class="fas fa-address-book text-indigo-500 text-2xl mr-3"></i>
+            <span class="font-semibold text-gray-800">Annuaire contacts</span>
           </a>
         </div>
       </div>
