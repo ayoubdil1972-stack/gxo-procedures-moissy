@@ -104,6 +104,120 @@ export function NouveauPage() {
             </div>
             <div id="onboarding-content"></div>
           </div>
+          
+          {/* Étape 1 : Sélection du métier */}
+          <div id="metier-selection-step" class="hidden bg-white rounded-lg p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold text-gray-800">
+                <i class="fas fa-briefcase mr-2 text-pink-500"></i>
+                Étape 1 : Quel est votre métier ?
+              </h3>
+              <button onclick="resetOnboarding()" class="text-sm text-gray-500 hover:text-gray-700">
+                <i class="fas fa-redo mr-1"></i>Recommencer
+              </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <button onclick="selectMetier('reception')" class="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-left transition-colors border-2 border-orange-200">
+                <i class="fas fa-truck-loading text-orange-500 text-2xl mb-2"></i>
+                <div class="font-bold text-gray-800">Réception</div>
+                <div class="text-sm text-gray-600">Déchargement et contrôle</div>
+              </button>
+              
+              <button onclick="selectMetier('agent-quai')" class="p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg text-left transition-colors border-2 border-yellow-200">
+                <i class="fas fa-hard-hat text-yellow-500 text-2xl mb-2"></i>
+                <div class="font-bold text-gray-800">Agent de Quai</div>
+                <div class="text-sm text-gray-600">Opérations de quai</div>
+              </button>
+              
+              <button onclick="selectMetier('controleur')" class="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-left transition-colors border-2 border-green-200">
+                <i class="fas fa-clipboard-check text-green-500 text-2xl mb-2"></i>
+                <div class="font-bold text-gray-800">Contrôleur</div>
+                <div class="text-sm text-gray-600">Contrôle qualité</div>
+              </button>
+              
+              <button onclick="selectMetier('administrateur')" class="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-left transition-colors border-2 border-purple-200">
+                <i class="fas fa-user-tie text-purple-500 text-2xl mb-2"></i>
+                <div class="font-bold text-gray-800">Administrateur</div>
+                <div class="text-sm text-gray-600">Gestion administrative</div>
+              </button>
+              
+              <button onclick="selectMetier('accueil-chauffeur')" class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-left transition-colors border-2 border-blue-200">
+                <i class="fas fa-truck text-blue-500 text-2xl mb-2"></i>
+                <div class="font-bold text-gray-800">Accueil Chauffeur</div>
+                <div class="text-sm text-gray-600">Arrivée et livraison</div>
+              </button>
+              
+              <button onclick="selectMetier('autre')" class="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors border-2 border-gray-200">
+                <i class="fas fa-ellipsis-h text-gray-500 text-2xl mb-2"></i>
+                <div class="font-bold text-gray-800">Autre métier</div>
+                <div class="text-sm text-gray-600">Support, maintenance...</div>
+              </button>
+            </div>
+          </div>
+          
+          {/* Étape 2 : Sélection de la formation */}
+          <div id="formation-selection-step" class="hidden bg-white rounded-lg p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold text-gray-800">
+                <i class="fas fa-graduation-cap mr-2 text-pink-500"></i>
+                Étape 2 : Quelle formation souhaitez-vous ?
+              </h3>
+              <button onclick="backToMetierSelection()" class="text-sm text-gray-500 hover:text-gray-700">
+                <i class="fas fa-arrow-left mr-1"></i>Retour
+              </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button onclick="selectFormation('initiale')" class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all text-left">
+                <i class="fas fa-book-open text-2xl mb-2"></i>
+                <div class="font-bold">Formation initiale</div>
+                <div class="text-sm opacity-90">Apprendre les bases du métier</div>
+              </button>
+              
+              <button onclick="selectFormation('perfectionnement')" class="p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transition-all text-left">
+                <i class="fas fa-chart-line text-2xl mb-2"></i>
+                <div class="font-bold">Perfectionnement</div>
+                <div class="text-sm opacity-90">Approfondir mes compétences</div>
+              </button>
+              
+              <button onclick="selectFormation('recyclage')" class="p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all text-left">
+                <i class="fas fa-sync-alt text-2xl mb-2"></i>
+                <div class="font-bold">Recyclage</div>
+                <div class="text-sm opacity-90">Mise à jour des procédures</div>
+              </button>
+              
+              <button onclick="selectFormation('caces')" class="p-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition-all text-left">
+                <i class="fas fa-forklift text-2xl mb-2"></i>
+                <div class="font-bold">CACES / Habilitations</div>
+                <div class="text-sm opacity-90">Certifications réglementaires</div>
+              </button>
+              
+              <button onclick="selectFormation('securite')" class="p-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-lg transition-all text-left">
+                <i class="fas fa-shield-alt text-2xl mb-2"></i>
+                <div class="font-bold">Sécurité</div>
+                <div class="text-sm opacity-90">EPI, gestes et postures, incendie</div>
+              </button>
+              
+              <button onclick="selectFormation('systeme')" class="p-4 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all text-left">
+                <i class="fas fa-desktop text-2xl mb-2"></i>
+                <div class="font-bold">Systèmes informatiques</div>
+                <div class="text-sm opacity-90">SAP, WMS, terminal RF</div>
+              </button>
+            </div>
+          </div>
+          
+          {/* Résultat final */}
+          <div id="final-result" class="hidden bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold text-gray-800">
+                <i class="fas fa-check-circle mr-2 text-green-500"></i>
+                Votre parcours de formation personnalisé
+              </h3>
+              <button onclick="resetOnboarding()" class="text-sm text-gray-500 hover:text-gray-700">
+                <i class="fas fa-redo mr-1"></i>Recommencer
+              </button>
+            </div>
+            <div id="final-content" class="space-y-4"></div>
+          </div>
         </div>
       </div>
 
