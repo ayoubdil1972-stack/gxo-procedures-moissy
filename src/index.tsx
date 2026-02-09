@@ -26,8 +26,8 @@ app.get('/login', loginRenderer, (c) => c.render(<LoginPage />))
 app.use('*', async (c, next) => {
   const path = c.req.path
   
-  // Ignorer la vérification pour la page de login et les fichiers statiques
-  if (path === '/login' || path.startsWith('/static/')) {
+  // Ignorer la vérification pour la page de login, test et les fichiers statiques
+  if (path === '/login' || path === '/test-questionnaire' || path.startsWith('/static/')) {
     await next()
     return
   }

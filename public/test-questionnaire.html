@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Questionnaire - GXO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-flask mr-2"></i>
+            Test Questionnaire Nouvel Arrivant
+        </h1>
+        
+        <div class="bg-white rounded-lg p-6 shadow-md mb-4">
+            <h2 class="text-xl font-bold mb-4">Instructions de test</h2>
+            <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                <li>Ouvrir la console (F12)</li>
+                <li>Cliquer sur "Nouvelle intégration"</li>
+                <li>Vérifier que le questionnaire apparaît</li>
+            </ol>
+        </div>
+
+        <!-- Section sélection situation -->
+        <div id="situation-selection" class="space-y-4">
+            <div class="bg-white rounded-lg p-6 shadow-md">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-clipboard-question mr-2 text-pink-500"></i>
+                    Quelle est votre situation ?
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button 
+                        onclick="showSituationQuestionnaire('nouveau')"
+                        class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all text-left">
+                        <i class="fas fa-user-plus text-2xl mb-2"></i>
+                        <div class="font-bold">Nouvelle intégration</div>
+                        <div class="text-sm opacity-90">Premier jour dans l'entreprise</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questionnaire détaillé -->
+        <div id="situation-questionnaire" class="hidden bg-white rounded-lg p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-gray-800">
+                    <i class="fas fa-clipboard-list mr-2 text-pink-500"></i>
+                    <span id="questionnaire-title">Profil et compétences</span>
+                </h3>
+                <button onclick="resetQuestionnaire()" class="text-sm text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-arrow-left mr-1"></i>Retour
+                </button>
+            </div>
+
+            <!-- Question 1 : Poste -->
+            <div id="question-poste" class="mb-6">
+                <h4 class="font-semibold text-gray-800 mb-3">
+                    <i class="fas fa-briefcase mr-2 text-blue-500"></i>
+                    Quel poste allez-vous occuper ?
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <button onclick="selectPoste('reception')" class="p-3 bg-orange-50 hover:bg-orange-100 rounded-lg text-left">
+                        <i class="fas fa-truck-loading text-orange-500 mr-2"></i>
+                        <span class="font-semibold">Réception</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 2 : Expérience -->
+            <div id="question-experience" class="hidden mb-6">
+                <h4 class="font-semibold text-gray-800 mb-3">Quelle est votre expérience ?</h4>
+                <button onclick="selectExperience('debutant')" class="p-4 bg-blue-50 rounded-lg">
+                    Débutant
+                </button>
+            </div>
+
+            <!-- Question 3 : Compétences -->
+            <div id="question-competences" class="hidden mb-6">
+                <h4 class="font-semibold text-gray-800 mb-3">Vos compétences</h4>
+                <label class="flex items-center p-3 bg-gray-50 rounded-lg">
+                    <input type="checkbox" class="competence-checkbox mr-3" value="sap"/>
+                    <span>SAP</span>
+                </label>
+                <button onclick="validateCompetences()" class="mt-4 w-full bg-pink-500 text-white px-6 py-3 rounded-lg">
+                    Voir mes formations
+                </button>
+            </div>
+        </div>
+
+        <!-- Formations recommandées -->
+        <div id="formations-recommandees" class="hidden bg-green-50 rounded-lg p-6 shadow-md">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Formations recommandées</h3>
+            <div id="formations-list"></div>
+        </div>
+
+        <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+            <h3 class="font-bold mb-2">État des éléments :</h3>
+            <div id="status" class="text-sm text-gray-700"></div>
+        </div>
+    </div>
+
+    <script src="/static/onboarding.js"></script>
+    <script>
+        // Test automatique après chargement
+        setTimeout(() => {
+            const status = document.getElementById('status');
+            const elements = [
+                'situation-selection',
+                'situation-questionnaire',
+                'question-poste',
+                'question-experience',
+                'question-competences',
+                'formations-recommandees'
+            ];
+            
+            let html = '';
+            elements.forEach(id => {
+                const el = document.getElementById(id);
+                const found = el ? '✅ Trouvé' : '❌ Introuvable';
+                html += `<div>${id}: ${found}</div>`;
+            });
+            
+            status.innerHTML = html;
+        }, 200);
+    </script>
+</body>
+</html>

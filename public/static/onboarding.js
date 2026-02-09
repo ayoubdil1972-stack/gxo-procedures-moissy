@@ -395,37 +395,46 @@ function resetOnboarding() {
   resetQuestionnaire();
 }
 
+// Rendre les fonctions globales immédiatement
+window.showSituationQuestionnaire = showSituationQuestionnaire;
+window.selectPoste = selectPoste;
+window.selectExperience = selectExperience;
+window.validateCompetences = validateCompetences;
+window.resetQuestionnaire = resetQuestionnaire;
+window.resetOnboarding = resetOnboarding;
+window.backToMetierSelection = backToMetierSelection;
+
 // Initialisation au chargement de la page
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('✅ Onboarding system v4.8 loaded');
-  
-  // Rendre les fonctions globales pour onclick
-  window.showSituationQuestionnaire = showSituationQuestionnaire;
-  window.selectPoste = selectPoste;
-  window.selectExperience = selectExperience;
-  window.validateCompetences = validateCompetences;
-  window.resetQuestionnaire = resetQuestionnaire;
-  window.resetOnboarding = resetOnboarding;
-  window.backToMetierSelection = backToMetierSelection;
-  
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initOnboarding);
+} else {
+  // Le DOM est déjà chargé
+  initOnboarding();
+}
+
+function initOnboarding() {
+  console.log('✅ Onboarding system v4.9 loaded');
   console.log('✅ Fonctions globales enregistrées');
   
-  // Test de présence des éléments
-  const testElements = [
-    'situation-selection',
-    'situation-questionnaire',
-    'question-poste',
-    'question-experience',
-    'question-competences',
-    'formations-recommandees'
-  ];
-  
-  testElements.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      console.log(`✅ Element #${id} trouvé`);
-    } else {
-      console.warn(`⚠️ Element #${id} introuvable`);
-    }
-  });
-});
+  // Attendre un peu pour que le HTML soit complètement injecté
+  setTimeout(function() {
+    // Test de présence des éléments
+    const testElements = [
+      'situation-selection',
+      'situation-questionnaire',
+      'question-poste',
+      'question-experience',
+      'question-competences',
+      'formations-recommandees'
+    ];
+    
+    testElements.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        console.log(`✅ Element #${id} trouvé`);
+      } else {
+        console.warn(`⚠️ Element #${id} introuvable`);
+      }
+    });
+  }, 100); // Attendre 100ms
+}
