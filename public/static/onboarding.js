@@ -1,319 +1,383 @@
 // Système de questionnaire intelligent pour l'onboarding
-// GXO Procedures Moissy-Cramayel
+// GXO Procedures Moissy-Cramayel - Version 4.7
 
-// Parcours d'onboarding selon la situation
-const onboardingPaths = {
-  'nouveau': {
-    title: 'Nouvelle intégration',
-    icon: 'fa-user-plus',
-    color: 'blue',
-    priority: ['securite', 'epi', 'site', 'outils', 'contacts', 'metier'],
-    message: 'Bienvenue chez GXO ! Commençons par l\'essentiel pour votre sécurité et votre intégration.',
-    steps: [
-      { title: 'Sécurité et EPI', duration: '30 min', essential: true },
-      { title: 'Visite du site', duration: '45 min', essential: true },
-      { title: 'Outils informatiques', duration: '30 min', essential: true },
-      { title: 'Formation métier', duration: 'Selon métier', essential: true },
-      { title: 'Contacts clés', duration: '15 min', essential: false }
-    ]
-  },
-  'changement-poste': {
-    title: 'Changement de poste',
-    icon: 'fa-exchange-alt',
-    color: 'green',
-    priority: ['metier', 'outils', 'securite'],
-    message: 'Vous connaissez déjà GXO, concentrons-nous sur votre nouveau métier.',
-    steps: [
-      { title: 'Formation nouveau métier', duration: 'Selon métier', essential: true },
-      { title: 'Outils spécifiques', duration: '20 min', essential: true },
-      { title: 'Procédures de sécurité spécifiques', duration: '15 min', essential: false },
-      { title: 'Nouveaux contacts', duration: '10 min', essential: false }
-    ]
-  },
-  'changement-site': {
-    title: 'Changement de site',
-    icon: 'fa-building',
-    color: 'orange',
-    priority: ['site', 'contacts', 'outils'],
-    message: 'Bienvenue à Moissy-Cramayel ! Découvrons les spécificités de ce site.',
-    steps: [
-      { title: 'Visite du site de Moissy', duration: '30 min', essential: true },
-      { title: 'Procédures locales', duration: '20 min', essential: true },
-      { title: 'Contacts du site', duration: '15 min', essential: true },
-      { title: 'Outils et systèmes locaux', duration: '15 min', essential: false }
-    ]
-  },
-  'retour-conge': {
-    title: 'Retour après absence',
-    icon: 'fa-calendar-check',
-    color: 'purple',
-    priority: ['outils', 'metier', 'contacts'],
-    message: 'Bon retour parmi nous ! Voici ce qui a évolué pendant votre absence.',
-    steps: [
-      { title: 'Mise à jour des procédures', duration: '20 min', essential: true },
-      { title: 'Nouvelles procédures', duration: '15 min', essential: false },
-      { title: 'Changements d\'organisation', duration: '10 min', essential: false },
-      { title: 'Rappel outils', duration: '10 min', essential: false }
-    ]
-  },
-  'interim': {
-    title: 'Intérimaire / CDD',
-    icon: 'fa-clock',
-    color: 'yellow',
-    priority: ['securite', 'epi', 'metier', 'contacts'],
-    message: 'Bienvenue pour votre mission ! Concentrons-nous sur l\'essentiel opérationnel.',
-    steps: [
-      { title: 'Sécurité et EPI (OBLIGATOIRE)', duration: '20 min', essential: true },
-      { title: 'Formation métier express', duration: '30 min', essential: true },
-      { title: 'Contacts essentiels', duration: '10 min', essential: true },
-      { title: 'Consignes spécifiques', duration: '15 min', essential: false }
-    ]
-  },
-  'formation': {
-    title: 'Formation / Montée en compétence',
-    icon: 'fa-graduation-cap',
-    color: 'indigo',
-    priority: ['metier'],
-    message: 'Excellente initiative ! Choisissez le métier ou processus que vous souhaitez apprendre.',
-    steps: [
-      { title: 'Formation théorique', duration: 'Selon processus', essential: true },
-      { title: 'Formation pratique', duration: 'Selon processus', essential: true },
-      { title: 'Suivi terrain', duration: '1-2 semaines', essential: false }
-    ]
-  }
-};
+// Variables globales pour stocker les réponses
+let currentSituation = '';
+let selectedPoste = '';
+let selectedExperience = '';
+let selectedCompetences = [];
 
-// Recommandations par métier
-const metierPaths = {
+// Données des métiers
+const metiers = {
   'reception': {
-    title: 'Réception',
-    procedures: [
-      { id: 'reception-standard', title: 'Réception palette fournisseur', priority: 'high', url: '/reception#reception-standard' },
-      { id: 'dechargement', title: 'Déchargement camion', priority: 'high', url: '/reception#dechargement' },
-      { id: 'etiquette', title: 'Rééditer une étiquette', priority: 'medium', url: '/reception#etiquette' },
-      { id: 'verification-dossier', title: 'Vérification dossier', priority: 'high', url: '/reception#verification-dossier' }
-    ],
-    documents: ['Manuel EWM Goods Receipt', 'Assigner camion à quai'],
-    formation: '2-3 jours avec tuteur'
+    name: 'Réception',
+    icon: 'fa-truck-loading',
+    color: 'orange',
+    formations: ['Formation initiale Réception', 'Utilisation terminal RF', 'SAP Goods Receipt', 'Sécurité quai'],
+    procedures: ['/reception']
   },
-  'ipl': {
-    title: 'IPL (Cariste)',
-    procedures: [
-      { id: 'affectation-tache', title: 'Affectation tâche', priority: 'high', url: '/cariste#affectation-tache' },
-      { id: 'mise-en-stock', title: 'Mise en stock', priority: 'high', url: '/cariste#mise-en-stock' },
-      { id: 'charger-batterie', title: 'Changement batterie', priority: 'medium', url: '/reception#charger-batterie' }
-    ],
-    documents: ['Checklists IPL', 'Procédures sécurité chariot'],
-    formation: '3-5 jours avec CACES requis'
+  'agent-quai': {
+    name: 'Agent de Quai',
+    icon: 'fa-hard-hat',
+    color: 'yellow',
+    formations: ['Opérations de quai', 'Sécurité chargement/déchargement', 'Gestion des palettes', 'CACES R489 cat. 3'],
+    procedures: ['/agent-quai']
   },
-  'preparation': {
-    title: 'Préparation',
-    procedures: [
-      { id: 'preparation-commande', title: 'Préparation commande standard', priority: 'high', url: '/manutention#preparation-commande' },
-      { id: 'montage-roll', title: 'Montage roll', priority: 'high', url: '/manutention#montage-roll' }
-    ],
-    documents: ['Procédures préparation', 'Checklists qualité'],
-    formation: '1-2 jours'
+  'controleur': {
+    name: 'Contrôleur',
+    icon: 'fa-clipboard-check',
+    color: 'green',
+    formations: ['Contrôle qualité', 'Procédures d\'inspection', 'Gestion des non-conformités', 'Documentation qualité'],
+    procedures: ['/controleur']
   },
-  'retours': {
-    title: 'Retours',
-    procedures: [
-      { id: 'retour-fournisseur', title: 'Retour fournisseur', priority: 'high', url: '/anomalies#retour-fournisseur' },
-      { id: 'collecte-dechets', title: 'Collecte déchets', priority: 'medium', url: '/retours#collecte-dechets' }
-    ],
-    documents: ['Procédures retours', 'Arbres de décision'],
-    formation: '1 jour'
+  'administrateur': {
+    name: 'Administrateur',
+    icon: 'fa-user-tie',
+    color: 'purple',
+    formations: ['Gestion administrative', 'SAP MM/WM', 'Reporting et KPI', 'Communication interne'],
+    procedures: ['/administrateur']
   },
-  'admin': {
-    title: 'Administratif',
-    procedures: [
-      { id: 'gestion-planning', title: 'Gestion planning', priority: 'high', url: '/contacts' },
-      { id: 'reporting', title: 'Reporting quotidien', priority: 'high', url: '/contacts' }
-    ],
-    documents: ['Tous les documents'],
-    formation: '2-3 jours'
+  'accueil-chauffeur': {
+    name: 'Accueil Chauffeur',
+    icon: 'fa-truck',
+    color: 'blue',
+    formations: ['Procédure d\'accueil', 'Gestion des livraisons', 'Sécurité chauffeurs', 'Portail Action'],
+    procedures: ['/accueil-chauffeur']
   },
-  'chef': {
-    title: 'Chef d\'équipe',
-    procedures: [
-      { id: 'management', title: 'Management équipe', priority: 'high', url: '/contacts' },
-      { id: 'reporting-chef', title: 'Reporting chef d\'équipe', priority: 'high', url: '/contacts' }
-    ],
-    documents: ['Tous les documents', 'Procédures management'],
-    formation: '1 semaine'
+  'autre': {
+    name: 'Autre métier',
+    icon: 'fa-ellipsis-h',
+    color: 'gray',
+    formations: ['Formation générale GXO', 'Sécurité', 'Outils informatiques'],
+    procedures: ['/']
   }
 };
 
-// Fonction principale : afficher le parcours selon la situation
-function showOnboardingPath(situation) {
-  const path = onboardingPaths[situation];
-  if (!path) return;
+// Données des niveaux d'expérience
+const experiences = {
+  'aucune': {
+    label: 'Aucune expérience',
+    formations: ['Formation de base', 'Sécurité obligatoire', 'Gestes et postures', 'Accompagnement renforcé']
+  },
+  'debutant': {
+    label: 'Débutant (moins d\'1 an)',
+    formations: ['Consolidation des bases', 'Procédures avancées', 'Autonomie progressive']
+  },
+  'intermediaire': {
+    label: 'Intermédiaire (1-3 ans)',
+    formations: ['Perfectionnement', 'Polyvalence', 'Cas complexes']
+  },
+  'experimente': {
+    label: 'Expérimenté (3+ ans)',
+    formations: ['Formation de formateur', 'Optimisation des processus', 'Mentorat']
+  }
+};
+
+// Données des compétences
+const competencesData = {
+  'sap': { name: 'SAP / S4HANA', icon: 'fa-desktop' },
+  'rf': { name: 'Terminal RF / Scanner', icon: 'fa-mobile-alt' },
+  'caces': { name: 'CACES', icon: 'fa-forklift' },
+  'controle': { name: 'Contrôle qualité', icon: 'fa-clipboard-check' },
+  'admin': { name: 'Gestion administrative', icon: 'fa-file-alt' },
+  'securite': { name: 'Sécurité / EPI', icon: 'fa-shield-alt' }
+};
+
+// Fonction principale : Afficher le questionnaire selon la situation
+function showSituationQuestionnaire(situation) {
+  currentSituation = situation;
   
-  // Masquer le questionnaire initial
+  // Masquer la sélection initiale
   document.getElementById('onboarding-questionnaire').classList.add('hidden');
   
-  // Afficher le résultat
-  const resultDiv = document.getElementById('onboarding-result');
+  // Afficher le questionnaire
+  const questionnaire = document.getElementById('situation-questionnaire');
+  questionnaire.classList.remove('hidden');
+  
+  // Mettre à jour le titre selon la situation
+  const titles = {
+    'nouveau': 'Nouvelle intégration - Définissons votre profil',
+    'changement-poste': 'Changement de poste - Votre nouveau rôle',
+    'changement-site': 'Changement de site - Adaptation à Moissy',
+    'retour-conge': 'Retour après absence - Remise à niveau',
+    'interim': 'Intérimaire / CDD - Formation rapide',
+    'formation': 'Formation continue - Développement des compétences'
+  };
+  
+  document.getElementById('questionnaire-title').textContent = titles[situation] || 'Profil et compétences';
+  
+  // Afficher la première question
+  document.getElementById('question-poste').classList.remove('hidden');
+  document.getElementById('question-experience').classList.add('hidden');
+  document.getElementById('question-competences').classList.add('hidden');
+  
+  // Réinitialiser les réponses
+  selectedPoste = '';
+  selectedExperience = '';
+  selectedCompetences = [];
+}
+
+// Question 1 : Sélection du poste
+function selectPoste(poste) {
+  selectedPoste = poste;
+  
+  // Masquer la question 1
+  document.getElementById('question-poste').classList.add('hidden');
+  
+  // Afficher la question 2
+  document.getElementById('question-experience').classList.remove('hidden');
+  
+  // Scroll vers le haut du questionnaire
+  document.getElementById('situation-questionnaire').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Question 2 : Sélection de l'expérience
+function selectExperience(experience) {
+  selectedExperience = experience;
+  
+  // Masquer la question 2
+  document.getElementById('question-experience').classList.add('hidden');
+  
+  // Afficher la question 3
+  document.getElementById('question-competences').classList.remove('hidden');
+  
+  // Scroll vers le haut du questionnaire
+  document.getElementById('situation-questionnaire').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Question 3 : Validation des compétences
+function validateCompetences() {
+  // Récupérer les compétences cochées
+  const checkboxes = document.querySelectorAll('.competence-checkbox:checked');
+  selectedCompetences = Array.from(checkboxes).map(cb => cb.value);
+  
+  // Masquer le questionnaire
+  document.getElementById('situation-questionnaire').classList.add('hidden');
+  
+  // Afficher les résultats
+  showFormationsRecommandees();
+}
+
+// Afficher les formations recommandées
+function showFormationsRecommandees() {
+  const resultDiv = document.getElementById('formations-recommandees');
   resultDiv.classList.remove('hidden');
   
-  // Construire le contenu
-  let html = `
-    <div class="mb-6 p-4 bg-${path.color}-50 border-l-4 border-${path.color}-500 rounded">
-      <div class="flex items-center mb-2">
-        <i class="fas ${path.icon} text-${path.color}-600 text-2xl mr-3"></i>
-        <h4 class="font-bold text-gray-800 text-lg">${path.title}</h4>
-      </div>
-      <p class="text-gray-700">${path.message}</p>
-    </div>
-    
-    <div class="mb-6">
-      <h4 class="font-bold text-gray-800 mb-3">
-        <i class="fas fa-list-check mr-2"></i>
-        Étapes de votre parcours :
-      </h4>
-      <div class="space-y-3">
-  `;
+  // Mettre à jour le résumé du profil
+  const metier = metiers[selectedPoste];
+  const experience = experiences[selectedExperience];
   
-  path.steps.forEach((step, index) => {
-    html += `
-      <div class="flex items-start p-3 bg-gray-50 rounded-lg">
-        <div class="bg-${path.color}-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
-          ${index + 1}
-        </div>
-        <div class="flex-1">
-          <div class="font-semibold text-gray-800">
-            ${step.title}
-            ${step.essential ? '<span class="ml-2 text-xs bg-red-500 text-white px-2 py-1 rounded">ESSENTIEL</span>' : ''}
+  document.getElementById('profil-poste').textContent = metier.name;
+  document.getElementById('profil-experience').textContent = experience.label;
+  document.getElementById('profil-competences').textContent = selectedCompetences.length + ' sélectionnée(s)';
+  
+  // Générer la liste des formations recommandées
+  const formationsList = document.getElementById('formations-list');
+  formationsList.innerHTML = '';
+  
+  // Formations essentielles selon le métier
+  const formations = [];
+  
+  // 1. Formations obligatoires de sécurité (toujours en premier)
+  if (currentSituation === 'nouveau' || currentSituation === 'interim') {
+    formations.push({
+      priority: 'essentiel',
+      title: 'Sécurité et EPI obligatoires',
+      description: 'Formation sécurité, port des EPI, gestes et postures',
+      duration: '2 heures',
+      icon: 'fa-shield-alt',
+      color: 'red',
+      link: '/anomalies'
+    });
+  }
+  
+  // 2. Formations métier de base
+  metier.formations.forEach((formation, index) => {
+    const needsFormation = index === 0 || (selectedExperience === 'aucune' || selectedExperience === 'debutant');
+    
+    if (needsFormation) {
+      formations.push({
+        priority: index === 0 ? 'essentiel' : 'recommande',
+        title: formation,
+        description: `Formation spécifique au poste ${metier.name}`,
+        duration: '4 heures',
+        icon: metier.icon,
+        color: metier.color,
+        link: metier.procedures[0]
+      });
+    }
+  });
+  
+  // 3. Formations selon l'expérience
+  if (selectedExperience === 'aucune' || selectedExperience === 'debutant') {
+    formations.push({
+      priority: 'recommande',
+      title: 'Accompagnement tuteur',
+      description: 'Suivi personnalisé par un tuteur expérimenté',
+      duration: '1 semaine',
+      icon: 'fa-user-friends',
+      color: 'blue',
+      link: '/contacts'
+    });
+  }
+  
+  if (selectedExperience === 'experimente') {
+    formations.push({
+      priority: 'optionnel',
+      title: 'Formation de formateur',
+      description: 'Devenir référent et former les nouveaux collaborateurs',
+      duration: '2 jours',
+      icon: 'fa-chalkboard-teacher',
+      color: 'purple',
+      link: '/nouveau'
+    });
+  }
+  
+  // 4. Formations selon les compétences manquantes
+  const competencesManquantes = [];
+  
+  if (!selectedCompetences.includes('sap') && ['reception', 'administrateur', 'controleur'].includes(selectedPoste)) {
+    competencesManquantes.push({
+      priority: 'essentiel',
+      title: 'Formation SAP / S4HANA',
+      description: 'Utilisation du système de gestion SAP',
+      duration: '1 journée',
+      icon: 'fa-desktop',
+      color: 'indigo',
+      link: '/bibliotheque'
+    });
+  }
+  
+  if (!selectedCompetences.includes('rf') && ['reception', 'agent-quai', 'controleur'].includes(selectedPoste)) {
+    competencesManquantes.push({
+      priority: 'essentiel',
+      title: 'Terminal RF / Scanner',
+      description: 'Maîtrise du terminal RF et des scanners',
+      duration: '2 heures',
+      icon: 'fa-mobile-alt',
+      color: 'green',
+      link: '/bibliotheque'
+    });
+  }
+  
+  if (!selectedCompetences.includes('caces') && selectedPoste === 'agent-quai') {
+    competencesManquantes.push({
+      priority: 'essentiel',
+      title: 'CACES R489 catégorie 3',
+      description: 'Certification obligatoire pour chariot élévateur',
+      duration: '3 jours',
+      icon: 'fa-forklift',
+      color: 'orange',
+      link: '/contacts'
+    });
+  }
+  
+  formations.push(...competencesManquantes);
+  
+  // 5. Formation système si changement de site
+  if (currentSituation === 'changement-site') {
+    formations.push({
+      priority: 'recommande',
+      title: 'Spécificités du site de Moissy',
+      description: 'Procédures locales et organisation du site',
+      duration: '1/2 journée',
+      icon: 'fa-building',
+      color: 'orange',
+      link: '/nouveau'
+    });
+  }
+  
+  // Trier les formations par priorité
+  const priorityOrder = { 'essentiel': 1, 'recommande': 2, 'optionnel': 3 };
+  formations.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+  
+  // Afficher les formations
+  formations.forEach((formation) => {
+    const priorityBadges = {
+      'essentiel': '<span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">Essentiel</span>',
+      'recommande': '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Recommandé</span>',
+      'optionnel': '<span class="bg-gray-500 text-white text-xs px-2 py-1 rounded-full">Optionnel</span>'
+    };
+    
+    const colorClasses = {
+      'red': 'border-red-500 bg-red-50',
+      'orange': 'border-orange-500 bg-orange-50',
+      'yellow': 'border-yellow-500 bg-yellow-50',
+      'green': 'border-green-500 bg-green-50',
+      'blue': 'border-blue-500 bg-blue-50',
+      'indigo': 'border-indigo-500 bg-indigo-50',
+      'purple': 'border-purple-500 bg-purple-50',
+      'gray': 'border-gray-500 bg-gray-50'
+    };
+    
+    const formationCard = `
+      <div class="bg-white rounded-lg p-4 shadow-md border-l-4 ${colorClasses[formation.color]}">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex items-center">
+            <i class="fas ${formation.icon} text-${formation.color}-500 text-2xl mr-3"></i>
+            <div>
+              <h4 class="font-bold text-gray-800">${formation.title}</h4>
+              <p class="text-sm text-gray-600">${formation.description}</p>
+            </div>
           </div>
-          <div class="text-sm text-gray-600">Durée : ${step.duration}</div>
+          ${priorityBadges[formation.priority]}
+        </div>
+        <div class="flex items-center justify-between mt-3">
+          <div class="flex items-center text-sm text-gray-600">
+            <i class="fas fa-clock mr-2"></i>
+            <span>Durée : ${formation.duration}</span>
+          </div>
+          <a href="${formation.link}" class="text-${formation.color}-600 hover:text-${formation.color}-700 font-semibold text-sm">
+            Voir les procédures <i class="fas fa-arrow-right ml-1"></i>
+          </a>
         </div>
       </div>
     `;
+    
+    formationsList.innerHTML += formationCard;
   });
   
-  html += `
-      </div>
-    </div>
-    
-    <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
-      <h4 class="font-bold text-gray-800 mb-3">
-        <i class="fas fa-arrow-right mr-2 text-indigo-600"></i>
-        Prochaine étape
-      </h4>
-      <p class="text-gray-700 mb-4">
-        ${situation === 'formation' || situation === 'changement-poste' 
-          ? 'Sélectionnez votre métier pour accéder aux procédures spécifiques.'
-          : 'Commencez par les étapes essentielles marquées ci-dessus, puis sélectionnez votre métier.'}
-      </p>
-      <button onclick="showMetierSelection()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
-        <i class="fas fa-briefcase mr-2"></i>
-        Choisir mon métier
-      </button>
-    </div>
-  `;
-  
-  document.getElementById('onboarding-content').innerHTML = html;
+  // Scroll vers les résultats
+  resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Afficher la sélection de métier
-function showMetierSelection() {
-  document.getElementById('metier-selection').classList.remove('hidden');
-  document.getElementById('metier-selection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// Afficher le parcours métier
-function showMetierPath(metier) {
-  const path = metierPaths[metier];
-  if (!path) return;
-  
-  let html = `
-    <div class="bg-white rounded-lg p-6 shadow-md mt-6">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">
-        <i class="fas fa-route mr-2 text-green-600"></i>
-        Parcours formation : ${path.title}
-      </h3>
-      
-      <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded">
-        <div class="font-semibold text-gray-800 mb-2">Durée de formation : ${path.formation}</div>
-        <div class="text-sm text-gray-600">Formation théorique + pratique terrain avec tuteur</div>
-      </div>
-      
-      <div class="mb-6">
-        <h4 class="font-bold text-gray-800 mb-3">
-          <i class="fas fa-list-ol mr-2"></i>
-          Procédures à maîtriser (par ordre de priorité) :
-        </h4>
-        <div class="space-y-2">
-  `;
-  
-  path.procedures.forEach((proc, index) => {
-    const priorityBadge = proc.priority === 'high' 
-      ? '<span class="text-xs bg-red-500 text-white px-2 py-1 rounded ml-2">PRIORITAIRE</span>'
-      : '<span class="text-xs bg-orange-400 text-white px-2 py-1 rounded ml-2">SECONDAIRE</span>';
-    
-    html += `
-      <a href="${proc.url}" class="flex items-center p-3 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors border border-gray-200">
-        <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
-          ${index + 1}
-        </div>
-        <div class="flex-1">
-          <div class="font-semibold text-gray-800">${proc.title} ${priorityBadge}</div>
-        </div>
-        <i class="fas fa-arrow-right text-gray-400"></i>
-      </a>
-    `;
-  });
-  
-  html += `
-        </div>
-      </div>
-      
-      <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h4 class="font-bold text-gray-800 mb-2">
-          <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
-          Conseil
-        </h4>
-        <p class="text-gray-700 text-sm">
-          Suivez les procédures dans l'ordre indiqué. Les procédures <strong>PRIORITAIRES</strong> sont essentielles pour votre premier jour. 
-          Utilisez les checklists interactives pour valider votre apprentissage.
-        </p>
-      </div>
-      
-      <div class="mt-4 flex gap-3">
-        <a href="/${metier === 'ipl' ? 'cariste' : metier}" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors text-center">
-          <i class="fas fa-book-open mr-2"></i>
-          Accéder aux procédures ${path.title}
-        </a>
-        <button onclick="resetOnboarding()" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
-          <i class="fas fa-redo mr-2"></i>
-          Recommencer
-        </button>
-      </div>
-    </div>
-  `;
-  
-  document.getElementById('metier-selection').insertAdjacentHTML('afterend', html);
-  
-  // Scroll vers le résultat
-  setTimeout(() => {
-    const newElement = document.getElementById('metier-selection').nextElementSibling;
-    newElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+// Retour à la sélection du métier
+function backToMetierSelection() {
+  document.getElementById('formation-selection-step').classList.add('hidden');
+  document.getElementById('metier-selection-step').classList.remove('hidden');
 }
 
 // Réinitialiser le questionnaire
-function resetOnboarding() {
-  // Masquer les résultats
-  document.getElementById('onboarding-result').classList.add('hidden');
-  document.getElementById('metier-selection').classList.add('hidden');
+function resetQuestionnaire() {
+  // Réinitialiser les variables
+  currentSituation = '';
+  selectedPoste = '';
+  selectedExperience = '';
+  selectedCompetences = [];
   
-  // Réafficher le questionnaire
+  // Décocher toutes les checkboxes
+  document.querySelectorAll('.competence-checkbox').forEach(cb => cb.checked = false);
+  
+  // Masquer toutes les sections
+  document.getElementById('situation-questionnaire').classList.add('hidden');
+  document.getElementById('metier-selection-step').classList.add('hidden');
+  document.getElementById('formation-selection-step').classList.add('hidden');
+  document.getElementById('final-result').classList.add('hidden');
+  document.getElementById('formations-recommandees').classList.add('hidden');
+  
+  // Réafficher la sélection initiale
   document.getElementById('onboarding-questionnaire').classList.remove('hidden');
   
-  // Supprimer les parcours métier dynamiques
-  const metierResults = document.querySelectorAll('#metier-selection ~ .bg-white.rounded-lg.p-6.shadow-md');
-  metierResults.forEach(el => el.remove());
-  
   // Scroll vers le haut
-  document.getElementById('onboarding-questionnaire').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// Fonction héritée pour compatibilité
+function resetOnboarding() {
+  resetQuestionnaire();
+}
+
+// Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Onboarding system v4.7 loaded');
+});
