@@ -255,18 +255,9 @@ function showFormationsRecommandeesModal() {
   
   console.log('✅ Formations affichées:', formations.length);
 }
-  const metier = metiers[selectedPoste];
-  const experience = experiences[selectedExperience];
-  
-  document.getElementById('profil-poste').textContent = metier.name;
-  document.getElementById('profil-experience').textContent = experience.label;
-  document.getElementById('profil-competences').textContent = selectedCompetences.length + ' sélectionnée(s)';
-  
-  // Générer la liste des formations recommandées
-  const formationsList = document.getElementById('formations-list');
-  formationsList.innerHTML = '';
-  
-  // Formations essentielles selon le métier
+
+// Fonction pour générer les formations recommandées
+function generateFormations() {
   const formations = [];
   
   // 1. Formations obligatoires de sécurité (toujours en premier)
