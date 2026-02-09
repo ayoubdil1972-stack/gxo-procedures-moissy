@@ -128,12 +128,13 @@ function showSituationQuestionnaire(situation) {
   // Changer la couleur du header du modal
   const modalHeader = document.getElementById('modal-header');
   if (modalHeader) {
-    // Retirer toutes les anciennes classes de couleur
-    modalHeader.className = modalHeader.className.replace(/from-\w+-\d+/g, '').replace(/to-\w+-\d+/g, '');
+    // Retirer toutes les anciennes classes de couleur (from-* et to-*)
+    const classes = modalHeader.className.split(' ').filter(cls => !cls.startsWith('from-') && !cls.startsWith('to-'));
     
     // Ajouter les nouvelles couleurs
     const situationColors = colors[situation] || colors['nouveau'];
-    modalHeader.classList.add(situationColors.from, situationColors.to);
+    modalHeader.className = [...classes, situationColors.from, situationColors.to].join(' ');
+    console.log('🎨 Couleur du header changée:', situationColors);
   }
   
   // Afficher la première question

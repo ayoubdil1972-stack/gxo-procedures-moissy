@@ -591,7 +591,7 @@ export function NouveauPage() {
       <div id="questionnaire-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick="closeQuestionnaireModal(event)">
         <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
           {/* Header du modal */}
-          <div id="modal-header" class="sticky top-0 bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-lg">
+          <div id="modal-header" class="sticky top-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-t-lg">
             <div class="flex items-center justify-between">
               <h3 class="text-2xl font-bold">
                 <i class="fas fa-clipboard-list mr-3"></i>
