@@ -28,7 +28,7 @@ export function NouveauPage() {
         </p>
         
         {/* Questionnaire interactif */}
-        <div id="onboarding-questionnaire" class="space-y-4">
+        <div id="situation-selection" class="space-y-4">
           <div class="bg-white rounded-lg p-6 shadow-md">
             <h3 class="text-lg font-bold text-gray-800 mb-4">
               <i class="fas fa-clipboard-question mr-2 text-pink-500"></i>

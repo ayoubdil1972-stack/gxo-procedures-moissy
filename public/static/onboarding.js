@@ -90,14 +90,14 @@ function showSituationQuestionnaire(situation) {
   currentSituation = situation;
   
   // Masquer la sélection initiale
-  const onboardingDiv = document.getElementById('onboarding-questionnaire');
-  console.log('📋 Element onboarding-questionnaire:', onboardingDiv);
+  const onboardingDiv = document.getElementById('situation-selection');
+  console.log('📋 Element situation-selection:', onboardingDiv);
   
   if (onboardingDiv) {
     onboardingDiv.classList.add('hidden');
     console.log('✅ Section initiale masquée');
   } else {
-    console.error('❌ Element onboarding-questionnaire introuvable !');
+    console.error('❌ Element situation-selection introuvable !');
   }
   
   // Afficher le questionnaire
@@ -384,7 +384,7 @@ function resetQuestionnaire() {
   document.getElementById('formations-recommandees').classList.add('hidden');
   
   // Réafficher la sélection initiale
-  document.getElementById('onboarding-questionnaire').classList.remove('hidden');
+  document.getElementById('situation-selection').classList.remove('hidden');
   
   // Scroll vers le haut
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Test de présence des éléments
   const testElements = [
-    'onboarding-questionnaire',
+    'situation-selection',
     'situation-questionnaire',
     'question-poste',
     'question-experience',
