@@ -110,9 +110,30 @@ function showSituationQuestionnaire(situation) {
     'formation': 'Formation continue - Développement des compétences'
   };
   
+  // Couleurs correspondant à chaque situation (comme sur les boutons)
+  const colors = {
+    'nouveau': { from: 'from-blue-500', to: 'to-blue-600' },
+    'changement-poste': { from: 'from-green-500', to: 'to-green-600' },
+    'changement-site': { from: 'from-orange-500', to: 'to-orange-600' },
+    'retour-conge': { from: 'from-purple-500', to: 'to-purple-600' },
+    'interim': { from: 'from-yellow-500', to: 'to-yellow-600' },
+    'formation': { from: 'from-indigo-500', to: 'to-indigo-600' }
+  };
+  
   const titleElement = document.getElementById('modal-questionnaire-title');
   if (titleElement) {
     titleElement.textContent = titles[situation] || 'Questionnaire de formation';
+  }
+  
+  // Changer la couleur du header du modal
+  const modalHeader = document.getElementById('modal-header');
+  if (modalHeader) {
+    // Retirer toutes les anciennes classes de couleur
+    modalHeader.className = modalHeader.className.replace(/from-\w+-\d+/g, '').replace(/to-\w+-\d+/g, '');
+    
+    // Ajouter les nouvelles couleurs
+    const situationColors = colors[situation] || colors['nouveau'];
+    modalHeader.classList.add(situationColors.from, situationColors.to);
   }
   
   // Afficher la première question
