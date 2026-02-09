@@ -83,32 +83,20 @@ const competencesData = {
   'securite': { name: 'Sécurité / EPI', icon: 'fa-shield-alt' }
 };
 
-// Fonction principale : Afficher le questionnaire selon la situation
+// Fonction principale : Afficher le questionnaire selon la situation dans un modal
 function showSituationQuestionnaire(situation) {
   console.log('🎯 showSituationQuestionnaire appelée avec:', situation);
   
   currentSituation = situation;
   
-  // Masquer la sélection initiale
-  const onboardingDiv = document.getElementById('situation-selection');
-  console.log('📋 Element situation-selection:', onboardingDiv);
-  
-  if (onboardingDiv) {
-    onboardingDiv.classList.add('hidden');
-    console.log('✅ Section initiale masquée');
+  // Afficher le modal
+  const modal = document.getElementById('questionnaire-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Bloquer le scroll de la page
+    console.log('✅ Modal ouvert');
   } else {
-    console.error('❌ Element situation-selection introuvable !');
-  }
-  
-  // Afficher le questionnaire
-  const questionnaire = document.getElementById('situation-questionnaire');
-  console.log('📋 Element situation-questionnaire:', questionnaire);
-  
-  if (questionnaire) {
-    questionnaire.classList.remove('hidden');
-    console.log('✅ Questionnaire affiché');
-  } else {
-    console.error('❌ Element situation-questionnaire introuvable !');
+    console.error('❌ Modal introuvable !');
     return;
   }
   
@@ -122,66 +110,151 @@ function showSituationQuestionnaire(situation) {
     'formation': 'Formation continue - Développement des compétences'
   };
   
-  document.getElementById('questionnaire-title').textContent = titles[situation] || 'Profil et compétences';
+  const titleElement = document.getElementById('modal-questionnaire-title');
+  if (titleElement) {
+    titleElement.textContent = titles[situation] || 'Questionnaire de formation';
+  }
   
   // Afficher la première question
-  document.getElementById('question-poste').classList.remove('hidden');
-  document.getElementById('question-experience').classList.add('hidden');
-  document.getElementById('question-competences').classList.add('hidden');
+  document.getElementById('modal-question-poste').classList.remove('hidden');
+  document.getElementById('modal-question-experience').classList.add('hidden');
+  document.getElementById('modal-question-competences').classList.add('hidden');
+  document.getElementById('modal-formations-recommandees').classList.add('hidden');
   
   // Réinitialiser les réponses
   selectedPoste = '';
   selectedExperience = '';
   selectedCompetences = [];
+  
+  // Décocher toutes les checkboxes
+  document.querySelectorAll('.modal-competence-checkbox').forEach(cb => cb.checked = false);
 }
 
-// Question 1 : Sélection du poste
-function selectPoste(poste) {
+// Fermer le modal
+function closeQuestionnaireModal(event) {
+  // Si event existe et que c'est un clic sur le backdrop, fermer
+  if (event && event.target.id !== 'questionnaire-modal') return;
+  
+  const modal = document.getElementById('questionnaire-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = ''; // Réactiver le scroll
+    console.log('✅ Modal fermé');
+  }
+}
+
+// Question 1 : Sélection du poste (version modal)
+function selectPosteModal(poste) {
   selectedPoste = poste;
+  console.log('✅ Poste sélectionné:', poste);
   
   // Masquer la question 1
-  document.getElementById('question-poste').classList.add('hidden');
+  document.getElementById('modal-question-poste').classList.add('hidden');
   
   // Afficher la question 2
-  document.getElementById('question-experience').classList.remove('hidden');
-  
-  // Scroll vers le haut du questionnaire
-  document.getElementById('situation-questionnaire').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('modal-question-experience').classList.remove('hidden');
 }
 
-// Question 2 : Sélection de l'expérience
-function selectExperience(experience) {
+// Question 2 : Sélection de l'expérience (version modal)
+function selectExperienceModal(experience) {
   selectedExperience = experience;
+  console.log('✅ Expérience sélectionnée:', experience);
   
   // Masquer la question 2
-  document.getElementById('question-experience').classList.add('hidden');
+  document.getElementById('modal-question-experience').classList.add('hidden');
   
   // Afficher la question 3
-  document.getElementById('question-competences').classList.remove('hidden');
-  
-  // Scroll vers le haut du questionnaire
-  document.getElementById('situation-questionnaire').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('modal-question-competences').classList.remove('hidden');
 }
 
-// Question 3 : Validation des compétences
-function validateCompetences() {
+// Question 3 : Validation des compétences (version modal)
+function validateCompetencesModal() {
   // Récupérer les compétences cochées
-  const checkboxes = document.querySelectorAll('.competence-checkbox:checked');
+  const checkboxes = document.querySelectorAll('.modal-competence-checkbox:checked');
   selectedCompetences = Array.from(checkboxes).map(cb => cb.value);
   
-  // Masquer le questionnaire
-  document.getElementById('situation-questionnaire').classList.add('hidden');
+  console.log('✅ Compétences sélectionnées:', selectedCompetences);
+  
+  // Masquer la question 3
+  document.getElementById('modal-question-competences').classList.add('hidden');
   
   // Afficher les résultats
-  showFormationsRecommandees();
+  showFormationsRecommandeesModal();
 }
 
-// Afficher les formations recommandées
-function showFormationsRecommandees() {
-  const resultDiv = document.getElementById('formations-recommandees');
+// Afficher les formations recommandées dans le modal
+function showFormationsRecommandeesModal() {
+  const resultDiv = document.getElementById('modal-formations-recommandees');
   resultDiv.classList.remove('hidden');
   
   // Mettre à jour le résumé du profil
+  const posteNames = {
+    'reception': 'Réception',
+    'agent-quai': 'Agent de Quai',
+    'controleur': 'Contrôleur',
+    'administrateur': 'Administrateur',
+    'accueil-chauffeur': 'Accueil Chauffeur',
+    'autre': 'Autre métier'
+  };
+  
+  const experienceNames = {
+    'aucune': 'Aucune',
+    'debutant': 'Débutant',
+    'intermediaire': 'Intermédiaire',
+    'experimente': 'Expérimenté'
+  };
+  
+  document.getElementById('modal-profil-poste').textContent = posteNames[selectedPoste] || selectedPoste;
+  document.getElementById('modal-profil-experience').textContent = experienceNames[selectedExperience] || selectedExperience;
+  document.getElementById('modal-profil-competences').textContent = selectedCompetences.length + ' compétence(s)';
+  
+  // Générer les formations recommandées
+  const formations = generateFormations();
+  const formationsListDiv = document.getElementById('modal-formations-list');
+  
+  formationsListDiv.innerHTML = formations.map(formation => {
+    const priorityBadges = {
+      'essentiel': '<span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">Essentiel</span>',
+      'recommande': '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Recommandé</span>',
+      'optionnel': '<span class="bg-gray-500 text-white text-xs px-2 py-1 rounded-full">Optionnel</span>'
+    };
+    
+    const colorClasses = {
+      'red': 'border-red-500 bg-red-50',
+      'orange': 'border-orange-500 bg-orange-50',
+      'yellow': 'border-yellow-500 bg-yellow-50',
+      'green': 'border-green-500 bg-green-50',
+      'blue': 'border-blue-500 bg-blue-50',
+      'indigo': 'border-indigo-500 bg-indigo-50',
+      'purple': 'border-purple-500 bg-purple-50',
+      'gray': 'border-gray-500 bg-gray-50'
+    };
+    
+    return `
+      <div class="bg-white rounded-lg p-4 shadow-md border-l-4 ${colorClasses[formation.color]}">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex items-center">
+            <i class="fas ${formation.icon} text-${formation.color}-500 text-2xl mr-3"></i>
+            <div>
+              <h4 class="font-bold text-gray-800">${formation.title}</h4>
+              <p class="text-sm text-gray-600">${formation.description}</p>
+            </div>
+          </div>
+          ${priorityBadges[formation.priority]}
+        </div>
+        <div class="flex items-center justify-between mt-3">
+          <div class="flex items-center text-sm text-gray-600">
+            <i class="fas fa-clock mr-1"></i>
+            <span>${formation.duration}</span>
+          </div>
+          ${formation.link ? `<a href="${formation.link}" class="text-${formation.color}-600 hover:underline text-sm font-semibold">Voir les procédures →</a>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  console.log('✅ Formations affichées:', formations.length);
+}
   const metier = metiers[selectedPoste];
   const experience = experiences[selectedExperience];
   
@@ -397,6 +470,10 @@ function resetOnboarding() {
 
 // Rendre les fonctions globales immédiatement
 window.showSituationQuestionnaire = showSituationQuestionnaire;
+window.closeQuestionnaireModal = closeQuestionnaireModal;
+window.selectPosteModal = selectPosteModal;
+window.selectExperienceModal = selectExperienceModal;
+window.validateCompetencesModal = validateCompetencesModal;
 window.selectPoste = selectPoste;
 window.selectExperience = selectExperience;
 window.validateCompetences = validateCompetences;

@@ -586,6 +586,185 @@ export function NouveauPage() {
           <i class="fas fa-home mr-2"></i>Retour à l'accueil
         </a>
       </div>
+
+      {/* Modal Questionnaire - S'affiche par-dessus la page */}
+      <div id="questionnaire-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick="closeQuestionnaireModal(event)">
+        <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+          {/* Header du modal */}
+          <div class="sticky top-0 bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-lg">
+            <div class="flex items-center justify-between">
+              <h3 class="text-2xl font-bold">
+                <i class="fas fa-clipboard-list mr-3"></i>
+                <span id="modal-questionnaire-title">Questionnaire de formation</span>
+              </h3>
+              <button onclick="closeQuestionnaireModal()" class="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all">
+                <i class="fas fa-times text-2xl"></i>
+              </button>
+            </div>
+          </div>
+
+          {/* Contenu du questionnaire dans le modal */}
+          <div class="p-6">
+            {/* Question 1 : Poste */}
+            <div id="modal-question-poste" class="mb-6">
+              <h4 class="font-semibold text-gray-800 mb-4 text-lg">
+                <i class="fas fa-briefcase mr-2 text-blue-500"></i>
+                Question 1/3 : Quel poste allez-vous occuper ?
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <button onclick="selectPosteModal('reception')" class="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-left transition-colors border-2 border-transparent hover:border-orange-500 hover:shadow-md">
+                  <i class="fas fa-truck-loading text-orange-500 text-2xl mb-2"></i>
+                  <div class="font-semibold text-gray-800">Réception</div>
+                  <div class="text-sm text-gray-600">Déchargement et contrôle</div>
+                </button>
+                <button onclick="selectPosteModal('agent-quai')" class="p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg text-left transition-colors border-2 border-transparent hover:border-yellow-500 hover:shadow-md">
+                  <i class="fas fa-hard-hat text-yellow-500 text-2xl mb-2"></i>
+                  <div class="font-semibold text-gray-800">Agent de Quai</div>
+                  <div class="text-sm text-gray-600">Opérations de quai</div>
+                </button>
+                <button onclick="selectPosteModal('controleur')" class="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-left transition-colors border-2 border-transparent hover:border-green-500 hover:shadow-md">
+                  <i class="fas fa-clipboard-check text-green-500 text-2xl mb-2"></i>
+                  <div class="font-semibold text-gray-800">Contrôleur</div>
+                  <div class="text-sm text-gray-600">Contrôle qualité</div>
+                </button>
+                <button onclick="selectPosteModal('administrateur')" class="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-left transition-colors border-2 border-transparent hover:border-purple-500 hover:shadow-md">
+                  <i class="fas fa-user-tie text-purple-500 text-2xl mb-2"></i>
+                  <div class="font-semibold text-gray-800">Administrateur</div>
+                  <div class="text-sm text-gray-600">Gestion administrative</div>
+                </button>
+                <button onclick="selectPosteModal('accueil-chauffeur')" class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-left transition-colors border-2 border-transparent hover:border-blue-500 hover:shadow-md">
+                  <i class="fas fa-truck text-blue-500 text-2xl mb-2"></i>
+                  <div class="font-semibold text-gray-800">Accueil Chauffeur</div>
+                  <div class="text-sm text-gray-600">Accueil et livraison</div>
+                </button>
+                <button onclick="selectPosteModal('autre')" class="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors border-2 border-transparent hover:border-gray-500 hover:shadow-md">
+                  <i class="fas fa-ellipsis-h text-gray-500 text-2xl mb-2"></i>
+                  <div class="font-semibold text-gray-800">Autre</div>
+                  <div class="text-sm text-gray-600">Autres postes</div>
+                </button>
+              </div>
+            </div>
+
+            {/* Question 2 : Expérience */}
+            <div id="modal-question-experience" class="hidden mb-6">
+              <h4 class="font-semibold text-gray-800 mb-4 text-lg">
+                <i class="fas fa-history mr-2 text-green-500"></i>
+                Question 2/3 : Quelle est votre expérience dans la logistique ?
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button onclick="selectExperienceModal('aucune')" class="p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-lg text-left transition-all border-2 border-transparent hover:border-red-500 hover:shadow-md">
+                  <div class="font-bold text-gray-800">Aucune expérience</div>
+                  <div class="text-sm text-gray-600">Première expérience en logistique</div>
+                </button>
+                <button onclick="selectExperienceModal('debutant')" class="p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg text-left transition-all border-2 border-transparent hover:border-orange-500 hover:shadow-md">
+                  <div class="font-bold text-gray-800">Débutant (moins d'1 an)</div>
+                  <div class="text-sm text-gray-600">Quelques mois d'expérience</div>
+                </button>
+                <button onclick="selectExperienceModal('intermediaire')" class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg text-left transition-all border-2 border-transparent hover:border-blue-500 hover:shadow-md">
+                  <div class="font-bold text-gray-800">Intermédiaire (1-3 ans)</div>
+                  <div class="text-sm text-gray-600">Bonne connaissance du secteur</div>
+                </button>
+                <button onclick="selectExperienceModal('experimente')" class="p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg text-left transition-all border-2 border-transparent hover:border-green-500 hover:shadow-md">
+                  <div class="font-bold text-gray-800">Expérimenté (3+ ans)</div>
+                  <div class="text-sm text-gray-600">Expertise confirmée</div>
+                </button>
+              </div>
+            </div>
+
+            {/* Question 3 : Compétences */}
+            <div id="modal-question-competences" class="hidden mb-6">
+              <h4 class="font-semibold text-gray-800 mb-4 text-lg">
+                <i class="fas fa-check-circle mr-2 text-purple-500"></i>
+                Question 3/3 : Quelles compétences possédez-vous déjà ?
+              </h4>
+              <div class="text-sm text-gray-600 mb-3">
+                <i class="fas fa-info-circle mr-1"></i>
+                Sélectionnez toutes les compétences que vous maîtrisez
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                  <input type="checkbox" class="modal-competence-checkbox mr-3" value="sap" />
+                  <i class="fas fa-desktop text-blue-500 mr-2"></i>
+                  <span>SAP / S4HANA</span>
+                </label>
+                <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                  <input type="checkbox" class="modal-competence-checkbox mr-3" value="rf" />
+                  <i class="fas fa-mobile-alt text-green-500 mr-2"></i>
+                  <span>Terminal RF / Scanner</span>
+                </label>
+                <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                  <input type="checkbox" class="modal-competence-checkbox mr-3" value="caces" />
+                  <i class="fas fa-forklift text-orange-500 mr-2"></i>
+                  <span>CACES (Chariot élévateur)</span>
+                </label>
+                <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                  <input type="checkbox" class="modal-competence-checkbox mr-3" value="controle" />
+                  <i class="fas fa-clipboard-check text-purple-500 mr-2"></i>
+                  <span>Contrôle qualité</span>
+                </label>
+                <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                  <input type="checkbox" class="modal-competence-checkbox mr-3" value="admin" />
+                  <i class="fas fa-file-alt text-indigo-500 mr-2"></i>
+                  <span>Gestion administrative</span>
+                </label>
+                <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                  <input type="checkbox" class="modal-competence-checkbox mr-3" value="securite" />
+                  <i class="fas fa-shield-alt text-red-500 mr-2"></i>
+                  <span>Sécurité / EPI</span>
+                </label>
+              </div>
+              <button onclick="validateCompetencesModal()" class="mt-4 w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-4 rounded-lg font-semibold hover:shadow-lg transition-all text-lg">
+                <i class="fas fa-arrow-right mr-2"></i>
+                Voir mes formations recommandées
+              </button>
+            </div>
+
+            {/* Résultats : Formations recommandées */}
+            <div id="modal-formations-recommandees" class="hidden">
+              <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-4">
+                <h4 class="font-semibold text-gray-800 mb-3 text-lg">
+                  <i class="fas fa-user mr-2 text-blue-500"></i>
+                  Votre profil
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                  <div class="flex items-center">
+                    <i class="fas fa-briefcase text-orange-500 mr-2"></i>
+                    <span><strong>Poste :</strong> <span id="modal-profil-poste"></span></span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-history text-green-500 mr-2"></i>
+                    <span><strong>Expérience :</strong> <span id="modal-profil-experience"></span></span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-check-circle text-purple-500 mr-2"></i>
+                    <span><strong>Compétences :</strong> <span id="modal-profil-competences"></span></span>
+                  </div>
+                </div>
+              </div>
+
+              <h4 class="font-semibold text-gray-800 mb-4 text-lg">
+                <i class="fas fa-graduation-cap mr-2 text-green-500"></i>
+                Vos formations recommandées
+              </h4>
+              
+              <div id="modal-formations-list" class="space-y-3 mb-6">
+                {/* Formations générées dynamiquement */}
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <a href="/bibliotheque" class="flex items-center justify-center p-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                  <i class="fas fa-book mr-2"></i>
+                  Consulter la bibliothèque
+                </a>
+                <a href="/contacts" class="flex items-center justify-center p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                  <i class="fas fa-phone mr-2"></i>
+                  Contacter un responsable
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
