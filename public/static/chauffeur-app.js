@@ -131,6 +131,26 @@ const translations = {
     desc_clefs: 'Consegna le chiavi all\'agente della banchina',
     btn_valider: 'Convalida',
     btn_valide: 'Convalidato ✓'
+  },
+  bg: {
+    titre_inscription: 'Регистрация на шофьор',
+    label_pseudo: 'Име / Прякор',
+    label_entreprise: 'Транспортна компания',
+    label_quai: 'Номер на док',
+    btn_submit: 'Потвърди и започни',
+    titre_progression: 'Прогрес',
+    titre_epi: 'Задължително носене на ЛПС',
+    desc_epi: 'Каска, светлоотразителна жилетка, предпазни обувки',
+    titre_placement: 'Правилно позициониране на док',
+    desc_placement: 'Камион позициониран и осигурен',
+    titre_palette: 'Обмяна на палети',
+    desc_palette: 'Палети EPAL / EUR преброени',
+    titre_accueil: 'Рецепция уведомена',
+    desc_accueil: 'Съобщете пристигането си на рецепцията',
+    titre_clefs: 'Предаване на ключове',
+    desc_clefs: 'Предайте ключовете на агента на дока',
+    btn_valider: 'Потвърди',
+    btn_valide: 'Потвърдено ✓'
   }
 };
 
@@ -198,7 +218,8 @@ function appliquerTraductions(langue) {
     'es': '🇪🇸 Español',
     'pl': '🇵🇱 Polski',
     'de': '🇩🇪 Deutsch',
-    'it': '🇮🇹 Italiano'
+    'it': '🇮🇹 Italiano',
+    'bg': '🇧🇬 Български'
   };
   const headerEl = document.getElementById('langue-header');
   if (headerEl) {

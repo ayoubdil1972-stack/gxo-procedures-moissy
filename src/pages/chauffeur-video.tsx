@@ -96,18 +96,20 @@ export function ChauffeurVideoPage() {
             'es': '🇪🇸 Español',
             'pl': '🇵🇱 Polski',
             'de': '🇩🇪 Deutsch',
-            'it': '🇮🇹 Italiano'
+            'it': '🇮🇹 Italiano',
+            'bg': '🇧🇬 Български'
           };
           document.getElementById('langue-selectionnee').textContent = langueNoms[langue] || langue;
           
-          // URLs des vidéos par langue (à remplir plus tard)
+          // URLs des vidéos par langue
           const videoUrls = {
             'fr': '/static/videos/instructions-fr.mp4',
             'en': '/static/videos/instructions-en.mp4',
             'es': '/static/videos/instructions-es.mp4',
             'pl': '/static/videos/instructions-pl.mp4',
             'de': '/static/videos/instructions-de.mp4',
-            'it': '/static/videos/instructions-it.mp4'
+            'it': '/static/videos/instructions-it.mp4',
+            'bg': '/static/videos/instructions-bg.mp4'  // Vidéo bulgare disponible
           };
           
           const video = document.getElementById('video-instructions');
@@ -133,7 +135,7 @@ export function ChauffeurVideoPage() {
           }
           
           // Si une vidéo existe pour cette langue
-          if (videoUrls[langue] && videoUrls[langue] !== '/static/videos/instructions-' + langue + '.mp4') {
+          if (videoUrls[langue]) {
             videoSource.src = videoUrls[langue];
             video.load();
             placeholder.classList.add('hidden');
