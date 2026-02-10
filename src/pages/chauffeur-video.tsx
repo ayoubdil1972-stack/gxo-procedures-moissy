@@ -19,9 +19,11 @@ export function ChauffeurVideoPage() {
                 <video 
                   id="video-instructions" 
                   class="w-full h-full"
+                  controls
                   controlsList="nodownload"
                   disablePictureInPicture
                   onContextMenu="return false;"
+                  playsinline
                 >
                   <source src="" type="video/mp4" id="video-source" />
                   Votre navigateur ne supporte pas la lecture vidéo.
@@ -176,8 +178,8 @@ export function ChauffeurVideoPage() {
               this.dataset.lastTime = this.currentTime;
             });
             
-            // Lancer la vidéo
-            video.play();
+            // Message pour démarrer la vidéo
+            console.log('✅ Vidéo bulgare chargée. Cliquez sur PLAY pour démarrer.');
           }
           
           // Empêcher de quitter la page
