@@ -21,9 +21,24 @@ let authState = {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.location.pathname === '/login') {
-    initLoginPage();
+  const path = window.location.pathname;
+  
+  // Pages publiques (pas besoin d'authentification)
+  const publicPaths = [
+    '/login',
+    '/qrcode-chauffeur',
+    '/chauffeur/langue',
+    '/chauffeur/video',
+    '/chauffeur/inscription'
+  ];
+  
+  if (publicPaths.includes(path)) {
+    // Page publique - pas de vérification d'authentification
+    if (path === '/login') {
+      initLoginPage();
+    }
   } else {
+    // Page protégée - vérifier l'authentification
     checkAuthentication();
   }
 });
