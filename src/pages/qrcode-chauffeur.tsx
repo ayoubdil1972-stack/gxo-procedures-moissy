@@ -75,8 +75,8 @@ export function QRCodeChauffeurPage() {
           document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('qrcode-container');
             if (container && typeof QRCode !== 'undefined') {
-              // URL complète du système chauffeur
-              const url = window.location.origin + '/chauffeur/langue';
+              // URL complète pointant vers cette page QR Code
+              const url = window.location.origin + '/qrcode-chauffeur';
               
               new QRCode(container, {
                 text: url,
