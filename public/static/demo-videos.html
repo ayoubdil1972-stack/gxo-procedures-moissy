@@ -3,248 +3,210 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Démo Vidéos Multilingues - GXO</title>
+  <title>Test Vidéos Mobile - GXO</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-  <div class="container mx-auto p-4 md:p-8">
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-6 rounded-xl mb-8 shadow-2xl">
-      <h1 class="text-3xl md:text-4xl font-bold mb-2">
-        <i class="fas fa-video mr-3"></i>
-        Démo Vidéos Multilingues GXO
+<body class="bg-gray-900 text-white">
+  <div class="container mx-auto p-4 max-w-4xl">
+    <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-6 mb-6 text-center">
+      <h1 class="text-3xl font-bold mb-2">
+        <i class="fas fa-video mr-2"></i>
+        Test Vidéos Mobile GXO
       </h1>
-      <p class="text-orange-100 text-lg">12 langues disponibles • Lecteur optimisé mobile avec plein écran</p>
+      <p class="text-sm opacity-90">12 langues disponibles - 107 MB total</p>
     </div>
 
-    <!-- Stats Section -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-      <div class="bg-gray-800 p-6 rounded-xl border-2 border-green-500">
-        <div class="text-4xl font-bold text-green-400 mb-2">12</div>
-        <div class="text-gray-300">Langues</div>
-      </div>
-      <div class="bg-gray-800 p-6 rounded-xl border-2 border-blue-500">
-        <div class="text-4xl font-bold text-blue-400 mb-2">107 MB</div>
-        <div class="text-gray-300">Vidéos totales</div>
-      </div>
-      <div class="bg-gray-800 p-6 rounded-xl border-2 border-purple-500">
-        <div class="text-4xl font-bold text-purple-400 mb-2">100%</div>
-        <div class="text-gray-300">Mobile-ready</div>
-      </div>
-      <div class="bg-gray-800 p-6 rounded-xl border-2 border-orange-500">
-        <div class="text-4xl font-bold text-orange-400 mb-2">✓</div>
-        <div class="text-gray-300">Plein écran</div>
-      </div>
+    <!-- Grille des vidéos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Français -->
+      <a href="/chauffeur/video?lang=fr" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇫🇷</span>
+          <span class="bg-green-500 text-xs px-2 py-1 rounded-full">NOUVEAU</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Français 🎥</h3>
+        <p class="text-sm text-gray-400 mb-2">Avec sous-titres</p>
+        <div class="text-xs text-gray-500">9.1 MB</div>
+      </a>
+
+      <!-- Néerlandais -->
+      <a href="/chauffeur/video?lang=nl" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇳🇱</span>
+          <span class="bg-green-500 text-xs px-2 py-1 rounded-full">NOUVEAU</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Nederlands</h3>
+        <p class="text-sm text-gray-400 mb-2">Dutch / Hollandais</p>
+        <div class="text-xs text-gray-500">8.8 MB</div>
+      </a>
+
+      <!-- Finnois -->
+      <a href="/chauffeur/video?lang=fi" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇫🇮</span>
+          <span class="bg-green-500 text-xs px-2 py-1 rounded-full">NOUVEAU</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Suomi</h3>
+        <p class="text-sm text-gray-400 mb-2">Finnish / Finnois</p>
+        <div class="text-xs text-gray-500">8.8 MB</div>
+      </a>
+
+      <!-- Allemand -->
+      <a href="/chauffeur/video?lang=de" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇩🇪</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Deutsch</h3>
+        <p class="text-sm text-gray-400 mb-2">German / Allemand</p>
+        <div class="text-xs text-gray-500">8.9 MB</div>
+      </a>
+
+      <!-- Italien -->
+      <a href="/chauffeur/video?lang=it" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇮🇹</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Italiano</h3>
+        <p class="text-sm text-gray-400 mb-2">Italian / Italien</p>
+        <div class="text-xs text-gray-500">9.1 MB</div>
+      </a>
+
+      <!-- Polonais -->
+      <a href="/chauffeur/video?lang=pl" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇵🇱</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Polski</h3>
+        <p class="text-sm text-gray-400 mb-2">Polish / Polonais</p>
+        <div class="text-xs text-gray-500">9.1 MB</div>
+      </a>
+
+      <!-- Portugais -->
+      <a href="/chauffeur/video?lang=pt" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇵🇹</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Português</h3>
+        <p class="text-sm text-gray-400 mb-2">Portuguese / Portugais</p>
+        <div class="text-xs text-gray-500">9.1 MB</div>
+      </a>
+
+      <!-- Bulgare -->
+      <a href="/chauffeur/video?lang=bg" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇧🇬</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Български</h3>
+        <p class="text-sm text-gray-400 mb-2">Bulgarian / Bulgare</p>
+        <div class="text-xs text-gray-500">9.1 MB</div>
+      </a>
+
+      <!-- Tchèque -->
+      <a href="/chauffeur/video?lang=cs" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇨🇿</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Čeština</h3>
+        <p class="text-sm text-gray-400 mb-2">Czech / Tchèque</p>
+        <div class="text-xs text-gray-500">8.8 MB</div>
+      </a>
+
+      <!-- Danois -->
+      <a href="/chauffeur/video?lang=da" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇩🇰</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Dansk</h3>
+        <p class="text-sm text-gray-400 mb-2">Danish / Danois</p>
+        <div class="text-xs text-gray-500">8.2 MB</div>
+      </a>
+
+      <!-- Croate -->
+      <a href="/chauffeur/video?lang=hr" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇭🇷</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Hrvatski</h3>
+        <p class="text-sm text-gray-400 mb-2">Croatian / Croate</p>
+        <div class="text-xs text-gray-500">9.1 MB</div>
+      </a>
+
+      <!-- Roumain -->
+      <a href="/chauffeur/video?lang=ro" class="block bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all hover:scale-105">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-3xl">🇷🇴</span>
+        </div>
+        <h3 class="font-bold text-lg mb-1">Română</h3>
+        <p class="text-sm text-gray-400 mb-2">Romanian / Roumain</p>
+        <div class="text-xs text-gray-500">9.2 MB</div>
+      </a>
     </div>
 
-    <!-- Nouvelles langues ajoutées -->
-    <div class="bg-green-900 bg-opacity-30 border-2 border-green-500 rounded-xl p-6 mb-8">
-      <h2 class="text-2xl font-bold mb-4 flex items-center">
-        <i class="fas fa-plus-circle mr-3 text-green-400"></i>
-        Nouvelles langues ajoutées (v10.0)
+    <!-- Instructions test mobile -->
+    <div class="mt-8 bg-blue-900 rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center">
+        <i class="fas fa-mobile-alt mr-2"></i>
+        Test Mobile
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a href="/chauffeur/video?lang=fr" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition-all hover:scale-105 block">
-          <div class="text-4xl mb-2">🇫🇷</div>
-          <div class="font-bold text-xl mb-1">Français 🎥</div>
-          <div class="text-sm text-gray-400">Avec sous-titres</div>
-          <div class="text-green-400 text-sm mt-2">
-            <i class="fas fa-play-circle mr-1"></i> Tester maintenant
-          </div>
-        </a>
-        <a href="/chauffeur/video?lang=nl" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition-all hover:scale-105 block">
-          <div class="text-4xl mb-2">🇳🇱</div>
-          <div class="font-bold text-xl mb-1">Nederlands</div>
-          <div class="text-sm text-gray-400">Néerlandais</div>
-          <div class="text-green-400 text-sm mt-2">
-            <i class="fas fa-play-circle mr-1"></i> Tester maintenant
-          </div>
-        </a>
-        <a href="/chauffeur/video?lang=fi" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition-all hover:scale-105 block">
-          <div class="text-4xl mb-2">🇫🇮</div>
-          <div class="font-bold text-xl mb-1">Suomi</div>
-          <div class="text-sm text-gray-400">Finnois</div>
-          <div class="text-green-400 text-sm mt-2">
-            <i class="fas fa-play-circle mr-1"></i> Tester maintenant
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Toutes les langues -->
-    <div class="bg-gray-800 rounded-xl p-6 mb-8">
-      <h2 class="text-2xl font-bold mb-4 flex items-center">
-        <i class="fas fa-globe mr-3 text-blue-400"></i>
-        Toutes les langues disponibles
-      </h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <a href="/chauffeur/video?lang=fr" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇫🇷</div>
-          <div class="text-sm font-semibold">Français 🎥</div>
-        </a>
-        <a href="/chauffeur/video?lang=nl" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇳🇱</div>
-          <div class="text-sm font-semibold">Nederlands</div>
-        </a>
-        <a href="/chauffeur/video?lang=fi" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇫🇮</div>
-          <div class="text-sm font-semibold">Suomi</div>
-        </a>
-        <a href="/chauffeur/video?lang=de" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇩🇪</div>
-          <div class="text-sm font-semibold">Deutsch</div>
-        </a>
-        <a href="/chauffeur/video?lang=it" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇮🇹</div>
-          <div class="text-sm font-semibold">Italiano</div>
-        </a>
-        <a href="/chauffeur/video?lang=pl" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇵🇱</div>
-          <div class="text-sm font-semibold">Polski</div>
-        </a>
-        <a href="/chauffeur/video?lang=pt" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇵🇹</div>
-          <div class="text-sm font-semibold">Português</div>
-        </a>
-        <a href="/chauffeur/video?lang=bg" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇧🇬</div>
-          <div class="text-sm font-semibold">Български</div>
-        </a>
-        <a href="/chauffeur/video?lang=cs" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇨🇿</div>
-          <div class="text-sm font-semibold">Čeština</div>
-        </a>
-        <a href="/chauffeur/video?lang=da" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇩🇰</div>
-          <div class="text-sm font-semibold">Dansk</div>
-        </a>
-        <a href="/chauffeur/video?lang=hr" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇭🇷</div>
-          <div class="text-sm font-semibold">Hrvatski</div>
-        </a>
-        <a href="/chauffeur/video?lang=ro" class="bg-gray-700 hover:bg-[#FF5A1A] p-3 rounded-lg transition-all text-center">
-          <div class="text-3xl mb-1">🇷🇴</div>
-          <div class="text-sm font-semibold">Română</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Améliorations v10.0 -->
-    <div class="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl p-6 mb-8">
-      <h2 class="text-2xl font-bold mb-4 flex items-center">
-        <i class="fas fa-star mr-3 text-yellow-400"></i>
-        Améliorations du lecteur vidéo (v10.0)
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-black bg-opacity-30 p-4 rounded-lg">
-          <div class="flex items-start">
-            <i class="fas fa-mobile-alt text-3xl text-green-400 mr-4 mt-1"></i>
-            <div>
-              <h3 class="font-bold text-lg mb-2">📱 Optimisation mobile</h3>
-              <ul class="text-sm text-gray-300 space-y-1">
-                <li>• Taille max 70vh (visage toujours visible)</li>
-                <li>• object-fit: contain (pas de déformation)</li>
-                <li>• Lecteur adaptatif portrait/paysage</li>
-              </ul>
-            </div>
+      <div class="space-y-3 text-sm">
+        <div class="flex items-start">
+          <span class="text-2xl mr-3">1️⃣</span>
+          <div>
+            <strong>Cliquez sur une langue</strong><br>
+            <span class="text-gray-300">La vidéo se charge automatiquement</span>
           </div>
         </div>
-        <div class="bg-black bg-opacity-30 p-4 rounded-lg">
-          <div class="flex items-start">
-            <i class="fas fa-expand text-3xl text-blue-400 mr-4 mt-1"></i>
-            <div>
-              <h3 class="font-bold text-lg mb-2">🖥️ Mode plein écran intelligent</h3>
-              <ul class="text-sm text-gray-300 space-y-1">
-                <li>• Bouton plein écran toujours visible</li>
-                <li>• Support iOS et Android</li>
-                <li>• Orientation naturelle (pas de lock)</li>
-              </ul>
-            </div>
+        <div class="flex items-start">
+          <span class="text-2xl mr-3">2️⃣</span>
+          <div>
+            <strong>Testez le mode portrait</strong><br>
+            <span class="text-gray-300">Le visage doit rester visible (max-height: 70vh)</span>
           </div>
         </div>
-        <div class="bg-black bg-opacity-30 p-4 rounded-lg">
-          <div class="flex items-start">
-            <i class="fas fa-language text-3xl text-purple-400 mr-4 mt-1"></i>
-            <div>
-              <h3 class="font-bold text-lg mb-2">🌍 Interface multilingue</h3>
-              <ul class="text-sm text-gray-300 space-y-1">
-                <li>• Header traduit (12 langues)</li>
-                <li>• Boutons et messages localisés</li>
-                <li>• Drapeaux et emoji natifs</li>
-              </ul>
-            </div>
+        <div class="flex items-start">
+          <span class="text-2xl mr-3">3️⃣</span>
+          <div>
+            <strong>Cliquez sur "Plein écran"</strong><br>
+            <span class="text-gray-300">Bouton en haut à droite de la vidéo</span>
           </div>
         </div>
-        <div class="bg-black bg-opacity-30 p-4 rounded-lg">
-          <div class="flex items-start">
-            <i class="fas fa-shield-alt text-3xl text-red-400 mr-4 mt-1"></i>
-            <div>
-              <h3 class="font-bold text-lg mb-2">🔒 Sécurité et contrôle</h3>
-              <ul class="text-sm text-gray-300 space-y-1">
-                <li>• Anti-skip (pas de saut en avant)</li>
-                <li>• Blocage back button</li>
-                <li>• Pas de téléchargement/PiP</li>
-              </ul>
-            </div>
+        <div class="flex items-start">
+          <span class="text-2xl mr-3">4️⃣</span>
+          <div>
+            <strong>Tournez l'écran</strong><br>
+            <span class="text-gray-300">La vidéo s'adapte naturellement (portrait/paysage)</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Guide de test mobile -->
-    <div class="bg-blue-900 bg-opacity-30 border-2 border-blue-500 rounded-xl p-6">
-      <h2 class="text-2xl font-bold mb-4 flex items-center">
-        <i class="fas fa-clipboard-check mr-3 text-blue-400"></i>
-        Guide de test mobile
-      </h2>
-      <div class="space-y-3">
-        <div class="flex items-start">
-          <div class="bg-blue-500 text-white font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">1</div>
-          <div>
-            <div class="font-semibold">Scanner le QR Code</div>
-            <div class="text-sm text-gray-400">Allez sur <a href="/qrcode-chauffeur" class="text-blue-400 underline">/qrcode-chauffeur</a></div>
-          </div>
-        </div>
-        <div class="flex items-start">
-          <div class="bg-blue-500 text-white font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">2</div>
-          <div>
-            <div class="font-semibold">Choisir une langue</div>
-            <div class="text-sm text-gray-400">Tester Français 🇫🇷, Néerlandais 🇳🇱 ou Finnois 🇫🇮</div>
-          </div>
-        </div>
-        <div class="flex items-start">
-          <div class="bg-blue-500 text-white font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">3</div>
-          <div>
-            <div class="font-semibold">Tester le plein écran</div>
-            <div class="text-sm text-gray-400">Cliquer sur le bouton "Plein écran" en haut à droite</div>
-          </div>
-        </div>
-        <div class="flex items-start">
-          <div class="bg-blue-500 text-white font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">4</div>
-          <div>
-            <div class="font-semibold">Vérifier l'affichage</div>
-            <div class="text-sm text-gray-400">Le visage du collaborateur doit être visible sans déformation</div>
-          </div>
-        </div>
-        <div class="flex items-start">
-          <div class="bg-blue-500 text-white font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">5</div>
-          <div>
-            <div class="font-semibold">Compléter le parcours</div>
-            <div class="text-sm text-gray-400">Inscription → Valider les 5 tâches → Chat</div>
-          </div>
-        </div>
+    <!-- Statistiques -->
+    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-gray-800 rounded-lg p-4 text-center">
+        <div class="text-3xl font-bold text-orange-500">12</div>
+        <div class="text-sm text-gray-400">Langues</div>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-4 text-center">
+        <div class="text-3xl font-bold text-orange-500">107</div>
+        <div class="text-sm text-gray-400">MB Total</div>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-4 text-center">
+        <div class="text-3xl font-bold text-orange-500">70vh</div>
+        <div class="text-sm text-gray-400">Max Height</div>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-4 text-center">
+        <div class="text-3xl font-bold text-orange-500">100%</div>
+        <div class="text-sm text-gray-400">Mobile OK</div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <div class="text-center mt-8 text-gray-500 text-sm">
-      <p>GXO Logistics Moissy-Cramayel • Version 10.0 • 2026-02-11</p>
-      <p class="mt-2">
-        <a href="/" class="text-[#FF5A1A] hover:underline">← Retour à l'accueil</a>
-        <span class="mx-3">|</span>
-        <a href="/qrcode-chauffeur" class="text-[#FF5A1A] hover:underline">QR Code Chauffeur</a>
-      </p>
+    <!-- Retour -->
+    <div class="mt-8 text-center">
+      <a href="/qrcode-chauffeur" class="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold transition-all">
+        <i class="fas fa-arrow-left mr-2"></i>
+        Retour au QR Code
+      </a>
     </div>
   </div>
 </body>
