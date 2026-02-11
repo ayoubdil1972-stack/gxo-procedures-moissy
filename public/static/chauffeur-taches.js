@@ -9,6 +9,7 @@ let currentLangue = 'fr';
 let messagesTraductionState = {};
 let afficherTraduction = true;
 let chatEstOuvert = false; // Nouveau: tracker si le chat est ouvert
+let messagesLusCache = false; // Cache pour mémoriser que tous les messages ont été lus
 
 // Traductions pour toutes les langues
 const translations = {
@@ -655,6 +656,8 @@ document.getElementById('btn-chat').addEventListener('click', () => {
       badge.classList.add('hidden');
       badge.textContent = '0';
     }
+    // Marquer dans le cache que tous les messages ont été lus
+    messagesLusCache = true;
   }).catch(err => console.error('Erreur marquage lu:', err));
 });
 
@@ -674,6 +677,8 @@ document.getElementById('btn-fermer-chat').addEventListener('click', () => {
       badge.classList.add('hidden');
       badge.textContent = '0';
     }
+    // Marquer dans le cache que tous les messages ont été lus
+    messagesLusCache = true;
   }).catch(err => console.error('Erreur marquage lu:', err));
 });
 
@@ -702,7 +707,17 @@ async function chargerMessages() {
             badge.classList.add('hidden');
             badge.textContent = '0';
           }
+          // Marquer dans le cache que tous les messages ont été lus
+          messagesLusCache = true;
         }).catch(err => console.error('Erreur marquage lu:', err));
+      } else {
+        // Pas de nouveaux messages, s'assurer que le badge est masqué
+        const badge = document.getElementById('chat-badge');
+        if (badge) {
+          badge.classList.add('hidden');
+          badge.textContent = '0';
+        }
+        messagesLusCache = true;
       }
     }
   } catch (error) {
@@ -891,6 +906,11 @@ function demarrerActualisationAuto() {
       return; // Ignorer la mise à jour du badge
     }
     
+    // Ne pas mettre à jour le badge si tous les messages ont été lus (cache)
+    if (messagesLusCache) {
+      return; // Messages déjà lus, badge déjà masqué
+    }
+    
     const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chauffeurId}`);
     const data = await response.json();
     
@@ -901,8 +921,11 @@ function demarrerActualisationAuto() {
       if (nonLus > 0) {
         badge.textContent = nonLus;
         badge.classList.remove('hidden');
+        messagesLusCache = false; // Réinitialiser le cache
       } else {
         badge.classList.add('hidden');
+        badge.textContent = '0';
+        messagesLusCache = true; // Marquer comme lu dans le cache
       }
     }
   }, 10000);

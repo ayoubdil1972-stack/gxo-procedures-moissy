@@ -3,6 +3,7 @@
 // Section: Dashboard des chauffeurs actifs
 
 let updateInterval = null;
+let chauffeursMessagesLus = new Set(); // Cache des chauffeurs dont tous les messages ont été lus
 
 // Charger les chauffeurs actifs
 async function chargerChauffeursActifs() {
@@ -167,6 +168,11 @@ async function chargerCompteursMessagesNonLus(chauffeurs) {
       continue; // Ignorer ce chauffeur, son badge est déjà géré par le chat ouvert
     }
     
+    // Ne pas mettre à jour le badge si tous les messages ont été lus (cache)
+    if (chauffeursMessagesLus.has(chauffeur.id)) {
+      continue; // Messages déjà lus, badge déjà masqué
+    }
+    
     try {
       const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chauffeur.id}`);
       const data = await response.json();
@@ -182,10 +188,13 @@ async function chargerCompteursMessagesNonLus(chauffeurs) {
             if (nonLus > 0) {
               badge.textContent = nonLus;
               badge.classList.remove('hidden');
+              // Retirer du cache car il y a de nouveaux messages
+              chauffeursMessagesLus.delete(chauffeur.id);
             } else {
-              // Aucun message non lu : masquer le badge
+              // Aucun message non lu : masquer le badge et ajouter au cache
               badge.classList.add('hidden');
               badge.textContent = '0';
+              chauffeursMessagesLus.add(chauffeur.id);
             }
           }
         }
@@ -302,7 +311,10 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
     const badge = document.querySelector(`[data-chauffeur-id="${chauffeurId}"] .notification-badge`);
     if (badge) {
       badge.classList.add('hidden');
+      badge.textContent = '0';
     }
+    // Ajouter au cache : tous les messages ont été lus
+    chauffeursMessagesLus.add(chauffeurId);
   }).catch(err => console.error('Erreur marquage lu:', err));
   
   // Créer le modal de chat s'il n'existe pas
@@ -415,6 +427,8 @@ window.fermerChatAdmin = function() {
         badge.classList.add('hidden');
         badge.textContent = '0';
       }
+      // Ajouter au cache : tous les messages ont été lus
+      chauffeursMessagesLus.add(chatAdminChauffeurId);
     }).catch(err => console.error('Erreur marquage lu:', err));
   }
   
@@ -455,7 +469,17 @@ async function chargerMessagesAdmin() {
             badge.classList.add('hidden');
             badge.textContent = '0';
           }
+          // Ajouter au cache : tous les messages ont été lus
+          chauffeursMessagesLus.add(chatAdminChauffeurId);
         }).catch(err => console.error('Erreur marquage lu:', err));
+      } else {
+        // Pas de nouveaux messages, mais s'assurer que le badge est masqué
+        const badge = document.querySelector(`[data-chauffeur-id="${chatAdminChauffeurId}"] .notification-badge`);
+        if (badge) {
+          badge.classList.add('hidden');
+          badge.textContent = '0';
+        }
+        chauffeursMessagesLus.add(chatAdminChauffeurId);
       }
       
       // Mettre à jour l'affichage de la langue
