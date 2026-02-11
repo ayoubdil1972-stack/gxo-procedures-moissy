@@ -119,7 +119,7 @@ function afficherDashboardChauffeurs(chauffeurs) {
         }).join('')}
       </div>
       
-      {/* Info temps */}
+      {/* Info temps et actions */}
       <div class="flex items-center justify-between text-xs text-gray-600 pt-3 border-t">
         <div class="flex items-center">
           <i class="fas fa-clock mr-1"></i>
@@ -128,6 +128,26 @@ function afficherDashboardChauffeurs(chauffeurs) {
         <div class="flex items-center ${bgColor} ${textColor} px-2 py-1 rounded-full font-semibold">
           ${progression === 100 ? '<i class="fas fa-check-circle mr-1"></i>Prêt' : progression > 0 ? '<i class="fas fa-hourglass-half mr-1"></i>En cours' : '<i class="fas fa-circle-notch mr-1"></i>Début'}
         </div>
+      </div>
+      
+      {/* Boutons d'action */}
+      <div class="mt-4 flex gap-2">
+        <button 
+          onclick="ouvrirChatAdmin(${chauffeur.id}, '${chauffeur.pseudo}')"
+          class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+        >
+          <i class="fas fa-comments"></i>
+          <span>Chat</span>
+        </button>
+        ${progression === 100 ? `
+          <button 
+            onclick="cloturerChauffeur(${chauffeur.id}, '${chauffeur.pseudo}')"
+            class="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+          >
+            <i class="fas fa-check-double"></i>
+            <span>Clôturer</span>
+          </button>
+        ` : ''}
       </div>
     `;
     
@@ -216,6 +236,221 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('beforeunload', () => {
   arreterActualisationDashboard();
 });
+
+// ===== FONCTIONS CHAT ADMIN ↔ CHAUFFEUR =====
+
+let chatAdminChauffeurId = null;
+let chatAdminPseudo = '';
+let chatUpdateInterval = null;
+
+// Ouvrir le chat admin avec un chauffeur
+window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
+  chatAdminChauffeurId = chauffeurId;
+  chatAdminPseudo = pseudo;
+  
+  // Créer le modal de chat s'il n'existe pas
+  let modalChat = document.getElementById('modal-chat-admin');
+  if (!modalChat) {
+    modalChat = document.createElement('div');
+    modalChat.id = 'modal-chat-admin';
+    modalChat.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+    modalChat.innerHTML = `
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col" style="max-height: 80vh;">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">Chat avec <span id="chat-admin-pseudo"></span></h3>
+              <p class="text-xs opacity-90">Support GXO - Admin</p>
+            </div>
+          </div>
+          <button onclick="fermerChatAdmin()" class="hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        
+        <!-- Messages -->
+        <div id="chat-admin-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50" style="max-height: 400px;">
+          <div class="text-center text-gray-400 py-8">
+            <i class="fas fa-comment-dots text-4xl mb-2"></i>
+            <p>Conversation avec le chauffeur</p>
+          </div>
+        </div>
+        
+        <!-- Input -->
+        <div class="p-4 bg-white border-t rounded-b-2xl">
+          <div class="flex gap-2">
+            <input 
+              type="text" 
+              id="chat-admin-input" 
+              placeholder="Votre message..."
+              class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button onclick="envoyerMessageAdmin()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalChat);
+    
+    // Enter pour envoyer
+    document.getElementById('chat-admin-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') envoyerMessageAdmin();
+    });
+  }
+  
+  // Afficher le modal
+  document.getElementById('chat-admin-pseudo').textContent = pseudo;
+  modalChat.classList.remove('hidden');
+  
+  // Charger les messages
+  chargerMessagesAdmin();
+  
+  // Actualisation toutes les 2 secondes
+  chatUpdateInterval = setInterval(chargerMessagesAdmin, 2000);
+};
+
+// Fermer le chat admin
+window.fermerChatAdmin = function() {
+  document.getElementById('modal-chat-admin').classList.add('hidden');
+  if (chatUpdateInterval) {
+    clearInterval(chatUpdateInterval);
+    chatUpdateInterval = null;
+  }
+  chatAdminChauffeurId = null;
+};
+
+// Charger les messages du chat admin
+async function chargerMessagesAdmin() {
+  try {
+    const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chatAdminChauffeurId}`);
+    const data = await response.json();
+    
+    if (data.success && data.messages) {
+      afficherMessagesAdmin(data.messages);
+    }
+  } catch (error) {
+    console.error('Erreur chargement messages admin:', error);
+  }
+}
+
+// Afficher les messages du chat admin
+function afficherMessagesAdmin(messages) {
+  const container = document.getElementById('chat-admin-messages');
+  
+  if (messages.length === 0) {
+    container.innerHTML = `
+      <div class="text-center text-gray-400 py-8">
+        <i class="fas fa-comment-dots text-4xl mb-2"></i>
+        <p>Aucun message pour le moment</p>
+        <p class="text-sm mt-1">Commencez la conversation</p>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = messages.map(msg => {
+    const isAdmin = msg.sender === 'admin';
+    return `
+      <div class="flex ${isAdmin ? 'justify-end' : 'justify-start'}">
+        <div class="max-w-xs ${isAdmin ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200'} rounded-2xl px-4 py-2 shadow-sm">
+          <div class="flex items-center gap-2 mb-1">
+            <i class="fas ${isAdmin ? 'fa-user-shield' : 'fa-truck'} text-xs"></i>
+            <span class="text-xs font-semibold ${isAdmin ? 'text-blue-100' : 'text-gray-600'}">
+              ${isAdmin ? 'Admin GXO' : chatAdminPseudo}
+            </span>
+          </div>
+          <p class="text-sm">${msg.message}</p>
+          <p class="text-xs ${isAdmin ? 'text-blue-200' : 'text-gray-400'} mt-1">
+            ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
+          </p>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  // Scroll vers le bas
+  container.scrollTop = container.scrollHeight;
+}
+
+// Envoyer un message admin
+async function envoyerMessageAdmin() {
+  const input = document.getElementById('chat-admin-input');
+  const message = input.value.trim();
+  
+  if (!message) return;
+  
+  try {
+    const response = await fetch('/api/admin/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chauffeur_id: chatAdminChauffeurId,
+        message: message
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      input.value = '';
+      chargerMessagesAdmin();
+    }
+  } catch (error) {
+    console.error('Erreur envoi message admin:', error);
+    alert('Erreur lors de l\'envoi du message');
+  }
+}
+
+// ===== FONCTION CLÔTURE CHAUFFEUR =====
+
+window.cloturerChauffeur = async function(chauffeurId, pseudo) {
+  if (!confirm(`Voulez-vous clôturer le départ de ${pseudo} ?\n\nCette action marquera le chauffeur comme terminé.`)) {
+    return;
+  }
+  
+  try {
+    const response = await fetch('/api/admin/cloturer-chauffeur', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chauffeur_id: chauffeurId })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Animation de succès
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-20 right-4 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 animate-slide-in-right flex items-center space-x-3';
+      toast.innerHTML = `
+        <i class="fas fa-check-circle text-2xl"></i>
+        <div>
+          <div class="font-bold">Départ clôturé</div>
+          <div class="text-sm opacity-90">${pseudo} a été retiré de la liste</div>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('animate-slide-out-right');
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+      
+      // Recharger la liste
+      chargerChauffeursActifs();
+    } else {
+      alert('Erreur lors de la clôture: ' + (data.error || 'Erreur inconnue'));
+    }
+  } catch (error) {
+    console.error('Erreur clôture chauffeur:', error);
+    alert('Erreur lors de la clôture du chauffeur');
+  }
+};
 
 // Style CSS pour l'animation
 const style = document.createElement('style');

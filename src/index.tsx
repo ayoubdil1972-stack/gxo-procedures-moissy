@@ -256,6 +256,27 @@ app.post('/api/chauffeur/chat/mark-read', async (c) => {
   }
 })
 
+// API: Clôturer un chauffeur (admin)
+app.post('/api/admin/cloturer-chauffeur', async (c) => {
+  try {
+    const { chauffeur_id } = await c.req.json()
+    
+    // Marquer le chauffeur comme completed et changer le status
+    await c.env.DB.prepare(`
+      UPDATE chauffeur_arrivals 
+      SET status = 'completed', 
+          completed = 1,
+          completion_time = datetime('now')
+      WHERE id = ?
+    `).bind(chauffeur_id).run()
+    
+    return c.json({ success: true })
+  } catch (error) {
+    console.error('Erreur clôture chauffeur:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 app.get('/api/notifications/non-lues', async (c) => {
   try {
     const { results } = await c.env.DB.prepare(`
@@ -283,6 +304,26 @@ app.post('/api/notification/mark-read', async (c) => {
     return c.json({ success: true })
   } catch (error) {
     console.error('Erreur marquage notification:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// Admin: Clôturer le départ d'un chauffeur
+app.post('/api/admin/cloturer-chauffeur', async (c) => {
+  try {
+    const { chauffeur_id } = await c.req.json()
+    
+    await c.env.DB.prepare(`
+      UPDATE chauffeur_arrivals 
+      SET status = 'completed', 
+          departure_time = datetime('now')
+      WHERE id = ?
+    `).bind(chauffeur_id).run()
+    
+    console.log(`✅ Chauffeur ${chauffeur_id} clôturé`)
+    return c.json({ success: true })
+  } catch (error) {
+    console.error('Erreur clôture chauffeur:', error)
     return c.json({ success: false, error: error.message }, 500)
   }
 })
