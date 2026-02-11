@@ -34,6 +34,8 @@ export function ChauffeurVideoPage() {
               playsinline
               webkit-playsinline
               x-webkit-airplay="allow"
+              preload="auto"
+              poster=""
             >
               <source src="" type="video/mp4" id="video-source" />
               Votre navigateur ne supporte pas la lecture vidéo.
@@ -42,18 +44,15 @@ export function ChauffeurVideoPage() {
             {/* Placeholder si pas de vidéo chargée */}
             <div id="video-placeholder" class="absolute inset-0 flex items-center justify-center p-4 md:p-8 bg-gray-900">
               <div class="text-center">
-                <i class="fas fa-video text-4xl md:text-6xl text-gray-600 mb-4"></i>
-                <p class="text-white text-lg md:text-xl mb-2">Vidéo d'instructions</p>
-                <p class="text-gray-400 text-xs md:text-sm mb-4">Chargement...</p>
-                
-                {/* Bouton de simulation pour test */}
-                <button 
-                  onclick="simulerFinVideo()"
-                  class="mt-4 md:mt-6 bg-orange-500 hover:bg-orange-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold transition-colors text-sm md:text-base"
-                >
-                  <i class="fas fa-forward mr-2"></i>
-                  Simuler fin de vidéo (TEST)
-                </button>
+                <div class="relative inline-block">
+                  {/* Spinner de chargement animé */}
+                  <svg class="animate-spin h-16 w-16 md:h-20 md:w-20 text-orange-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+                <p class="text-white text-lg md:text-xl mb-2 font-semibold">Chargement de la vidéo...</p>
+                <p class="text-gray-400 text-xs md:text-sm">Patientez quelques instants</p>
               </div>
             </div>
             
@@ -231,11 +230,7 @@ export function ChauffeurVideoPage() {
           const placeholder = document.getElementById('video-placeholder');
           const fullscreenBtn = document.getElementById('fullscreen-btn');
           
-          // Fonction pour simuler la fin de vidéo (pour les tests)
-          window.simulerFinVideo = function() {
-            console.log('Simulation : vidéo terminée');
-            videoCompleted();
-          };
+
           
           // Fonction plein écran AMÉLIORÉE (support mobile)
           window.toggleFullscreen = function() {
@@ -307,7 +302,9 @@ export function ChauffeurVideoPage() {
           // Si une vidéo existe pour cette langue
           if (videoUrls[langue]) {
             videoSource.src = videoUrls[langue];
+            // Précharger la vidéo dès le chargement de la page
             video.load();
+            video.preload = 'auto'; // Forcer le préchargement
             
             // Fonction pour afficher la vidéo
             function afficherVideo() {
@@ -329,18 +326,27 @@ export function ChauffeurVideoPage() {
               afficherVideo();
             });
             
-            // Méthode 3: Timeout de sécurité (afficher après 2 secondes si rien ne se passe)
+            // Méthode 3: Timeout de sécurité réduit (500ms au lieu de 2s)
             setTimeout(function() {
               if (!placeholder.classList.contains('hidden')) {
-                console.log('⏰ Timeout: affichage forcé de la vidéo');
+                console.log('⏰ Affichage immédiat de la vidéo');
                 afficherVideo();
               }
-            }, 2000);
+            }, 500);
+            
+            // Méthode 4: Forcer l'affichage dès que la vidéo peut commencer à jouer
+            video.addEventListener('canplay', function() {
+              console.log('✅ Vidéo prête à jouer');
+              afficherVideo();
+            });
             
             // Gestion des erreurs
             video.addEventListener('error', function(e) {
               console.error('❌ Erreur chargement vidéo:', e);
-              placeholder.querySelector('p').textContent = 'Erreur de chargement. Utilisez le bouton TEST.';
+              const errorMsg = placeholder.querySelector('p');
+              if (errorMsg) {
+                errorMsg.textContent = 'Erreur de chargement. Veuillez réessayer.';
+              }
             });
             
             // Mise à jour de la progression
