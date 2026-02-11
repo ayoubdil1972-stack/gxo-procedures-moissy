@@ -409,17 +409,125 @@ async function envoyerMessageAdmin() {
 // ===== FONCTION CLÔTURE CHAUFFEUR =====
 
 window.cloturerChauffeur = async function(chauffeurId, pseudo, progression = 100) {
-  // Message différent selon si les tâches sont complètes ou non
-  let message;
-  if (progression === 100) {
-    message = `✅ Clôturer le départ de ${pseudo} ?\n\nToutes les tâches sont complétées.\nLe chauffeur sera retiré de la liste.`;
-  } else {
-    message = `⚠️ ATTENTION - Clôturer ${pseudo} ?\n\n⚠️ Les tâches ne sont pas toutes terminées (${progression}%).\n\n❓ Voulez-vous vraiment clôturer maintenant ?\nLe chauffeur sera retiré de la liste même si les tâches ne sont pas finies.`;
+  // Créer le modal de confirmation s'il n'existe pas
+  let modalCloture = document.getElementById('modal-cloture-confirmation');
+  if (!modalCloture) {
+    modalCloture = document.createElement('div');
+    modalCloture.id = 'modal-cloture-confirmation';
+    modalCloture.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+    document.body.appendChild(modalCloture);
   }
   
-  if (!confirm(message)) {
-    return;
+  // Définir le contenu selon la progression
+  const isComplete = progression === 100;
+  const bgColor = isComplete ? 'from-green-500 to-green-600' : 'from-orange-500 to-orange-600';
+  const icon = isComplete ? 'fa-check-double' : 'fa-exclamation-triangle';
+  const iconBg = isComplete ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600';
+  const titre = isComplete ? '✅ Clôturer le départ' : '⚠️ Clôture forcée';
+  
+  modalCloture.innerHTML = `
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
+      <!-- Header -->
+      <div class="bg-gradient-to-r ${bgColor} text-white p-6">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-14 h-14 ${iconBg} rounded-full flex items-center justify-center">
+            <i class="fas ${icon} text-2xl"></i>
+          </div>
+          <button onclick="fermerModalCloture()" class="hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <h3 class="font-bold text-2xl">${titre}</h3>
+        <p class="text-sm opacity-90 mt-1">${pseudo}</p>
+      </div>
+      
+      <!-- Contenu -->
+      <div class="p-6">
+        ${isComplete ? `
+          <div class="space-y-4">
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+              <div class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                <div>
+                  <p class="font-semibold text-green-800">Toutes les tâches sont complétées</p>
+                  <p class="text-sm text-green-600 mt-1">Le chauffeur a terminé les 5 étapes de déchargement.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 rounded-lg p-4">
+              <p class="text-gray-700 text-sm">
+                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                Le chauffeur sera marqué comme <strong>terminé</strong> et retiré de la liste des chauffeurs actifs.
+              </p>
+            </div>
+          </div>
+        ` : `
+          <div class="space-y-4">
+            <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+              <div class="flex items-start">
+                <i class="fas fa-exclamation-triangle text-orange-500 text-xl mr-3 mt-1"></i>
+                <div>
+                  <p class="font-semibold text-orange-800">Tâches incomplètes (${progression}%)</p>
+                  <p class="text-sm text-orange-600 mt-1">Le chauffeur n'a pas terminé toutes les étapes de déchargement.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+              <p class="text-yellow-800 text-sm font-semibold mb-2">
+                <i class="fas fa-question-circle mr-2"></i>
+                Voulez-vous vraiment clôturer maintenant ?
+              </p>
+              <ul class="text-xs text-yellow-700 space-y-1 ml-6">
+                <li>• Le chauffeur sera retiré de la liste</li>
+                <li>• Les tâches non terminées resteront incomplètes</li>
+                <li>• Cette action ne peut pas être annulée</li>
+              </ul>
+            </div>
+          </div>
+        `}
+      </div>
+      
+      <!-- Actions -->
+      <div class="bg-gray-50 px-6 py-4 flex gap-3">
+        <button 
+          onclick="fermerModalCloture()" 
+          class="flex-1 bg-white hover:bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg border border-gray-300"
+        >
+          <i class="fas fa-times mr-2"></i>
+          Annuler
+        </button>
+        <button 
+          onclick="confirmerCloture(${chauffeurId}, '${pseudo}', ${progression})" 
+          class="flex-1 bg-gradient-to-r ${bgColor} hover:opacity-90 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg"
+        >
+          <i class="fas ${isComplete ? 'fa-check' : 'fa-exclamation-circle'} mr-2"></i>
+          ${isComplete ? 'Confirmer' : 'Clôturer quand même'}
+        </button>
+      </div>
+    </div>
+  `;
+  
+  // Afficher le modal avec animation
+  modalCloture.classList.remove('hidden');
+  setTimeout(() => {
+    modalCloture.querySelector('.animate-scale-in').style.animation = 'scaleIn 0.3s ease-out';
+  }, 10);
+}
+
+// Fermer le modal de clôture
+window.fermerModalCloture = function() {
+  const modal = document.getElementById('modal-cloture-confirmation');
+  if (modal) {
+    modal.classList.add('hidden');
   }
+}
+
+// Confirmer la clôture
+window.confirmerCloture = async function(chauffeurId, pseudo, progression) {
+  // Fermer le modal
+  fermerModalCloture();
   
   try {
     const response = await fetch('/api/admin/cloturer-chauffeur', {
