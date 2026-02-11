@@ -139,15 +139,14 @@ function afficherDashboardChauffeurs(chauffeurs) {
           <i class="fas fa-comments"></i>
           <span>Chat</span>
         </button>
-        ${progression === 100 ? `
-          <button 
-            onclick="cloturerChauffeur(${chauffeur.id}, '${chauffeur.pseudo}')"
-            class="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
-          >
-            <i class="fas fa-check-double"></i>
-            <span>Clôturer</span>
-          </button>
-        ` : ''}
+        <button 
+          onclick="cloturerChauffeur(${chauffeur.id}, '${chauffeur.pseudo}', ${progression})"
+          class="flex-1 ${progression === 100 ? 'bg-green-500 hover:bg-green-600' : 'bg-orange-500 hover:bg-orange-600'} text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+          title="${progression === 100 ? 'Toutes les tâches sont complétées' : 'Clôturer même si les tâches ne sont pas terminées'}"
+        >
+          <i class="fas ${progression === 100 ? 'fa-check-double' : 'fa-sign-out-alt'}"></i>
+          <span>Clôturer</span>
+        </button>
       </div>
     `;
     
@@ -409,8 +408,16 @@ async function envoyerMessageAdmin() {
 
 // ===== FONCTION CLÔTURE CHAUFFEUR =====
 
-window.cloturerChauffeur = async function(chauffeurId, pseudo) {
-  if (!confirm(`Voulez-vous clôturer le départ de ${pseudo} ?\n\nCette action marquera le chauffeur comme terminé.`)) {
+window.cloturerChauffeur = async function(chauffeurId, pseudo, progression = 100) {
+  // Message différent selon si les tâches sont complètes ou non
+  let message;
+  if (progression === 100) {
+    message = `✅ Clôturer le départ de ${pseudo} ?\n\nToutes les tâches sont complétées.\nLe chauffeur sera retiré de la liste.`;
+  } else {
+    message = `⚠️ ATTENTION - Clôturer ${pseudo} ?\n\n⚠️ Les tâches ne sont pas toutes terminées (${progression}%).\n\n❓ Voulez-vous vraiment clôturer maintenant ?\nLe chauffeur sera retiré de la liste même si les tâches ne sont pas finies.`;
+  }
+  
+  if (!confirm(message)) {
     return;
   }
   
@@ -424,14 +431,15 @@ window.cloturerChauffeur = async function(chauffeurId, pseudo) {
     const data = await response.json();
     
     if (data.success) {
-      // Animation de succès
+      // Animation de succès avec couleur selon progression
+      const bgColor = progression === 100 ? 'bg-green-500' : 'bg-orange-500';
       const toast = document.createElement('div');
-      toast.className = 'fixed top-20 right-4 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 animate-slide-in-right flex items-center space-x-3';
+      toast.className = `fixed top-20 right-4 ${bgColor} text-white px-6 py-4 rounded-xl shadow-2xl z-50 animate-slide-in-right flex items-center space-x-3`;
       toast.innerHTML = `
         <i class="fas fa-check-circle text-2xl"></i>
         <div>
           <div class="font-bold">Départ clôturé</div>
-          <div class="text-sm opacity-90">${pseudo} a été retiré de la liste</div>
+          <div class="text-sm opacity-90">${pseudo} a été retiré de la liste ${progression < 100 ? '(tâches incomplètes)' : ''}</div>
         </div>
       `;
       document.body.appendChild(toast);
