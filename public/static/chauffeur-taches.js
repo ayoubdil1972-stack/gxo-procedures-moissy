@@ -684,6 +684,23 @@ async function chargerMessages() {
       // Mettre à jour le cache
       cachedChauffeurMessages = data.messages;
       afficherMessagesCaches();
+      
+      // Marquer les messages comme lus dès qu'ils sont affichés
+      const messagesNonLus = data.messages.filter(m => m.sender === 'admin' && !m.read_by_chauffeur);
+      if (messagesNonLus.length > 0) {
+        fetch('/api/chauffeur/chat/mark-read', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chauffeur_id: chauffeurId, reader: 'chauffeur' })
+        }).then(() => {
+          // Retirer le badge immédiatement
+          const badge = document.getElementById('chat-badge');
+          if (badge) {
+            badge.classList.add('hidden');
+            badge.textContent = '0';
+          }
+        }).catch(err => console.error('Erreur marquage lu:', err));
+      }
     }
   } catch (error) {
     console.error('Erreur chargement messages:', error);

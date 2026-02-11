@@ -433,6 +433,23 @@ async function chargerMessagesAdmin() {
       chatAdminLangueChauffeur = data.chauffeur_langue || 'fr';
       afficherMessagesAdmin(data.messages);
       
+      // Marquer les messages comme lus dès qu'ils sont affichés
+      const messagesNonLus = data.messages.filter(m => m.sender === 'chauffeur' && !m.read_by_admin);
+      if (messagesNonLus.length > 0) {
+        fetch('/api/chauffeur/chat/mark-read', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chauffeur_id: chatAdminChauffeurId, reader: 'admin' })
+        }).then(() => {
+          // Retirer le badge immédiatement
+          const badge = document.querySelector(`[data-chauffeur-id="${chatAdminChauffeurId}"] .notification-badge`);
+          if (badge) {
+            badge.classList.add('hidden');
+            badge.textContent = '0';
+          }
+        }).catch(err => console.error('Erreur marquage lu:', err));
+      }
+      
       // Mettre à jour l'affichage de la langue
       const langueDisplay = document.getElementById('langue-chauffeur-display');
       if (langueDisplay) {
