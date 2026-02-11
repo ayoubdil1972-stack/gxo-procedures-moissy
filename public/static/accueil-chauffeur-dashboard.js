@@ -250,6 +250,19 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
   chatAdminChauffeurId = chauffeurId;
   chatAdminPseudo = pseudo;
   
+  // Marquer immédiatement les messages comme lus et retirer le badge
+  fetch('/api/chauffeur/chat/mark-read', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chauffeur_id: chauffeurId, reader: 'admin' })
+  }).then(() => {
+    // Retirer le badge de notification sur la carte du chauffeur
+    const badge = document.querySelector(`[data-chauffeur-id="${chauffeurId}"] .notification-badge`);
+    if (badge) {
+      badge.classList.add('hidden');
+    }
+  }).catch(err => console.error('Erreur marquage lu:', err));
+  
   // Créer le modal de chat s'il n'existe pas
   let modalChat = document.getElementById('modal-chat-admin');
   if (!modalChat) {
@@ -294,6 +307,18 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
           </div>
         </div>
         
+        <!-- Indicateur de frappe -->
+        <div id="typing-indicator-admin" class="px-4 py-2 bg-gray-50 hidden">
+          <div class="flex items-center gap-2 text-gray-500 text-sm">
+            <div class="flex gap-1">
+              <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+              <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+              <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+            </div>
+            <span id="typing-indicator-text">Le chauffeur écrit...</span>
+          </div>
+        </div>
+        
         <!-- Input -->
         <div class="p-4 bg-white border-t rounded-b-2xl">
           <div class="flex gap-2">
@@ -301,7 +326,8 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
               type="text" 
               id="chat-admin-input" 
               placeholder="Votre message (sera traduit automatiquement)..."
-              class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              oninput="notifierFrappeAdmin()"
             />
             <button onclick="envoyerMessageAdmin()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg">
               <i class="fas fa-paper-plane"></i>
@@ -539,6 +565,49 @@ window.basculerTraduction = function() {
     afficherMessagesAdmin(cachedMessages);
   }
 };
+
+// Variables pour le typing indicator
+let typingTimeout = null;
+let lastTypingNotification = 0;
+
+// Notifier que l'admin est en train d'écrire (avec debouncing)
+window.notifierFrappeAdmin = function() {
+  const now = Date.now();
+  
+  // Envoyer max 1 notification toutes les 2 secondes
+  if (now - lastTypingNotification < 2000) return;
+  
+  lastTypingNotification = now;
+  
+  // Envoyer la notification au serveur (à implémenter si besoin)
+  // Pour l'instant, on simule localement
+  
+  // Clear le timeout précédent
+  if (typingTimeout) clearTimeout(typingTimeout);
+  
+  // Masquer l'indicateur après 3 secondes sans frappe
+  typingTimeout = setTimeout(() => {
+    // L'utilisateur a arrêté de taper
+  }, 3000);
+};
+
+// Afficher l'indicateur de frappe du chauffeur
+function afficherTypingIndicator() {
+  const indicator = document.getElementById('typing-indicator-admin');
+  if (indicator) {
+    indicator.classList.remove('hidden');
+    indicator.classList.add('animate-fade-in');
+  }
+}
+
+// Masquer l'indicateur de frappe du chauffeur
+function masquerTypingIndicator() {
+  const indicator = document.getElementById('typing-indicator-admin');
+  if (indicator) {
+    indicator.classList.add('hidden');
+    indicator.classList.remove('animate-fade-in');
+  }
+}
 
 // Envoyer un message admin avec affichage optimiste
 async function envoyerMessageAdmin() {

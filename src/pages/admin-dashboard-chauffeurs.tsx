@@ -9,6 +9,9 @@ export const AdminDashboardChauffeurs: FC = () => {
         <title>Dashboard Chauffeurs - GXO Admin</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/static/animations.css" />
+        <link rel="preload" href="/static/gxo-logo-official.svg" as="image" />
+        <link rel="preload" href="/static/accueil-chauffeur-dashboard.js" as="script" />
       </head>
       <body class="bg-gray-100">
         {/* Header */}

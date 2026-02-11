@@ -9,6 +9,9 @@ export const ChauffeurTachesPage: FC = () => {
         <title>Mes Tâches - GXO Chauffeur</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/static/animations.css" />
+        <link rel="preload" href="/static/gxo-logo-official.svg" as="image" />
+        <link rel="preload" href="/static/chauffeur-taches.js" as="script" />
       </head>
       <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
         {/* Header Mobile */}
@@ -103,6 +106,18 @@ export const ChauffeurTachesPage: FC = () => {
               </div>
             </div>
 
+            {/* Indicateur de frappe Admin */}
+            <div id="typing-indicator-chauffeur" class="px-4 py-2 bg-gray-100 hidden border-t">
+              <div class="flex items-center gap-2 text-gray-600 text-sm">
+                <div class="flex gap-1">
+                  <span class="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                  <span class="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                  <span class="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                </div>
+                <span id="typing-indicator-chauffeur-text">L'admin écrit...</span>
+              </div>
+            </div>
+
             {/* Input Chat */}
             <div class="border-t p-4 bg-gray-50 sm:rounded-b-2xl rounded-b-2xl">
               <div class="flex space-x-2">
@@ -110,9 +125,10 @@ export const ChauffeurTachesPage: FC = () => {
                   type="text" 
                   id="input-message" 
                   placeholder="Écrivez votre message..." 
-                  class="flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  class="flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+                  oninput="notifierFrappeChauffeur()"
                 />
-                <button id="btn-envoyer-message" class="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6 py-3 font-bold transition">
+                <button id="btn-envoyer-message" class="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6 py-3 font-bold transition-all shadow-md hover:shadow-lg">
                   <i class="fas fa-paper-plane"></i>
                 </button>
               </div>

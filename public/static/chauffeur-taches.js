@@ -744,6 +744,44 @@ document.getElementById('input-message').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') envoyerMessage();
 });
 
+// Variables pour le typing indicator
+let typingTimeoutChauffeur = null;
+let lastTypingNotificationChauffeur = 0;
+
+// Notifier que le chauffeur est en train d'écrire (avec debouncing)
+window.notifierFrappeChauffeur = function() {
+  const now = Date.now();
+  
+  // Envoyer max 1 notification toutes les 2 secondes
+  if (now - lastTypingNotificationChauffeur < 2000) return;
+  
+  lastTypingNotificationChauffeur = now;
+  
+  // Clear le timeout précédent
+  if (typingTimeoutChauffeur) clearTimeout(typingTimeoutChauffeur);
+  
+  // Masquer l'indicateur après 3 secondes sans frappe
+  typingTimeoutChauffeur = setTimeout(() => {
+    // L'utilisateur a arrêté de taper
+  }, 3000);
+};
+
+// Afficher l'indicateur de frappe de l'admin
+function afficherTypingIndicatorChauffeur() {
+  const indicator = document.getElementById('typing-indicator-chauffeur');
+  if (indicator) {
+    indicator.classList.remove('hidden');
+  }
+}
+
+// Masquer l'indicateur de frappe de l'admin
+function masquerTypingIndicatorChauffeur() {
+  const indicator = document.getElementById('typing-indicator-chauffeur');
+  if (indicator) {
+    indicator.classList.add('hidden');
+  }
+}
+
 async function envoyerMessage() {
   const input = document.getElementById('input-message');
   const message = input.value.trim();
