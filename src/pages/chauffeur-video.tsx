@@ -3,9 +3,18 @@ export function ChauffeurVideoPage() {
     <div class="min-h-screen bg-black flex flex-col">
       {/* Header fixe - Compact mobile */}
       <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-3 md:p-4 shadow-lg">
-        <div class="container mx-auto flex items-center justify-between">
-          <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-8 md:h-10" />
-          <div class="text-white font-bold text-sm md:text-base" id="langue-selectionnee"></div>
+        <div class="container mx-auto">
+          <div class="flex items-center justify-between mb-2">
+            <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-8 md:h-10" />
+            <div class="text-white font-bold text-sm md:text-base" id="langue-selectionnee"></div>
+          </div>
+          {/* Titre Instructions */}
+          <div class="text-center">
+            <h1 class="text-xl md:text-2xl font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-play-circle"></i>
+              <span id="titre-instructions">Instructions</span>
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -106,72 +115,84 @@ export function ChauffeurVideoPage() {
           const translations = {
             bg: { 
               header: '🇧🇬 Български', 
+              titre: 'Инструкции',
               message: 'Моля, гледайте цялото видео преди да продължите',
               btn: 'Продължи към регистрацията',
               fullscreen: 'Цял екран'
             },
             cs: { 
               header: '🇨🇿 Čeština', 
+              titre: 'Pokyny',
               message: 'Prosím sledujte celé video před pokračováním',
               btn: 'Pokračovat k registraci',
               fullscreen: 'Celá obrazovka'
             },
             da: { 
               header: '🇩🇰 Dansk', 
+              titre: 'Instruktioner',
               message: 'Se venligst hele videoen før du fortsætter',
               btn: 'Fortsæt til registrering',
               fullscreen: 'Fuld skærm'
             },
             de: { 
               header: '🇩🇪 Deutsch', 
+              titre: 'Anweisungen',
               message: 'Bitte sehen Sie sich das gesamte Video an, bevor Sie fortfahren',
               btn: 'Weiter zur Registrierung',
               fullscreen: 'Vollbild'
             },
             hr: { 
               header: '🇭🇷 Hrvatski', 
+              titre: 'Upute',
               message: 'Molimo pogledajte cijeli video prije nastavka',
               btn: 'Nastavi s registracijom',
               fullscreen: 'Puni zaslon'
             },
             it: { 
               header: '🇮🇹 Italiano', 
+              titre: 'Istruzioni',
               message: 'Si prega di guardare l\\'intero video prima di continuare',
               btn: 'Continua con la registrazione',
               fullscreen: 'Schermo intero'
             },
             pl: { 
               header: '🇵🇱 Polski', 
+              titre: 'Instrukcje',
               message: 'Proszę obejrzeć cały film przed kontynuowaniem',
               btn: 'Przejdź do rejestracji',
               fullscreen: 'Pełny ekran'
             },
             pt: { 
               header: '🇵🇹 Português', 
+              titre: 'Instruções',
               message: 'Por favor, assista ao vídeo completo antes de continuar',
               btn: 'Continuar para o registo',
               fullscreen: 'Ecrã inteiro'
             },
             ro: { 
               header: '🇷🇴 Română', 
+              titre: 'Instrucțiuni',
               message: 'Vă rugăm să vizionați întregul video înainte de a continua',
               btn: 'Continuă către înregistrare',
               fullscreen: 'Ecran complet'
             },
             fr: { 
               header: '🇫🇷 Français (sous-titres)', 
+              titre: 'Instructions',
               message: 'Veuillez regarder la vidéo complète avant de continuer',
               btn: 'Continuer vers l\\\'inscription',
               fullscreen: 'Plein écran'
             },
             nl: { 
               header: '🇳🇱 Nederlands', 
+              titre: 'Instructies',
               message: 'Bekijk de volledige video voordat u doorgaat',
               btn: 'Doorgaan naar registratie',
               fullscreen: 'Volledig scherm'
             },
             fi: { 
               header: '🇫🇮 Suomi', 
+              titre: 'Ohjeet',
               message: 'Katso koko video ennen jatkamista',
               btn: 'Jatka rekisteröintiin',
               fullscreen: 'Koko näyttö'
@@ -180,6 +201,7 @@ export function ChauffeurVideoPage() {
           
           const t = translations[langue] || translations.bg;
           document.getElementById('langue-selectionnee').textContent = t.header;
+          document.getElementById('titre-instructions').textContent = t.titre;
           document.getElementById('message-text').textContent = t.message;
           document.getElementById('btn-continuer-text').textContent = t.btn;
           document.getElementById('fullscreen-text').textContent = t.fullscreen;
