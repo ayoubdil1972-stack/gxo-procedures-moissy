@@ -220,13 +220,18 @@ function showFormationsRecommandeesModal() {
   };
   
   const experienceNames = {
-    'aucune': 'Aucune',
-    'debutant': 'Débutant',
-    'intermediaire': 'Intermédiaire',
-    'experimente': 'Expérimenté'
+    'aucune': 'Aucune expérience',
+    'debutant': 'Débutant (< 1 an)',
+    'intermediaire': 'Intermédiaire (1-3 ans)',
+    'experimente': 'Expérimenté (3+ ans)'
   };
   
-  document.getElementById('modal-profil-poste').textContent = posteNames[selectedPoste] || selectedPoste;
+  // Mettre à jour le header du modal avec le poste sélectionné
+  const modalTitle = document.getElementById('modal-questionnaire-title');
+  const posteName = posteNames[selectedPoste] || selectedPoste;
+  modalTitle.textContent = `Formations recommandées - ${posteName}`;
+  
+  document.getElementById('modal-profil-poste').textContent = posteName;
   document.getElementById('modal-profil-experience').textContent = experienceNames[selectedExperience] || selectedExperience;
   document.getElementById('modal-profil-competences').textContent = selectedCompetences.length + ' compétence(s)';
   
@@ -234,7 +239,47 @@ function showFormationsRecommandeesModal() {
   const formations = generateFormations();
   const formationsListDiv = document.getElementById('modal-formations-list');
   
-  formationsListDiv.innerHTML = formations.map(formation => {
+  // Message d'explication selon l'expérience
+  let messageExplication = '';
+  if (selectedExperience === 'aucune' || selectedExperience === 'debutant') {
+    messageExplication = `
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+        <div class="flex items-start">
+          <i class="fas fa-info-circle text-blue-500 mr-3 mt-1"></i>
+          <div>
+            <p class="font-semibold text-blue-800">Formations organisées par ordre croissant de difficulté</p>
+            <p class="text-sm text-blue-700 mt-1">Commencez par les formations les plus simples pour progresser étape par étape</p>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (selectedExperience === 'experimente') {
+    messageExplication = `
+      <div class="bg-purple-50 border-l-4 border-purple-500 p-4 mb-4">
+        <div class="flex items-start">
+          <i class="fas fa-star text-purple-500 mr-3 mt-1"></i>
+          <div>
+            <p class="font-semibold text-purple-800">Formations avancées sélectionnées pour votre niveau d'expertise</p>
+            <p class="text-sm text-purple-700 mt-1">Seules les formations les plus complexes sont proposées, triées par ordre décroissant de difficulté</p>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    messageExplication = `
+      <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+        <div class="flex items-start">
+          <i class="fas fa-chart-line text-green-500 mr-3 mt-1"></i>
+          <div>
+            <p class="font-semibold text-green-800">Formations adaptées à votre niveau intermédiaire</p>
+            <p class="text-sm text-green-700 mt-1">Formations moyennes et avancées pour perfectionner vos compétences</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  formationsListDiv.innerHTML = messageExplication + formations.map(formation => {
     const priorityBadges = {
       'essentiel': '<span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">Essentiel</span>',
       'recommande': '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Recommandé</span>',
@@ -360,23 +405,31 @@ function generateFormations() {
   let formationsAdaptees = [];
   
   if (selectedExperience === 'aucune') {
-    // Débutant complet : TOUTES les formations, triées du plus facile au plus difficile
+    // ⭐ AUCUNE EXPÉRIENCE : TOUTES les formations, du FACILE au DIFFICILE
+    // Objectif : Progression pédagogique complète, du plus simple au plus complexe
     formationsAdaptees = formationsPoste.sort((a, b) => a.difficulty - b.difficulty);
+    console.log('📚 Profil débutant complet : ' + formationsAdaptees.length + ' formations (facile → difficile)');
   } else if (selectedExperience === 'debutant') {
-    // Débutant avec quelques bases : formations faciles et moyennes (difficultés 1-3)
+    // ⭐⭐ DÉBUTANT : Formations FACILES et MOYENNES (difficultés 1-3), du FACILE au DIFFICILE
+    // Objectif : Consolidation des bases, éviter les formations trop complexes
     formationsAdaptees = formationsPoste
       .filter(f => f.difficulty <= 3)
       .sort((a, b) => a.difficulty - b.difficulty);
+    console.log('📚 Profil débutant : ' + formationsAdaptees.length + ' formations (facile → moyen)');
   } else if (selectedExperience === 'intermediaire') {
-    // Intermédiaire : formations moyennes et avancées (difficultés 2-4)
+    // ⭐⭐⭐ INTERMÉDIAIRE : Formations MOYENNES et AVANCÉES (difficultés 2-4), du FACILE au DIFFICILE
+    // Objectif : Perfectionnement, montée en compétence progressive
     formationsAdaptees = formationsPoste
       .filter(f => f.difficulty >= 2 && f.difficulty <= 4)
       .sort((a, b) => a.difficulty - b.difficulty);
+    console.log('📚 Profil intermédiaire : ' + formationsAdaptees.length + ' formations (moyen → avancé)');
   } else if (selectedExperience === 'experimente') {
-    // Expérimenté : UNIQUEMENT les formations difficiles (difficultés 4-5), triées du plus difficile au plus facile
+    // ⭐⭐⭐⭐⭐ EXPÉRIMENTÉ : UNIQUEMENT formations DIFFICILES (difficultés 4-5), du DIFFICILE au PLUS DIFFICILE
+    // Objectif : Défis avancés, expertise, moins de formations mais plus complexes
     formationsAdaptees = formationsPoste
       .filter(f => f.difficulty >= 4)
-      .sort((a, b) => b.difficulty - a.difficulty); // Tri inversé pour les experts
+      .sort((a, b) => b.difficulty - a.difficulty); // ⚠️ TRI INVERSÉ pour les experts !
+    console.log('📚 Profil expérimenté : ' + formationsAdaptees.length + ' formations (difficile → expert)');
   }
 
   // Convertir en format attendu avec niveau de difficulté visible
