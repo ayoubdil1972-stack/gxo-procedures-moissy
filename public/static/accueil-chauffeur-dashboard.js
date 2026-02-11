@@ -162,6 +162,11 @@ function afficherDashboardChauffeurs(chauffeurs) {
 // Charger les compteurs de messages non lus pour tous les chauffeurs
 async function chargerCompteursMessagesNonLus(chauffeurs) {
   for (const chauffeur of chauffeurs) {
+    // Ne pas mettre à jour le badge si le chat avec ce chauffeur est actuellement ouvert
+    if (chatAdminChauffeurId === chauffeur.id) {
+      continue; // Ignorer ce chauffeur, son badge est déjà géré par le chat ouvert
+    }
+    
     try {
       const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chauffeur.id}`);
       const data = await response.json();
@@ -170,14 +175,17 @@ async function chargerCompteursMessagesNonLus(chauffeurs) {
         // Compter les messages non lus de l'admin (envoyés par le chauffeur et non lus par l'admin)
         const nonLus = data.messages.filter(m => m.sender === 'chauffeur' && !m.read_by_admin).length;
         
-        if (nonLus > 0) {
-          // Afficher le badge
-          const button = document.querySelector(`button[data-chauffeur-id="${chauffeur.id}"]`);
-          if (button) {
-            const badge = button.querySelector('.notification-badge');
-            if (badge) {
+        const button = document.querySelector(`button[data-chauffeur-id="${chauffeur.id}"]`);
+        if (button) {
+          const badge = button.querySelector('.notification-badge');
+          if (badge) {
+            if (nonLus > 0) {
               badge.textContent = nonLus;
               badge.classList.remove('hidden');
+            } else {
+              // Aucun message non lu : masquer le badge
+              badge.classList.add('hidden');
+              badge.textContent = '0';
             }
           }
         }

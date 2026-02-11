@@ -8,6 +8,7 @@ let intervalProgression = null;
 let currentLangue = 'fr';
 let messagesTraductionState = {};
 let afficherTraduction = true;
+let chatEstOuvert = false; // Nouveau: tracker si le chat est ouvert
 
 // Traductions pour toutes les langues
 const translations = {
@@ -638,6 +639,7 @@ function stopTimer() {
 
 // Chat
 document.getElementById('btn-chat').addEventListener('click', () => {
+  chatEstOuvert = true; // Marquer le chat comme ouvert
   document.getElementById('modal-chat').classList.remove('hidden');
   chargerMessages();
   
@@ -657,6 +659,7 @@ document.getElementById('btn-chat').addEventListener('click', () => {
 });
 
 document.getElementById('btn-fermer-chat').addEventListener('click', () => {
+  chatEstOuvert = false; // Marquer le chat comme fermé
   document.getElementById('modal-chat').classList.add('hidden');
   
   // Marquer les messages comme lus lors de la fermeture
@@ -882,6 +885,11 @@ async function envoyerMessage() {
 function demarrerActualisationAuto() {
   intervalProgression = setInterval(async () => {
     await chargerTaches();
+    
+    // Ne pas mettre à jour le badge si le chat est actuellement ouvert
+    if (chatEstOuvert) {
+      return; // Ignorer la mise à jour du badge
+    }
     
     const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chauffeurId}`);
     const data = await response.json();
