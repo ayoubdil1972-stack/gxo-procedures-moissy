@@ -1,12 +1,14 @@
 export function ChauffeurLanguePage() {
   const langues = [
-    { code: 'fr', nom: 'Français', drapeau: '🇫🇷' },
-    { code: 'en', nom: 'English', drapeau: '🇬🇧' },
-    { code: 'es', nom: 'Español', drapeau: '🇪🇸' },
-    { code: 'pl', nom: 'Polski', drapeau: '🇵🇱' },
+    { code: 'bg', nom: 'Български', drapeau: '🇧🇬' },
+    { code: 'cs', nom: 'Čeština', drapeau: '🇨🇿' },
+    { code: 'da', nom: 'Dansk', drapeau: '🇩🇰' },
     { code: 'de', nom: 'Deutsch', drapeau: '🇩🇪' },
+    { code: 'hr', nom: 'Hrvatski', drapeau: '🇭🇷' },
     { code: 'it', nom: 'Italiano', drapeau: '🇮🇹' },
-    { code: 'bg', nom: 'Български', drapeau: '🇧🇬' }
+    { code: 'pl', nom: 'Polski', drapeau: '🇵🇱' },
+    { code: 'pt', nom: 'Português', drapeau: '🇵🇹' },
+    { code: 'ro', nom: 'Română', drapeau: '🇷🇴' }
   ];
 
   return (

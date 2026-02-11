@@ -20,7 +20,7 @@ export function QRCodeChauffeurPage() {
             <div id="qrcode-container"></div>
           </div>
           <p class="text-gray-700 font-semibold mt-3 md:mt-4 text-xs md:text-sm">
-            🇫🇷 🇬🇧 🇪🇸 🇵🇱 🇩🇪 🇮🇹 🇧🇬
+            🇧🇬 🇨🇿 🇩🇰 🇩🇪 🇭🇷 🇮🇹 🇵🇱 🇵🇹 🇷🇴
           </p>
           <p class="text-gray-600 text-xs mt-2">
             Système multilingue disponible

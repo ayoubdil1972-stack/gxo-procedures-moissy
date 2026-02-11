@@ -1,7 +1,7 @@
 export function ChauffeurVideoPage() {
   return (
     <div class="min-h-screen bg-black flex flex-col">
-      {/* Header fixe - Optimisé mobile */}
+      {/* Header fixe - Compact mobile */}
       <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-3 md:p-4 shadow-lg">
         <div class="container mx-auto flex items-center justify-between">
           <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-8 md:h-10" />
@@ -9,14 +9,15 @@ export function ChauffeurVideoPage() {
         </div>
       </div>
 
-      {/* Conteneur vidéo - Simplifié pour mobile */}
+      {/* Conteneur vidéo - Optimisé mobile + plein écran */}
       <div class="flex-1 flex items-center justify-center p-2 md:p-4">
         <div class="w-full max-w-5xl">
-          {/* Container vidéo direct */}
+          {/* Container vidéo avec aspect ratio 9:16 (portrait mobile) */}
           <div class="relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl">
             <video 
               id="video-instructions" 
-              class="w-full h-auto max-h-[70vh]"
+              class="w-full h-auto"
+              style="max-height: 85vh; object-fit: contain;"
               controls
               controlsList="nodownload"
               disablePictureInPicture
@@ -47,13 +48,14 @@ export function ChauffeurVideoPage() {
               </div>
             </div>
             
-            {/* Bouton plein écran personnalisé */}
+            {/* Bouton plein écran personnalisé - Toujours visible quand vidéo chargée */}
             <button 
               id="fullscreen-btn"
               onclick="toggleFullscreen()"
-              class="hidden absolute top-2 right-2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-lg transition-all z-10"
+              class="hidden absolute top-2 right-2 bg-black bg-opacity-70 hover:bg-opacity-90 text-white px-3 py-2 rounded-lg transition-all z-10 text-sm md:text-base"
             >
-              <i class="fas fa-expand text-lg" id="fullscreen-icon"></i>
+              <i class="fas fa-expand mr-1" id="fullscreen-icon"></i>
+              <span id="fullscreen-text">Plein écran</span>
             </button>
           </div>
 
@@ -74,7 +76,7 @@ export function ChauffeurVideoPage() {
           {/* Message bloquant */}
           <div id="message-bloquant" class="mt-4 md:mt-6 bg-yellow-500 text-black p-3 md:p-4 rounded-lg text-center font-semibold text-sm md:text-base">
             <i class="fas fa-lock mr-2"></i>
-            Veuillez regarder la vidéo complète avant de continuer
+            <span id="message-text">Veuillez regarder la vidéo complète avant de continuer</span>
           </div>
 
           {/* Bouton continuer (masqué par défaut) */}
@@ -84,43 +86,97 @@ export function ChauffeurVideoPage() {
               class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:shadow-lg transition-all"
             >
               <i class="fas fa-check-circle mr-2"></i>
-              Continuer vers l'inscription
+              <span id="btn-continuer-text">Continuer vers l'inscription</span>
             </a>
           </div>
         </div>
       </div>
 
-      {/* Script de contrôle vidéo */}
+      {/* Script de contrôle vidéo AMÉLIORÉ */}
       <script dangerouslySetInnerHTML={{
         __html: `
           // Récupérer la langue depuis l'URL
           const urlParams = new URLSearchParams(window.location.search);
-          const langue = urlParams.get('lang') || 'fr';
+          const langue = urlParams.get('lang') || 'bg';
           
           // Stocker la langue pour la suite
           sessionStorage.setItem('chauffeur_langue', langue);
           
-          // Afficher la langue sélectionnée
-          const langueNoms = {
-            'fr': '🇫🇷 Français',
-            'en': '🇬🇧 English',
-            'es': '🇪🇸 Español',
-            'pl': '🇵🇱 Polski',
-            'de': '🇩🇪 Deutsch',
-            'it': '🇮🇹 Italiano',
-            'bg': '🇧🇬 Български'
+          // Traductions
+          const translations = {
+            bg: { 
+              header: '🇧🇬 Български', 
+              message: 'Моля, гледайте цялото видео преди да продължите',
+              btn: 'Продължи към регистрацията',
+              fullscreen: 'Цял екран'
+            },
+            cs: { 
+              header: '🇨🇿 Čeština', 
+              message: 'Prosím sledujte celé video před pokračováním',
+              btn: 'Pokračovat k registraci',
+              fullscreen: 'Celá obrazovka'
+            },
+            da: { 
+              header: '🇩🇰 Dansk', 
+              message: 'Se venligst hele videoen før du fortsætter',
+              btn: 'Fortsæt til registrering',
+              fullscreen: 'Fuld skærm'
+            },
+            de: { 
+              header: '🇩🇪 Deutsch', 
+              message: 'Bitte sehen Sie sich das gesamte Video an, bevor Sie fortfahren',
+              btn: 'Weiter zur Registrierung',
+              fullscreen: 'Vollbild'
+            },
+            hr: { 
+              header: '🇭🇷 Hrvatski', 
+              message: 'Molimo pogledajte cijeli video prije nastavka',
+              btn: 'Nastavi s registracijom',
+              fullscreen: 'Puni zaslon'
+            },
+            it: { 
+              header: '🇮🇹 Italiano', 
+              message: 'Si prega di guardare l\\'intero video prima di continuare',
+              btn: 'Continua con la registrazione',
+              fullscreen: 'Schermo intero'
+            },
+            pl: { 
+              header: '🇵🇱 Polski', 
+              message: 'Proszę obejrzeć cały film przed kontynuowaniem',
+              btn: 'Przejdź do rejestracji',
+              fullscreen: 'Pełny ekran'
+            },
+            pt: { 
+              header: '🇵🇹 Português', 
+              message: 'Por favor, assista ao vídeo completo antes de continuar',
+              btn: 'Continuar para o registo',
+              fullscreen: 'Ecrã inteiro'
+            },
+            ro: { 
+              header: '🇷🇴 Română', 
+              message: 'Vă rugăm să vizionați întregul video înainte de a continua',
+              btn: 'Continuă către înregistrare',
+              fullscreen: 'Ecran complet'
+            }
           };
-          document.getElementById('langue-selectionnee').textContent = langueNoms[langue] || langue;
           
-          // URLs des vidéos par langue
+          const t = translations[langue] || translations.bg;
+          document.getElementById('langue-selectionnee').textContent = t.header;
+          document.getElementById('message-text').textContent = t.message;
+          document.getElementById('btn-continuer-text').textContent = t.btn;
+          document.getElementById('fullscreen-text').textContent = t.fullscreen;
+          
+          // URLs des vidéos par langue (9 langues disponibles !)
           const videoUrls = {
-            'fr': '/static/videos/instructions-fr.mp4',
-            'en': '/static/videos/instructions-en.mp4',
-            'es': '/static/videos/instructions-es.mp4',
-            'pl': '/static/videos/instructions-pl.mp4',
+            'bg': '/static/videos/instructions-bg.mp4',
+            'cs': '/static/videos/instructions-cs.mp4',
+            'da': '/static/videos/instructions-da.mp4',
             'de': '/static/videos/instructions-de.mp4',
+            'hr': '/static/videos/instructions-hr.mp4',
             'it': '/static/videos/instructions-it.mp4',
-            'bg': '/static/videos/instructions-bg.mp4'  // Vidéo bulgare disponible
+            'pl': '/static/videos/instructions-pl.mp4',
+            'pt': '/static/videos/instructions-pt.mp4',
+            'ro': '/static/videos/instructions-ro.mp4'
           };
           
           const video = document.getElementById('video-instructions');
@@ -138,32 +194,66 @@ export function ChauffeurVideoPage() {
             videoCompleted();
           };
           
-          // Fonction plein écran
+          // Fonction plein écran AMÉLIORÉE (support mobile)
           window.toggleFullscreen = function() {
-            if (!document.fullscreenElement) {
-              if (video.requestFullscreen) {
-                video.requestFullscreen();
-              } else if (video.webkitRequestFullscreen) {
-                video.webkitRequestFullscreen();
-              } else if (video.mozRequestFullScreen) {
-                video.mozRequestFullScreen();
-              } else if (video.msRequestFullscreen) {
-                video.msRequestFullscreen();
+            const videoContainer = video.parentElement;
+            
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+              // Entrer en plein écran
+              const requestFullscreen = videoContainer.requestFullscreen || 
+                                       videoContainer.webkitRequestFullscreen || 
+                                       videoContainer.mozRequestFullScreen || 
+                                       videoContainer.msRequestFullscreen;
+              
+              if (requestFullscreen) {
+                requestFullscreen.call(videoContainer).then(() => {
+                  // Lock orientation en paysage si disponible (Android)
+                  if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(() => {
+                      console.log('Orientation lock not supported');
+                    });
+                  }
+                });
               }
-              document.getElementById('fullscreen-icon').className = 'fas fa-compress text-lg';
+              
+              document.getElementById('fullscreen-icon').className = 'fas fa-compress mr-1';
+              document.getElementById('fullscreen-text').textContent = 'Quitter';
             } else {
-              if (document.exitFullscreen) {
-                document.exitFullscreen();
-              } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-              } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-              } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
+              // Quitter le plein écran
+              const exitFullscreen = document.exitFullscreen || 
+                                    document.webkitExitFullscreen || 
+                                    document.mozCancelFullScreen || 
+                                    document.msExitFullscreen;
+              
+              if (exitFullscreen) {
+                exitFullscreen.call(document).then(() => {
+                  // Unlock orientation
+                  if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                  }
+                });
               }
-              document.getElementById('fullscreen-icon').className = 'fas fa-expand text-lg';
+              
+              document.getElementById('fullscreen-icon').className = 'fas fa-expand mr-1';
+              const t = translations[langue] || translations.bg;
+              document.getElementById('fullscreen-text').textContent = t.fullscreen;
             }
           };
+          
+          // Écouter les changements de plein écran
+          document.addEventListener('fullscreenchange', updateFullscreenButton);
+          document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+          
+          function updateFullscreenButton() {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+              document.getElementById('fullscreen-icon').className = 'fas fa-compress mr-1';
+              document.getElementById('fullscreen-text').textContent = 'Quitter';
+            } else {
+              document.getElementById('fullscreen-icon').className = 'fas fa-expand mr-1';
+              const t = translations[langue] || translations.bg;
+              document.getElementById('fullscreen-text').textContent = t.fullscreen;
+            }
+          }
           
           // Fonction appelée quand la vidéo est terminée
           function videoCompleted() {
@@ -180,7 +270,7 @@ export function ChauffeurVideoPage() {
             
             // Attendre que les métadonnées soient chargées
             video.addEventListener('loadedmetadata', function() {
-              console.log('✅ Vidéo chargée:', langue);
+              console.log('✅ Vidéo chargée:', langue, '(' + Math.round(video.duration) + 's)');
               placeholder.classList.add('hidden');
               video.classList.remove('hidden');
               fullscreenBtn.classList.remove('hidden');
@@ -214,10 +304,8 @@ export function ChauffeurVideoPage() {
             // Empêcher de skip la vidéo
             video.addEventListener('seeking', function() {
               if (video.currentTime > video.duration - 5) {
-                // Autoriser les 5 dernières secondes
                 return;
               }
-              // Empêcher de sauter en avant
               if (video.currentTime > (this.dataset.lastTime || 0)) {
                 video.currentTime = this.dataset.lastTime || 0;
               }
@@ -227,7 +315,6 @@ export function ChauffeurVideoPage() {
               this.dataset.lastTime = this.currentTime;
             });
             
-            // Message pour démarrer la vidéo
             console.log('✅ Vidéo prête. Cliquez sur PLAY pour démarrer.');
           }
           
@@ -242,7 +329,6 @@ export function ChauffeurVideoPage() {
             }
           });
           
-          // Autoriser de quitter quand on clique sur "Continuer"
           if (btnContinuerContainer) {
             btnContinuerContainer.addEventListener('click', function() {
               canLeave = true;
@@ -254,7 +340,8 @@ export function ChauffeurVideoPage() {
           window.addEventListener('popstate', function() {
             if (!sessionStorage.getItem('video_completed')) {
               history.pushState(null, null, location.href);
-              alert('Veuillez terminer la vidéo avant de continuer.');
+              const t = translations[langue] || translations.bg;
+              alert(t.message);
             }
           });
         `
