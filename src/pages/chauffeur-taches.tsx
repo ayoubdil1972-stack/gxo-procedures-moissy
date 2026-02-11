@@ -21,10 +21,18 @@ export const ChauffeurTachesPage: FC = () => {
                 <div class="font-bold text-lg" id="chauffeur-pseudo">Chauffeur</div>
               </div>
             </div>
-            <button id="btn-chat" class="relative bg-white/20 hover:bg-white/30 rounded-full p-3 transition">
-              <i class="fas fa-comments text-xl"></i>
-              <span id="chat-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
-            </button>
+            <div class="flex items-center space-x-3">
+              {/* Indicateur de langue fixe */}
+              <div id="langue-indicator" class="bg-white/20 rounded-full px-3 py-2 flex items-center space-x-2">
+                <span class="text-2xl">🇫🇷</span>
+                <span class="font-bold">FR</span>
+              </div>
+              {/* Bouton Chat */}
+              <button id="btn-chat" class="relative bg-white/20 hover:bg-white/30 rounded-full p-3 transition">
+                <i class="fas fa-comments text-xl"></i>
+                <span id="chat-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
+              </button>
+            </div>
           </div>
         </div>
 

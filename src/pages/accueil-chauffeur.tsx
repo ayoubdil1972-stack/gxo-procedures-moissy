@@ -90,6 +90,73 @@ export function AccueilChauffeurPage() {
         </div>
       </div>
 
+      {/* Dashboard Chauffeurs en Temps Réel */}
+      <div id="dashboard-chauffeurs-container" class="mb-8">
+        <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl shadow-xl p-6 mb-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold mb-2 flex items-center">
+                <i class="fas fa-users-cog mr-3"></i>
+                Chauffeurs Actifs en Temps Réel
+              </h2>
+              <p class="text-sm opacity-90">Suivi de la progression des tâches de déchargement</p>
+            </div>
+            <div class="flex space-x-4">
+              <div class="bg-white/20 rounded-xl px-4 py-2 text-center">
+                <div class="text-3xl font-bold" id="stat-total-chauffeurs">0</div>
+                <div class="text-xs opacity-75">Total</div>
+              </div>
+              <div class="bg-white/20 rounded-xl px-4 py-2 text-center">
+                <div class="text-3xl font-bold text-green-300" id="stat-complets">0</div>
+                <div class="text-xs opacity-75">Prêts</div>
+              </div>
+              <div class="bg-white/20 rounded-xl px-4 py-2 text-center">
+                <div class="text-3xl font-bold text-orange-200" id="stat-en-cours">0</div>
+                <div class="text-xs opacity-75">En cours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Grille des chauffeurs */}
+        <div id="dashboard-chauffeurs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          {/* Chargement... */}
+          <div class="col-span-full flex justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent"></div>
+          </div>
+        </div>
+        
+        {/* Légende */}
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+            Légende des Tâches
+          </h3>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="flex items-center space-x-2">
+              <span class="text-2xl">🦺</span>
+              <span class="text-sm text-gray-700">EPI Porté</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-2xl">🚚</span>
+              <span class="text-sm text-gray-700">Placement Quai</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-2xl">📦</span>
+              <span class="text-sm text-gray-700">Échange Palettes</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-2xl">🔔</span>
+              <span class="text-sm text-gray-700">Accueil Notifié</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-2xl">🔑</span>
+              <span class="text-sm text-gray-700">Remise Clés</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Processes Grid */}
       <div class="grid grid-cols-1 gap-6">
         {processes.map((process) => (
@@ -170,6 +237,9 @@ export function AccueilChauffeurPage() {
           <div id="modal-content"></div>
         </div>
       </div>
+      
+      {/* Script Dashboard Temps Réel */}
+      <script src="/static/accueil-chauffeur-dashboard.js"></script>
     </div>
   )
 }
