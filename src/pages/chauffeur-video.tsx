@@ -176,7 +176,7 @@ export function ChauffeurVideoPage() {
               fullscreen: 'Ecran complet'
             },
             fr: { 
-              header: '🇫🇷 Français (sous-titres)', 
+              header: '🇫🇷 Français', 
               titre: 'Instructions',
               message: 'Veuillez regarder la vidéo complète avant de continuer',
               btn: 'Continuer vers l\\\'inscription',

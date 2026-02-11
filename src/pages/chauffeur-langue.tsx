@@ -1,6 +1,6 @@
 export function ChauffeurLanguePage() {
   const langues = [
-    { code: 'fr', nom: 'Français 🎥', drapeau: '🇫🇷' },
+    { code: 'fr', nom: 'Français', drapeau: '🇫🇷' },
     { code: 'nl', nom: 'Nederlands', drapeau: '🇳🇱' },
     { code: 'fi', nom: 'Suomi', drapeau: '🇫🇮' },
     { code: 'de', nom: 'Deutsch', drapeau: '🇩🇪' },
