@@ -19,6 +19,7 @@ import { ChauffeurVideoPage } from './pages/chauffeur-video'
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
+import { traduireTexte } from './services/translation'
 
 type Bindings = {
   DB: D1Database;
@@ -127,15 +128,29 @@ app.get('/api/chauffeur/progression', async (c) => {
   }
 })
 
-// API: Envoyer message chat
+// API: Envoyer message chat (chauffeur → admin)
 app.post('/api/chauffeur/chat', async (c) => {
   try {
     const { chauffeur_id, message } = await c.req.json()
     
+    // Récupérer la langue du chauffeur
+    const chauffeur = await c.env.DB.prepare(`
+      SELECT langue FROM chauffeur_arrivals WHERE id = ?
+    `).bind(chauffeur_id).first()
+    
+    const langueChauffeur = chauffeur?.langue || 'fr'
+    
+    // Traduire le message en français pour l'admin (si ce n'est pas déjà en français)
+    let traductionFr = message
+    if (langueChauffeur !== 'fr') {
+      traductionFr = await traduireTexte(message, 'fr', langueChauffeur)
+    }
+    
+    // Insérer le message avec traduction
     await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message)
-      VALUES (?, 'chauffeur', ?)
-    `).bind(chauffeur_id, message).run()
+      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr)
+      VALUES (?, 'chauffeur', ?, ?, ?)
+    `).bind(chauffeur_id, message, langueChauffeur, traductionFr).run()
     
     return c.json({ success: true })
   } catch (error) {
@@ -144,10 +159,17 @@ app.post('/api/chauffeur/chat', async (c) => {
   }
 })
 
-// API: Récupérer messages chat
+// API: Récupérer messages chat avec traductions
 app.get('/api/chauffeur/chat', async (c) => {
   try {
     const chauffeur_id = c.req.query('chauffeur_id')
+    
+    // Récupérer la langue du chauffeur
+    const chauffeur = await c.env.DB.prepare(`
+      SELECT langue FROM chauffeur_arrivals WHERE id = ?
+    `).bind(chauffeur_id).first()
+    
+    const langueChauffeur = chauffeur?.langue || 'fr'
     
     const { results } = await c.env.DB.prepare(`
       SELECT * FROM chat_messages 
@@ -155,7 +177,11 @@ app.get('/api/chauffeur/chat', async (c) => {
       ORDER BY timestamp ASC
     `).bind(chauffeur_id).all()
     
-    return c.json({ success: true, messages: results })
+    return c.json({ 
+      success: true, 
+      messages: results,
+      chauffeur_langue: langueChauffeur
+    })
   } catch (error) {
     console.error('Erreur récupération messages:', error)
     return c.json({ success: false, error: error.message }, 500)
@@ -226,10 +252,24 @@ app.post('/api/admin/chat', async (c) => {
   try {
     const { chauffeur_id, message } = await c.req.json()
     
+    // Récupérer la langue du chauffeur
+    const chauffeur = await c.env.DB.prepare(`
+      SELECT langue FROM chauffeur_arrivals WHERE id = ?
+    `).bind(chauffeur_id).first()
+    
+    const langueChauffeur = chauffeur?.langue || 'fr'
+    
+    // Traduire le message dans la langue du chauffeur (si ce n'est pas français)
+    let traductionChauffeur = message
+    if (langueChauffeur !== 'fr') {
+      traductionChauffeur = await traduireTexte(message, langueChauffeur, 'fr')
+    }
+    
+    // Insérer le message avec traduction
     await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message)
-      VALUES (?, 'admin', ?)
-    `).bind(chauffeur_id, message).run()
+      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_chauffeur)
+      VALUES (?, 'admin', ?, 'fr', ?)
+    `).bind(chauffeur_id, message, traductionChauffeur).run()
     
     return c.json({ success: true })
   } catch (error) {

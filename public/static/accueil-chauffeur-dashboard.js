@@ -241,6 +241,8 @@ window.addEventListener('beforeunload', () => {
 let chatAdminChauffeurId = null;
 let chatAdminPseudo = '';
 let chatUpdateInterval = null;
+let chatAdminLangueChauffeur = 'fr'; // Langue du chauffeur
+let afficherTraduction = true; // Par défaut, afficher la traduction
 
 // Ouvrir le chat admin avec un chauffeur
 window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
@@ -266,9 +268,21 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
               <p class="text-xs opacity-90">Support GXO - Admin</p>
             </div>
           </div>
-          <button onclick="fermerChatAdmin()" class="hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition">
-            <i class="fas fa-times text-xl"></i>
-          </button>
+          <div class="flex items-center gap-2">
+            <!-- Bouton bascule traduction/original -->
+            <button 
+              id="btn-toggle-traduction" 
+              onclick="basculerTraduction()" 
+              class="hover:bg-white hover:bg-opacity-20 rounded-full px-3 py-1 transition flex items-center gap-1 text-xs"
+              title="Basculer entre traduction et texte original"
+            >
+              <i class="fas fa-language"></i>
+              <span id="label-toggle-traduction">🇫🇷 FR</span>
+            </button>
+            <button onclick="fermerChatAdmin()" class="hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
         </div>
         
         <!-- Messages -->
@@ -285,13 +299,16 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
             <input 
               type="text" 
               id="chat-admin-input" 
-              placeholder="Votre message..."
+              placeholder="Votre message (sera traduit automatiquement)..."
               class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button onclick="envoyerMessageAdmin()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg">
               <i class="fas fa-paper-plane"></i>
             </button>
           </div>
+          <p class="text-xs text-gray-500 mt-2" id="info-traduction-admin">
+            <i class="fas fa-info-circle"></i> Vos messages seront traduits automatiquement en <span id="langue-chauffeur-display">français</span>
+          </p>
         </div>
       </div>
     `;
@@ -331,14 +348,36 @@ async function chargerMessagesAdmin() {
     const data = await response.json();
     
     if (data.success && data.messages) {
+      chatAdminLangueChauffeur = data.chauffeur_langue || 'fr';
       afficherMessagesAdmin(data.messages);
+      
+      // Mettre à jour l'affichage de la langue
+      const langueDisplay = document.getElementById('langue-chauffeur-display');
+      if (langueDisplay) {
+        const nomsLangues = {
+          'fr': 'français',
+          'en': 'anglais',
+          'nl': 'néerlandais',
+          'fi': 'finnois',
+          'de': 'allemand',
+          'it': 'italien',
+          'pl': 'polonais',
+          'pt': 'portugais',
+          'bg': 'bulgare',
+          'cs': 'tchèque',
+          'da': 'danois',
+          'hr': 'croate',
+          'ro': 'roumain'
+        };
+        langueDisplay.textContent = nomsLangues[chatAdminLangueChauffeur] || chatAdminLangueChauffeur;
+      }
     }
   } catch (error) {
     console.error('Erreur chargement messages admin:', error);
   }
 }
 
-// Afficher les messages du chat admin
+// Afficher les messages du chat admin avec traduction
 function afficherMessagesAdmin(messages) {
   const container = document.getElementById('chat-admin-messages');
   
@@ -355,6 +394,26 @@ function afficherMessagesAdmin(messages) {
   
   container.innerHTML = messages.map(msg => {
     const isAdmin = msg.sender === 'admin';
+    
+    // Déterminer quel texte afficher
+    let texteAffiche = msg.message;
+    let afficherIconeTraduction = false;
+    
+    if (afficherTraduction) {
+      // Mode traduction activé
+      if (isAdmin) {
+        // Message de l'admin : afficher le français (original)
+        texteAffiche = msg.message;
+      } else {
+        // Message du chauffeur : afficher la traduction française
+        texteAffiche = msg.translated_fr || msg.message;
+        afficherIconeTraduction = !!msg.translated_fr;
+      }
+    } else {
+      // Mode original activé : toujours afficher le texte original
+      texteAffiche = msg.message;
+    }
+    
     return `
       <div class="flex ${isAdmin ? 'justify-end' : 'justify-start'}">
         <div class="max-w-xs ${isAdmin ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200'} rounded-2xl px-4 py-2 shadow-sm">
@@ -363,8 +422,9 @@ function afficherMessagesAdmin(messages) {
             <span class="text-xs font-semibold ${isAdmin ? 'text-blue-100' : 'text-gray-600'}">
               ${isAdmin ? 'Admin GXO' : chatAdminPseudo}
             </span>
+            ${afficherIconeTraduction ? '<i class="fas fa-language text-xs" title="Message traduit"></i>' : ''}
           </div>
-          <p class="text-sm">${msg.message}</p>
+          <p class="text-sm">${texteAffiche}</p>
           <p class="text-xs ${isAdmin ? 'text-blue-200' : 'text-gray-400'} mt-1">
             ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
           </p>
@@ -376,6 +436,40 @@ function afficherMessagesAdmin(messages) {
   // Scroll vers le bas
   container.scrollTop = container.scrollHeight;
 }
+
+// Basculer entre traduction et texte original
+window.basculerTraduction = function() {
+  afficherTraduction = !afficherTraduction;
+  
+  // Mettre à jour le label du bouton
+  const label = document.getElementById('label-toggle-traduction');
+  if (label) {
+    if (afficherTraduction) {
+      label.innerHTML = '🇫🇷 FR';
+    } else {
+      // Afficher le drapeau de la langue du chauffeur
+      const drapeaux = {
+        'fr': '🇫🇷 FR',
+        'en': '🇬🇧 EN',
+        'nl': '🇳🇱 NL',
+        'fi': '🇫🇮 FI',
+        'de': '🇩🇪 DE',
+        'it': '🇮🇹 IT',
+        'pl': '🇵🇱 PL',
+        'pt': '🇵🇹 PT',
+        'bg': '🇧🇬 BG',
+        'cs': '🇨🇿 CZ',
+        'da': '🇩🇰 DK',
+        'hr': '🇭🇷 HR',
+        'ro': '🇷🇴 RO'
+      };
+      label.innerHTML = drapeaux[chatAdminLangueChauffeur] || '🌍 Original';
+    }
+  }
+  
+  // Recharger l'affichage des messages
+  chargerMessagesAdmin();
+};
 
 // Envoyer un message admin
 async function envoyerMessageAdmin() {
