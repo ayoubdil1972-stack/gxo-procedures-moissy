@@ -1,13 +1,16 @@
 export function ChauffeurLanguePage() {
   const langues = [
-    { code: 'bg', nom: 'Български', drapeau: '🇧🇬' },
-    { code: 'cs', nom: 'Čeština', drapeau: '🇨🇿' },
-    { code: 'da', nom: 'Dansk', drapeau: '🇩🇰' },
+    { code: 'fr', nom: 'Français 🎥', drapeau: '🇫🇷' },
+    { code: 'nl', nom: 'Nederlands', drapeau: '🇳🇱' },
+    { code: 'fi', nom: 'Suomi', drapeau: '🇫🇮' },
     { code: 'de', nom: 'Deutsch', drapeau: '🇩🇪' },
-    { code: 'hr', nom: 'Hrvatski', drapeau: '🇭🇷' },
     { code: 'it', nom: 'Italiano', drapeau: '🇮🇹' },
     { code: 'pl', nom: 'Polski', drapeau: '🇵🇱' },
     { code: 'pt', nom: 'Português', drapeau: '🇵🇹' },
+    { code: 'bg', nom: 'Български', drapeau: '🇧🇬' },
+    { code: 'cs', nom: 'Čeština', drapeau: '🇨🇿' },
+    { code: 'da', nom: 'Dansk', drapeau: '🇩🇰' },
+    { code: 'hr', nom: 'Hrvatski', drapeau: '🇭🇷' },
     { code: 'ro', nom: 'Română', drapeau: '🇷🇴' }
   ];
 
@@ -18,10 +21,10 @@ export function ChauffeurLanguePage() {
         <div class="text-center mb-6 md:mb-8">
           <img src="/static/gxo-logo-official.svg" alt="GXO Logistics" class="h-12 md:h-16 mx-auto mb-4" />
           <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-            Bienvenue / Welcome / Добре дошли
+            Bienvenue / Welcome / Tervetuloa / Welkom
           </h1>
           <p class="text-sm md:text-base text-gray-600">
-            Sélectionnez votre langue / Select your language / Изберете вашия език
+            Sélectionnez votre langue / Select your language / Valitse kielesi / Kies uw taal
           </p>
         </div>
 
@@ -46,7 +49,7 @@ export function ChauffeurLanguePage() {
           <div class="flex items-center justify-center text-gray-700 text-sm md:text-base">
             <i class="fas fa-hand-pointer text-xl md:text-2xl text-blue-500 mr-2 md:mr-3"></i>
             <span>
-              Cliquez sur votre langue / Click on your language / Кликнете на вашия език
+              Cliquez sur votre langue / Click on your language / Valitse kielesi / Kies uw taal
             </span>
           </div>
         </div>

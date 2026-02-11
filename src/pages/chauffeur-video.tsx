@@ -12,12 +12,12 @@ export function ChauffeurVideoPage() {
       {/* Conteneur vidéo - Optimisé mobile + plein écran */}
       <div class="flex-1 flex items-center justify-center p-2 md:p-4">
         <div class="w-full max-w-5xl">
-          {/* Container vidéo avec aspect ratio 9:16 (portrait mobile) */}
-          <div class="relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl">
+          {/* Container vidéo avec aspect ratio adaptatif - Optimisé mobile */}
+          <div class="relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl" style="min-height: 200px;">
             <video 
               id="video-instructions" 
-              class="w-full h-auto"
-              style="max-height: 85vh; object-fit: contain;"
+              class="w-full h-auto mx-auto"
+              style="max-height: 70vh; object-fit: contain; display: block;"
               controls
               controlsList="nodownload"
               disablePictureInPicture
@@ -157,6 +157,24 @@ export function ChauffeurVideoPage() {
               message: 'Vă rugăm să vizionați întregul video înainte de a continua',
               btn: 'Continuă către înregistrare',
               fullscreen: 'Ecran complet'
+            },
+            fr: { 
+              header: '🇫🇷 Français (sous-titres)', 
+              message: 'Veuillez regarder la vidéo complète avant de continuer',
+              btn: 'Continuer vers l\'inscription',
+              fullscreen: 'Plein écran'
+            },
+            nl: { 
+              header: '🇳🇱 Nederlands', 
+              message: 'Bekijk de volledige video voordat u doorgaat',
+              btn: 'Doorgaan naar registratie',
+              fullscreen: 'Volledig scherm'
+            },
+            fi: { 
+              header: '🇫🇮 Suomi', 
+              message: 'Katso koko video ennen jatkamista',
+              btn: 'Jatka rekisteröintiin',
+              fullscreen: 'Koko näyttö'
             }
           };
           
@@ -166,8 +184,11 @@ export function ChauffeurVideoPage() {
           document.getElementById('btn-continuer-text').textContent = t.btn;
           document.getElementById('fullscreen-text').textContent = t.fullscreen;
           
-          // URLs des vidéos par langue (9 langues disponibles !)
+          // URLs des vidéos par langue (12 langues disponibles !)
           const videoUrls = {
+            'fr': '/static/videos/instructions-fr.mp4',
+            'nl': '/static/videos/instructions-nl.mp4',
+            'fi': '/static/videos/instructions-fi.mp4',
             'bg': '/static/videos/instructions-bg.mp4',
             'cs': '/static/videos/instructions-cs.mp4',
             'da': '/static/videos/instructions-da.mp4',
@@ -207,12 +228,10 @@ export function ChauffeurVideoPage() {
               
               if (requestFullscreen) {
                 requestFullscreen.call(videoContainer).then(() => {
-                  // Lock orientation en paysage si disponible (Android)
-                  if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(() => {
-                      console.log('Orientation lock not supported');
-                    });
-                  }
+                  // Sur mobile, laisser l'orientation naturelle (portrait ou paysage)
+                  console.log('✅ Mode plein écran activé');
+                }).catch((err) => {
+                  console.error('❌ Erreur plein écran:', err);
                 });
               }
               
