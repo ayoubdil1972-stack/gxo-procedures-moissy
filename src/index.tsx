@@ -73,6 +73,7 @@ app.post('/api/chauffeur/valider-tache', async (c) => {
   try {
     const { chauffeur_id, tache } = await c.req.json()
     
+    // Mapping tâche → colonne booléenne
     const colonneMap = {
       'epi': 'task_epi_porte',
       'placement': 'task_placement_quai',
@@ -81,14 +82,25 @@ app.post('/api/chauffeur/valider-tache', async (c) => {
       'clefs': 'task_clefs_remises'
     }
     
+    // Mapping tâche → colonne timestamp
+    const colonneTimeMap = {
+      'epi': 'task_epi_time',
+      'placement': 'task_placement_time',
+      'palette': 'task_palette_time',
+      'accueil': 'task_accueil_time',
+      'clefs': 'task_clefs_time'
+    }
+    
     const colonne = colonneMap[tache]
-    if (!colonne) {
+    const colonneTime = colonneTimeMap[tache]
+    
+    if (!colonne || !colonneTime) {
       return c.json({ success: false, error: 'Tâche invalide' }, 400)
     }
     
     await c.env.DB.prepare(`
       UPDATE chauffeur_arrivals 
-      SET ${colonne} = 1, ${colonne.replace('task_', 'task_')}_time = datetime('now')
+      SET ${colonne} = 1, ${colonneTime} = datetime('now')
       WHERE id = ?
     `).bind(chauffeur_id).run()
     

@@ -1,28 +1,27 @@
 {
   "name": "gxo-procedures-moissy",
+  "version": "12.1.1",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "dev:sandbox": "wrangler pages dev dist --ip 0.0.0.0 --port 3000",
+    "dev:d1": "wrangler pages dev dist --d1=gxo-chauffeurs-db --local --ip 0.0.0.0 --port 3000",
     "build": "vite build",
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist",
     "deploy:prod": "npm run build && wrangler pages deploy dist --project-name gxo-procedures-moissy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
-    "test": "curl http://localhost:3000",
-    "git:commit": "git add . && git commit -m"
+    "db:migrate:local": "wrangler d1 migrations apply gxo-chauffeurs-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply gxo-chauffeurs-db"
   },
   "dependencies": {
-    "hono": "^4.11.7"
+    "hono": "^4.6.14"
   },
   "devDependencies": {
-    "@hono/vite-build": "^1.2.0",
-    "@hono/vite-dev-server": "^0.18.2",
-    "autoprefixer": "^10.4.24",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18",
-    "vite": "^6.3.5",
-    "wrangler": "^4.4.0"
+    "@cloudflare/workers-types": "^4.20250705.0",
+    "@hono/vite-cloudflare-pages": "^0.4.2",
+    "vite": "^5.4.11",
+    "wrangler": "^3.78.0"
   }
 }
