@@ -406,6 +406,7 @@ function afficherMessagesAdmin(messages) {
     
     let afficherBoutonTraduction = false;
     let labelBouton = '';
+    let badgeLangue = '';
     
     if (!isAdmin && msg.translated_fr) {
       // Message du chauffeur avec traduction disponible
@@ -415,8 +416,28 @@ function afficherMessagesAdmin(messages) {
         // Afficher la traduction française
         texteAffiche = msg.translated_fr;
         labelBouton = 'Voir original';
+        badgeLangue = '🇫🇷 Traduit';
       } else {
         // Afficher le texte original
+        texteAffiche = msg.message;
+        labelBouton = 'Traduire';
+      }
+    } else if (isAdmin && msg.translated_chauffeur && chatAdminLangueChauffeur !== 'fr') {
+      // Message de l'admin avec traduction dans la langue du chauffeur disponible
+      afficherBoutonTraduction = true;
+      
+      if (modeTraductionMessage) {
+        // Afficher la traduction dans la langue du chauffeur
+        texteAffiche = msg.translated_chauffeur;
+        labelBouton = 'Voir français';
+        const langueEmojis = {
+          'en': '🇬🇧', 'nl': '🇳🇱', 'fi': '🇫🇮', 'de': '🇩🇪', 'it': '🇮🇹',
+          'pl': '🇵🇱', 'pt': '🇵🇹', 'bg': '🇧🇬', 'cs': '🇨🇿', 'da': '🇩🇰',
+          'hr': '🇭🇷', 'ro': '🇷🇴'
+        };
+        badgeLangue = `${langueEmojis[chatAdminLangueChauffeur] || '🌍'} Traduit`;
+      } else {
+        // Afficher le texte français original
         texteAffiche = msg.message;
         labelBouton = 'Traduire';
       }
@@ -430,7 +451,7 @@ function afficherMessagesAdmin(messages) {
             <span class="text-xs font-semibold ${isAdmin ? 'text-blue-100' : 'text-gray-600'}">
               ${isAdmin ? 'Admin GXO' : chatAdminPseudo}
             </span>
-            ${modeTraductionMessage && !isAdmin && msg.translated_fr ? '<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">🌍 Traduit</span>' : ''}
+            ${badgeLangue && modeTraductionMessage ? `<span class="text-xs ${isAdmin ? 'bg-blue-100 text-blue-800' : 'bg-blue-100 text-blue-800'} px-2 py-0.5 rounded-full">${badgeLangue}</span>` : ''}
           </div>
           <p class="text-sm mb-2">${texteAffiche}</p>
           <div class="flex items-center justify-between gap-2">
