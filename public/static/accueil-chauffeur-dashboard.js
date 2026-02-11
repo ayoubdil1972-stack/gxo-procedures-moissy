@@ -134,10 +134,12 @@ function afficherDashboardChauffeurs(chauffeurs) {
       <div class="mt-4 flex gap-2">
         <button 
           onclick="ouvrirChatAdmin(${chauffeur.id}, '${chauffeur.pseudo}')"
-          class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+          class="relative flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+          data-chauffeur-id="${chauffeur.id}"
         >
           <i class="fas fa-comments"></i>
           <span>Chat</span>
+          <span class="notification-badge hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">0</span>
         </button>
         <button 
           onclick="cloturerChauffeur(${chauffeur.id}, '${chauffeur.pseudo}', ${progression})"
@@ -152,6 +154,38 @@ function afficherDashboardChauffeurs(chauffeurs) {
     
     container.appendChild(card);
   });
+  
+  // Charger les compteurs de messages non lus pour chaque chauffeur
+  chargerCompteursMessagesNonLus(chauffeurs);
+}
+
+// Charger les compteurs de messages non lus pour tous les chauffeurs
+async function chargerCompteursMessagesNonLus(chauffeurs) {
+  for (const chauffeur of chauffeurs) {
+    try {
+      const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chauffeur.id}`);
+      const data = await response.json();
+      
+      if (data.success && data.messages) {
+        // Compter les messages non lus de l'admin (envoyés par le chauffeur et non lus par l'admin)
+        const nonLus = data.messages.filter(m => m.sender === 'chauffeur' && !m.read_by_admin).length;
+        
+        if (nonLus > 0) {
+          // Afficher le badge
+          const button = document.querySelector(`button[data-chauffeur-id="${chauffeur.id}"]`);
+          if (button) {
+            const badge = button.querySelector('.notification-badge');
+            if (badge) {
+              badge.textContent = nonLus;
+              badge.classList.remove('hidden');
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Erreur chargement messages chauffeur ${chauffeur.id}:`, error);
+    }
+  }
 }
 
 // Mettre à jour les statistiques
@@ -360,6 +394,22 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
 
 // Fermer le chat admin
 window.fermerChatAdmin = function() {
+  // Marquer les messages comme lus lors de la fermeture
+  if (chatAdminChauffeurId) {
+    fetch('/api/chauffeur/chat/mark-read', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chauffeur_id: chatAdminChauffeurId, reader: 'admin' })
+    }).then(() => {
+      // Retirer le badge de notification
+      const badge = document.querySelector(`[data-chauffeur-id="${chatAdminChauffeurId}"] .notification-badge`);
+      if (badge) {
+        badge.classList.add('hidden');
+        badge.textContent = '0';
+      }
+    }).catch(err => console.error('Erreur marquage lu:', err));
+  }
+  
   document.getElementById('modal-chat-admin').classList.add('hidden');
   if (chatUpdateInterval) {
     clearInterval(chatUpdateInterval);

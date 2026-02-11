@@ -640,10 +640,38 @@ function stopTimer() {
 document.getElementById('btn-chat').addEventListener('click', () => {
   document.getElementById('modal-chat').classList.remove('hidden');
   chargerMessages();
+  
+  // Marquer les messages comme lus et retirer le badge
+  fetch('/api/chauffeur/chat/mark-read', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chauffeur_id: chauffeurId, reader: 'chauffeur' })
+  }).then(() => {
+    // Retirer le badge de notification
+    const badge = document.getElementById('chat-badge');
+    if (badge) {
+      badge.classList.add('hidden');
+      badge.textContent = '0';
+    }
+  }).catch(err => console.error('Erreur marquage lu:', err));
 });
 
 document.getElementById('btn-fermer-chat').addEventListener('click', () => {
   document.getElementById('modal-chat').classList.add('hidden');
+  
+  // Marquer les messages comme lus lors de la fermeture
+  fetch('/api/chauffeur/chat/mark-read', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chauffeur_id: chauffeurId, reader: 'chauffeur' })
+  }).then(() => {
+    // Retirer le badge de notification
+    const badge = document.getElementById('chat-badge');
+    if (badge) {
+      badge.classList.add('hidden');
+      badge.textContent = '0';
+    }
+  }).catch(err => console.error('Erreur marquage lu:', err));
 });
 
 async function chargerMessages() {
