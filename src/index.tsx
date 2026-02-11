@@ -17,6 +17,8 @@ import { QRCodeChauffeurPage } from './pages/qrcode-chauffeur'
 import { ChauffeurLanguePage } from './pages/chauffeur-langue'
 import { ChauffeurVideoPage } from './pages/chauffeur-video'
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
+import { ChauffeurTachesPage } from './pages/chauffeur-taches'
+import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
 
 type Bindings = {
   DB: D1Database;
@@ -43,6 +45,9 @@ app.get('/chauffeur/video', loginRenderer, (c) => c.render(<ChauffeurVideoPage /
 
 // Page inscription et tâches
 app.get('/chauffeur/inscription', loginRenderer, (c) => c.render(<ChauffeurInscriptionPage />))
+
+// Page des tâches chauffeur (après inscription)
+app.get('/chauffeur/taches', loginRenderer, (c) => c.render(<ChauffeurTachesPage />))
 
 // ===== API CHAUFFEURS =====
 
@@ -172,7 +177,8 @@ app.use('*', async (c, next) => {
     '/qrcode-chauffeur',
     '/chauffeur/langue',
     '/chauffeur/video',
-    '/chauffeur/inscription'
+    '/chauffeur/inscription',
+    '/chauffeur/taches'
   ];
   
   if (publicPaths.includes(path) || path.startsWith('/static/') || path.startsWith('/api/chauffeur/')) {
@@ -199,5 +205,90 @@ app.get('/nouveau', (c) => c.render(<NouveauPage />))
 app.get('/anomalies', (c) => c.render(<AnomaliesPage />))
 app.get('/bibliotheque', (c) => c.render(<BibliothequePage />))
 app.get('/contacts', (c) => c.render(<ContactsPage />))
+
+// Dashboard Admin Chauffeurs (route protégée)
+app.get('/admin/chauffeurs-dashboard', (c) => c.render(<AdminDashboardChauffeurs />))
+
+// API Admin supplémentaires
+app.post('/api/admin/chat', async (c) => {
+  try {
+    const { chauffeur_id, message } = await c.req.json()
+    
+    await c.env.DB.prepare(`
+      INSERT INTO chat_messages (chauffeur_id, sender, message)
+      VALUES (?, 'admin', ?)
+    `).bind(chauffeur_id, message).run()
+    
+    return c.json({ success: true })
+  } catch (error) {
+    console.error('Erreur envoi message admin:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+app.post('/api/chauffeur/chat/mark-read', async (c) => {
+  try {
+    const { chauffeur_id, reader } = await c.req.json()
+    const column = reader === 'admin' ? 'read_by_admin' : 'read_by_chauffeur'
+    
+    await c.env.DB.prepare(`
+      UPDATE chat_messages 
+      SET ${column} = 1
+      WHERE chauffeur_id = ? AND ${column} = 0
+    `).bind(chauffeur_id).run()
+    
+    return c.json({ success: true })
+  } catch (error) {
+    console.error('Erreur marquage lu:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+app.get('/api/notifications/non-lues', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM notifications 
+      WHERE read = 0 
+      ORDER BY timestamp DESC
+      LIMIT 10
+    `).all()
+    
+    return c.json({ success: true, notifications: results })
+  } catch (error) {
+    console.error('Erreur notifications:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+app.post('/api/notification/mark-read', async (c) => {
+  try {
+    const { notification_id } = await c.req.json()
+    
+    await c.env.DB.prepare(`
+      UPDATE notifications SET read = 1 WHERE id = ?
+    `).bind(notification_id).run()
+    
+    return c.json({ success: true })
+  } catch (error) {
+    console.error('Erreur marquage notification:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+app.post('/api/chauffeur/notification', async (c) => {
+  try {
+    const { chauffeur_id, type, titre, message } = await c.req.json()
+    
+    await c.env.DB.prepare(`
+      INSERT INTO notifications (chauffeur_id, type, titre, message)
+      VALUES (?, ?, ?, ?)
+    `).bind(chauffeur_id, type, titre, message).run()
+    
+    return c.json({ success: true })
+  } catch (error) {
+    console.error('Erreur création notification:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
 
 export default app
