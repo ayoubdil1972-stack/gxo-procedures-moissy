@@ -336,3 +336,80 @@ img {
     z-index: 50;
   }
 }
+
+/* ===== ANIMATIONS DE VALIDATION TÂCHES ===== */
+
+/* Animation succès - Carte devient verte */
+@keyframes animate-success {
+  0% {
+    transform: scale(1);
+    background-color: white;
+  }
+  50% {
+    transform: scale(1.05);
+    background-color: #10b981;
+  }
+  100% {
+    transform: scale(1);
+    background-color: #10b981;
+  }
+}
+
+.animate-success {
+  animation: animate-success 0.6s ease-in-out forwards;
+  color: white !important;
+}
+
+/* Animation confettis */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(300px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 0;
+  animation: confetti-fall 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Animation slide-in depuis la droite (toast) */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+/* Animation slide-out vers la droite (toast) */
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate-slide-out-right {
+  animation: slide-out-right 0.3s ease-out forwards;
+}

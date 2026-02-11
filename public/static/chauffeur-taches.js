@@ -576,18 +576,22 @@ function showSuccessToast() {
   }, 2000);
 }
 
-// Timer
+// Timer - Mis à jour toutes les secondes pour affichage en temps réel
 function startTimer() {
   updateTimer();
-  intervalTimer = setInterval(updateTimer, 60000);
+  intervalTimer = setInterval(updateTimer, 1000); // Actualisation chaque seconde
 }
 
 function updateTimer() {
   if (!startTime) return;
   const lang = translations[currentLangue];
   const now = new Date();
-  const diff = Math.floor((now - startTime) / 60000);
-  document.getElementById('temps-ecoule').textContent = `${diff} min`;
+  const diffSeconds = Math.floor((now - startTime) / 1000);
+  const minutes = Math.floor(diffSeconds / 60);
+  const seconds = diffSeconds % 60;
+  
+  // Affichage MM:SS pour plus de précision
+  document.getElementById('temps-ecoule').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function stopTimer() {
