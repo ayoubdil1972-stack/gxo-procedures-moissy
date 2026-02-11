@@ -652,21 +652,43 @@ async function chargerMessages() {
     const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chauffeurId}`);
     const data = await response.json();
     
-    const container = document.getElementById('chat-messages');
+    if (data.success && data.messages) {
+      // Mettre à jour le cache
+      cachedChauffeurMessages = data.messages;
+      afficherMessagesCaches();
+    }
+  } catch (error) {
+    console.error('Erreur chargement messages:', error);
+  }
+}
+
+// Fonction d'affichage depuis le cache (rapide, pas d'appel réseau)
+function afficherMessagesCaches() {
+  const lang = translations[currentLangue];
+  const container = document.getElementById('chat-messages');
+  
+  if (cachedChauffeurMessages.length === 0) {
+    container.innerHTML = `
+      <div class="text-center text-gray-500 text-sm py-8">
+        <i class="fas fa-comments text-4xl mb-2 opacity-30"></i>
+        <p>${lang.commencerConversation}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = '';
+  
+  cachedChauffeurMessages.forEach(msg => {
+    const isChauffeur = msg.sender === 'chauffeur';
+    const messageId = msg.id;
     
-    if (data.success && data.messages && data.messages.length > 0) {
-      container.innerHTML = '';
-      
-      data.messages.forEach(msg => {
-        const isChauffeur = msg.sender === 'chauffeur';
-        const messageId = msg.id;
-        
-        let texteAffiche = msg.message;
-        let modeTraductionMessage = messagesTraductionState[messageId] !== undefined 
-          ? messagesTraductionState[messageId] 
-          : afficherTraduction;
-        
-        let afficherBoutonTraduction = false;
+    let texteAffiche = msg.message;
+    let modeTraductionMessage = messagesTraductionState[messageId] !== undefined 
+      ? messagesTraductionState[messageId] 
+      : afficherTraduction;
+    
+    let afficherBoutonTraduction = false;
         let labelBouton = lang.traduire || 'Traduire';
         let labelOriginal = lang.voirOriginal || 'Voir original';
         
@@ -709,34 +731,13 @@ async function chargerMessages() {
       
       container.scrollTop = container.scrollHeight;
       
-      await fetch('/api/chauffeur/chat/mark-read', {
+      // Marquer comme lu (async sans attendre)
+      fetch('/api/chauffeur/chat/mark-read', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chauffeur_id: chauffeurId, reader: 'chauffeur' })
-      });
-      
-    } else {
-      container.innerHTML = `
-        <div class="text-center text-gray-500 text-sm py-8">
-          <i class="fas fa-comments text-4xl mb-2 opacity-30"></i>
-          <p>${lang.commencerConversation}</p>
-        </div>
-      `;
-    }
-  } catch (error) {
-    console.error('Erreur chargement messages:', error);
-  }
+      }).catch(err => console.error('Erreur marquage lu:', err));
 }
-
-// Basculer la traduction d'un message spécifique
-window.basculerTraductionMessage = function(messageId) {
-  if (messagesTraductionState[messageId] === undefined) {
-    messagesTraductionState[messageId] = !afficherTraduction;
-  } else {
-    messagesTraductionState[messageId] = !messagesTraductionState[messageId];
-  }
-  chargerMessages();
-};
 
 document.getElementById('btn-envoyer-message').addEventListener('click', envoyerMessage);
 document.getElementById('input-message').addEventListener('keypress', (e) => {
@@ -749,6 +750,23 @@ async function envoyerMessage() {
   
   if (!message) return;
   
+  // Désactiver le bouton pendant l'envoi
+  const btnEnvoyer = document.getElementById('btn-envoyer-message');
+  if (btnEnvoyer) btnEnvoyer.disabled = true;
+  
+  // Affichage optimiste : ajouter le message immédiatement
+  const tempMessage = {
+    id: 'temp-' + Date.now(),
+    sender: 'chauffeur',
+    message: message,
+    timestamp: new Date().toISOString(),
+    sending: true
+  };
+  
+  cachedChauffeurMessages.push(tempMessage);
+  afficherMessagesCaches();
+  input.value = '';
+  
   try {
     const response = await fetch('/api/chauffeur/chat', {
       method: 'POST',
@@ -759,11 +777,21 @@ async function envoyerMessage() {
     const data = await response.json();
     
     if (data.success) {
-      input.value = '';
+      // Recharger pour obtenir le vrai message avec traduction
       await chargerMessages();
+    } else {
+      // Retirer le message temporaire en cas d'erreur
+      cachedChauffeurMessages = cachedChauffeurMessages.filter(m => m.id !== tempMessage.id);
+      afficherMessagesCaches();
     }
   } catch (error) {
     console.error('Erreur envoi message:', error);
+    // Retirer le message temporaire
+    cachedChauffeurMessages = cachedChauffeurMessages.filter(m => m.id !== tempMessage.id);
+    afficherMessagesCaches();
+  } finally {
+    // Réactiver le bouton
+    if (btnEnvoyer) btnEnvoyer.disabled = false;
   }
 }
 

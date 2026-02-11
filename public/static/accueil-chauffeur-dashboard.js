@@ -350,6 +350,10 @@ async function chargerMessagesAdmin() {
     const data = await response.json();
     
     if (data.success && data.messages) {
+      // Mettre à jour le cache
+      cachedMessages = data.messages;
+      lastMessageTimestamp = data.messages.length > 0 ? data.messages[data.messages.length - 1].timestamp : null;
+      
       chatAdminLangueChauffeur = data.chauffeur_langue || 'fr';
       afficherMessagesAdmin(data.messages);
       
@@ -478,6 +482,10 @@ function afficherMessagesAdmin(messages) {
   container.scrollTop = container.scrollHeight;
 }
 
+// Cache des messages pour éviter les appels API inutiles
+let cachedMessages = [];
+let lastMessageTimestamp = null;
+
 // Basculer entre traduction et texte original pour un message spécifique
 window.basculerTraductionMessage = function(messageId) {
   // Inverser l'état de traduction pour ce message
@@ -487,8 +495,10 @@ window.basculerTraductionMessage = function(messageId) {
     messagesTraductionState[messageId] = !messagesTraductionState[messageId];
   }
   
-  // Recharger l'affichage des messages
-  chargerMessagesAdmin();
+  // Mise à jour optimisée : réafficher les messages depuis le cache
+  if (cachedMessages.length > 0) {
+    afficherMessagesAdmin(cachedMessages);
+  }
 };
 
 // Basculer entre traduction et texte original (mode global)
@@ -524,16 +534,36 @@ window.basculerTraduction = function() {
     }
   }
   
-  // Recharger l'affichage des messages
-  chargerMessagesAdmin();
+  // Mise à jour optimisée : réafficher depuis le cache
+  if (cachedMessages.length > 0) {
+    afficherMessagesAdmin(cachedMessages);
+  }
 };
 
-// Envoyer un message admin
+// Envoyer un message admin avec affichage optimiste
 async function envoyerMessageAdmin() {
   const input = document.getElementById('chat-admin-input');
   const message = input.value.trim();
   
   if (!message) return;
+  
+  // Désactiver le bouton pendant l'envoi
+  const btnEnvoyer = document.querySelector('#modal-chat-admin button[onclick*="envoyerMessageAdmin"]');
+  if (btnEnvoyer) btnEnvoyer.disabled = true;
+  
+  // Affichage optimiste : ajouter le message immédiatement
+  const tempMessage = {
+    id: 'temp-' + Date.now(),
+    sender: 'admin',
+    message: message,
+    timestamp: new Date().toISOString(),
+    translated_chauffeur: '⏳ Traduction...',
+    sending: true
+  };
+  
+  cachedMessages.push(tempMessage);
+  afficherMessagesAdmin(cachedMessages);
+  input.value = '';
   
   try {
     const response = await fetch('/api/admin/chat', {
@@ -548,12 +578,23 @@ async function envoyerMessageAdmin() {
     const data = await response.json();
     
     if (data.success) {
-      input.value = '';
-      chargerMessagesAdmin();
+      // Recharger pour obtenir le vrai message avec ID et traduction complète
+      await chargerMessagesAdmin();
+    } else {
+      // Retirer le message temporaire en cas d'erreur
+      cachedMessages = cachedMessages.filter(m => m.id !== tempMessage.id);
+      afficherMessagesAdmin(cachedMessages);
+      alert('Erreur lors de l\'envoi du message');
     }
   } catch (error) {
     console.error('Erreur envoi message admin:', error);
+    // Retirer le message temporaire
+    cachedMessages = cachedMessages.filter(m => m.id !== tempMessage.id);
+    afficherMessagesAdmin(cachedMessages);
     alert('Erreur lors de l\'envoi du message');
+  } finally {
+    // Réactiver le bouton
+    if (btnEnvoyer) btnEnvoyer.disabled = false;
   }
 }
 
