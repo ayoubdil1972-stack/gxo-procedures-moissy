@@ -309,13 +309,33 @@ export function ChauffeurVideoPage() {
             videoSource.src = videoUrls[langue];
             video.load();
             
-            // Attendre que les métadonnées soient chargées
-            video.addEventListener('loadedmetadata', function() {
-              console.log('✅ Vidéo chargée:', langue, '(' + Math.round(video.duration) + 's)');
+            // Fonction pour afficher la vidéo
+            function afficherVideo() {
+              console.log('✅ Vidéo chargée:', langue);
               placeholder.classList.add('hidden');
               video.classList.remove('hidden');
               fullscreenBtn.classList.remove('hidden');
+            }
+            
+            // Méthode 1: Attendre que les métadonnées soient chargées
+            video.addEventListener('loadedmetadata', function() {
+              console.log('✅ Métadonnées chargées: ' + Math.round(video.duration) + 's');
+              afficherVideo();
             });
+            
+            // Méthode 2: Attendre que les données soient chargées
+            video.addEventListener('loadeddata', function() {
+              console.log('✅ Données vidéo chargées');
+              afficherVideo();
+            });
+            
+            // Méthode 3: Timeout de sécurité (afficher après 2 secondes si rien ne se passe)
+            setTimeout(function() {
+              if (!placeholder.classList.contains('hidden')) {
+                console.log('⏰ Timeout: affichage forcé de la vidéo');
+                afficherVideo();
+              }
+            }, 2000);
             
             // Gestion des erreurs
             video.addEventListener('error', function(e) {
