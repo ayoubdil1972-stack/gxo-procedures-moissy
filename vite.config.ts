@@ -13,5 +13,10 @@ export default defineConfig({
   ],
   css: {
     postcss: './postcss.config.js'
+  },
+  // Copier les fichiers statiques vers dist/
+  publicDir: 'public',
+  build: {
+    copyPublicDir: true
   }
 })

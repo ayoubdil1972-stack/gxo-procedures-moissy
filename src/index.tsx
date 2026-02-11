@@ -24,8 +24,8 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-// Serve static files
-app.use('/static/*', serveStatic({ root: './public' }))
+// Serve static files - Pour Cloudflare Workers, les fichiers sont dans dist/
+app.use('/static/*', serveStatic({ root: './' }))
 
 // Route de connexion (sans authentification)
 app.get('/login', loginRenderer, (c) => c.render(<LoginPage />))
