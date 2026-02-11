@@ -237,12 +237,13 @@ window.addEventListener('beforeunload', () => {
 });
 
 // ===== FONCTIONS CHAT ADMIN ↔ CHAUFFEUR =====
-
+// Variables globales pour le chat
 let chatAdminChauffeurId = null;
 let chatAdminPseudo = '';
 let chatUpdateInterval = null;
 let chatAdminLangueChauffeur = 'fr'; // Langue du chauffeur
 let afficherTraduction = true; // Par défaut, afficher la traduction
+let messagesTraductionState = {}; // État de traduction pour chaque message (message_id: true/false)
 
 // Ouvrir le chat admin avec un chauffeur
 window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
@@ -339,6 +340,7 @@ window.fermerChatAdmin = function() {
     chatUpdateInterval = null;
   }
   chatAdminChauffeurId = null;
+  messagesTraductionState = {}; // Réinitialiser l'état des traductions
 };
 
 // Charger les messages du chat admin
@@ -394,40 +396,58 @@ function afficherMessagesAdmin(messages) {
   
   container.innerHTML = messages.map(msg => {
     const isAdmin = msg.sender === 'admin';
+    const messageId = msg.id;
     
-    // Déterminer quel texte afficher
+    // Déterminer quel texte afficher pour ce message spécifique
     let texteAffiche = msg.message;
-    let afficherIconeTraduction = false;
+    let modeTraductionMessage = messagesTraductionState[messageId] !== undefined 
+      ? messagesTraductionState[messageId] 
+      : afficherTraduction;
     
-    if (afficherTraduction) {
-      // Mode traduction activé
-      if (isAdmin) {
-        // Message de l'admin : afficher le français (original)
-        texteAffiche = msg.message;
+    let afficherBoutonTraduction = false;
+    let labelBouton = '';
+    
+    if (!isAdmin && msg.translated_fr) {
+      // Message du chauffeur avec traduction disponible
+      afficherBoutonTraduction = true;
+      
+      if (modeTraductionMessage) {
+        // Afficher la traduction française
+        texteAffiche = msg.translated_fr;
+        labelBouton = 'Voir original';
       } else {
-        // Message du chauffeur : afficher la traduction française
-        texteAffiche = msg.translated_fr || msg.message;
-        afficherIconeTraduction = !!msg.translated_fr;
+        // Afficher le texte original
+        texteAffiche = msg.message;
+        labelBouton = 'Traduire';
       }
-    } else {
-      // Mode original activé : toujours afficher le texte original
-      texteAffiche = msg.message;
     }
     
     return `
-      <div class="flex ${isAdmin ? 'justify-end' : 'justify-start'}">
-        <div class="max-w-xs ${isAdmin ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200'} rounded-2xl px-4 py-2 shadow-sm">
+      <div class="flex ${isAdmin ? 'justify-end' : 'justify-start'} mb-3">
+        <div class="max-w-md ${isAdmin ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200'} rounded-2xl px-4 py-2 shadow-sm">
           <div class="flex items-center gap-2 mb-1">
             <i class="fas ${isAdmin ? 'fa-user-shield' : 'fa-truck'} text-xs"></i>
             <span class="text-xs font-semibold ${isAdmin ? 'text-blue-100' : 'text-gray-600'}">
               ${isAdmin ? 'Admin GXO' : chatAdminPseudo}
             </span>
-            ${afficherIconeTraduction ? '<i class="fas fa-language text-xs" title="Message traduit"></i>' : ''}
+            ${modeTraductionMessage && !isAdmin && msg.translated_fr ? '<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">🌍 Traduit</span>' : ''}
           </div>
-          <p class="text-sm">${texteAffiche}</p>
-          <p class="text-xs ${isAdmin ? 'text-blue-200' : 'text-gray-400'} mt-1">
-            ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
-          </p>
+          <p class="text-sm mb-2">${texteAffiche}</p>
+          <div class="flex items-center justify-between gap-2">
+            <p class="text-xs ${isAdmin ? 'text-blue-200' : 'text-gray-400'}">
+              ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
+            </p>
+            ${afficherBoutonTraduction ? `
+              <button 
+                onclick="basculerTraductionMessage(${messageId})" 
+                class="text-xs ${isAdmin ? 'text-blue-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} flex items-center gap-1 transition-colors"
+                title="Basculer entre traduction et original"
+              >
+                <i class="fas fa-language"></i>
+                <span>${labelBouton}</span>
+              </button>
+            ` : ''}
+          </div>
         </div>
       </div>
     `;
@@ -437,9 +457,25 @@ function afficherMessagesAdmin(messages) {
   container.scrollTop = container.scrollHeight;
 }
 
-// Basculer entre traduction et texte original
+// Basculer entre traduction et texte original pour un message spécifique
+window.basculerTraductionMessage = function(messageId) {
+  // Inverser l'état de traduction pour ce message
+  if (messagesTraductionState[messageId] === undefined) {
+    messagesTraductionState[messageId] = !afficherTraduction;
+  } else {
+    messagesTraductionState[messageId] = !messagesTraductionState[messageId];
+  }
+  
+  // Recharger l'affichage des messages
+  chargerMessagesAdmin();
+};
+
+// Basculer entre traduction et texte original (mode global)
 window.basculerTraduction = function() {
   afficherTraduction = !afficherTraduction;
+  
+  // Réinitialiser l'état individuel des messages pour suivre le mode global
+  messagesTraductionState = {};
   
   // Mettre à jour le label du bouton
   const label = document.getElementById('label-toggle-traduction');
