@@ -6,6 +6,8 @@ let startTime = null;
 let intervalTimer = null;
 let intervalProgression = null;
 let currentLangue = 'fr';
+let messagesTraductionState = {}; // État de traduction pour chaque message (message_id: true/false)
+let afficherTraduction = true; // Par défaut, afficher la traduction
 
 // Traductions pour toutes les langues
 const translations = {
@@ -31,7 +33,10 @@ const translations = {
     supportGXO: 'Support GXO',
     enLigne: 'En ligne',
     commencerConversation: 'Commencez une conversation',
-    ecrivezMessage: 'Écrivez votre message...'
+    ecrivezMessage: 'Écrivez votre message...',
+    traduire: 'Traduire',
+    voirOriginal: 'Voir original',
+    traduit: 'Traduit'
   },
   nl: {
     flag: '🇳🇱',
@@ -55,7 +60,10 @@ const translations = {
     supportGXO: 'GXO Ondersteuning',
     enLigne: 'Online',
     commencerConversation: 'Begin een gesprek',
-    ecrivezMessage: 'Schrijf uw bericht...'
+    ecrivezMessage: 'Schrijf uw bericht...',
+    traduire: 'Vertalen',
+    voirOriginal: 'Origineel bekijken',
+    traduit: 'Vertaald'
   },
   fi: {
     flag: '🇫🇮',
@@ -101,6 +109,12 @@ const translations = {
     toutesTerminees: 'Alle Aufgaben sind erledigt',
     agentVaComing: 'Ein Agent wird zum Entladen zu Ihnen kommen',
     supportGXO: 'GXO Support',
+    traduire: 'Oversæt',
+    voirOriginal: 'Se original',
+    traduit: 'Oversat'
+    traduire: 'Übersetzen',
+    voirOriginal: 'Original ansehen',
+    traduit: 'Übersetzt'
     enLigne: 'Online',
     commencerConversation: 'Gespräch beginnen',
     ecrivezMessage: 'Schreiben Sie Ihre Nachricht...'
@@ -125,6 +139,9 @@ const translations = {
     toutesTerminees: 'Tutti i compiti sono completati',
     agentVaComing: 'Un agente verrà da te per lo scarico',
     supportGXO: 'Supporto GXO',
+    traduire: 'Traduci',
+    voirOriginal: 'Vedi originale',
+    traduit: 'Tradotto'
     enLigne: 'Online',
     commencerConversation: 'Inizia una conversazione',
     ecrivezMessage: 'Scrivi il tuo messaggio...'
@@ -149,6 +166,9 @@ const translations = {
     toutesTerminees: 'Wszystkie zadania są ukończone',
     agentVaComing: 'Agent przyjdzie do Ciebie w celu rozładunku',
     supportGXO: 'Wsparcie GXO',
+    traduire: 'Przetłumacz',
+    voirOriginal: 'Zobacz oryginał',
+    traduit: 'Przetłumaczone'
     enLigne: 'Online',
     commencerConversation: 'Rozpocznij rozmowę',
     ecrivezMessage: 'Napisz swoją wiadomość...'
@@ -173,6 +193,9 @@ const translations = {
     toutesTerminees: 'Todas as tarefas estão concluídas',
     agentVaComing: 'Um agente virá até você para a descarga',
     supportGXO: 'Suporte GXO',
+    traduire: 'Traduzir',
+    voirOriginal: 'Ver original',
+    traduit: 'Traduzido'
     enLigne: 'Online',
     commencerConversation: 'Comece uma conversa',
     ecrivezMessage: 'Escreva sua mensagem...'
@@ -197,6 +220,9 @@ const translations = {
     toutesTerminees: 'Всички задачи са завършени',
     agentVaComing: 'Агент ще дойде при вас за разтоварване',
     supportGXO: 'Поддръжка GXO',
+    traduire: 'Преведи',
+    voirOriginal: 'Вижте оригинала',
+    traduit: 'Преведено'
     enLigne: 'Онлайн',
     commencerConversation: 'Започнете разговор',
     ecrivezMessage: 'Напишете съобщението си...'
@@ -221,6 +247,9 @@ const translations = {
     toutesTerminees: 'Všechny úkoly jsou dokončeny',
     agentVaComing: 'Agent k vám přijde pro vykládku',
     supportGXO: 'Podpora GXO',
+    traduire: 'Přeložit',
+    voirOriginal: 'Zobrazit originál',
+    traduit: 'Přeloženo'
     enLigne: 'Online',
     commencerConversation: 'Začít konverzaci',
     ecrivezMessage: 'Napište svou zprávu...'
@@ -245,6 +274,12 @@ const translations = {
     toutesTerminees: 'Alle opgaver er færdige',
     agentVaComing: 'En agent kommer til dig for aflæsning',
     supportGXO: 'GXO Support',
+    traduire: 'Oversæt',
+    voirOriginal: 'Se original',
+    traduit: 'Oversat'
+    traduire: 'Übersetzen',
+    voirOriginal: 'Original ansehen',
+    traduit: 'Übersetzt'
     enLigne: 'Online',
     commencerConversation: 'Start en samtale',
     ecrivezMessage: 'Skriv din besked...'
@@ -269,6 +304,9 @@ const translations = {
     toutesTerminees: 'Svi zadaci su završeni',
     agentVaComing: 'Agent će doći k vama za istovar',
     supportGXO: 'GXO Podrška',
+    traduire: 'Prevedi',
+    voirOriginal: 'Pogledaj original',
+    traduit: 'Prevedeno'
     enLigne: 'Online',
     commencerConversation: 'Započnite razgovor',
     ecrivezMessage: 'Napišite svoju poruku...'
@@ -293,6 +331,9 @@ const translations = {
     toutesTerminees: 'Toate sarcinile sunt finalizate',
     agentVaComing: 'Un agent va veni la dvs. pentru descărcare',
     supportGXO: 'Suport GXO',
+    traduire: 'Tradu',
+    voirOriginal: 'Vezi originalul',
+    traduit: 'Tradus'
     enLigne: 'Online',
     commencerConversation: 'Începeți o conversație',
     ecrivezMessage: 'Scrieți mesajul dvs...'
@@ -620,13 +661,53 @@ async function chargerMessages() {
       container.innerHTML = '';
       
       data.messages.forEach(msg => {
+        const isChauffeur = msg.sender === 'chauffeur';
+        const messageId = msg.id;
+        
+        // Déterminer quel texte afficher pour ce message spécifique
+        let texteAffiche = msg.message;
+        let modeTraductionMessage = messagesTraductionState[messageId] !== undefined 
+          ? messagesTraductionState[messageId] 
+          : afficherTraduction;
+        
+        let afficherBoutonTraduction = false;
+        let labelBouton = lang.traduire || 'Traduire';
+        let labelOriginal = lang.voirOriginal || 'Voir original';
+        
+        if (!isChauffeur && msg.translated_chauffeur) {
+          // Message de l'admin avec traduction disponible
+          afficherBoutonTraduction = true;
+          
+          if (modeTraductionMessage) {
+            // Afficher la traduction dans la langue du chauffeur
+            texteAffiche = msg.translated_chauffeur;
+            labelBouton = labelOriginal;
+          } else {
+            // Afficher le texte original (français)
+            texteAffiche = msg.message;
+            labelBouton = labelBouton;
+          }
+        }
+        
         const div = document.createElement('div');
-        div.className = `flex ${msg.sender === 'chauffeur' ? 'justify-end' : 'justify-start'}`;
+        div.className = `flex ${isChauffeur ? 'justify-end' : 'justify-start'} mb-3`;
         
         div.innerHTML = `
-          <div class="max-w-xs ${msg.sender === 'chauffeur' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-800'} rounded-2xl px-4 py-3 shadow">
-            <p class="text-sm">${msg.message}</p>
-            <p class="text-xs opacity-75 mt-1">${new Date(msg.timestamp).toLocaleTimeString(currentLangue === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+          <div class="max-w-md ${isChauffeur ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-800'} rounded-2xl px-4 py-3 shadow">
+            ${!isChauffeur && modeTraductionMessage && msg.translated_chauffeur ? '<div class="flex items-center gap-2 mb-1"><span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">🌍 ' + (lang.traduit || 'Traduit') + '</span></div>' : ''}
+            <p class="text-sm mb-2">${texteAffiche}</p>
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-xs opacity-75">${new Date(msg.timestamp).toLocaleTimeString(currentLangue === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+              ${afficherBoutonTraduction ? `
+                <button 
+                  onclick="basculerTraductionMessage(${messageId})" 
+                  class="text-xs ${isChauffeur ? 'text-orange-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} flex items-center gap-1 transition-colors"
+                >
+                  <i class="fas fa-language"></i>
+                  <span>${labelBouton}</span>
+                </button>
+              ` : ''}
+            </div>
           </div>
         `;
         
@@ -653,6 +734,19 @@ async function chargerMessages() {
     console.error('Erreur chargement messages:', error);
   }
 }
+
+// Basculer la traduction d'un message spécifique
+window.basculerTraductionMessage = function(messageId) {
+  // Inverser l'état de traduction pour ce message
+  if (messagesTraductionState[messageId] === undefined) {
+    messagesTraductionState[messageId] = !afficherTraduction;
+  } else {
+    messagesTraductionState[messageId] = !messagesTraductionState[messageId];
+  }
+  
+  // Recharger l'affichage des messages
+  chargerMessages();
+};
 
 document.getElementById('btn-envoyer-message').addEventListener('click', envoyerMessage);
 document.getElementById('input-message').addEventListener('keypress', (e) => {
