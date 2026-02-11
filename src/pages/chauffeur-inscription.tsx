@@ -13,7 +13,7 @@ export function ChauffeurInscriptionPage() {
         <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-4 shadow-lg">
           <div class="container mx-auto flex items-center justify-between">
             <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-10" />
-            <div class="text-white font-bold">Inscription</div>
+            <div class="text-white font-bold" id="header-titre">Inscription</div>
           </div>
         </div>
 
@@ -23,7 +23,7 @@ export function ChauffeurInscriptionPage() {
           <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
               <i class="fas fa-user-plus text-[#FF5A1A] mr-3"></i>
-              Inscription Chauffeur
+              <span id="titre-inscription">Inscription Chauffeur</span>
             </h2>
 
             <form id="form-inscription" class="space-y-6">
@@ -31,7 +31,7 @@ export function ChauffeurInscriptionPage() {
               <div>
                 <label class="block text-gray-700 font-semibold mb-2">
                   <i class="fas fa-user mr-2 text-[#FF5A1A]"></i>
-                  Pseudo / Nom
+                  <span id="label-pseudo">Pseudo / Nom</span>
                   <span class="text-red-500">*</span>
                 </label>
                 <input 
@@ -39,7 +39,6 @@ export function ChauffeurInscriptionPage() {
                   id="pseudo" 
                   required
                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors text-lg"
-                  placeholder="Ex: Jean Dupont"
                 />
               </div>
 
@@ -47,7 +46,7 @@ export function ChauffeurInscriptionPage() {
               <div>
                 <label class="block text-gray-700 font-semibold mb-2">
                   <i class="fas fa-building mr-2 text-[#FF5A1A]"></i>
-                  Entreprise de transport
+                  <span id="label-entreprise">Entreprise de transport</span>
                   <span class="text-red-500">*</span>
                 </label>
                 <input 
@@ -55,7 +54,6 @@ export function ChauffeurInscriptionPage() {
                   id="entreprise" 
                   required
                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors text-lg"
-                  placeholder="Ex: DHL Express"
                 />
               </div>
 
@@ -63,7 +61,7 @@ export function ChauffeurInscriptionPage() {
               <div>
                 <label class="block text-gray-700 font-semibold mb-2">
                   <i class="fas fa-warehouse mr-2 text-[#FF5A1A]"></i>
-                  Numéro de quai attribué
+                  <span id="label-quai">Numéro de quai attribué</span>
                   <span class="text-red-500">*</span>
                 </label>
                 <select 
@@ -71,7 +69,7 @@ export function ChauffeurInscriptionPage() {
                   required
                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors text-lg"
                 >
-                  <option value="">-- Sélectionner --</option>
+                  <option value="" id="option-select">-- Sélectionner --</option>
                   {Array.from({ length: 20 }, (_, i) => i + 1).map(num => (
                     <option value={`Q${num}`}>Quai {num}</option>
                   ))}
@@ -84,13 +82,13 @@ export function ChauffeurInscriptionPage() {
                 class="w-full bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] text-white py-4 rounded-xl font-bold text-xl hover:shadow-2xl transition-all transform hover:scale-105 active:scale-95"
               >
                 <i class="fas fa-check-circle mr-2"></i>
-                Valider et Commencer
+                <span id="btn-valider">Valider et Commencer</span>
               </button>
             </form>
 
             <div class="mt-6 text-center text-sm text-gray-500">
               <i class="fas fa-info-circle mr-1"></i>
-              Après validation, vous accéderez à vos tâches de déchargement
+              <span id="info-message">Après validation, vous accéderez à vos tâches de déchargement</span>
             </div>
           </div>
         </div>
