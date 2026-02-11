@@ -1,204 +1,295 @@
-# GXO Logistics - HUB Procédures Moissy-Cramayel
+# 🚛 GXO Logistics Moissy - Système QR Code Chauffeurs
 
-## 🎯 Vue d'ensemble du projet
+**Version 11.4** - Système d'induction multilingue pour chauffeurs avec vidéos optimisées
 
-**HUB Procédures Logistiques** - Intranet pour le site GXO de Moissy-Cramayel, conçu comme un centre de ressources opérationnelles centralisé destiné aux équipes terrain.
+[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-orange)](https://pages.cloudflare.com/)
+[![Hono](https://img.shields.io/badge/Hono-Framework-blue)](https://hono.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 
-## ✨ Fonctionnalités actuelles
+---
 
-### Pages métiers complètes
-- ✅ **Page d'accueil** : HUB métiers avec logo GXO, illustration entrepôt animée et accès rapide
-- ✅ **Réception** : **29 procédures** incluant le **Manuel EWM Goods Receipt** (PDF 1.5MB), réception standard, déchargement, clôture livraison/TU, changement batterie, EOP checks, ICPE, conditionnement, etc.
-- ✅ **IPL** : 7 procédures avec checklists interactives et illustration chariot élévateur (affectation tâche, priorisation, LTRMS, LTRA, LS03N, etc.)
-- ✅ **Préparation** : 5 procédures complètes avec checklists interactives (dernier prélèvement, écart prélèvement, quai fictif, monteur de rolls, formation intégration)
-- ✅ **Retours** : 3 procédures (rappel contenants PAPREC/BIONERVAL, clôture livraison retour, transfert roll)
-- ✅ **Nouvel arrivant** : Parcours d'intégration complet en 5 étapes
-- ✅ **Anomalies/FAQ** : 3 procédures anomalies + 8 questions/réponses fréquentes
-- ✅ **Bibliothèque intelligente** : **34 documents** classés par rubrique avec recherche temps réel et aperçu PDF natif
+## 📱 Accès Rapide
 
-### Design et branding
-- ✅ **Logo GXO** : Logo officiel intégré dans la navigation et page d'accueil
-- ✅ **Couleurs GXO** : Bleu GXO (#00205B) et Orange (#FF6B35)
-- ✅ **Illustrations personnalisées** : Illustration entrepôt avec chariot élévateur et rayonnages pour IPL
-- ✅ **Animation arrière-plan** : Entrepôt en SVG avec chariot élévateur sur la page d'accueil
+**URL Production** : `https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur`
 
-### Fonctionnalités interactives
-- ✅ **Checklists interactives** : Cases à cocher, barre de progression, animation de complétion
-- ✅ **FAQ intelligente** : Accordéons dépliables avec niveaux d'urgence
-- ✅ **Système de niveaux** : 🟢 Essentiel / 🟡 Standard / 🔴 Avancé
-- ✅ **Liens documents** : 34 documents accessibles directement depuis les procédures
-- ✅ **Aperçu PDF natif** : Visualisation documents PDF dans le navigateur (iframe)
-- ✅ **Bibliothèque intelligente** : Recherche temps réel, filtres par rubrique (Réception 16, IPL 9, Préparation 4, Retours 3, Anomalies 2)
-- ✅ **Responsive design** : Optimisé mobile, tablette et PC
-- ✅ **Mode impression** : Checklists imprimables
-- ✅ **Animations** : Effets visuels et confettis de complétion
+**Scanner le QR Code** → Choisir langue → Regarder vidéo → S'inscrire
 
-## 🌐 URLs
+---
 
-- **Développement sandbox** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- **Production Cloudflare** : _(À déployer avec `npm run deploy:prod`)_
-- **Nom du projet** : `gxo-procedures-moissy`
+## 🎯 Objectif
 
-## 📁 Architecture du projet
+Système d'induction automatisé pour les chauffeurs visitant le site GXO Logistics de Moissy :
+- ✅ **12 langues** disponibles
+- ✅ **Vidéos optimisées** (chargement 4x plus rapide)
+- ✅ **Sans sous-titres** (rognées professionnellement)
+- ✅ **Mobile-first** (plein écran, responsive)
+- ✅ **Base de données** (sauvegarde des inscriptions)
 
-### Structure des données
+---
+
+## 🌍 Langues Supportées
+
+| Langue | Code | Vidéo | Taille |
+|--------|------|-------|--------|
+| 🇫🇷 Français | fr | ✅ | 5.2 MB |
+| 🇳🇱 Néerlandais | nl | ✅ | 5.0 MB |
+| 🇫🇮 Finnois | fi | ✅ | 5.0 MB |
+| 🇩🇪 Allemand | de | ✅ | 5.0 MB |
+| 🇮🇹 Italien | it | ✅ | 5.1 MB |
+| 🇵🇱 Polonais | pl | ✅ | 5.1 MB |
+| 🇵🇹 Portugais | pt | ✅ | 5.2 MB |
+| 🇧🇬 Bulgare | bg | ✅ | 5.2 MB |
+| 🇨🇿 Tchèque | cs | ✅ | 5.0 MB |
+| 🇩🇰 Danois | da | ✅ | 4.5 MB |
+| 🇭🇷 Croate | hr | ✅ | 5.2 MB |
+| 🇷🇴 Roumain | ro | ✅ | 5.2 MB |
+
+**Total** : 61 MB (vs 107 MB initialement, -43%)
+
+---
+
+## 🏗️ Architecture
+
 ```
-/home/user/webapp/
+webapp/
 ├── src/
-│   ├── index.tsx              # Application Hono principale
-│   ├── renderer.tsx           # Layout HTML global
-│   └── pages/                 # Pages métiers
-│       ├── home.tsx           # Page d'accueil
-│       ├── reception.tsx      # Réception (10 procédures)
-│       ├── cariste.tsx        # IPL - Intra Plant Logistics (7 procédures)
-│       ├── manutention.tsx    # Préparation (5 procédures)
-│       ├── chef-equipe.tsx    # Chef d'équipe
-│       ├── nouveau.tsx        # Nouvel arrivant
-│       └── anomalies.tsx      # Anomalies/FAQ
+│   ├── index.tsx                    # Point d'entrée Hono
+│   └── pages/
+│       ├── qrcode-chauffeur.tsx     # Page QR Code
+│       ├── chauffeur-langue.tsx     # Sélection langue
+│       ├── chauffeur-video.tsx      # Lecteur vidéo
+│       └── chauffeur-inscription.tsx # Formulaire inscription
 ├── public/
 │   └── static/
-│       ├── app.js             # JavaScript interactif
-│       ├── style.css          # Styles personnalisés
-│       ├── gxo-logo.svg       # Logo GXO officiel
-│       ├── ipl-illustration.svg # Illustration chariot élévateur IPL
-│       └── documents/         # 26 documents procédures
-└── dist/                      # Build production
+│       ├── videos/                   # 12 vidéos rognées
+│       ├── gxo-logo-official.svg
+│       └── test-cropped-videos.html
+├── migrations/
+│   └── 0001_init_schema.sql         # Schéma DB
+├── seed.sql                          # Données de test
+├── wrangler.jsonc                    # Config Cloudflare
+├── DEPLOYMENT.md                     # Guide déploiement
+└── README.md                         # Ce fichier
 ```
 
-### Services utilisés
-- **Framework** : Hono (backend léger)
-- **Runtime** : Cloudflare Workers/Pages
-- **Styling** : TailwindCSS (CDN)
-- **Icons** : Font Awesome
-- **Gestion process** : PM2
+---
 
-## 🚀 Guide d'utilisation
+## ⚡ Fonctionnalités
 
-### Pour les utilisateurs terrain
+### ✅ **Système QR Code**
+- Accès rapide via scan QR
+- Pas de connexion requise
+- Parcours guidé étape par étape
 
-1. **Accéder à l'intranet** : Ouvrir l'URL sur PC, tablette ou smartphone
-2. **Choisir son métier** : Cliquer sur la tuile correspondante
-3. **Sélectionner un process** : Parcourir les cartes de procédures
-4. **Utiliser les checklists** : Cliquer sur "Checklist interactive" pour un pas-à-pas
-5. **Consulter les documents** : Télécharger les procédures détaillées
-6. **FAQ** : Section Anomalies pour les cas problématiques
+### ✅ **Vidéos Optimisées**
+- **Chargement 4x plus rapide** (500ms vs 2s)
+- **Sans sous-titres** (rognées avec FFmpeg)
+- **Préchargement automatique** (`preload="auto"`)
+- **4 méthodes de détection** (loadedmetadata, loadeddata, canplay, timeout)
+- **Spinner animé** pendant le chargement
 
-### Navigation rapide
-- **Raccourci Ctrl+H** : Retour à l'accueil
-- **ESC** : Fermer les modales
-- **Recherche** : Utiliser Ctrl+F dans le navigateur
+### ✅ **Lecteur Vidéo Mobile**
+- Plein écran intelligent
+- Contrôles tactiles natifs
+- Max-height 70vh (visage toujours visible)
+- Object-fit contain
+- Orientation naturelle
 
-## 📊 État actuel
+### ✅ **Base de Données D1**
+- Sauvegarde des inscriptions
+- Logs de traçabilité
+- Statistiques par langue
+- Cloudflare D1 (SQLite global)
 
-### ✅ Fonctionnalités complétées (100%)
-- Structure complète du site
-- Logo et identité GXO officielle (bleu #00205B + orange #FF6B35)
-- **6 pages métiers** développées (Réception, IPL, Préparation, Retours, Nouvel Arrivant, Anomalies/FAQ)
-- **65 procédures** documentées (29 Réception, 7 IPL, 5 Préparation, 3 Retours, 6 Nouvel Arrivant, 20 Anomalies/FAQ)
-- **34 documents** intégrés (29 Word, 3 PDF, 1 Excel, 1 Template)
-- **Manuel EWM Goods Receipt** (PDF 1.5MB) - Document de référence complet
-- Checklists interactives fonctionnelles (15+ procédures)
-- FAQ avec arbres de décision
-- **Bibliothèque intelligente** : Recherche temps réel, filtres par rubrique, aperçu PDF natif
-- Système de niveaux de complexité (🟢🟡🔴)
-- Responsive design mobile/tablette/PC
-- Mode impression
-- Animations et effets visuels
-- Interface 100% française
+### ✅ **Interface Multilingue**
+- 12 langues uniformisées
+- Traductions complètes
+- Format identique partout
+- UX cohérente
 
-### 📊 Statistiques Globales
-- **Pages métiers** : 6
-- **Procédures totales** : 65
-- **Documents** : 34
-  - Réception : 16 documents (10 Word + 5 ex-Chef d'équipe + 1 PDF EWM)
-  - IPL : 9 documents (7 Word + 1 Excel + 1 Template)
-  - Préparation : 4 documents (Word)
-  - Retours : 3 documents (Word)
-  - Anomalies : 2 documents (1 Word + 1 PDF)
-- **Checklists interactives** : 15+
-- **Types de fichiers** : Word (29), PDF (3), Excel (1), Template (1)
+---
 
-### ⏳ Prochaines étapes recommandées
-1. **Déploiement production** : Déployer sur Cloudflare Pages
-2. **Formation utilisateurs** : Sessions de présentation et guide d'utilisation
-3. **Enrichissement contenu** : Ajouter vidéos tutoriels et schémas visuels
-4. **Analytics d'usage** : Tracker les procédures les plus consultées
-5. **Mode hors-ligne** : Progressive Web App (PWA) pour usage sans connexion
-6. **Notifications** : Alertes pour nouvelles procédures
-7. **Feedback utilisateurs** : Système de commentaires et suggestions
-8. **Autres manuels EWM** : Préparation, Expédition, etc.
+## 🚀 Démarrage Rapide
 
-## 🛠️ Déploiement
-
-### Environnement de développement (Sandbox)
+### Prérequis
 ```bash
-cd /home/user/webapp
+Node.js 18+
+npm ou pnpm
+```
+
+### Installation
+```bash
+# Cloner
+git clone https://github.com/VOTRE_USERNAME/gxo-procedures-moissy.git
+cd gxo-procedures-moissy
+
+# Installer
+npm install
+
+# Build
 npm run build
+
+# Lancer en local
 pm2 start ecosystem.config.cjs
 ```
 
-### Déploiement production (Cloudflare Pages)
-```bash
-# Configuration
-npm run build
-
-# Déploiement
-wrangler pages deploy dist --project-name gxo-intranet
+### Test Local
+```
+http://localhost:3000/qrcode-chauffeur
 ```
 
-## 📝 Notes techniques
+---
 
-### Performance
-- Temps de chargement initial : < 2s
-- Taille du bundle : ~90 KB
-- Compatible tous navigateurs modernes
-- Support offline en cours (PWA)
+## 📦 Scripts Disponibles
 
-### Sécurité
-- Aucune donnée sensible stockée
-- Accès réseau interne recommandé
-- Documents hébergés localement
+```bash
+# Développement
+npm run dev              # Serveur Vite dev
+npm run build            # Build production
 
-### Accessibilité
-- Support clavier complet
-- Contrastes de couleurs validés
-- Tailles de police adaptatives
-- Mode réduit de mouvement
+# PM2 (sandbox/local)
+pm2 start ecosystem.config.cjs
+pm2 logs --nostream
+pm2 restart gxo-procedures-moissy
 
-## 🎨 Charte graphique
+# Database (nécessite Cloudflare config)
+npm run db:migrate:local   # Migrations local
+npm run db:migrate:prod    # Migrations production
+npm run db:seed            # Données de test
+npm run db:reset           # Reset DB local
 
-- **Bleu GXO** : #00205B (couleur principale)
-- **Orange GXO** : #FF6B35 (accent)
-- **Niveaux** : 🟢 Vert / 🟡 Jaune / 🔴 Rouge
-- **Police** : System fonts (-apple-system, Segoe UI, etc.)
-- **Logo** : GXO Logistics officiel avec ligne orange
-- **Illustrations** : SVG personnalisés (entrepôt, chariot élévateur, rayonnages)
+# Déploiement (nécessite Cloudflare config)
+npm run deploy             # Build + deploy
+npm run deploy:prod        # Deploy production
+```
 
-## 📞 Support
+---
 
-Pour toute question ou amélioration :
-- **Chef d'équipe** : Support quotidien
-- **IT Support** : Problèmes techniques
-- **Contribution** : Suggérer de nouvelles procédures
+## 🗄️ Base de Données
+
+### Schéma
+
+**Table `chauffeurs`** : Inscriptions
+- id, nom, prenom, email, telephone
+- langue, video_completed, tasks_completed
+- statut (en_attente, valide, refuse)
+- dates (inscription, created_at, updated_at)
+
+**Table `logs_inscriptions`** : Traçabilité
+- chauffeur_id, action, details
+- user_agent, ip_address, created_at
+
+**Table `statistiques`** : Analytics
+- date, langue
+- total_visites, total_videos_vues, total_inscriptions
+
+---
+
+## 🔧 Configuration
+
+### Cloudflare Pages
+1. Créer compte sur https://dash.cloudflare.com
+2. Obtenir API Token
+3. Configurer `wrangler.jsonc`
+4. Voir **DEPLOYMENT.md** pour les détails
+
+### Base de Données D1
+```bash
+# Créer la DB
+npx wrangler d1 create gxo-chauffeurs-db
+
+# Copier le database_id dans wrangler.jsonc
+
+# Appliquer migrations
+npx wrangler d1 migrations apply gxo-chauffeurs-db --local
+npx wrangler d1 migrations apply gxo-chauffeurs-db
+```
+
+---
+
+## 📊 Statistiques
+
+### Performances
+- **Chargement initial** : < 2s
+- **Chargement vidéo** : < 1s (500ms)
+- **Build time** : ~2s
+- **Bundle size** : 235 KB
+
+### Vidéos
+- **Total** : 12 langues
+- **Taille** : 61 MB (-43% vs original)
+- **Résolution** : 720x1160 (rognée -120px)
+- **Format** : MP4 H.264, CRF 28
+
+---
+
+## 🎯 Roadmap
+
+- [x] **v11.0** : Vidéos rognées sans sous-titres
+- [x] **v11.1** : Page de test interactive
+- [x] **v11.2** : Chargement 4x plus rapide
+- [x] **v11.3** : Changelog interactif
+- [x] **v11.4** : Uniformisation 12 langues
+- [x] **v11.5** : Configuration DB + Documentation
+- [ ] **v12.0** : Interface admin (dashboard)
+- [ ] **v12.1** : Export CSV / Excel
+- [ ] **v12.2** : Statistiques avancées
+- [ ] **v12.3** : Notifications email
+
+---
+
+## 📚 Documentation
+
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Guide de déploiement complet (298 lignes)
+- **[CHANGELOG.md](./CHANGELOG.md)** - Historique des versions
+- **[scripts/db-setup.sh](./scripts/db-setup.sh)** - Script setup DB
+
+---
+
+## 🧪 Tests
+
+### Tests Fonctionnels
+```bash
+# Test pages
+curl -I https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+
+# Test vidéos
+curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-fr.mp4
+```
+
+### Tests DB
+```bash
+# Test local
+npx wrangler d1 execute gxo-chauffeurs-db --local --command="SELECT * FROM chauffeurs"
+
+# Test production
+npx wrangler d1 execute gxo-chauffeurs-db --command="SELECT COUNT(*) FROM chauffeurs"
+```
+
+---
+
+## 🤝 Contribution
+
+Ce projet est développé en interne pour GXO Logistics Moissy.
+
+---
 
 ## 📄 Licence
 
-© 2026 GXO Logistics - Usage interne uniquement
+Propriétaire - GXO Logistics Moissy © 2026
 
 ---
 
-**Dernière mise à jour** : 4 février 2026  
-**Version** : 2.5 STABLE  
-**Développé avec** : Hono + Cloudflare Workers + TailwindCSS
+## 📞 Support
+
+- **Technique** : IT Department
+- **Fonctionnel** : RH Department
+- **Documentation** : Voir DEPLOYMENT.md
 
 ---
 
-## 📘 Documents de Référence
-
-- **CHANGELOG_V2.5.md** : Détails de la version 2.5 (intégration Manuel EWM)
-- **GUIDE_MANUEL_EWM.md** : Guide utilisateur pour le Manuel EWM Goods Receipt
-- **CHANGELOG_V2.4.md** : Détails de la version 2.4 (suppression Chef d'équipe)
-- **CHANGELOG_V2.1.md** : Interface française et UI compacte
-- **CORRECTIONS_V2.0.md** : Corrections bibliothèque v2.0
-- **BIBLIOTHEQUE_INFO.md** : Guide bibliothèque intelligente
-- **APERCU_DOCUMENTS.md** : Fonctionnalité aperçu documents
+**Dernière mise à jour** : 11 février 2026  
+**Version** : 11.5  
+**Auteur** : GXO Logistics Moissy

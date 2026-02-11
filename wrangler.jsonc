@@ -5,30 +5,18 @@
   "pages_build_output_dir": "./dist",
   "compatibility_flags": [
     "nodejs_compat"
+  ],
+  // Configuration D1 Database
+  // IMPORTANT: Exécutez ces commandes pour créer la base de données:
+  // 1. wrangler d1 create gxo-chauffeurs-db
+  // 2. Copiez le database_id dans la section ci-dessous
+  // 3. wrangler d1 migrations apply gxo-chauffeurs-db --local (pour local)
+  // 4. wrangler d1 migrations apply gxo-chauffeurs-db (pour production)
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gxo-chauffeurs-db",
+      "database_id": "REMPLACER_PAR_VOTRE_DATABASE_ID"
+    }
   ]
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
-  // "kv_namespaces": [
-  //   {
-  //     "binding": "MY_KV_NAMESPACE",
-  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  //   }
-  // ],
-  // "r2_buckets": [
-  //   {
-  //     "binding": "MY_BUCKET",
-  //     "bucket_name": "my-bucket"
-  //   }
-  // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
-  //   }
-  // ],
-  // "ai": {
-  //   "binding": "AI"
-  // }
 }
