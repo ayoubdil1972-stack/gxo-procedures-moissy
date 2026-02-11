@@ -6,8 +6,8 @@ let startTime = null;
 let intervalTimer = null;
 let intervalProgression = null;
 let currentLangue = 'fr';
-let messagesTraductionState = {}; // État de traduction pour chaque message (message_id: true/false)
-let afficherTraduction = true; // Par défaut, afficher la traduction
+let messagesTraductionState = {};
+let afficherTraduction = true;
 
 // Traductions pour toutes les langues
 const translations = {
@@ -87,7 +87,10 @@ const translations = {
     supportGXO: 'GXO Tuki',
     enLigne: 'Online',
     commencerConversation: 'Aloita keskustelu',
-    ecrivezMessage: 'Kirjoita viestisi...'
+    ecrivezMessage: 'Kirjoita viestisi...',
+    traduire: 'Kääntää',
+    voirOriginal: 'Katso alkuperäinen',
+    traduit: 'Käännetty'
   },
   de: {
     flag: '🇩🇪',
@@ -109,15 +112,12 @@ const translations = {
     toutesTerminees: 'Alle Aufgaben sind erledigt',
     agentVaComing: 'Ein Agent wird zum Entladen zu Ihnen kommen',
     supportGXO: 'GXO Support',
-    traduire: 'Oversæt',
-    voirOriginal: 'Se original',
-    traduit: 'Oversat'
+    enLigne: 'Online',
+    commencerConversation: 'Gespräch beginnen',
+    ecrivezMessage: 'Schreiben Sie Ihre Nachricht...',
     traduire: 'Übersetzen',
     voirOriginal: 'Original ansehen',
     traduit: 'Übersetzt'
-    enLigne: 'Online',
-    commencerConversation: 'Gespräch beginnen',
-    ecrivezMessage: 'Schreiben Sie Ihre Nachricht...'
   },
   it: {
     flag: '🇮🇹',
@@ -139,12 +139,12 @@ const translations = {
     toutesTerminees: 'Tutti i compiti sono completati',
     agentVaComing: 'Un agente verrà da te per lo scarico',
     supportGXO: 'Supporto GXO',
+    enLigne: 'Online',
+    commencerConversation: 'Inizia una conversazione',
+    ecrivezMessage: 'Scrivi il tuo messaggio...',
     traduire: 'Traduci',
     voirOriginal: 'Vedi originale',
     traduit: 'Tradotto'
-    enLigne: 'Online',
-    commencerConversation: 'Inizia una conversazione',
-    ecrivezMessage: 'Scrivi il tuo messaggio...'
   },
   pl: {
     flag: '🇵🇱',
@@ -166,12 +166,12 @@ const translations = {
     toutesTerminees: 'Wszystkie zadania są ukończone',
     agentVaComing: 'Agent przyjdzie do Ciebie w celu rozładunku',
     supportGXO: 'Wsparcie GXO',
+    enLigne: 'Online',
+    commencerConversation: 'Rozpocznij rozmowę',
+    ecrivezMessage: 'Napisz swoją wiadomość...',
     traduire: 'Przetłumacz',
     voirOriginal: 'Zobacz oryginał',
     traduit: 'Przetłumaczone'
-    enLigne: 'Online',
-    commencerConversation: 'Rozpocznij rozmowę',
-    ecrivezMessage: 'Napisz swoją wiadomość...'
   },
   pt: {
     flag: '🇵🇹',
@@ -193,12 +193,12 @@ const translations = {
     toutesTerminees: 'Todas as tarefas estão concluídas',
     agentVaComing: 'Um agente virá até você para a descarga',
     supportGXO: 'Suporte GXO',
+    enLigne: 'Online',
+    commencerConversation: 'Comece uma conversa',
+    ecrivezMessage: 'Escreva sua mensagem...',
     traduire: 'Traduzir',
     voirOriginal: 'Ver original',
     traduit: 'Traduzido'
-    enLigne: 'Online',
-    commencerConversation: 'Comece uma conversa',
-    ecrivezMessage: 'Escreva sua mensagem...'
   },
   bg: {
     flag: '🇧🇬',
@@ -220,12 +220,12 @@ const translations = {
     toutesTerminees: 'Всички задачи са завършени',
     agentVaComing: 'Агент ще дойде при вас за разтоварване',
     supportGXO: 'Поддръжка GXO',
+    enLigne: 'Онлайн',
+    commencerConversation: 'Започнете разговор',
+    ecrivezMessage: 'Напишете съобщението си...',
     traduire: 'Преведи',
     voirOriginal: 'Вижте оригинала',
     traduit: 'Преведено'
-    enLigne: 'Онлайн',
-    commencerConversation: 'Започнете разговор',
-    ecrivezMessage: 'Напишете съобщението си...'
   },
   cs: {
     flag: '🇨🇿',
@@ -247,12 +247,12 @@ const translations = {
     toutesTerminees: 'Všechny úkoly jsou dokončeny',
     agentVaComing: 'Agent k vám přijde pro vykládku',
     supportGXO: 'Podpora GXO',
+    enLigne: 'Online',
+    commencerConversation: 'Začít konverzaci',
+    ecrivezMessage: 'Napište svou zprávu...',
     traduire: 'Přeložit',
     voirOriginal: 'Zobrazit originál',
     traduit: 'Přeloženo'
-    enLigne: 'Online',
-    commencerConversation: 'Začít konverzaci',
-    ecrivezMessage: 'Napište svou zprávu...'
   },
   da: {
     flag: '🇩🇰',
@@ -274,15 +274,12 @@ const translations = {
     toutesTerminees: 'Alle opgaver er færdige',
     agentVaComing: 'En agent kommer til dig for aflæsning',
     supportGXO: 'GXO Support',
+    enLigne: 'Online',
+    commencerConversation: 'Start en samtale',
+    ecrivezMessage: 'Skriv din besked...',
     traduire: 'Oversæt',
     voirOriginal: 'Se original',
     traduit: 'Oversat'
-    traduire: 'Übersetzen',
-    voirOriginal: 'Original ansehen',
-    traduit: 'Übersetzt'
-    enLigne: 'Online',
-    commencerConversation: 'Start en samtale',
-    ecrivezMessage: 'Skriv din besked...'
   },
   hr: {
     flag: '🇭🇷',
@@ -304,12 +301,12 @@ const translations = {
     toutesTerminees: 'Svi zadaci su završeni',
     agentVaComing: 'Agent će doći k vama za istovar',
     supportGXO: 'GXO Podrška',
+    enLigne: 'Online',
+    commencerConversation: 'Započnite razgovor',
+    ecrivezMessage: 'Napišite svoju poruku...',
     traduire: 'Prevedi',
     voirOriginal: 'Pogledaj original',
     traduit: 'Prevedeno'
-    enLigne: 'Online',
-    commencerConversation: 'Započnite razgovor',
-    ecrivezMessage: 'Napišite svoju poruku...'
   },
   ro: {
     flag: '🇷🇴',
@@ -331,12 +328,12 @@ const translations = {
     toutesTerminees: 'Toate sarcinile sunt finalizate',
     agentVaComing: 'Un agent va veni la dvs. pentru descărcare',
     supportGXO: 'Suport GXO',
+    enLigne: 'Online',
+    commencerConversation: 'Începeți o conversație',
+    ecrivezMessage: 'Scrieți mesajul dvs...',
     traduire: 'Tradu',
     voirOriginal: 'Vezi originalul',
     traduit: 'Tradus'
-    enLigne: 'Online',
-    commencerConversation: 'Începeți o conversație',
-    ecrivezMessage: 'Scrieți mesajul dvs...'
   }
 };
 
@@ -664,7 +661,6 @@ async function chargerMessages() {
         const isChauffeur = msg.sender === 'chauffeur';
         const messageId = msg.id;
         
-        // Déterminer quel texte afficher pour ce message spécifique
         let texteAffiche = msg.message;
         let modeTraductionMessage = messagesTraductionState[messageId] !== undefined 
           ? messagesTraductionState[messageId] 
@@ -675,15 +671,12 @@ async function chargerMessages() {
         let labelOriginal = lang.voirOriginal || 'Voir original';
         
         if (!isChauffeur && msg.translated_chauffeur) {
-          // Message de l'admin avec traduction disponible
           afficherBoutonTraduction = true;
           
           if (modeTraductionMessage) {
-            // Afficher la traduction dans la langue du chauffeur
             texteAffiche = msg.translated_chauffeur;
             labelBouton = labelOriginal;
           } else {
-            // Afficher le texte original (français)
             texteAffiche = msg.message;
             labelBouton = labelBouton;
           }
@@ -737,14 +730,11 @@ async function chargerMessages() {
 
 // Basculer la traduction d'un message spécifique
 window.basculerTraductionMessage = function(messageId) {
-  // Inverser l'état de traduction pour ce message
   if (messagesTraductionState[messageId] === undefined) {
     messagesTraductionState[messageId] = !afficherTraduction;
   } else {
     messagesTraductionState[messageId] = !messagesTraductionState[messageId];
   }
-  
-  // Recharger l'affichage des messages
   chargerMessages();
 };
 
