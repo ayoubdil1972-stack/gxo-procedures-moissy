@@ -89,13 +89,14 @@ export function ChauffeurVideoPage() {
 
           {/* Bouton continuer (masqué par défaut) */}
           <div id="btn-continuer-container" class="hidden mt-4 md:mt-6 text-center">
-            <a 
-              href="/chauffeur/inscription"
-              class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:shadow-lg transition-all"
+            <button 
+              id="btn-continuer"
+              onclick="handleContinue()"
+              class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:shadow-lg transition-all cursor-pointer"
             >
               <i class="fas fa-check-circle mr-2"></i>
               <span id="btn-continuer-text">Continuer vers l'inscription</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -298,6 +299,24 @@ export function ChauffeurVideoPage() {
             btnContinuerContainer.classList.remove('hidden');
             sessionStorage.setItem('video_completed', 'true');
           }
+          
+          // Fonction pour gérer le clic sur "Continuer"
+          window.handleContinue = function() {
+            canLeave = true;
+            
+            // Vérifier si le chauffeur est déjà inscrit (a un ID en session)
+            const chauffeurId = sessionStorage.getItem('chauffeur_id');
+            
+            if (chauffeurId) {
+              // Chauffeur déjà inscrit → Rediriger vers ses tâches
+              console.log('✅ Chauffeur inscrit, redirection vers tâches:', chauffeurId);
+              window.location.href = '/chauffeur/taches?id=' + chauffeurId;
+            } else {
+              // Nouveau chauffeur → Rediriger vers l'inscription
+              console.log('✅ Nouveau chauffeur, redirection vers inscription');
+              window.location.href = '/chauffeur/inscription';
+            }
+          };
           
           // Si une vidéo existe pour cette langue
           if (videoUrls[langue]) {

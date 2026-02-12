@@ -39,13 +39,13 @@ app.get('/login', loginRenderer, (c) => c.render(<LoginPage />))
 app.get('/qrcode-chauffeur', loginRenderer, (c) => c.render(<QRCodeChauffeurPage />))
 
 // Page sélection langue
-app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage />))
+app.get('/chauffeur/langue', (c) => c.render(<ChauffeurLanguePage />))
 
 // Page vidéo d'instructions
-app.get('/chauffeur/video', loginRenderer, (c) => c.render(<ChauffeurVideoPage />))
+app.get('/chauffeur/video', (c) => c.render(<ChauffeurVideoPage />))
 
 // Page inscription et tâches
-app.get('/chauffeur/inscription', loginRenderer, (c) => c.render(<ChauffeurInscriptionPage />))
+app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
 
 // Page des tâches chauffeur (après inscription)
 app.get('/chauffeur/taches', loginRenderer, (c) => c.render(<ChauffeurTachesPage />))
