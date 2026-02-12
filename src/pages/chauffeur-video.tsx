@@ -349,9 +349,12 @@ export function ChauffeurVideoPage() {
               fullscreenBtn.classList.remove('hidden');
             }
             
-            // MOBILE : Afficher gros bouton PLAY immédiatement
+            // STRATÉGIE UNIVERSELLE : Même code pour MOBILE et PC
+            // Charger la vidéo
+            video.load();
+            
+            // Afficher le bouton PLAY sur mobile
             if (isMobile) {
-              // Masquer spinner, afficher bouton PLAY
               placeholder.innerHTML = \`
                 <div class="text-center">
                   <button 
@@ -360,46 +363,23 @@ export function ChauffeurVideoPage() {
                     style="animation: pulse 2s ease-in-out infinite;"
                   >
                     <i class="fas fa-play-circle text-5xl mb-3"></i>
-                    <div class="text-lg">Lancer la vidéo</div>
+                    <div class="text-lg">▶ Lancer la vidéo</div>
                   </button>
                   <p class="text-gray-400 text-sm mt-4">Appuyez pour démarrer</p>
                 </div>
               \`;
               
+              // Clic sur le bouton PLAY
               document.getElementById('mobile-play-btn').addEventListener('click', function() {
-                console.log('🎬 Clic utilisateur détecté - Langue:', langue);
-                console.log('🎬 URL vidéo:', videoUrls[langue]);
-                
-                // IMPORTANT : Afficher la vidéo AVANT de lancer la lecture
+                console.log('🎬 Clic mobile détecté');
                 afficherVideo();
-                
-                // Charger et lire la vidéo
-                video.load();
-                video.play().then(function() {
-                  console.log('✅ Lecture démarrée avec succès');
-                }).catch(function(err) {
-                  console.error('❌ Erreur lecture:', err);
-                  placeholder.classList.remove('hidden');
-                  placeholder.innerHTML = \`
-                    <div class="text-center">
-                      <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
-                      <p class="text-white text-lg mb-4">Erreur : Impossible de lire la vidéo</p>
-                      <p class="text-gray-400 text-sm mb-4">Vérifiez votre connexion Internet</p>
-                      <button 
-                        onclick="location.reload()"
-                        class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600"
-                      >
-                        <i class="fas fa-redo mr-2"></i>Réessayer
-                      </button>
-                    </div>
-                  \`;
+                video.play().catch(function(err) {
+                  console.error('❌ Erreur:', err);
+                  alert('Erreur de lecture. Rechargez la page.');
                 });
               });
             } else {
-              // PC : Charger automatiquement
-              video.load();
-              
-              // Tenter autoplay muted sur PC
+              // PC : Autoplay direct
               video.muted = true;
               video.play().then(function() {
                 setTimeout(function() { video.muted = false; }, 100);
@@ -408,30 +388,25 @@ export function ChauffeurVideoPage() {
               });
             }
             
-            // Événements de chargement
-            video.addEventListener('loadedmetadata', function() {
-              console.log('✅ Métadonnées chargées: ' + Math.round(video.duration) + 's');
-              if (!isMobile) afficherVideo();
-            });
-            
-            video.addEventListener('loadeddata', function() {
-              console.log('✅ Données vidéo chargées');
-              if (!isMobile) afficherVideo();
-            });
-            
-            video.addEventListener('canplay', function() {
-              console.log('✅ Vidéo prête à jouer');
-              if (!isMobile) afficherVideo();
-            });
-            
-            // Timeout secours PC uniquement
+            // Événements de chargement (PC uniquement)
             if (!isMobile) {
+              video.addEventListener('loadedmetadata', function() {
+                console.log('✅ Métadonnées chargées');
+                afficherVideo();
+              });
+              
+              video.addEventListener('canplay', function() {
+                console.log('✅ Vidéo prête');
+                afficherVideo();
+              });
+              
+              // Timeout secours
               setTimeout(function() {
                 if (!videoDisplayed) {
-                  console.log('⏰ Timeout - Forcer affichage');
+                  console.log('⏰ Timeout - Affichage forcé');
                   afficherVideo();
                 }
-              }, 3000);
+              }, 2000);
             }
             
             // Gestion erreurs
