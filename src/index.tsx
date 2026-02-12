@@ -29,7 +29,15 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>()
 
 // Serve static files - Pour Cloudflare Workers, les fichiers sont dans dist/
-app.use('/static/*', serveStatic({ root: './' }))
+// Note : Les vidéos nécessitent un traitement spécial pour iOS (voir route ci-dessous)
+app.use('/static/*', serveStatic({ 
+  root: './',
+  // Ajouter les headers nécessaires pour les vidéos
+  onNotFound: (path, c) => {
+    console.log('Fichier non trouvé:', path)
+    return c.notFound()
+  }
+}))
 
 // Route de connexion (sans authentification)
 app.get('/login', loginRenderer, (c) => c.render(<LoginPage />))

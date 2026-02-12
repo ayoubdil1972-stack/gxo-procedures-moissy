@@ -32,11 +32,10 @@ export function ChauffeurVideoPage() {
               disablePictureInPicture
               onContextMenu="return false;"
               playsinline
-              webkit-playsinline
+              webkit-playsinline="true"
               x-webkit-airplay="allow"
-              preload="auto"
-              poster=""
-              muted
+              preload="metadata"
+              crossorigin="anonymous"
             >
               <source src="" type="video/mp4" id="video-source" />
               Votre navigateur ne supporte pas la lecture vidéo.
@@ -369,14 +368,46 @@ export function ChauffeurVideoPage() {
                 </div>
               \`;
               
+              // Attendre que la vidéo soit prête
+              video.addEventListener('canplaythrough', function() {
+                console.log('✅ Vidéo prête pour lecture');
+              });
+              
               // Clic sur le bouton PLAY
               document.getElementById('mobile-play-btn').addEventListener('click', function() {
-                console.log('🎬 Clic mobile détecté');
+                console.log('🎬 Clic mobile - Lancement lecture');
+                
+                // Afficher la vidéo
                 afficherVideo();
-                video.play().catch(function(err) {
-                  console.error('❌ Erreur:', err);
-                  alert('Erreur de lecture. Rechargez la page.');
-                });
+                
+                // Activer le son
+                video.muted = false;
+                video.volume = 1.0;
+                
+                // Lancer la lecture
+                const playPromise = video.play();
+                
+                if (playPromise !== undefined) {
+                  playPromise.then(function() {
+                    console.log('✅ Lecture démarrée');
+                  }).catch(function(err) {
+                    console.error('❌ Erreur lecture:', err.name, '-', err.message);
+                    placeholder.classList.remove('hidden');
+                    placeholder.innerHTML = \`
+                      <div class="text-center px-4">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+                        <p class="text-white text-lg mb-2">Erreur de lecture</p>
+                        <p class="text-gray-400 text-xs mb-4">\${err.name}: \${err.message}</p>
+                        <button 
+                          onclick="location.reload()"
+                          class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold"
+                        >
+                          <i class="fas fa-redo mr-2"></i>Réessayer
+                        </button>
+                      </div>
+                    \`;
+                  });
+                }
               });
             } else {
               // PC : Autoplay direct
