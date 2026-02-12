@@ -1,0 +1,11 @@
+name = "gxo-procedures-moissy"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
+
+[build]
+command = ""
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gxo-chauffeurs-db"
+database_id = "28637f66-9f3f-4c23-91f0-b67d66cb89b3"
