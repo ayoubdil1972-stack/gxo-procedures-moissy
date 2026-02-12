@@ -217,19 +217,21 @@ export function ChauffeurVideoPage() {
           document.getElementById('fullscreen-text').textContent = t.fullscreen;
           
           // URLs des vidéos par langue (12 langues disponibles !)
+          // Hébergé sur GitHub public repository pour éviter limite 25MB Cloudflare Pages
+          const videoBaseUrl = 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos';
           const videoUrls = {
-            'fr': '/static/videos/instructions-fr.mp4',
-            'nl': '/static/videos/instructions-nl.mp4',
-            'fi': '/static/videos/instructions-fi.mp4',
-            'bg': '/static/videos/instructions-bg.mp4',
-            'cs': '/static/videos/instructions-cs.mp4',
-            'da': '/static/videos/instructions-da.mp4',
-            'de': '/static/videos/instructions-de.mp4',
-            'hr': '/static/videos/instructions-hr.mp4',
-            'it': '/static/videos/instructions-it.mp4',
-            'pl': '/static/videos/instructions-pl.mp4',
-            'pt': '/static/videos/instructions-pt.mp4',
-            'ro': '/static/videos/instructions-ro.mp4'
+            'fr': videoBaseUrl + '/instructions-fr.mp4',
+            'nl': videoBaseUrl + '/instructions-nl.mp4',
+            'fi': videoBaseUrl + '/instructions-fi.mp4',
+            'bg': videoBaseUrl + '/instructions-bg.mp4',
+            'cs': videoBaseUrl + '/instructions-cs.mp4',
+            'da': videoBaseUrl + '/instructions-da.mp4',
+            'de': videoBaseUrl + '/instructions-de.mp4',
+            'hr': videoBaseUrl + '/instructions-hr.mp4',
+            'it': videoBaseUrl + '/instructions-it.mp4',
+            'pl': videoBaseUrl + '/instructions-pl.mp4',
+            'pt': videoBaseUrl + '/instructions-pt.mp4',
+            'ro': videoBaseUrl + '/instructions-ro.mp4'
           };
           
           const video = document.getElementById('video-instructions');
