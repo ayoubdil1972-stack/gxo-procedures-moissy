@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import { loginRenderer } from './login-renderer'
+import { simpleRenderer } from './simple-renderer'
 import { HomePage } from './pages/home'
 import { ReceptionPage } from './pages/reception'
 import { AccueilChauffeurPage } from './pages/accueil-chauffeur'
@@ -43,8 +44,8 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
-// Page vidéo d'instructions (accessible pour tests mobiles)
-app.get('/chauffeur/video', renderer, (c) => c.render(<ChauffeurVideoPage />))
+// Page vidéo d'instructions (accessible pour tests mobiles, SANS menu navigation)
+app.get('/chauffeur/video', simpleRenderer, (c) => c.render(<ChauffeurVideoPage />))
 
 // Page inscription et tâches
 app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
