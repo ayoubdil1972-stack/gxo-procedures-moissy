@@ -31,7 +31,7 @@ const translations = {
   },
   nl: {
     headerTitle: 'Registratie',
-    pageTitle: 'Chauffeur Registratie',
+    pageTitle: 'Bestuurder Registratie',
     labelPseudo: 'Gebruikersnaam / Naam',
     labelEntreprise: 'Transportbedrijf',
     labelQuai: 'Toegewezen kade nummer',
