@@ -947,12 +947,38 @@ document.addEventListener('DOMContentLoaded', () => {
     chargerTaches();
     startTimer();
     demarrerActualisationAuto();
+    demarrerHeartbeat(); // Démarrer le heartbeat pour signaler la présence en ligne
   }
 });
+
+// Fonction de heartbeat pour signaler que le chauffeur est en ligne
+let heartbeatInterval = null;
+
+function demarrerHeartbeat() {
+  // Envoyer immédiatement un premier heartbeat
+  envoyerHeartbeat();
+  
+  // Puis envoyer toutes les 15 secondes
+  heartbeatInterval = setInterval(() => {
+    envoyerHeartbeat();
+  }, 15000); // 15 secondes
+}
+
+function envoyerHeartbeat() {
+  fetch('/api/chat/heartbeat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      chauffeur_id: chauffeurId,
+      page_url: window.location.pathname
+    })
+  }).catch(err => console.error('Erreur heartbeat:', err));
+}
 
 window.addEventListener('beforeunload', () => {
   stopTimer();
   if (intervalProgression) clearInterval(intervalProgression);
+  if (heartbeatInterval) clearInterval(heartbeatInterval); // Arrêter le heartbeat
 });
 
 // Styles CSS pour les animations (à ajouter dans un style tag)

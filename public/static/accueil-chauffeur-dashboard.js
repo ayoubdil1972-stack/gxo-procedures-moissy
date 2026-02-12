@@ -82,7 +82,20 @@ function afficherDashboardChauffeurs(chauffeurs) {
             ${chauffeur.pseudo.substring(0, 2).toUpperCase()}
           </div>
           <div>
-            <h3 class="font-bold text-gray-900 text-lg">${chauffeur.pseudo}</h3>
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-gray-900 text-lg">${chauffeur.pseudo}</h3>
+              ${chauffeur.online_status ? `
+                <span class="flex items-center gap-1 text-xs text-green-600 font-semibold">
+                  <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  En ligne
+                </span>
+              ` : `
+                <span class="flex items-center gap-1 text-xs text-gray-400">
+                  <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                  Hors ligne
+                </span>
+              `}
+            </div>
             <p class="text-xs text-gray-500">${chauffeur.entreprise}</p>
           </div>
         </div>
@@ -333,7 +346,10 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
             </div>
             <div>
               <h3 class="font-bold text-lg">Chat avec <span id="chat-admin-pseudo"></span></h3>
-              <p class="text-xs opacity-90">Support GXO - Admin</p>
+              <p class="text-xs opacity-90 flex items-center gap-1">
+                <span id="chauffeur-online-indicator" class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                <span id="chauffeur-online-text">Vérification...</span>
+              </p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -405,12 +421,52 @@ window.ouvrirChatAdmin = function(chauffeurId, pseudo) {
   document.getElementById('chat-admin-pseudo').textContent = pseudo;
   modalChat.classList.remove('hidden');
   
+  // Vérifier le statut en ligne du chauffeur
+  verifierStatutEnLigneChauffeur(chauffeurId);
+  
   // Charger les messages
   chargerMessagesAdmin();
   
   // Actualisation toutes les 2 secondes
-  chatUpdateInterval = setInterval(chargerMessagesAdmin, 2000);
+  chatUpdateInterval = setInterval(() => {
+    chargerMessagesAdmin();
+    verifierStatutEnLigneChauffeur(chauffeurId); // Vérifier aussi le statut
+  }, 2000);
 };
+
+// Fonction pour vérifier et afficher le statut en ligne du chauffeur
+async function verifierStatutEnLigneChauffeur(chauffeurId) {
+  try {
+    const response = await fetch(`/api/chat/online-status?chauffeur_id=${chauffeurId}`);
+    const data = await response.json();
+    
+    const indicator = document.getElementById('chauffeur-online-indicator');
+    const text = document.getElementById('chauffeur-online-text');
+    
+    if (indicator && text) {
+      if (data.online) {
+        indicator.className = 'w-2 h-2 bg-green-400 rounded-full animate-pulse';
+        text.textContent = 'En ligne';
+      } else {
+        indicator.className = 'w-2 h-2 bg-gray-400 rounded-full';
+        if (data.seconds_ago) {
+          const minutes = Math.floor(data.seconds_ago / 60);
+          if (minutes < 1) {
+            text.textContent = 'Actif il y a <1 min';
+          } else if (minutes < 60) {
+            text.textContent = `Actif il y a ${minutes} min`;
+          } else {
+            text.textContent = 'Hors ligne';
+          }
+        } else {
+          text.textContent = 'Hors ligne';
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Erreur vérification statut:', error);
+  }
+}
 
 // Fermer le chat admin
 window.fermerChatAdmin = function() {

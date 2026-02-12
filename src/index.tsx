@@ -191,14 +191,21 @@ app.get('/api/chauffeur/chat', async (c) => {
 // API: Heartbeat pour indiquer qu'un utilisateur est en ligne
 app.post('/api/chat/heartbeat', async (c) => {
   try {
-    const { chauffeur_id, user_type } = await c.req.json() // user_type: 'admin' ou 'chauffeur'
+    const { chauffeur_id, page_url } = await c.req.json()
     
-    // Créer ou mettre à jour un enregistrement dans une table de sessions
-    // Pour simplifier, on utilise une table chauffeur_sessions
-    // Si la table n'existe pas, on pourrait simplement retourner success
-    // Pour l'instant, retournons juste success (heartbeat côté client uniquement)
+    // Mettre à jour ou créer la session
+    // On utilise INSERT ... ON CONFLICT pour gérer les deux cas
+    await c.env.DB.prepare(`
+      INSERT INTO chauffeur_sessions (chauffeur_id, last_heartbeat, is_online, page_url)
+      VALUES (?, datetime('now'), 1, ?)
+      ON CONFLICT(chauffeur_id) 
+      DO UPDATE SET 
+        last_heartbeat = datetime('now'),
+        is_online = 1,
+        page_url = excluded.page_url
+    `).bind(chauffeur_id, page_url || '').run()
     
-    return c.json({ success: true, online: true, last_seen: new Date().toISOString() })
+    return c.json({ success: true, online: true, timestamp: new Date().toISOString() })
   } catch (error) {
     console.error('Erreur heartbeat:', error)
     return c.json({ success: false, error: error.message }, 500)
@@ -209,15 +216,23 @@ app.post('/api/chat/heartbeat', async (c) => {
 app.get('/api/chat/online-status', async (c) => {
   try {
     const chauffeur_id = c.req.query('chauffeur_id')
-    const user_type = c.req.query('user_type') // 'admin' ou 'chauffeur'
     
-    // Pour l'instant, retournons toujours online (on pourrait implémenter une vraie logique)
-    // Logique: Si le dernier heartbeat < 30 secondes, considérer en ligne
+    // Récupérer la session du chauffeur
+    const session = await c.env.DB.prepare(`
+      SELECT last_heartbeat, is_online,
+             (julianday('now') - julianday(last_heartbeat)) * 86400 as seconds_ago
+      FROM chauffeur_sessions
+      WHERE chauffeur_id = ?
+    `).bind(chauffeur_id).first()
+    
+    // Considérer en ligne si heartbeat < 30 secondes
+    const isOnline = session && session.seconds_ago < 30
     
     return c.json({ 
       success: true, 
-      online: true, // Simplifié pour l'instant
-      last_seen: new Date().toISOString() 
+      online: isOnline,
+      last_heartbeat: session?.last_heartbeat || null,
+      seconds_ago: session?.seconds_ago || null
     })
   } catch (error) {
     console.error('Erreur statut en ligne:', error)
@@ -228,10 +243,22 @@ app.get('/api/chat/online-status', async (c) => {
 // API: Liste des chauffeurs en cours (pour admin)
 app.get('/api/chauffeur/liste', async (c) => {
   try {
+    // Récupérer les chauffeurs avec leur statut en ligne via LEFT JOIN
     const { results } = await c.env.DB.prepare(`
-      SELECT * FROM chauffeur_arrivals 
-      WHERE status = 'in_progress' 
-      ORDER BY arrival_time DESC
+      SELECT 
+        ca.*,
+        cs.last_heartbeat,
+        cs.is_online,
+        CASE 
+          WHEN cs.last_heartbeat IS NOT NULL 
+            AND (julianday('now') - julianday(cs.last_heartbeat)) * 86400 < 30 
+          THEN 1 
+          ELSE 0 
+        END as online_status
+      FROM chauffeur_arrivals ca
+      LEFT JOIN chauffeur_sessions cs ON ca.id = cs.chauffeur_id
+      WHERE ca.status = 'in_progress' 
+      ORDER BY ca.arrival_time DESC
     `).all()
     
     return c.json({ success: true, chauffeurs: results })
