@@ -30,9 +30,12 @@ export function ChauffeurVideoPage() {
               controls
               controlsList="nodownload"
               disablePictureInPicture
+              onContextMenu="return false;"
               playsinline
               webkit-playsinline
-              preload="metadata"
+              x-webkit-airplay="allow"
+              preload="auto"
+              poster=""
               muted
             >
               <source src="" type="video/mp4" id="video-source" />
