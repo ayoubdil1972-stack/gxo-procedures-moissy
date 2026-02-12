@@ -105,6 +105,16 @@ export function ChauffeurVideoPage() {
       {/* Script de contrôle vidéo AMÉLIORÉ */}
       <script dangerouslySetInnerHTML={{
         __html: `
+          // Animation pulse pour bouton mobile
+          const style = document.createElement('style');
+          style.textContent = \`
+            @keyframes pulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+            }
+          \`;
+          document.head.appendChild(style);
+          
           // Récupérer la langue depuis l'URL
           const urlParams = new URLSearchParams(window.location.search);
           const langue = urlParams.get('lang') || 'bg';
@@ -326,6 +336,9 @@ export function ChauffeurVideoPage() {
             let videoDisplayed = false;
             let isSeekingLocked = false;
             
+            // Détection mobile
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
             // Fonction pour afficher la vidéo
             function afficherVideo() {
               if (videoDisplayed) return;
@@ -336,58 +349,88 @@ export function ChauffeurVideoPage() {
               fullscreenBtn.classList.remove('hidden');
             }
             
-            // Charger la vidéo avec préchargement
-            video.load();
-            
-            // iOS/Android: Tenter lecture automatique muette puis réactiver le son
-            const attemptAutoplay = function() {
+            // MOBILE : Afficher gros bouton PLAY immédiatement
+            if (isMobile) {
+              // Masquer spinner, afficher bouton PLAY
+              placeholder.innerHTML = \`
+                <div class="text-center">
+                  <button 
+                    id="mobile-play-btn"
+                    class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-12 py-6 rounded-full text-2xl font-bold shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105 active:scale-95"
+                    style="animation: pulse 2s ease-in-out infinite;"
+                  >
+                    <i class="fas fa-play-circle text-5xl mb-3"></i>
+                    <div class="text-lg">Lancer la vidéo</div>
+                  </button>
+                  <p class="text-gray-400 text-sm mt-4">Appuyez pour démarrer</p>
+                </div>
+              \`;
+              
+              document.getElementById('mobile-play-btn').addEventListener('click', function() {
+                console.log('🎬 Clic utilisateur détecté');
+                video.load();
+                video.play().then(function() {
+                  console.log('✅ Lecture démarrée');
+                  afficherVideo();
+                }).catch(function(err) {
+                  console.error('❌ Erreur lecture:', err);
+                  alert('Erreur : Impossible de lire la vidéo. Vérifiez votre connexion.');
+                });
+              });
+            } else {
+              // PC : Charger automatiquement
+              video.load();
+              
+              // Tenter autoplay muted sur PC
               video.muted = true;
               video.play().then(function() {
-                console.log('✅ Autoplay muted réussi');
-                // Réactiver le son après 100ms
-                setTimeout(function() {
-                  video.muted = false;
-                }, 100);
-              }).catch(function(err) {
-                console.log('⚠️ Autoplay bloqué, attente interaction:', err);
+                setTimeout(function() { video.muted = false; }, 100);
+              }).catch(function() {
                 video.muted = false;
               });
-            };
+            }
             
-            // Méthode 1: Attendre métadonnées
+            // Événements de chargement
             video.addEventListener('loadedmetadata', function() {
               console.log('✅ Métadonnées chargées: ' + Math.round(video.duration) + 's');
-              afficherVideo();
-              attemptAutoplay();
+              if (!isMobile) afficherVideo();
             });
             
-            // Méthode 2: Attendre données chargées
             video.addEventListener('loadeddata', function() {
               console.log('✅ Données vidéo chargées');
-              afficherVideo();
+              if (!isMobile) afficherVideo();
             });
             
-            // Méthode 3: Forcer affichage si ready
             video.addEventListener('canplay', function() {
               console.log('✅ Vidéo prête à jouer');
-              afficherVideo();
+              if (!isMobile) afficherVideo();
             });
             
-            // Timeout de secours 3s
-            setTimeout(function() {
-              if (!videoDisplayed) {
-                console.log('⏰ Timeout - Forcer affichage');
-                afficherVideo();
-              }
-            }, 3000);
+            // Timeout secours PC uniquement
+            if (!isMobile) {
+              setTimeout(function() {
+                if (!videoDisplayed) {
+                  console.log('⏰ Timeout - Forcer affichage');
+                  afficherVideo();
+                }
+              }, 3000);
+            }
             
             // Gestion erreurs
             video.addEventListener('error', function(e) {
               console.error('❌ Erreur chargement vidéo:', e);
-              const errorMsg = placeholder.querySelector('p');
-              if (errorMsg) {
-                errorMsg.textContent = 'Erreur de chargement. Rechargez la page.';
-              }
+              placeholder.innerHTML = \`
+                <div class="text-center">
+                  <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+                  <p class="text-white text-lg mb-4">Erreur de chargement</p>
+                  <button 
+                    onclick="location.reload()"
+                    class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600"
+                  >
+                    <i class="fas fa-redo mr-2"></i>Recharger
+                  </button>
+                </div>
+              \`;
             });
             
             // Mise à jour progression (avec protection NaN)
@@ -426,13 +469,16 @@ export function ChauffeurVideoPage() {
               this.dataset.lastTime = this.currentTime;
             });
             
-            console.log('✅ Vidéo prête. Cliquez sur PLAY pour démarrer.');
+            console.log('✅ Vidéo prête. ' + (isMobile ? 'Appuyez sur PLAY.' : 'Chargement auto.'));
           } else {
             console.error('❌ Pas de vidéo pour la langue:', langue);
-            const errorMsg = placeholder.querySelector('p');
-            if (errorMsg) {
-              errorMsg.textContent = 'Vidéo non disponible pour cette langue.';
-            }
+            placeholder.innerHTML = \`
+              <div class="text-center">
+                <i class="fas fa-film text-gray-500 text-5xl mb-4"></i>
+                <p class="text-white text-lg">Vidéo non disponible</p>
+                <p class="text-gray-400 text-sm mt-2">Langue : \${langue}</p>
+              </div>
+            \`;
           }
           
           // Empêcher de quitter la page
