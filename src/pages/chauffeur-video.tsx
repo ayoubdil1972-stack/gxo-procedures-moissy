@@ -367,14 +367,32 @@ export function ChauffeurVideoPage() {
               \`;
               
               document.getElementById('mobile-play-btn').addEventListener('click', function() {
-                console.log('🎬 Clic utilisateur détecté');
+                console.log('🎬 Clic utilisateur détecté - Langue:', langue);
+                console.log('🎬 URL vidéo:', videoUrls[langue]);
+                
+                // IMPORTANT : Afficher la vidéo AVANT de lancer la lecture
+                afficherVideo();
+                
+                // Charger et lire la vidéo
                 video.load();
                 video.play().then(function() {
-                  console.log('✅ Lecture démarrée');
-                  afficherVideo();
+                  console.log('✅ Lecture démarrée avec succès');
                 }).catch(function(err) {
                   console.error('❌ Erreur lecture:', err);
-                  alert('Erreur : Impossible de lire la vidéo. Vérifiez votre connexion.');
+                  placeholder.classList.remove('hidden');
+                  placeholder.innerHTML = \`
+                    <div class="text-center">
+                      <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+                      <p class="text-white text-lg mb-4">Erreur : Impossible de lire la vidéo</p>
+                      <p class="text-gray-400 text-sm mb-4">Vérifiez votre connexion Internet</p>
+                      <button 
+                        onclick="location.reload()"
+                        class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600"
+                      >
+                        <i class="fas fa-redo mr-2"></i>Réessayer
+                      </button>
+                    </div>
+                  \`;
                 });
               });
             } else {
