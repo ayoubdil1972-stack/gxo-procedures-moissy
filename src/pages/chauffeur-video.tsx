@@ -26,16 +26,13 @@ export function ChauffeurVideoPage() {
             <video 
               id="video-instructions" 
               class="w-full h-auto mx-auto"
-              style="max-height: 70vh; object-fit: contain; display: block;"
+              style="max-height: 70vh; object-fit: contain; display: block; -webkit-touch-callout: none;"
               controls
               controlsList="nodownload"
-              disablePictureInPicture
-              onContextMenu="return false;"
-              playsinline
-              webkit-playsinline
-              x-webkit-airplay="allow"
-              preload="auto"
-              poster=""
+              disablePictureInPicture="true"
+              playsinline="true"
+              webkit-playsinline="true"
+              preload="metadata"
             >
               <source src="" type="video/mp4" id="video-source" />
               Votre navigateur ne supporte pas la lecture vidéo.
@@ -321,55 +318,113 @@ export function ChauffeurVideoPage() {
           // Si une vidéo existe pour cette langue
           if (videoUrls[langue]) {
             videoSource.src = videoUrls[langue];
-            // Précharger la vidéo dès le chargement de la page
-            video.load();
-            video.preload = 'auto'; // Forcer le préchargement
+            
+            // Détecter iOS
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+            
+            // Flag pour éviter les doubles chargements
+            let videoDisplayed = false;
+            let isSeekingLocked = false;
             
             // Fonction pour afficher la vidéo
             function afficherVideo() {
+              if (videoDisplayed) return;
+              videoDisplayed = true;
+              
               console.log('✅ Vidéo chargée:', langue);
               placeholder.classList.add('hidden');
               video.classList.remove('hidden');
+              video.offsetHeight; // Forcer repaint iOS
               fullscreenBtn.classList.remove('hidden');
+            }
+            
+            // Fonction pour créer un bouton manuel de lecture (iOS/Android)
+            function creerBoutonManuel(message) {
+              const existingBtn = placeholder.querySelector('.manual-play-btn');
+              if (existingBtn) return; // Éviter les doublons
+              
+              const manualBtn = document.createElement('button');
+              manualBtn.className = 'manual-play-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-bold text-base hover:shadow-lg transition-all mt-4';
+              manualBtn.innerHTML = '<i class="fas fa-play-circle mr-2"></i>' + message;
+              manualBtn.onclick = function() {
+                video.load();
+                video.play().then(function() {
+                  console.log('✅ Lecture manuelle réussie');
+                  afficherVideo();
+                  manualBtn.remove();
+                }).catch(function(err) {
+                  console.error('❌ Erreur lecture:', err);
+                  alert('Erreur de lecture. Vérifiez votre connexion.');
+                });
+              };
+              
+              const textContainer = placeholder.querySelector('div.text-center');
+              if (textContainer) {
+                textContainer.appendChild(manualBtn);
+              }
+            }
+            
+            // iOS : Demander interaction utilisateur
+            if (isIOS) {
+              console.log('📱 iOS détecté - Bouton manuel requis');
+              setTimeout(function() {
+                creerBoutonManuel('Lancer la vidéo');
+              }, 1000);
+            } else {
+              // Android/PC : Charger automatiquement
+              video.load();
             }
             
             // Méthode 1: Attendre que les métadonnées soient chargées
             video.addEventListener('loadedmetadata', function() {
               console.log('✅ Métadonnées chargées: ' + Math.round(video.duration) + 's');
-              afficherVideo();
+              if (!isIOS) { // iOS nécessite interaction manuelle
+                afficherVideo();
+              }
             });
             
             // Méthode 2: Attendre que les données soient chargées
             video.addEventListener('loadeddata', function() {
               console.log('✅ Données vidéo chargées');
-              afficherVideo();
-            });
-            
-            // Méthode 3: Timeout de sécurité réduit (500ms au lieu de 2s)
-            setTimeout(function() {
-              if (!placeholder.classList.contains('hidden')) {
-                console.log('⏰ Affichage immédiat de la vidéo');
+              if (!isIOS) {
                 afficherVideo();
               }
-            }, 500);
+            });
+            
+            // Méthode 3: Timeout de secours (3s pour réseau lent)
+            const videoLoadTimeout = setTimeout(function() {
+              if (!placeholder.classList.contains('hidden') && !videoDisplayed) {
+                console.log('⏰ Timeout - Proposer chargement manuel');
+                creerBoutonManuel('Charger la vidéo');
+              }
+            }, 3000);
             
             // Méthode 4: Forcer l'affichage dès que la vidéo peut commencer à jouer
             video.addEventListener('canplay', function() {
               console.log('✅ Vidéo prête à jouer');
-              afficherVideo();
+              clearTimeout(videoLoadTimeout);
+              if (!isIOS) {
+                afficherVideo();
+              }
             });
             
             // Gestion des erreurs
             video.addEventListener('error', function(e) {
               console.error('❌ Erreur chargement vidéo:', e);
+              clearTimeout(videoLoadTimeout);
               const errorMsg = placeholder.querySelector('p');
               if (errorMsg) {
-                errorMsg.textContent = 'Erreur de chargement. Veuillez réessayer.';
+                errorMsg.textContent = 'Erreur de chargement. Vérifiez votre connexion.';
               }
+              creerBoutonManuel('Réessayer');
             });
             
             // Mise à jour de la progression
             video.addEventListener('timeupdate', function() {
+              // Vérifier que duration est valide (fix iOS/Android)
+              if (isNaN(video.duration) || video.duration === 0) return;
+              
               const percent = (video.currentTime / video.duration) * 100;
               progressBar.style.width = percent + '%';
               
@@ -387,13 +442,17 @@ export function ChauffeurVideoPage() {
             // Vidéo terminée
             video.addEventListener('ended', videoCompleted);
             
-            // Empêcher de skip la vidéo
+            // Empêcher de skip la vidéo (avec protection contre boucle infinie)
             video.addEventListener('seeking', function() {
+              if (isSeekingLocked) return; // Éviter boucle infinie
+              
               if (video.currentTime > video.duration - 5) {
                 return;
               }
               if (video.currentTime > (this.dataset.lastTime || 0)) {
+                isSeekingLocked = true;
                 video.currentTime = this.dataset.lastTime || 0;
+                setTimeout(function() { isSeekingLocked = false; }, 100);
               }
             });
             
@@ -401,7 +460,14 @@ export function ChauffeurVideoPage() {
               this.dataset.lastTime = this.currentTime;
             });
             
-            console.log('✅ Vidéo prête. Cliquez sur PLAY pour démarrer.');
+            console.log('✅ Vidéo prête. ' + (isIOS ? 'Appuyez sur le bouton pour démarrer.' : 'Cliquez sur PLAY pour démarrer.'));
+          } else {
+            // Pas de vidéo pour cette langue
+            console.error('❌ Pas de vidéo pour la langue:', langue);
+            const errorMsg = placeholder.querySelector('p');
+            if (errorMsg) {
+              errorMsg.textContent = 'Vidéo non disponible pour cette langue.';
+            }
           }
           
           // Empêcher de quitter la page
