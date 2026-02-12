@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Vidéo GitHub CDN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-white mb-6">Test Vidéo GitHub CDN</h1>
+        
+        <div class="bg-gray-800 p-4 rounded-lg mb-4">
+            <p class="text-white mb-2">✅ Repository: <a href="https://github.com/ayoubdil1972-stack/gxo-video-assets" class="text-blue-400 underline" target="_blank">gxo-video-assets</a></p>
+            <p class="text-white mb-2">✅ Base URL: <span class="text-green-400">https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/</span></p>
+            <p class="text-white">✅ Support Range Requests: OUI (iOS compatible)</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+            <button onclick="loadVideo('nl')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇳🇱 NL</button>
+            <button onclick="loadVideo('fr')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇫🇷 FR</button>
+            <button onclick="loadVideo('de')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇩🇪 DE</button>
+            <button onclick="loadVideo('fi')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇫🇮 FI</button>
+            <button onclick="loadVideo('da')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇩🇰 DA</button>
+            <button onclick="loadVideo('cs')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇨🇿 CS</button>
+            <button onclick="loadVideo('bg')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇧🇬 BG</button>
+            <button onclick="loadVideo('pl')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇵🇱 PL</button>
+            <button onclick="loadVideo('ro')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇷🇴 RO</button>
+            <button onclick="loadVideo('it')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇮🇹 IT</button>
+            <button onclick="loadVideo('pt')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇵🇹 PT</button>
+            <button onclick="loadVideo('hr')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">🇭🇷 HR</button>
+        </div>
+        
+        <div class="bg-black rounded-lg overflow-hidden">
+            <video id="video" class="w-full" controls playsinline webkit-playsinline preload="metadata">
+                <source id="video-source" src="" type="video/mp4" />
+                Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
+        </div>
+        
+        <div id="info" class="mt-4 p-4 bg-gray-800 rounded-lg text-white text-sm"></div>
+    </div>
+    
+    <script>
+        const baseUrl = 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos';
+        const video = document.getElementById('video');
+        const videoSource = document.getElementById('video-source');
+        const info = document.getElementById('info');
+        
+        function loadVideo(lang) {
+            const url = `${baseUrl}/instructions-${lang}.mp4`;
+            console.log('Chargement:', url);
+            
+            info.innerHTML = `
+                <p class="mb-2"><strong>Langue:</strong> ${lang.toUpperCase()}</p>
+                <p class="mb-2"><strong>URL:</strong> ${url}</p>
+                <p class="text-yellow-400">⏳ Chargement en cours...</p>
+            `;
+            
+            videoSource.src = url;
+            video.load();
+            
+            video.addEventListener('loadedmetadata', function() {
+                const duration = Math.floor(video.duration);
+                info.innerHTML = `
+                    <p class="mb-2"><strong>Langue:</strong> ${lang.toUpperCase()}</p>
+                    <p class="mb-2"><strong>URL:</strong> ${url}</p>
+                    <p class="mb-2"><strong>Durée:</strong> ${duration}s</p>
+                    <p class="text-green-400">✅ Vidéo chargée avec succès!</p>
+                `;
+            }, { once: true });
+            
+            video.addEventListener('error', function(e) {
+                info.innerHTML = `
+                    <p class="mb-2"><strong>Langue:</strong> ${lang.toUpperCase()}</p>
+                    <p class="mb-2"><strong>URL:</strong> ${url}</p>
+                    <p class="text-red-400">❌ Erreur de chargement: ${video.error ? video.error.message : 'Inconnue'}</p>
+                `;
+            }, { once: true });
+            
+            video.play().catch(err => console.log('Autoplay bloqué:', err));
+        }
+        
+        // Charger NL par défaut
+        loadVideo('nl');
+    </script>
+</body>
+</html>
