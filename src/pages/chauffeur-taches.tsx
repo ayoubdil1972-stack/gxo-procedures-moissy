@@ -90,7 +90,10 @@ export const ChauffeurTachesPage: FC = () => {
                 <i class="fas fa-headset text-2xl"></i>
                 <div>
                   <div class="font-bold text-lg">Support GXO</div>
-                  <div class="text-xs opacity-90">En ligne</div>
+                  <div class="text-xs opacity-90 flex items-center gap-1">
+                    <span id="admin-online-indicator" class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span id="admin-online-text">En ligne</span>
+                  </div>
                 </div>
               </div>
               <button id="btn-fermer-chat" class="hover:bg-white/20 rounded-full p-2 transition">

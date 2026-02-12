@@ -776,15 +776,22 @@ function afficherMessagesCaches() {
             <p class="text-sm mb-2">${texteAffiche}</p>
             <div class="flex items-center justify-between gap-2">
               <p class="text-xs opacity-75">${new Date(msg.timestamp).toLocaleTimeString(currentLangue === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</p>
-              ${afficherBoutonTraduction ? `
-                <button 
-                  onclick="basculerTraductionMessage(${messageId})" 
-                  class="text-xs ${isChauffeur ? 'text-orange-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} flex items-center gap-1 transition-colors"
-                >
-                  <i class="fas fa-language"></i>
-                  <span>${labelBouton}</span>
-                </button>
-              ` : ''}
+              <div class="flex items-center gap-2">
+                ${afficherBoutonTraduction ? `
+                  <button 
+                    onclick="basculerTraductionMessage(${messageId})" 
+                    class="text-xs ${isChauffeur ? 'text-orange-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} flex items-center gap-1 transition-colors"
+                  >
+                    <i class="fas fa-language"></i>
+                    <span>${labelBouton}</span>
+                  </button>
+                ` : ''}
+                ${isChauffeur ? `
+                  <span class="text-xs" title="${msg.read_by_admin ? 'Lu' : msg.delivered_at ? 'Envoyé' : 'En attente'}">
+                    ${msg.read_by_admin ? '✓✓' : msg.delivered_at ? '✓' : '○'}
+                  </span>
+                ` : ''}
+              </div>
             </div>
           </div>
         `;

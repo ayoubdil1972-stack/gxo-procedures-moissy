@@ -146,10 +146,10 @@ app.post('/api/chauffeur/chat', async (c) => {
       traductionFr = await traduireTexte(message, 'fr', langueChauffeur)
     }
     
-    // Insérer le message avec traduction
+    // Insérer le message avec traduction + statuts (delivered_at = now, sender_online = 1)
     await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr)
-      VALUES (?, 'chauffeur', ?, ?, ?)
+      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, delivered_at, sender_online)
+      VALUES (?, 'chauffeur', ?, ?, ?, datetime('now'), 1)
     `).bind(chauffeur_id, message, langueChauffeur, traductionFr).run()
     
     return c.json({ success: true })
@@ -184,6 +184,43 @@ app.get('/api/chauffeur/chat', async (c) => {
     })
   } catch (error) {
     console.error('Erreur récupération messages:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// API: Heartbeat pour indiquer qu'un utilisateur est en ligne
+app.post('/api/chat/heartbeat', async (c) => {
+  try {
+    const { chauffeur_id, user_type } = await c.req.json() // user_type: 'admin' ou 'chauffeur'
+    
+    // Créer ou mettre à jour un enregistrement dans une table de sessions
+    // Pour simplifier, on utilise une table chauffeur_sessions
+    // Si la table n'existe pas, on pourrait simplement retourner success
+    // Pour l'instant, retournons juste success (heartbeat côté client uniquement)
+    
+    return c.json({ success: true, online: true, last_seen: new Date().toISOString() })
+  } catch (error) {
+    console.error('Erreur heartbeat:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// API: Vérifier si un utilisateur est en ligne (basé sur le dernier heartbeat)
+app.get('/api/chat/online-status', async (c) => {
+  try {
+    const chauffeur_id = c.req.query('chauffeur_id')
+    const user_type = c.req.query('user_type') // 'admin' ou 'chauffeur'
+    
+    // Pour l'instant, retournons toujours online (on pourrait implémenter une vraie logique)
+    // Logique: Si le dernier heartbeat < 30 secondes, considérer en ligne
+    
+    return c.json({ 
+      success: true, 
+      online: true, // Simplifié pour l'instant
+      last_seen: new Date().toISOString() 
+    })
+  } catch (error) {
+    console.error('Erreur statut en ligne:', error)
     return c.json({ success: false, error: error.message }, 500)
   }
 })
@@ -265,10 +302,10 @@ app.post('/api/admin/chat', async (c) => {
       traductionChauffeur = await traduireTexte(message, langueChauffeur, 'fr')
     }
     
-    // Insérer le message avec traduction
+    // Insérer le message avec traduction + statuts (delivered_at = now, sender_online = 1)
     await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_chauffeur)
-      VALUES (?, 'admin', ?, 'fr', ?)
+      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_chauffeur, delivered_at, sender_online)
+      VALUES (?, 'admin', ?, 'fr', ?, datetime('now'), 1)
     `).bind(chauffeur_id, message, traductionChauffeur).run()
     
     return c.json({ success: true })
@@ -283,9 +320,10 @@ app.post('/api/chauffeur/chat/mark-read', async (c) => {
     const { chauffeur_id, reader } = await c.req.json()
     const column = reader === 'admin' ? 'read_by_admin' : 'read_by_chauffeur'
     
+    // Mettre à jour à la fois le booléen et le timestamp read_at
     await c.env.DB.prepare(`
       UPDATE chat_messages 
-      SET ${column} = 1
+      SET ${column} = 1, read_at = datetime('now')
       WHERE chauffeur_id = ? AND ${column} = 0
     `).bind(chauffeur_id).run()
     

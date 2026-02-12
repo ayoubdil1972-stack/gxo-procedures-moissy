@@ -587,16 +587,23 @@ function afficherMessagesAdmin(messages) {
             <p class="text-xs ${isAdmin ? 'text-blue-200' : 'text-gray-400'}">
               ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
             </p>
-            ${afficherBoutonTraduction ? `
-              <button 
-                onclick="basculerTraductionMessage(${messageId})" 
-                class="text-xs ${isAdmin ? 'text-blue-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} flex items-center gap-1 transition-colors"
-                title="Basculer entre traduction et original"
-              >
-                <i class="fas fa-language"></i>
-                <span>${labelBouton}</span>
-              </button>
-            ` : ''}
+            <div class="flex items-center gap-2">
+              ${afficherBoutonTraduction ? `
+                <button 
+                  onclick="basculerTraductionMessage(${messageId})" 
+                  class="text-xs ${isAdmin ? 'text-blue-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} flex items-center gap-1 transition-colors"
+                  title="Basculer entre traduction et original"
+                >
+                  <i class="fas fa-language"></i>
+                  <span>${labelBouton}</span>
+                </button>
+              ` : ''}
+              ${isAdmin ? `
+                <span class="text-xs ${isAdmin ? 'text-blue-200' : 'text-gray-400'}" title="${msg.read_by_chauffeur ? 'Lu' : msg.delivered_at ? 'Envoyé' : 'En attente'}">
+                  ${msg.read_by_chauffeur ? '✓✓' : msg.delivered_at ? '✓' : '○'}
+                </span>
+              ` : ''}
+            </div>
           </div>
         </div>
       </div>
