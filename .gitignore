@@ -1,36 +1,45 @@
 # Dependencies
 node_modules/
+.npm/
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# Build output
+dist/
+.wrangler/
+.mf/
+.cache/
 
-# Compiled binary addons
-build
-dist
-
-# dotenv environment variables file
+# Environment
 .env
+.env.local
 .dev.vars
 
-# PM2
-.pm2/
-pids/
-logs/
+# Logs
 *.log
+npm-debug.log*
+logs/
+.pm2/
 
-# Backup files
-*.backup
-*.bak
-*.tar.gz
-*.zip
-
-# Wrangler
-.wrangler/
-wrangler.toml
+# OS
+.DS_Store
+Thumbs.db
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.backup
+*.bak
+
+# Git credentials (NEVER COMMIT)
+.git-credentials
+
+# Large video files - will be deployed separately
+public/static/videos/*.mp4
+
+# Archives
+*.tar.gz
+*.zip
