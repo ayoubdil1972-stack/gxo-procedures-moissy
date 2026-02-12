@@ -36,7 +36,7 @@ app.get('/login', loginRenderer, (c) => c.render(<LoginPage />))
 // ===== ROUTES CHAUFFEURS (PUBLIC - Sans authentification) =====
 
 // Page QR Code
-app.get('/qrcode-chauffeur', loginRenderer, (c) => c.render(<QRCodeChauffeurPage />))
+app.get('/qrcode-chauffeur', (c) => c.render(<QRCodeChauffeurPage />))
 
 // Page sélection langue
 app.get('/chauffeur/langue', (c) => c.render(<ChauffeurLanguePage />))
@@ -48,7 +48,7 @@ app.get('/chauffeur/video', (c) => c.render(<ChauffeurVideoPage />))
 app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
 
 // Page des tâches chauffeur (après inscription)
-app.get('/chauffeur/taches', loginRenderer, (c) => c.render(<ChauffeurTachesPage />))
+app.get('/chauffeur/taches', (c) => c.render(<ChauffeurTachesPage />))
 
 // ===== API CHAUFFEURS =====
 
