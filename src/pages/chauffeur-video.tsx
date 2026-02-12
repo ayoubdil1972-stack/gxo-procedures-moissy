@@ -26,13 +26,14 @@ export function ChauffeurVideoPage() {
             <video 
               id="video-instructions" 
               class="w-full h-auto mx-auto"
-              style="max-height: 70vh; object-fit: contain; display: block; -webkit-touch-callout: none;"
+              style="max-height: 70vh; object-fit: contain; display: block;"
               controls
               controlsList="nodownload"
-              disablePictureInPicture="true"
-              playsinline="true"
-              webkit-playsinline="true"
+              disablePictureInPicture
+              playsinline
+              webkit-playsinline
               preload="metadata"
+              muted
             >
               <source src="" type="video/mp4" id="video-source" />
               Votre navigateur ne supporte pas la lecture vidéo.
@@ -319,11 +320,6 @@ export function ChauffeurVideoPage() {
           if (videoUrls[langue]) {
             videoSource.src = videoUrls[langue];
             
-            // Détecter iOS
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const isAndroid = /Android/.test(navigator.userAgent);
-            
-            // Flag pour éviter les doubles chargements
             let videoDisplayed = false;
             let isSeekingLocked = false;
             
@@ -331,98 +327,68 @@ export function ChauffeurVideoPage() {
             function afficherVideo() {
               if (videoDisplayed) return;
               videoDisplayed = true;
-              
               console.log('✅ Vidéo chargée:', langue);
               placeholder.classList.add('hidden');
               video.classList.remove('hidden');
-              video.offsetHeight; // Forcer repaint iOS
               fullscreenBtn.classList.remove('hidden');
             }
             
-            // Fonction pour créer un bouton manuel de lecture (iOS/Android)
-            function creerBoutonManuel(message) {
-              const existingBtn = placeholder.querySelector('.manual-play-btn');
-              if (existingBtn) return; // Éviter les doublons
-              
-              const manualBtn = document.createElement('button');
-              manualBtn.className = 'manual-play-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-bold text-base hover:shadow-lg transition-all mt-4';
-              manualBtn.innerHTML = '<i class="fas fa-play-circle mr-2"></i>' + message;
-              manualBtn.onclick = function() {
-                video.load();
-                video.play().then(function() {
-                  console.log('✅ Lecture manuelle réussie');
-                  afficherVideo();
-                  manualBtn.remove();
-                }).catch(function(err) {
-                  console.error('❌ Erreur lecture:', err);
-                  alert('Erreur de lecture. Vérifiez votre connexion.');
-                });
-              };
-              
-              const textContainer = placeholder.querySelector('div.text-center');
-              if (textContainer) {
-                textContainer.appendChild(manualBtn);
-              }
-            }
+            // Charger la vidéo avec préchargement
+            video.load();
             
-            // iOS : Demander interaction utilisateur
-            if (isIOS) {
-              console.log('📱 iOS détecté - Bouton manuel requis');
-              setTimeout(function() {
-                creerBoutonManuel('Lancer la vidéo');
-              }, 1000);
-            } else {
-              // Android/PC : Charger automatiquement
-              video.load();
-            }
+            // iOS/Android: Tenter lecture automatique muette puis réactiver le son
+            const attemptAutoplay = function() {
+              video.muted = true;
+              video.play().then(function() {
+                console.log('✅ Autoplay muted réussi');
+                // Réactiver le son après 100ms
+                setTimeout(function() {
+                  video.muted = false;
+                }, 100);
+              }).catch(function(err) {
+                console.log('⚠️ Autoplay bloqué, attente interaction:', err);
+                video.muted = false;
+              });
+            };
             
-            // Méthode 1: Attendre que les métadonnées soient chargées
+            // Méthode 1: Attendre métadonnées
             video.addEventListener('loadedmetadata', function() {
               console.log('✅ Métadonnées chargées: ' + Math.round(video.duration) + 's');
-              if (!isIOS) { // iOS nécessite interaction manuelle
-                afficherVideo();
-              }
+              afficherVideo();
+              attemptAutoplay();
             });
             
-            // Méthode 2: Attendre que les données soient chargées
+            // Méthode 2: Attendre données chargées
             video.addEventListener('loadeddata', function() {
               console.log('✅ Données vidéo chargées');
-              if (!isIOS) {
-                afficherVideo();
-              }
+              afficherVideo();
             });
             
-            // Méthode 3: Timeout de secours (3s pour réseau lent)
-            const videoLoadTimeout = setTimeout(function() {
-              if (!placeholder.classList.contains('hidden') && !videoDisplayed) {
-                console.log('⏰ Timeout - Proposer chargement manuel');
-                creerBoutonManuel('Charger la vidéo');
+            // Méthode 3: Forcer affichage si ready
+            video.addEventListener('canplay', function() {
+              console.log('✅ Vidéo prête à jouer');
+              afficherVideo();
+            });
+            
+            // Timeout de secours 3s
+            setTimeout(function() {
+              if (!videoDisplayed) {
+                console.log('⏰ Timeout - Forcer affichage');
+                afficherVideo();
               }
             }, 3000);
             
-            // Méthode 4: Forcer l'affichage dès que la vidéo peut commencer à jouer
-            video.addEventListener('canplay', function() {
-              console.log('✅ Vidéo prête à jouer');
-              clearTimeout(videoLoadTimeout);
-              if (!isIOS) {
-                afficherVideo();
-              }
-            });
-            
-            // Gestion des erreurs
+            // Gestion erreurs
             video.addEventListener('error', function(e) {
               console.error('❌ Erreur chargement vidéo:', e);
-              clearTimeout(videoLoadTimeout);
               const errorMsg = placeholder.querySelector('p');
               if (errorMsg) {
-                errorMsg.textContent = 'Erreur de chargement. Vérifiez votre connexion.';
+                errorMsg.textContent = 'Erreur de chargement. Rechargez la page.';
               }
-              creerBoutonManuel('Réessayer');
             });
             
-            // Mise à jour de la progression
+            // Mise à jour progression (avec protection NaN)
             video.addEventListener('timeupdate', function() {
-              // Vérifier que duration est valide (fix iOS/Android)
               if (isNaN(video.duration) || video.duration === 0) return;
               
               const percent = (video.currentTime / video.duration) * 100;
@@ -442,13 +408,10 @@ export function ChauffeurVideoPage() {
             // Vidéo terminée
             video.addEventListener('ended', videoCompleted);
             
-            // Empêcher de skip la vidéo (avec protection contre boucle infinie)
+            // Empêcher skip (avec protection boucle)
             video.addEventListener('seeking', function() {
-              if (isSeekingLocked) return; // Éviter boucle infinie
-              
-              if (video.currentTime > video.duration - 5) {
-                return;
-              }
+              if (isSeekingLocked) return;
+              if (video.currentTime > video.duration - 5) return;
               if (video.currentTime > (this.dataset.lastTime || 0)) {
                 isSeekingLocked = true;
                 video.currentTime = this.dataset.lastTime || 0;
@@ -460,9 +423,8 @@ export function ChauffeurVideoPage() {
               this.dataset.lastTime = this.currentTime;
             });
             
-            console.log('✅ Vidéo prête. ' + (isIOS ? 'Appuyez sur le bouton pour démarrer.' : 'Cliquez sur PLAY pour démarrer.'));
+            console.log('✅ Vidéo prête. Cliquez sur PLAY pour démarrer.');
           } else {
-            // Pas de vidéo pour cette langue
             console.error('❌ Pas de vidéo pour la langue:', langue);
             const errorMsg = placeholder.querySelector('p');
             if (errorMsg) {
