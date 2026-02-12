@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Test Simple</title></head>
+<body style="background:#000; color:#fff; padding:20px;">
+  <h1>Test Vidéo Simple</h1>
+  <video controls style="width:100%; max-width:800px;" playsinline>
+    <source src="/static/videos/instructions-fr.mp4" type="video/mp4">
+  </video>
+  <script>
+    console.log('Page chargée');
+    const video = document.querySelector('video');
+    video.addEventListener('loadedmetadata', () => console.log('✅ Métadonnées chargées'));
+    video.addEventListener('error', (e) => console.error('❌ Erreur:', e));
+  </script>
+</body>
+</html>

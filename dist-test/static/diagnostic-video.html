@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔍 Diagnostic Vidéos GXO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-6">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-orange-500">🔍 Diagnostic Vidéos GXO</h1>
+    
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-bold mb-4">Test direct des URLs</h2>
+      <div id="url-tests" class="space-y-2"></div>
+    </div>
+    
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-bold mb-4">🎥 Lecteur Vidéo Test (Français)</h2>
+      <video 
+        id="test-video"
+        controls 
+        class="w-full max-h-96 bg-black rounded"
+        playsinline
+      >
+        <source src="/static/videos/instructions-fr.mp4" type="video/mp4">
+      </video>
+      <div id="video-status" class="mt-4 p-4 bg-gray-700 rounded"></div>
+    </div>
+    
+    <div class="bg-gray-800 rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4">📊 Logs Console</h2>
+      <div id="console-logs" class="text-xs font-mono space-y-1"></div>
+    </div>
+  </div>
+  
+  <script>
+    const log = (msg, type = 'info') => {
+      const logs = document.getElementById('console-logs');
+      const colors = {info: 'text-blue-400', success: 'text-green-400', error: 'text-red-400'};
+      logs.innerHTML += `<div class="${colors[type]}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+      console.log(msg);
+    };
+    
+    log('🚀 Page chargée', 'info');
+    
+    // Test des URLs
+    const videos = {
+      'fr': 'Français', 'nl': 'Néerlandais', 'fi': 'Finnois',
+      'bg': 'Bulgare', 'cs': 'Tchèque', 'da': 'Danois',
+      'de': 'Allemand', 'hr': 'Croate', 'it': 'Italien',
+      'pl': 'Polonais', 'pt': 'Portugais', 'ro': 'Roumain'
+    };
+    
+    const urlTests = document.getElementById('url-tests');
+    Object.entries(videos).forEach(([code, name]) => {
+      const url = `/static/videos/instructions-${code}.mp4`;
+      fetch(url, {method: 'HEAD'})
+        .then(res => {
+          const status = res.ok ? '✅' : '❌';
+          const color = res.ok ? 'text-green-400' : 'text-red-400';
+          urlTests.innerHTML += `<div class="${color}">${status} ${name} (${code}): ${res.status} ${res.statusText}</div>`;
+          log(`${status} ${name}: ${res.status}`, res.ok ? 'success' : 'error');
+        })
+        .catch(err => {
+          urlTests.innerHTML += `<div class="text-red-400">❌ ${name} (${code}): ${err.message}</div>`;
+          log(`❌ ${name}: ${err.message}`, 'error');
+        });
+    });
+    
+    // Test du lecteur vidéo
+    const video = document.getElementById('test-video');
+    const status = document.getElementById('video-status');
+    
+    video.addEventListener('loadstart', () => {
+      status.innerHTML = '<p class="text-yellow-400">⏳ Chargement de la vidéo...</p>';
+      log('⏳ Chargement vidéo démarré', 'info');
+    });
+    
+    video.addEventListener('loadedmetadata', () => {
+      const duration = Math.round(video.duration);
+      status.innerHTML = `<p class="text-green-400">✅ Vidéo chargée ! Durée: ${duration}s</p>`;
+      log(`✅ Métadonnées chargées (${duration}s)`, 'success');
+    });
+    
+    video.addEventListener('canplay', () => {
+      status.innerHTML += '<p class="text-green-400">✅ Vidéo prête à jouer</p>';
+      log('✅ Vidéo prête', 'success');
+    });
+    
+    video.addEventListener('error', (e) => {
+      const error = e.target.error;
+      status.innerHTML = `<p class="text-red-400">❌ Erreur: ${error ? error.message : 'Inconnue'}</p>`;
+      log(`❌ Erreur vidéo: ${error ? error.message : 'Inconnue'}`, 'error');
+    });
+    
+    video.addEventListener('play', () => {
+      log('▶️ Lecture démarrée', 'success');
+    });
+  </script>
+</body>
+</html>

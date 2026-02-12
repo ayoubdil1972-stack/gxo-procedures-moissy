@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Vidéos Rognées - GXO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white p-4">
+    <div class="container mx-auto max-w-6xl">
+        <div class="bg-gradient-to-r from-orange-500 to-red-500 p-6 rounded-lg mb-6 text-center">
+            <h1 class="text-3xl font-bold mb-2">
+                <i class="fas fa-cut mr-2"></i>
+                Vidéos Rognées - Sans Sous-titres
+            </h1>
+            <p class="text-lg">12 langues • Résolution: 720x1160 • Taille réduite de 43%</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <!-- Statistiques -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-xl font-bold mb-4 text-orange-400">
+                    <i class="fas fa-chart-bar mr-2"></i>
+                    Statistiques
+                </h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span>Avant:</span>
+                        <span class="font-bold">107 MB (9.1 MB/vidéo)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Après:</span>
+                        <span class="font-bold text-green-400">61 MB (5.1 MB/vidéo)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Économie:</span>
+                        <span class="font-bold text-green-400">-46 MB (-43%)</span>
+                    </div>
+                    <hr class="border-gray-700 my-2">
+                    <div class="flex justify-between">
+                        <span>Résolution:</span>
+                        <span class="font-bold">720x1160</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Sous-titres:</span>
+                        <span class="font-bold text-red-400">Supprimés (120px)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Méthode -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-xl font-bold mb-4 text-orange-400">
+                    <i class="fas fa-cog mr-2"></i>
+                    Méthode
+                </h3>
+                <div class="space-y-2 text-sm">
+                    <div><i class="fas fa-check text-green-400 mr-2"></i>FFmpeg crop=720:1160:0:0</div>
+                    <div><i class="fas fa-check text-green-400 mr-2"></i>Preset: ultrafast</div>
+                    <div><i class="fas fa-check text-green-400 mr-2"></i>Qualité: CRF 28</div>
+                    <div><i class="fas fa-check text-green-400 mr-2"></i>Audio: copie directe</div>
+                    <div><i class="fas fa-check text-green-400 mr-2"></i>Visage: préservé</div>
+                    <div><i class="fas fa-check text-green-400 mr-2"></i>Animations: intactes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test des vidéos -->
+        <div class="bg-gray-800 p-6 rounded-lg mb-6">
+            <h3 class="text-xl font-bold mb-4 text-orange-400">
+                <i class="fas fa-video mr-2"></i>
+                Test des 12 Vidéos Rognées
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <button onclick="loadVideo('fr', '🇫🇷 Français')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇫🇷 FR (5.2 MB)
+                </button>
+                <button onclick="loadVideo('nl', '🇳🇱 Néerlandais')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇳🇱 NL (5.0 MB)
+                </button>
+                <button onclick="loadVideo('fi', '🇫🇮 Finnois')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇫🇮 FI (5.0 MB)
+                </button>
+                <button onclick="loadVideo('bg', '🇧🇬 Bulgare')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇧🇬 BG (5.2 MB)
+                </button>
+                <button onclick="loadVideo('cs', '🇨🇿 Tchèque')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇨🇿 CS (5.0 MB)
+                </button>
+                <button onclick="loadVideo('da', '🇩🇰 Danois')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇩🇰 DA (4.5 MB)
+                </button>
+                <button onclick="loadVideo('de', '🇩🇪 Allemand')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇩🇪 DE (5.0 MB)
+                </button>
+                <button onclick="loadVideo('hr', '🇭🇷 Croate')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇭🇷 HR (5.2 MB)
+                </button>
+                <button onclick="loadVideo('it', '🇮🇹 Italien')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇮🇹 IT (5.1 MB)
+                </button>
+                <button onclick="loadVideo('pl', '🇵🇱 Polonais')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇵🇱 PL (5.1 MB)
+                </button>
+                <button onclick="loadVideo('pt', '🇵🇹 Portugais')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇵🇹 PT (5.2 MB)
+                </button>
+                <button onclick="loadVideo('ro', '🇷🇴 Roumain')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                    🇷🇴 RO (5.2 MB)
+                </button>
+            </div>
+
+            <!-- Lecteur vidéo -->
+            <div id="video-container" class="hidden">
+                <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                    <h4 id="video-title" class="text-lg font-bold mb-2 text-orange-400"></h4>
+                    <video id="test-video" class="w-full max-w-md mx-auto rounded-lg" controls playsinline style="max-height: 70vh; object-fit: contain;">
+                        <source id="video-src" src="" type="video/mp4">
+                    </video>
+                    <div class="mt-2 text-sm text-gray-400 text-center">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Vidéo rognée - Sous-titres supprimés - Résolution 720x1160
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liens utiles -->
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <h3 class="text-xl font-bold mb-4 text-orange-400">
+                <i class="fas fa-link mr-2"></i>
+                Liens Utiles
+            </h3>
+            <div class="space-y-2 text-sm">
+                <div>
+                    <a href="/qrcode-chauffeur" class="text-blue-400 hover:text-blue-300 underline">
+                        <i class="fas fa-qrcode mr-1"></i>
+                        QR Code Chauffeurs
+                    </a>
+                </div>
+                <div>
+                    <a href="/chauffeur/langue" class="text-blue-400 hover:text-blue-300 underline">
+                        <i class="fas fa-language mr-1"></i>
+                        Sélection Langue
+                    </a>
+                </div>
+                <div>
+                    <a href="/chauffeur/video?lang=fr" class="text-blue-400 hover:text-blue-300 underline">
+                        <i class="fas fa-video mr-1"></i>
+                        Test Vidéo FR
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadVideo(lang, name) {
+            const container = document.getElementById('video-container');
+            const title = document.getElementById('video-title');
+            const videoSrc = document.getElementById('video-src');
+            const video = document.getElementById('test-video');
+
+            container.classList.remove('hidden');
+            title.textContent = name;
+            
+            const url = `/static/videos/instructions-${lang}.mp4`;
+            videoSrc.src = url;
+            video.load();
+            
+            // Scroll vers la vidéo
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            console.log(`📹 Chargement vidéo: ${name} (${lang})`);
+            console.log(`📁 URL: ${url}`);
+        }
+    </script>
+</body>
+</html>
