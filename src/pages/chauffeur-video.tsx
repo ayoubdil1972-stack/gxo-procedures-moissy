@@ -34,8 +34,7 @@ export function ChauffeurVideoPage() {
               playsinline
               webkit-playsinline="true"
               x-webkit-airplay="allow"
-              preload="metadata"
-              crossorigin="anonymous"
+              preload="auto"
             >
               <source src="" type="video/mp4" id="video-source" />
               Votre navigateur ne supporte pas la lecture vidéo.
