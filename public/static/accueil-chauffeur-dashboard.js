@@ -107,10 +107,12 @@ function afficherDashboardChauffeurs(chauffeurs) {
         </div>
       </div>
       
-      {/* Barre de progression */}
       <div class="mb-4">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-semibold text-gray-700">Progression</span>
+          <span class="text-xs text-gray-500 flex items-center gap-1">
+            <i class="fas fa-tasks"></i>
+            <span>Avancement</span>
+          </span>
           <span class="text-sm font-bold ${textColor}">${progression}%</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
@@ -118,7 +120,6 @@ function afficherDashboardChauffeurs(chauffeurs) {
         </div>
       </div>
       
-      {/* Tâches avec icônes */}
       <div class="grid grid-cols-5 gap-2 mb-4">
         ${taches.map((done, i) => {
           const icons = ['🦺', '🚚', '📦', '🔔', '🔑'];
@@ -133,18 +134,16 @@ function afficherDashboardChauffeurs(chauffeurs) {
         }).join('')}
       </div>
       
-      {/* Info temps et actions */}
-      <div class="flex items-center justify-between text-xs text-gray-600 pt-3 border-t">
-        <div class="flex items-center">
-          <i class="fas fa-clock mr-1"></i>
-          ${dureeMinutes} min
+      <div class="flex items-center justify-between text-xs pt-3 border-t">
+        <div class="flex items-center text-gray-500">
+          <i class="fas fa-clock mr-1.5"></i>
+          <span>${dureeMinutes} min</span>
         </div>
-        <div class="flex items-center ${bgColor} ${textColor} px-2 py-1 rounded-full font-semibold">
-          ${progression === 100 ? '<i class="fas fa-check-circle mr-1"></i>Prêt' : progression > 0 ? '<i class="fas fa-hourglass-half mr-1"></i>En cours' : '<i class="fas fa-circle-notch mr-1"></i>Début'}
+        <div class="flex items-center ${bgColor} ${textColor} px-2.5 py-1 rounded-full text-xs font-semibold">
+          ${progression === 100 ? '<i class="fas fa-check-circle mr-1.5"></i>Prêt' : progression > 0 ? '<i class="fas fa-hourglass-half mr-1.5"></i>En cours' : '<i class="fas fa-circle-notch mr-1.5"></i>Début'}
         </div>
       </div>
       
-      {/* Boutons d'action */}
       <div class="mt-4 flex gap-2">
         <button 
           onclick="ouvrirChatAdmin(${chauffeur.id}, '${chauffeur.pseudo}')"
