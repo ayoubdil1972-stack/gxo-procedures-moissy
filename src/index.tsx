@@ -29,10 +29,8 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>()
 
 // Serve static files - Pour Cloudflare Workers, les fichiers sont dans dist/
-// Note : Les vidéos nécessitent un traitement spécial pour iOS (voir route ci-dessous)
 app.use('/static/*', serveStatic({ 
   root: './',
-  // Ajouter les headers nécessaires pour les vidéos
   onNotFound: (path, c) => {
     console.log('Fichier non trouvé:', path)
     return c.notFound()
@@ -65,72 +63,6 @@ app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
 app.get('/chauffeur/taches', (c) => c.render(<ChauffeurTachesPage />))
 
 // ===== API CHAUFFEURS =====
-
-// API: Proxy vidéo - Sert les vidéos depuis GitHub Releases avec support Range Requests pour mobile
-app.get('/api/video/:langue', async (c) => {
-  const langue = c.req.param('langue')
-  const videoUrl = `https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-${langue}.mp4`
-  
-  try {
-    // Récupérer les headers Range du client (iOS Safari envoie ça)
-    const rangeHeader = c.req.header('Range')
-    
-    // Fetch la vidéo complète SANS Range (GitHub Releases ne supporte pas bien les Ranges)
-    const response = await fetch(videoUrl, { redirect: 'follow' })
-    
-    if (!response.ok) {
-      return c.json({ error: 'Video not found', url: videoUrl }, 404)
-    }
-    
-    // Charger la vidéo en ArrayBuffer
-    const videoBuffer = await response.arrayBuffer()
-    const totalSize = videoBuffer.byteLength
-    
-    // Headers de base
-    const headers: Record<string, string> = {
-      'Content-Type': 'video/mp4',
-      'Accept-Ranges': 'bytes',
-      'Cache-Control': 'public, max-age=31536000',
-      'Access-Control-Allow-Origin': '*'
-    }
-    
-    // Si Range Request (iOS Safari)
-    if (rangeHeader) {
-      // Parse Range: bytes=0-1023
-      const match = rangeHeader.match(/bytes=(\d+)-(\d*)/)
-      if (match) {
-        const start = parseInt(match[1], 10)
-        const end = match[2] ? parseInt(match[2], 10) : totalSize - 1
-        const chunkSize = end - start + 1
-        
-        // Extraire le chunk demandé
-        const chunk = videoBuffer.slice(start, end + 1)
-        
-        headers['Content-Length'] = chunkSize.toString()
-        headers['Content-Range'] = `bytes ${start}-${end}/${totalSize}`
-        
-        // Retourner HTTP 206 Partial Content
-        return new Response(chunk, {
-          status: 206,
-          headers
-        })
-      }
-    }
-    
-    // Pas de Range Request - Retourner la vidéo complète (HTTP 200)
-    headers['Content-Length'] = totalSize.toString()
-    return new Response(videoBuffer, {
-      status: 200,
-      headers
-    })
-  } catch (error) {
-    console.error('Erreur chargement vidéo:', error)
-    return c.json({ 
-      error: 'Failed to load video', 
-      message: error instanceof Error ? error.message : 'Unknown error' 
-    }, 500)
-  }
-})
 
 // API: Inscription chauffeur
 app.post('/api/chauffeur/inscription', async (c) => {
