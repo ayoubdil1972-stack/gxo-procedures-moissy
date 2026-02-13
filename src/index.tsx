@@ -53,7 +53,10 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
 // Page consignes d'instructions en texte (accessible pour tests mobiles, SANS menu navigation)
-app.get('/chauffeur/video', simpleRenderer, (c) => c.render(<ChauffeurInstructionsPage />))
+app.get('/chauffeur/consignes', simpleRenderer, (c) => c.render(<ChauffeurInstructionsPage />))
+
+// Redirection ancienne URL vers nouvelle (compatibilité)
+app.get('/chauffeur/video', (c) => c.redirect('/chauffeur/consignes?lang=' + (c.req.query('lang') || 'fr')))
 
 // Page inscription et tâches
 app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))

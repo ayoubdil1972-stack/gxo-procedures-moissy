@@ -32,7 +32,7 @@ export function ChauffeurLanguePage() {
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
           {langues.map((langue) => (
             <a
-              href={`/chauffeur/video?lang=${langue.code}`}
+              href={`/chauffeur/consignes?lang=${langue.code}`}
               class="group block bg-gradient-to-br from-gray-50 to-gray-100 hover:from-orange-50 hover:to-orange-100 rounded-xl p-4 md:p-6 text-center transition-all hover:shadow-lg hover:scale-105 border-2 border-transparent hover:border-[#FF5A1A] active:scale-95"
             >
               <div class="text-4xl md:text-6xl mb-2 md:mb-3">{langue.drapeau}</div>
