@@ -68,16 +68,16 @@ app.get('/chauffeur/inscription', (c) => {
   return c.html(ChauffeurInscriptionPage({ lang }));
 });
 
-// Page des tâches chauffeur - Redirige vers HTML statique selon la langue
+// Page des tâches chauffeur - Redirection vers fichiers HTML statiques
 app.get('/chauffeur/taches', (c) => {
   const lang = c.req.query('lang') || 'fr';
   const id = c.req.query('id');
   
-  // Rediriger vers la page HTML statique correspondante
+  // Cloudflare Pages sert automatiquement /taches/{lang}.html comme /taches/{lang}
   const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
   const validLang = supportedLangs.includes(lang) ? lang : 'fr';
   
-  return c.redirect(`/static/taches/${validLang}.html?id=${id}&lang=${validLang}`);
+  return c.redirect(`/taches/${validLang}?id=${id}&lang=${validLang}`);
 });
 
 // ===== API CHAUFFEURS =====
