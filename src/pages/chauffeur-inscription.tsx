@@ -1,100 +1,196 @@
-export function ChauffeurInscriptionPage() {
-  return (
-    <html lang="fr">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Inscription - GXO Chauffeur</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
-      </head>
-      <body class="min-h-screen bg-gray-100">
-        {/* Header */}
-        <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-4 shadow-lg">
-          <div class="container mx-auto flex items-center justify-between">
-            <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-10" />
-            <div class="text-white font-bold" id="header-titre">Inscription</div>
+import { getWorkflowTranslation } from '../translations-workflow';
+
+interface Props {
+  lang: string;
+}
+
+export function ChauffeurInscriptionPage({ lang }: Props) {
+  const t = getWorkflowTranslation(lang);
+  
+  return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${t.inscriptionTitre} - GXO Logistics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-4 shadow-lg">
+    <div class="container mx-auto flex items-center justify-between">
+      <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-10">
+      <div class="text-white font-bold text-lg">${t.inscriptionTitre}</div>
+    </div>
+  </div>
+
+  <!-- Conteneur principal -->
+  <div class="container mx-auto p-4 max-w-lg">
+    <div class="bg-white rounded-2xl shadow-xl p-8 my-6">
+      <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center flex items-center justify-center gap-3">
+        <i class="fas fa-user-plus text-[#FF5A1A]"></i>
+        <span>${t.inscriptionTitre}</span>
+      </h2>
+      <p class="text-center text-gray-600 mb-6">${t.inscriptionSousTitre}</p>
+
+      <form id="form-inscription" class="space-y-5">
+        <!-- Nom complet -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-user mr-2 text-[#FF5A1A]"></i>
+            ${t.nomComplet} <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="nom" 
+            name="nom"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
+          />
+        </div>
+
+        <!-- Entreprise -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-building mr-2 text-[#FF5A1A]"></i>
+            ${t.entreprise} <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="entreprise" 
+            name="entreprise"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
+          />
+        </div>
+
+        <!-- Téléphone -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-phone mr-2 text-[#FF5A1A]"></i>
+            ${t.telephone} <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="tel" 
+            id="telephone" 
+            name="telephone"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
+          />
+        </div>
+
+        <!-- Numéro de plaque -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-id-card mr-2 text-[#FF5A1A]"></i>
+            ${t.numeroPlaque} <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="plaque" 
+            name="plaque"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
+          />
+        </div>
+
+        <!-- Type de camion -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-truck mr-2 text-[#FF5A1A]"></i>
+            ${t.typeCamion} <span class="text-red-500">*</span>
+          </label>
+          <select 
+            id="type-camion" 
+            name="type_camion"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
+          >
+            <option value="">-- ${t.btnRetour} --</option>
+            <option value="porteur">Porteur</option>
+            <option value="semi">Semi-remorque</option>
+            <option value="fourgon">Fourgon</option>
+          </select>
+        </div>
+
+        <!-- Message info -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+          <div class="flex">
+            <i class="fas fa-info-circle text-yellow-500 mr-3 mt-0.5"></i>
+            <p class="text-sm text-gray-700">${t.champsObligatoires}</p>
           </div>
         </div>
 
-        {/* Conteneur principal */}
-        <div class="container mx-auto p-4 max-w-lg">
-          {/* Section Inscription */}
-          <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
-              <i class="fas fa-user-plus text-[#FF5A1A] mr-3"></i>
-              <span id="titre-inscription">Inscription Chauffeur</span>
-            </h2>
-
-            <form id="form-inscription" class="space-y-6">
-              {/* Pseudo */}
-              <div>
-                <label class="block text-gray-700 font-semibold mb-2">
-                  <i class="fas fa-user mr-2 text-[#FF5A1A]"></i>
-                  <span id="label-pseudo">Pseudo / Nom</span>
-                  <span class="text-red-500">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  id="pseudo" 
-                  required
-                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors text-lg"
-                />
-              </div>
-
-              {/* Entreprise */}
-              <div>
-                <label class="block text-gray-700 font-semibold mb-2">
-                  <i class="fas fa-building mr-2 text-[#FF5A1A]"></i>
-                  <span id="label-entreprise">Entreprise de transport</span>
-                  <span class="text-red-500">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  id="entreprise" 
-                  required
-                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors text-lg"
-                />
-              </div>
-
-              {/* Numéro de Quai */}
-              <div>
-                <label class="block text-gray-700 font-semibold mb-2">
-                  <i class="fas fa-warehouse mr-2 text-[#FF5A1A]"></i>
-                  <span id="label-quai">Numéro de quai attribué</span>
-                  <span class="text-red-500">*</span>
-                </label>
-                <select 
-                  id="numero-quai" 
-                  required
-                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors text-lg"
-                >
-                  <option value="" id="option-select">-- Sélectionner --</option>
-                  {Array.from({ length: 20 }, (_, i) => i + 1).map(num => (
-                    <option value={`Q${num}`}>Quai {num}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Bouton de soumission */}
-              <button 
-                type="submit"
-                class="w-full bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] text-white py-4 rounded-xl font-bold text-xl hover:shadow-2xl transition-all transform hover:scale-105 active:scale-95"
-              >
-                <i class="fas fa-check-circle mr-2"></i>
-                <span id="btn-valider">Valider et Commencer</span>
-              </button>
-            </form>
-
-            <div class="mt-6 text-center text-sm text-gray-500">
-              <i class="fas fa-info-circle mr-1"></i>
-              <span id="info-message">Après validation, vous accéderez à vos tâches de déchargement</span>
-            </div>
+        <!-- Message d'erreur -->
+        <div id="error-message" class="hidden bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+          <div class="flex">
+            <i class="fas fa-exclamation-triangle text-red-500 mr-3 mt-0.5"></i>
+            <p class="text-sm text-red-700">${t.erreurChamps}</p>
           </div>
         </div>
 
-        <script src="/static/chauffeur-inscription.js"></script>
-      </body>
-    </html>
-  )
+        <!-- Bouton de soumission -->
+        <button 
+          type="submit"
+          id="btn-submit"
+          class="w-full bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <i class="fas fa-check-circle mr-2"></i>
+          ${t.btnValider}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="bg-gray-900 text-gray-400 text-center p-4 text-sm">
+    <p>© 2026 GXO Logistics</p>
+  </div>
+
+  <script>
+    const lang = '${lang}';
+    const form = document.getElementById('form-inscription');
+    const btnSubmit = document.getElementById('btn-submit');
+    const errorMessage = document.getElementById('error-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Désactiver le bouton pendant l'envoi
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>${t.chargement}...';
+      
+      // Cacher le message d'erreur
+      errorMessage.classList.add('hidden');
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      data.langue = lang;
+
+      try {
+        const response = await fetch('/api/chauffeurs/inscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.id) {
+          // Rediriger vers la page des tâches avec l'ID du chauffeur
+          window.location.href = \`/chauffeur/taches?id=\${result.id}&lang=\${lang}\`;
+        } else {
+          throw new Error(result.error || 'Erreur inscription');
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        errorMessage.classList.remove('hidden');
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="fas fa-check-circle mr-2"></i>${t.btnValider}';
+      }
+    });
+  </script>
+</body>
+</html>`;
 }

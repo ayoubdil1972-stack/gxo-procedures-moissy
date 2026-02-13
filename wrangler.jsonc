@@ -5,18 +5,12 @@
   "pages_build_output_dir": "./dist",
   "compatibility_flags": [
     "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gxo-chauffeurs-db",
+      "database_id": "28637bef-a644-4661-8cca-829f84058875"
+    }
   ]
-  // Configuration D1 Database - TEMPORAIREMENT DÉSACTIVÉE POUR DEBUG ERROR 1101
-  // IMPORTANT: Exécutez ces commandes pour créer la base de données:
-  // 1. wrangler d1 create gxo-chauffeurs-db
-  // 2. Copiez le database_id dans la section ci-dessous
-  // 3. wrangler d1 migrations apply gxo-chauffeurs-db --local (pour local)
-  // 4. wrangler d1 migrations apply gxo-chauffeurs-db (pour production)
-  // "d1_databases": [
-  //   {
-  //     "binding": "DB",
-  //     "database_name": "gxo-chauffeurs-db",
-  //     "database_id": "28637bef-a644-4661-8cca-829f84058875"
-  //   }
-  // ]
 }

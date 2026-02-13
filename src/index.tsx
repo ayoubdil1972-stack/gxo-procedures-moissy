@@ -21,6 +21,7 @@ import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
 import { traduireTexte } from './services/translation'
+import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
   DB: D1Database;
@@ -61,10 +62,20 @@ app.get('/chauffeur/consignes', (c) => {
 app.get('/chauffeur/video', (c) => c.redirect('/chauffeur/consignes?lang=' + (c.req.query('lang') || 'fr')))
 
 // Page inscription et tâches
-app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
+app.get('/chauffeur/inscription', (c) => {
+  const lang = c.req.query('lang') || 'fr';
+  return c.html(ChauffeurInscriptionPage({ lang }));
+});
 
-// Page des tâches chauffeur (accessible directement)
-app.get('/chauffeur/taches', (c) => c.render(<ChauffeurTachesPage />))
+// Page des tâches chauffeur
+app.get('/chauffeur/taches', (c) => {
+  const id = c.req.query('id');
+  const lang = c.req.query('lang') || 'fr';
+  if (!id) {
+    return c.redirect('/chauffeur/langue');
+  }
+  return c.html(ChauffeurTachesPage({ lang, chauffeurId: id }));
+});
 
 // ===== API CHAUFFEURS =====
 
@@ -467,5 +478,34 @@ app.post('/api/chauffeur/notification', async (c) => {
     return c.json({ success: false, error: error.message }, 500)
   }
 })
+
+// ===== NOUVEAU WORKFLOW CHAUFFEUR - API ROUTES =====
+
+// POST /api/chauffeurs/inscription - Inscription nouveau chauffeur
+app.post('/api/chauffeurs/inscription', workflowAPI.inscriptionChauffeur);
+
+// GET /api/chauffeurs/:id - Récupérer info chauffeur
+app.get('/api/chauffeurs/:id', workflowAPI.getChauffeur);
+
+// GET /api/chauffeurs/:id/taches - Récupérer tâches chauffeur
+app.get('/api/chauffeurs/:id/taches', workflowAPI.getTachesChauffeur);
+
+// POST /api/taches/:id/completer - Marquer tâche comme terminée
+app.post('/api/taches/:id/completer', workflowAPI.completerTache);
+
+// GET /api/chauffeurs/:id/messages - Récupérer messages chauffeur
+app.get('/api/chauffeurs/:id/messages', workflowAPI.getMessagesChauffeur);
+
+// POST /api/messages - Envoyer un message
+app.post('/api/messages', workflowAPI.envoyerMessage);
+
+// POST /api/messages/:id/marquer-vu - Marquer message comme vu
+app.post('/api/messages/:id/marquer-vu', workflowAPI.marquerMessageVu);
+
+// GET /api/admin/chauffeurs-actifs - Liste chauffeurs actifs (dashboard admin)
+app.get('/api/admin/chauffeurs-actifs', workflowAPI.getChauffeursActifs);
+
+// POST /api/admin/taches/assigner - Assigner nouvelle tâche
+app.post('/api/admin/taches/assigner', workflowAPI.assignerTache);
 
 export default app
