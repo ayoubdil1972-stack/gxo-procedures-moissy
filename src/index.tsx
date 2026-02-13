@@ -16,7 +16,7 @@ import { ContactsPage } from './pages/contacts'
 import { LoginPage } from './pages/login'
 import { QRCodeChauffeurPage } from './pages/qrcode-chauffeur'
 import { ChauffeurLanguePage } from './pages/chauffeur-langue'
-import { ChauffeurConsignesPage } from './pages/chauffeur-consignes'
+// ChauffeurConsignesPage : Now using static HTML files in /static/consignes/
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
@@ -50,11 +50,10 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
-// Page consignes - HTML pur généré côté serveur (string template)
+// Page consignes - Redirection vers fichiers HTML statiques (Cloudflare Pages sert automatiquement public/)
 app.get('/chauffeur/consignes', (c) => {
   const lang = c.req.query('lang') || 'fr'
-  const html = ChauffeurConsignesPage({ lang })
-  return c.html(html)
+  return c.redirect(`/consignes/${lang}.html`)
 })
 
 // Redirection ancienne URL vers nouvelle (compatibilité)
