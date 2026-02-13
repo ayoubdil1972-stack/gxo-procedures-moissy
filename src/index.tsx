@@ -16,12 +16,11 @@ import { ContactsPage } from './pages/contacts'
 import { LoginPage } from './pages/login'
 import { QRCodeChauffeurPage } from './pages/qrcode-chauffeur'
 import { ChauffeurLanguePage } from './pages/chauffeur-langue'
-import { ChauffeurInstructionsPage } from './pages/chauffeur-instructions'
+import { ChauffeurConsignesPage } from './pages/chauffeur-consignes'
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
 import { traduireTexte } from './services/translation'
-import { getTranslation } from './translations-data'
 
 type Bindings = {
   DB: D1Database;
@@ -51,8 +50,11 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
-// Page consignes d'instructions en texte (accessible pour tests mobiles, SANS menu navigation)
-app.get('/chauffeur/consignes', simpleRenderer, (c) => c.render(<ChauffeurInstructionsPage />))
+// Page consignes - SSR pur sans JavaScript côté client
+app.get('/chauffeur/consignes', (c) => {
+  const lang = c.req.query('lang') || 'fr'
+  return c.html(<ChauffeurConsignesPage lang={lang} />)
+})
 
 // Redirection ancienne URL vers nouvelle (compatibilité)
 app.get('/chauffeur/video', (c) => c.redirect('/chauffeur/consignes?lang=' + (c.req.query('lang') || 'fr')))
@@ -64,13 +66,6 @@ app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
 app.get('/chauffeur/taches', (c) => c.render(<ChauffeurTachesPage />))
 
 // ===== API CHAUFFEURS =====
-
-// API: Traductions embarquées dans le Worker
-app.get('/api/translations/:langue', (c) => {
-  const langue = c.req.param('langue')
-  const translation = getTranslation(langue)
-  return c.json(translation)
-})
 
 // API: Inscription chauffeur
 app.post('/api/chauffeur/inscription', async (c) => {
