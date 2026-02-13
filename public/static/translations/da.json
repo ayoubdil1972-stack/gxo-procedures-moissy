@@ -1,0 +1,17 @@
+{
+  "header": "🇩🇰 Dansk",
+  "titre": "Instruktioner",
+  "bienvenue": "Hej",
+  "sousTitre": "Velkommen til vores websted",
+  "titreSecurite": "Obligatoriske sikkerhedsinstruktioner",
+  "consigneEPI": "Det er <strong class=\"text-red-600\">obligatorisk</strong> at bære <strong>sikkerhedsvest</strong> og <strong>sikkerhedssko</strong> på hele området.",
+  "consigneFumer": "Det er <strong class=\"text-red-600\">strengt forbudt at ryge</strong> på området.",
+  "titreAccueil": "Ved chauffør-receptionen",
+  "consignePalette": "Angiv, om et <strong>palleskift</strong> er nødvendigt.",
+  "consigneHayon": "Angiv, om din lastbil er udstyret med en <strong>læssebagsmæk</strong>.",
+  "titreQuai": "Placering ved læsserampe",
+  "consigneClefs": "Så snart du er <strong>placeret ved rampen</strong>, skal du <strong class=\"text-green-600\">aflevere dine nøgler</strong> til rampemedarbejderen.",
+  "titreImportant": "Vigtigt",
+  "messageImportant": "Overholdelse af disse instruktioner er afgørende for at sikre <strong>alles sikkerhed</strong> på området.",
+  "btnContinuer": "Jeg har læst og forstået instruktionerne"
+}

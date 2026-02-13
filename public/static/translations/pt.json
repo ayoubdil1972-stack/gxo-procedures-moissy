@@ -1,0 +1,17 @@
+{
+  "header": "🇵🇹 Português",
+  "titre": "Instruções",
+  "bienvenue": "Olá",
+  "sousTitre": "Bem-vindo ao nosso site",
+  "titreSecurite": "Instruções de segurança obrigatórias",
+  "consigneEPI": "O uso de <strong>colete de segurança</strong> e <strong>calçado de segurança</strong> é <strong class=\"text-red-600\">obrigatório</strong> em todo o local.",
+  "consigneFumer": "É <strong class=\"text-red-600\">estritamente proibido fumar</strong> no local.",
+  "titreAccueil": "Na receção de motoristas",
+  "consignePalette": "Indique se é necessária uma <strong>troca de palete</strong>.",
+  "consigneHayon": "Especifique se o seu camião está equipado com <strong>plataforma elevatória</strong>.",
+  "titreQuai": "Colocação no cais",
+  "consigneClefs": "Assim que estiver <strong>colocado no cais</strong>, deve <strong class=\"text-green-600\">entregar as suas chaves</strong> ao agente do cais.",
+  "titreImportant": "Importante",
+  "messageImportant": "O cumprimento destas instruções é essencial para garantir a <strong>segurança de todos</strong> no local.",
+  "btnContinuer": "Li e compreendi as instruções"
+}

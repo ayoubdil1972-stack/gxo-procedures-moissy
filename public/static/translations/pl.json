@@ -1,0 +1,17 @@
+{
+  "header": "🇵🇱 Polski",
+  "titre": "Instrukcje",
+  "bienvenue": "Dzień dobry",
+  "sousTitre": "Witamy na naszej stronie",
+  "titreSecurite": "Obowiązkowe instrukcje bezpieczeństwa",
+  "consigneEPI": "Noszenie <strong>kamizelki odblaskowej</strong> i <strong>obuwia ochronnego</strong> jest <strong class=\"text-red-600\">obowiązkowe</strong> na całym terenie.",
+  "consigneFumer": "<strong class=\"text-red-600\">Palenie jest surowo zabronione</strong> na terenie.",
+  "titreAccueil": "W recepcji kierowców",
+  "consignePalette": "Wskaż, czy konieczna jest <strong>wymiana palety</strong>.",
+  "consigneHayon": "Określ, czy ciężarówka jest wyposażona w <strong>windę załadunkową</strong>.",
+  "titreQuai": "Ustawienie przy rampie",
+  "consigneClefs": "Jak tylko zostaniesz <strong>ustawiony przy rampie</strong>, musisz <strong class=\"text-green-600\">oddać klucze</strong> pracownikowi rampy.",
+  "titreImportant": "Ważne",
+  "messageImportant": "Przestrzeganie tych instrukcji jest niezbędne dla zapewnienia <strong>bezpieczeństwa wszystkich</strong> na terenie.",
+  "btnContinuer": "Przeczytałem i zrozumiałem instrukcje"
+}

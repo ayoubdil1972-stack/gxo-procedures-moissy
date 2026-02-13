@@ -137,49 +137,58 @@ export function ChauffeurInstructionsPage() {
         </div>
       </div>
 
-      {/* Script externe pour les traductions */}
-      <script src="/static/consignes-translations.js"></script>
-      
-      {/* Script de gestion minimal */}
+      {/* Script - Charge dynamiquement le JSON de la langue */}
       <script dangerouslySetInnerHTML={{
         __html: `
-          const urlParams = new URLSearchParams(window.location.search);
-          const langue = urlParams.get('lang') || 'fr';
-          sessionStorage.setItem('chauffeur_langue', langue);
-          
-          // Charger traductions depuis window.consignesTranslations (fichier externe)
-          const t = window.consignesTranslations && window.consignesTranslations[langue] 
-            ? window.consignesTranslations[langue] 
-            : window.consignesTranslations['fr'];
-          
-          // Appliquer traductions
-          document.getElementById('langue-selectionnee').textContent = t.header;
-          document.getElementById('titre-instructions').textContent = t.titre;
-          document.getElementById('bienvenue').textContent = t.bienvenue;
-          document.getElementById('sous-titre').textContent = t.sousTitre;
-          document.getElementById('titre-securite').textContent = t.titreSecurite;
-          document.getElementById('consigne-epi').innerHTML = t.consigneEPI;
-          document.getElementById('consigne-fumer').innerHTML = t.consigneFumer;
-          document.getElementById('titre-accueil').textContent = t.titreAccueil;
-          document.getElementById('consigne-palette').innerHTML = t.consignePalette;
-          document.getElementById('consigne-hayon').innerHTML = t.consigneHayon;
-          document.getElementById('titre-quai').textContent = t.titreQuai;
-          document.getElementById('consigne-clefs').innerHTML = t.consigneClefs;
-          document.getElementById('titre-important').textContent = t.titreImportant;
-          document.getElementById('message-important').innerHTML = t.messageImportant;
-          document.getElementById('btn-continuer-text').textContent = t.btnContinuer;
-          
-          window.handleContinue = function() {
-            sessionStorage.setItem('instructions_lues', 'true');
-            const chauffeurId = sessionStorage.getItem('chauffeur_id');
-            if (chauffeurId) {
-              window.location.href = '/chauffeur/taches?id=' + chauffeurId;
-            } else {
-              window.location.href = '/chauffeur/inscription';
-            }
-          };
-          
-          console.log('✅ Page consignes chargée - Langue:', langue);
+          (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const langue = urlParams.get('lang') || 'fr';
+            sessionStorage.setItem('chauffeur_langue', langue);
+            
+            // Charger le fichier JSON de la langue
+            fetch('/static/translations/' + langue + '.json')
+              .then(response => {
+                if (!response.ok) throw new Error('Translation not found');
+                return response.json();
+              })
+              .then(t => {
+                // Appliquer traductions
+                document.getElementById('langue-selectionnee').textContent = t.header;
+                document.getElementById('titre-instructions').textContent = t.titre;
+                document.getElementById('bienvenue').textContent = t.bienvenue;
+                document.getElementById('sous-titre').textContent = t.sousTitre;
+                document.getElementById('titre-securite').textContent = t.titreSecurite;
+                document.getElementById('consigne-epi').innerHTML = t.consigneEPI;
+                document.getElementById('consigne-fumer').innerHTML = t.consigneFumer;
+                document.getElementById('titre-accueil').textContent = t.titreAccueil;
+                document.getElementById('consigne-palette').innerHTML = t.consignePalette;
+                document.getElementById('consigne-hayon').innerHTML = t.consigneHayon;
+                document.getElementById('titre-quai').textContent = t.titreQuai;
+                document.getElementById('consigne-clefs').innerHTML = t.consigneClefs;
+                document.getElementById('titre-important').textContent = t.titreImportant;
+                document.getElementById('message-important').innerHTML = t.messageImportant;
+                document.getElementById('btn-continuer-text').textContent = t.btnContinuer;
+                
+                console.log('✅ Consignes chargées - Langue:', langue);
+              })
+              .catch(err => {
+                console.error('❌ Erreur chargement traduction:', err);
+                // Fallback en français si erreur
+                if (langue !== 'fr') {
+                  window.location.href = '/chauffeur/consignes?lang=fr';
+                }
+              });
+            
+            window.handleContinue = function() {
+              sessionStorage.setItem('instructions_lues', 'true');
+              const chauffeurId = sessionStorage.getItem('chauffeur_id');
+              if (chauffeurId) {
+                window.location.href = '/chauffeur/taches?id=' + chauffeurId;
+              } else {
+                window.location.href = '/chauffeur/inscription';
+              }
+            };
+          })();
         `
       }} />
     </div>
