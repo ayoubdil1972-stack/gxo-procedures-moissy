@@ -5,8 +5,55 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 ## 🌐 URLs
 
 - **Production**: https://gxo-moissy-v2.pages.dev
-- **GitHub**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+- **GitHub Code**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+- **GitHub Assets**: https://github.com/ayoubdil1972-stack/gxo-video-assets
 - **Cloudflare Dashboard**: https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-moissy-v2
+
+## 🚗 Workflow Chauffeur - URLs Principales
+
+### 1️⃣ QR Code d'accueil
+**https://gxo-moissy-v2.pages.dev/qrcode-chauffeur**
+- Point d'entrée pour les chauffeurs
+- Scanner le QR code pour accéder au système
+
+### 2️⃣ Sélection de langue
+**https://gxo-moissy-v2.pages.dev/chauffeur/langue**
+- Interface de choix de langue (12 langues disponibles)
+- Redirige vers les consignes dans la langue choisie
+
+### 3️⃣ Consignes de sécurité (12 langues)
+
+**Format d'URL** : `https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang={code}`
+
+| Langue | Code | URL Directe |
+|--------|------|-------------|
+| 🇫🇷 Français | `fr` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr |
+| 🇳🇱 Néerlandais | `nl` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl |
+| 🇩🇪 Allemand | `de` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=de |
+| 🇮🇹 Italien | `it` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it |
+| 🇧🇬 Bulgare | `bg` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=bg |
+| 🇨🇿 Tchèque | `cs` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=cs |
+| 🇩🇰 Danois | `da` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=da |
+| 🇫🇮 Finnois | `fi` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fi |
+| 🇭🇷 Croate | `hr` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=hr |
+| 🇵🇱 Polonais | `pl` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pl |
+| 🇵🇹 Portugais | `pt` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pt |
+| 🇷🇴 Roumain | `ro` | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=ro |
+
+### 4️⃣ Inscription
+**https://gxo-moissy-v2.pages.dev/chauffeur/inscription**
+- Formulaire d'inscription du chauffeur
+- Collecte des informations (pseudo, entreprise, numéro de quai, langue)
+
+### 5️⃣ Tâches
+**https://gxo-moissy-v2.pages.dev/chauffeur/taches?id={chauffeur_id}**
+- Liste des tâches à effectuer
+- Validation des tâches
+
+### 6️⃣ Accueil Chauffeur (post-inscription)
+**https://gxo-moissy-v2.pages.dev/accueil-chauffeur**
+- Page d'accueil après inscription
+- Accès aux fonctionnalités
 
 ## 📱 Fonctionnalités
 
@@ -54,33 +101,41 @@ npm run deploy:prod
 ```
 webapp/
 ├── src/
-│   └── index.tsx          # Application Hono principale
+│   ├── index.tsx              # Application Hono principale
+│   ├── pages/                 # Pages TSX
+│   │   ├── chauffeur-langue.tsx
+│   │   ├── chauffeur-inscription.tsx
+│   │   └── ...
+│   ├── services/              # Services (traduction, etc.)
+│   └── config/                # Configuration
 ├── public/
+│   ├── consignes/             # 12 fichiers HTML statiques (FR, NL, DE, IT, BG, CS, DA, FI, HR, PL, PT, RO)
 │   └── static/
-│       ├── videos/        # 12 vidéos d'instructions (5 MB chacune)
-│       ├── images/        # Logos et images
-│       └── *.js          # Scripts frontend
-├── migrations/            # Migrations D1
-├── .github/
-│   └── workflows/
-│       └── deploy.yml    # Déploiement automatique
+│       ├── images/            # Logos et images
+│       └── *.js               # Scripts frontend
+├── migrations/                # Migrations D1 (base de données)
+├── dist/                      # Build output (généré)
+│   ├── _worker.js             # Worker Cloudflare compilé
+│   ├── _routes.json           # Configuration des routes
+│   └── consignes/             # Fichiers HTML statiques copiés
+├── generate-consignes.cjs     # Script de génération des pages HTML
+├── wrangler.jsonc             # Configuration Cloudflare
 └── package.json
 ```
 
-## 📱 Test sur iPhone 12
+## 📱 Test sur iPhone/Android
 
-URL de test vidéo NL :
-```
-https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
-```
+Toutes les pages de consignes sont optimisées pour mobile et testées sur :
+- ✅ iPhone 12 et versions ultérieures
+- ✅ Appareils Android
+- ✅ Tablettes
 
-Résultat attendu :
-- ✅ Page noire avec bande orange
-- ✅ Logo GXO
-- ✅ Bouton PLAY orange
-- ✅ Vidéo se lance immédiatement
-- ✅ Barre de progression orange
-- ✅ Bouton "Doorgaan" (Continuer) à la fin
+**Résultat attendu** :
+- ✅ Design responsive avec Tailwind CSS
+- ✅ Logo GXO visible
+- ✅ Contenu lisible et bien formaté
+- ✅ Bouton "J'ai lu et compris les consignes" cliquable
+- ✅ Support parfait des caractères spéciaux (12 langues)
 
 ## 🔧 Développement local
 
@@ -99,16 +154,24 @@ npm run dev:sandbox
 
 - [Guide de déploiement automatique](./DEPLOIEMENT_AUTOMATIQUE_GITHUB.md)
 - [Configuration des secrets](./SECRETS_GITHUB_GUIDE.md)
-- [Corrections automatiques](./CORRECTION_AUTOMATIQUE.md)
-- [Nouveau token](./NOUVEAU_TOKEN.md)
+- [Migration finale - Succès](./MIGRATION_FINALE_SUCCESS.md)
+- [Solution Error 1101](./DIAGNOSTIC_ERROR_1101.md)
 
 ## 🎯 Statut
 
-- ✅ Projet créé sur Cloudflare
-- ✅ Workflow GitHub Actions configuré
-- ✅ Build fonctionnel
+- ✅ Projet créé sur Cloudflare (gxo-moissy-v2)
+- ✅ 12 langues de consignes fonctionnelles
+- ✅ Build optimisé (231.42 KB)
 - ✅ Base de données D1 configurée
-- ⏳ Premier déploiement en attente
+- ✅ Déployé en production
+
+## 📊 Statistiques de Performance
+
+- **Bundle Worker**: 231.42 KB (optimisé)
+- **Fichiers statiques**: 12 fichiers HTML (~7 KB chacun)
+- **Temps de chargement**: < 100ms (CDN Cloudflare)
+- **Compatibilité**: 100% mobile et desktop
+- **Error 1101**: ✅ RÉSOLU
 
 ## 📞 Support
 
@@ -116,32 +179,6 @@ Pour toute question ou problème, consultez les guides de documentation dans le 
 
 ---
 
-**Dernière mise à jour :** 12 février 2026  
-**Version :** 12.1.1  
-**Statut :** ✅ Prêt pour le déploiement
-
-## 🌍 URLs des Consignes de Sécurité
-
-Les consignes de sécurité sont disponibles en 12 langues :
-
-- 🇫🇷 **Français**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
-- 🇳🇱 **Néerlandais**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
-- 🇩🇪 **Allemand**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=de
-- 🇮🇹 **Italien**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
-- 🇧🇬 **Bulgare**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=bg
-- 🇨🇿 **Tchèque**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=cs
-- 🇩🇰 **Danois**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=da
-- 🇫🇮 **Finnois**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fi
-- 🇭🇷 **Croate**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=hr
-- 🇵🇱 **Polonais**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pl
-- 🇵🇹 **Portugais**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pt
-- 🇷🇴 **Roumain**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=ro
-
-**Accès direct** : https://gxo-moissy-v2.pages.dev/chauffeur/langue (sélection de langue)
-
-## 📊 Statistiques
-
-- **Bundle Worker**: 231.42 KB (optimisé)
-- **Fichiers statiques**: 12 fichiers HTML (~7 KB chacun)
-- **Temps de chargement**: < 100ms (CDN Cloudflare)
-- **Compatibilité**: 100% mobile et desktop
+**Dernière mise à jour :** 13 février 2026  
+**Version :** 12.1.2  
+**Statut :** ✅ Production - 100% Fonctionnel
