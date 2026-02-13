@@ -499,7 +499,7 @@ window.fermerChatAdmin = function() {
 // Charger les messages du chat admin
 async function chargerMessagesAdmin() {
   try {
-    const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chatAdminChauffeurId}`);
+    const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chatAdminChauffeurId}&viewer=admin`);
     const data = await response.json();
     
     if (data.success && data.messages) {

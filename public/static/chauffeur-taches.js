@@ -211,7 +211,7 @@ formMessage.addEventListener('submit', async (e) => {
 
 async function loadMessages() {
   try {
-    const response = await fetch(`/api/chauffeur/chat?id=${chauffeurId}`);
+    const response = await fetch(`/api/chauffeur/chat?id=${chauffeurId}&viewer=chauffeur`);
     const data = await response.json();
     
     if (response.ok && data.success && data.messages) {
@@ -263,8 +263,27 @@ async function loadMessages() {
   }
 }
 
+// Heartbeat pour indiquer que le chauffeur est en ligne
+async function sendHeartbeat() {
+  try {
+    await fetch('/api/chat/heartbeat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chauffeur_id: chauffeurId,
+        page_url: window.location.href
+      })
+    });
+  } catch (error) {
+    console.error('Erreur heartbeat:', error);
+  }
+}
+
 // Initialisation
 loadChauffeurInfo();
+
+// Envoyer heartbeat immédiatement
+sendHeartbeat();
 
 // Mise à jour automatique toutes les 5 secondes
 updateInterval = setInterval(() => {
@@ -272,6 +291,8 @@ updateInterval = setInterval(() => {
   if (!modalChat.classList.contains('hidden')) {
     loadMessages();
   }
+  // Envoyer heartbeat pour indiquer que le chauffeur est toujours en ligne
+  sendHeartbeat();
 }, 5000);
 
 // Make validerTache global

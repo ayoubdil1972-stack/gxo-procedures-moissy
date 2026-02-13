@@ -3,6 +3,7 @@ import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import { loginRenderer } from './login-renderer'
 import { simpleRenderer } from './simple-renderer'
+import { traduireTexte } from './services/translation'
 import { HomePage } from './pages/home'
 import { ReceptionPage } from './pages/reception'
 import { AccueilChauffeurPage } from './pages/accueil-chauffeur'
@@ -163,22 +164,60 @@ app.get('/api/chauffeur/progression', async (c) => {
   }
 })
 
-// API: Envoyer message chat (chauffeur → admin)
+// API: Envoyer message chat (chauffeur → admin OU admin → chauffeur)
 app.post('/api/chauffeur/chat', async (c) => {
   try {
-    const { chauffeur_id, message } = await c.req.json()
+    const { chauffeur_id, message, sender } = await c.req.json()
     
     if (!chauffeur_id || !message) {
       return c.json({ success: false, error: 'Données manquantes' }, 400)
     }
     
-    // Insérer le message dans la table chat_messages simple
-    await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message, read)
-      VALUES (?, 'chauffeur', ?, 0)
-    `).bind(chauffeur_id, message).run()
+    // Récupérer la langue du chauffeur
+    const chauffeur = await c.env.DB.prepare(`
+      SELECT langue FROM chauffeur_arrivals WHERE id = ?
+    `).bind(chauffeur_id).first()
     
-    return c.json({ success: true })
+    const langueChauffeur = chauffeur?.langue || 'fr'
+    const senderType = sender || 'chauffeur' // 'chauffeur' ou 'admin'
+    
+    // Traduction du message
+    let translated_fr = message
+    let translated_chauffeur = message
+    let originalLang = langueChauffeur
+    
+    if (senderType === 'chauffeur') {
+      // Chauffeur → Admin : traduire vers le français
+      if (langueChauffeur !== 'fr') {
+        translated_fr = await traduireTexte(message, 'fr', langueChauffeur)
+      }
+      originalLang = langueChauffeur
+      translated_chauffeur = message // Le message original du chauffeur
+    } else {
+      // Admin → Chauffeur : traduire vers la langue du chauffeur
+      if (langueChauffeur !== 'fr') {
+        translated_chauffeur = await traduireTexte(message, langueChauffeur, 'fr')
+      }
+      originalLang = 'fr'
+      translated_fr = message // Le message original de l'admin (français)
+    }
+    
+    // Insérer le message avec traduction
+    await c.env.DB.prepare(`
+      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      chauffeur_id, 
+      senderType, 
+      message, 
+      originalLang,
+      translated_fr,
+      translated_chauffeur,
+      senderType === 'chauffeur' ? 0 : 1, // Si chauffeur envoie, admin n'a pas lu
+      senderType === 'admin' ? 0 : 1      // Si admin envoie, chauffeur n'a pas lu
+    ).run()
+    
+    return c.json({ success: true, translated_fr, translated_chauffeur })
   } catch (error) {
     console.error('Erreur envoi message:', error)
     return c.json({ success: false, error: error.message }, 500)
@@ -189,6 +228,7 @@ app.post('/api/chauffeur/chat', async (c) => {
 app.get('/api/chauffeur/chat', async (c) => {
   try {
     const chauffeur_id = c.req.query('id') || c.req.query('chauffeur_id')
+    const viewer = c.req.query('viewer') || 'chauffeur' // 'chauffeur' ou 'admin'
     
     // Récupérer la langue du chauffeur
     const chauffeur = await c.env.DB.prepare(`
@@ -203,9 +243,30 @@ app.get('/api/chauffeur/chat', async (c) => {
       ORDER BY timestamp ASC
     `).bind(chauffeur_id).all()
     
+    // Adapter les messages selon le lecteur
+    const messages = results.map(msg => {
+      let displayMessage = msg.message
+      
+      // Si le viewer est admin, afficher translated_fr (traduction française)
+      if (viewer === 'admin' && msg.translated_fr) {
+        displayMessage = msg.translated_fr
+      }
+      
+      // Si le viewer est chauffeur, afficher translated_chauffeur (traduction dans sa langue)
+      if (viewer === 'chauffeur' && msg.translated_chauffeur) {
+        displayMessage = msg.translated_chauffeur
+      }
+      
+      return {
+        ...msg,
+        message: displayMessage,
+        original_message: msg.message // Garder l'original pour info
+      }
+    })
+    
     return c.json({ 
       success: true, 
-      messages: results,
+      messages: messages,
       chauffeur_langue: langueChauffeur
     })
   } catch (error) {
@@ -269,12 +330,21 @@ app.get('/api/chat/online-status', async (c) => {
 // API: Liste des chauffeurs en cours (pour admin)
 app.get('/api/chauffeur/liste', async (c) => {
   try {
-    // Récupérer les chauffeurs actifs (sans chauffeur_sessions pour compatibilité production)
+    // Récupérer les chauffeurs avec leur statut en ligne via LEFT JOIN
     const { results } = await c.env.DB.prepare(`
       SELECT 
         ca.*,
-        0 as online_status
+        cs.last_heartbeat,
+        cs.is_online,
+        cs.page_url,
+        CASE 
+          WHEN cs.last_heartbeat IS NOT NULL 
+            AND (julianday('now') - julianday(cs.last_heartbeat)) * 86400 < 30 
+          THEN 1 
+          ELSE 0 
+        END as online_status
       FROM chauffeur_arrivals ca
+      LEFT JOIN chauffeur_sessions cs ON ca.id = cs.chauffeur_id
       WHERE ca.status = 'in_progress' 
       ORDER BY ca.arrival_time DESC
     `).all()
@@ -334,6 +404,10 @@ app.post('/api/admin/chat', async (c) => {
   try {
     const { chauffeur_id, message } = await c.req.json()
     
+    if (!chauffeur_id || !message) {
+      return c.json({ success: false, error: 'Données manquantes' }, 400)
+    }
+    
     // Récupérer la langue du chauffeur
     const chauffeur = await c.env.DB.prepare(`
       SELECT langue FROM chauffeur_arrivals WHERE id = ?
@@ -341,19 +415,19 @@ app.post('/api/admin/chat', async (c) => {
     
     const langueChauffeur = chauffeur?.langue || 'fr'
     
-    // Traduire le message dans la langue du chauffeur (si ce n'est pas français)
-    let traductionChauffeur = message
+    // Admin envoie toujours en français, traduire vers la langue du chauffeur
+    let translated_chauffeur = message
     if (langueChauffeur !== 'fr') {
-      traductionChauffeur = await traduireTexte(message, langueChauffeur, 'fr')
+      translated_chauffeur = await traduireTexte(message, langueChauffeur, 'fr')
     }
     
-    // Insérer le message avec traduction + statuts (delivered_at = now, sender_online = 1)
+    // Insérer le message avec traduction
     await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_chauffeur, delivered_at, sender_online)
-      VALUES (?, 'admin', ?, 'fr', ?, datetime('now'), 1)
-    `).bind(chauffeur_id, message, traductionChauffeur).run()
+      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
+      VALUES (?, 'admin', ?, 'fr', ?, ?, 1, 0)
+    `).bind(chauffeur_id, message, message, translated_chauffeur).run()
     
-    return c.json({ success: true })
+    return c.json({ success: true, translated: translated_chauffeur })
   } catch (error) {
     console.error('Erreur envoi message admin:', error)
     return c.json({ success: false, error: error.message }, 500)
