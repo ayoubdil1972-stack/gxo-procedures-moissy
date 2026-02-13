@@ -35,17 +35,17 @@ export function ChauffeurInscriptionPage({ lang }: Props) {
       <p class="text-center text-gray-600 mb-6">${t.inscriptionSousTitre}</p>
 
       <form id="form-inscription" class="space-y-5">
-        <!-- Nom complet -->
+        <!-- Pseudo / Nom -->
         <div>
           <label class="block text-gray-700 font-semibold mb-2">
             <i class="fas fa-user mr-2 text-[#FF5A1A]"></i>
-            ${t.nomComplet} <span class="text-red-500">*</span>
+            ${t.nomComplet}
           </label>
           <input 
             type="text" 
-            id="nom" 
-            name="nom"
-            required
+            id="pseudo" 
+            name="pseudo"
+            placeholder="Entrez votre nom..."
             class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
           />
         </div>
@@ -54,72 +54,31 @@ export function ChauffeurInscriptionPage({ lang }: Props) {
         <div>
           <label class="block text-gray-700 font-semibold mb-2">
             <i class="fas fa-building mr-2 text-[#FF5A1A]"></i>
-            ${t.entreprise} <span class="text-red-500">*</span>
+            ${t.entreprise}
           </label>
           <input 
             type="text" 
             id="entreprise" 
             name="entreprise"
-            required
+            placeholder="Nom de votre entreprise..."
             class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
           />
         </div>
 
-        <!-- Téléphone -->
+        <!-- Numéro de Quai -->
         <div>
           <label class="block text-gray-700 font-semibold mb-2">
-            <i class="fas fa-phone mr-2 text-[#FF5A1A]"></i>
-            ${t.telephone} <span class="text-red-500">*</span>
-          </label>
-          <input 
-            type="tel" 
-            id="telephone" 
-            name="telephone"
-            required
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
-          />
-        </div>
-
-        <!-- Numéro de plaque -->
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2">
-            <i class="fas fa-id-card mr-2 text-[#FF5A1A]"></i>
-            ${t.numeroPlaque} <span class="text-red-500">*</span>
-          </label>
-          <input 
-            type="text" 
-            id="plaque" 
-            name="plaque"
-            required
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
-          />
-        </div>
-
-        <!-- Type de camion -->
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2">
-            <i class="fas fa-truck mr-2 text-[#FF5A1A]"></i>
-            ${t.typeCamion} <span class="text-red-500">*</span>
+            <i class="fas fa-warehouse mr-2 text-[#FF5A1A]"></i>
+            Numéro de quai attribué
           </label>
           <select 
-            id="type-camion" 
-            name="type_camion"
-            required
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors"
+            id="numero-quai" 
+            name="numero_quai"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none transition-colors text-lg"
           >
-            <option value="">-- ${t.btnRetour} --</option>
-            <option value="porteur">Porteur</option>
-            <option value="semi">Semi-remorque</option>
-            <option value="fourgon">Fourgon</option>
+            <option value="">-- Sélectionner un quai --</option>
+            ${Array.from({ length: 30 }, (_, i) => `<option value="Q${i + 1}">Quai ${i + 1}</option>`).join('')}
           </select>
-        </div>
-
-        <!-- Message info -->
-        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
-          <div class="flex">
-            <i class="fas fa-info-circle text-yellow-500 mr-3 mt-0.5"></i>
-            <p class="text-sm text-gray-700">${t.champsObligatoires}</p>
-          </div>
         </div>
 
         <!-- Message d'erreur -->
@@ -165,11 +124,16 @@ export function ChauffeurInscriptionPage({ lang }: Props) {
       errorMessage.classList.add('hidden');
 
       const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      data.langue = lang;
+      const data = {
+        pseudo: formData.get('pseudo') || '',
+        entreprise: formData.get('entreprise') || '',
+        numero_quai: formData.get('numero_quai') || '',
+        langue: lang,
+        video_completed: 1
+      };
 
       try {
-        const response = await fetch('/api/chauffeurs/inscription', {
+        const response = await fetch('/api/chauffeur/inscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)

@@ -68,13 +68,8 @@ app.get('/chauffeur/inscription', (c) => {
 });
 
 // Page des tâches chauffeur
-app.get('/chauffeur/taches', (c) => {
-  const id = c.req.query('id');
-  const lang = c.req.query('lang') || 'fr';
-  if (!id) {
-    return c.redirect('/chauffeur/langue');
-  }
-  return c.html(ChauffeurTachesPage({ lang, chauffeurId: id }));
+app.get('/chauffeur/taches', loginRenderer, (c) => {
+  return c.render(<ChauffeurTachesPage />);
 });
 
 // ===== API CHAUFFEURS =====
