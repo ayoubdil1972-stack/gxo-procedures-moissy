@@ -216,20 +216,21 @@ export function ChauffeurVideoPage() {
           document.getElementById('fullscreen-text').textContent = t.fullscreen;
           
           // URLs des vidéos par langue (12 langues disponibles !)
-          // Vidéos hébergées sur GitHub Releases, servies via API proxy avec bon MIME type
+          // Vidéos hébergées sur GitHub Releases - CDN direct (no proxy)
+          // GitHub CDN supporte Range Requests même avec application/octet-stream
           const videoUrls = {
-            'fr': '/api/video/fr',
-            'nl': '/api/video/nl',
-            'fi': '/api/video/fi',
-            'bg': '/api/video/bg',
-            'cs': '/api/video/cs',
-            'da': '/api/video/da',
-            'de': '/api/video/de',
-            'hr': '/api/video/hr',
-            'it': '/api/video/it',
-            'pl': '/api/video/pl',
-            'pt': '/api/video/pt',
-            'ro': '/api/video/ro'
+            'fr': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-fr.mp4',
+            'nl': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-nl.mp4',
+            'fi': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-fi.mp4',
+            'bg': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-bg.mp4',
+            'cs': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-cs.mp4',
+            'da': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-da.mp4',
+            'de': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-de.mp4',
+            'hr': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-hr.mp4',
+            'it': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-it.mp4',
+            'pl': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-pl.mp4',
+            'pt': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-pt.mp4',
+            'ro': 'https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-ro.mp4'
           };
           
           const video = document.getElementById('video-instructions');
