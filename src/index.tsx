@@ -85,12 +85,16 @@ app.get('/api/video/:langue', async (c) => {
       return c.json({ error: 'Video not found' }, 404)
     }
     
+    // Lire le body en ArrayBuffer (nécessaire pour Cloudflare Workers)
+    const videoData = await response.arrayBuffer()
+    
     // Transférer la réponse avec tous les headers nécessaires
     const headers: Record<string, string> = {
       'Content-Type': 'video/mp4',
       'Accept-Ranges': 'bytes',
       'Cache-Control': 'public, max-age=31536000',
       'Access-Control-Allow-Origin': '*',
+      'Content-Length': videoData.byteLength.toString()
     }
     
     // Transférer Content-Range si présent (pour requêtes partielles)
@@ -99,20 +103,14 @@ app.get('/api/video/:langue', async (c) => {
       headers['Content-Range'] = contentRange
     }
     
-    // Transférer Content-Length
-    const contentLength = response.headers.get('Content-Length')
-    if (contentLength) {
-      headers['Content-Length'] = contentLength
-    }
-    
     // Retourner le statut approprié (200 ou 206 Partial Content)
-    return new Response(response.body, {
+    return new Response(videoData, {
       status: response.status,
       headers
     })
   } catch (error) {
     console.error('Erreur chargement vidéo:', error)
-    return c.json({ error: 'Failed to load video' }, 500)
+    return c.json({ error: 'Failed to load video', message: error.message }, 500)
   }
 })
 
