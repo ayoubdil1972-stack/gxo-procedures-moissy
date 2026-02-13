@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS chauffeur_sessions (chauffeur_id INTEGER PRIMARY KEY, last_heartbeat DATETIME, is_online INTEGER DEFAULT 0, page_url TEXT, FOREIGN KEY (chauffeur_id) REFERENCES chauffeur_arrivals(id));
