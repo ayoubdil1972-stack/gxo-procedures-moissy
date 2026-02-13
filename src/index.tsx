@@ -51,9 +51,10 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
 // Page consignes - Redirection vers fichiers HTML statiques (Cloudflare Pages sert automatiquement public/)
+// Note: Cloudflare Pages fait automatiquement un redirect de .html vers sans extension
 app.get('/chauffeur/consignes', (c) => {
   const lang = c.req.query('lang') || 'fr'
-  return c.redirect(`/consignes/${lang}.html`)
+  return c.redirect(`/consignes/${lang}`)
 })
 
 // Redirection ancienne URL vers nouvelle (compatibilité)
