@@ -16,7 +16,7 @@ import { ContactsPage } from './pages/contacts'
 import { LoginPage } from './pages/login'
 import { QRCodeChauffeurPage } from './pages/qrcode-chauffeur'
 import { ChauffeurLanguePage } from './pages/chauffeur-langue'
-import { ChauffeurVideoPage } from './pages/chauffeur-video'
+import { ChauffeurInstructionsPage } from './pages/chauffeur-instructions'
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
@@ -52,8 +52,8 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
-// Page vidéo d'instructions (accessible pour tests mobiles, SANS menu navigation)
-app.get('/chauffeur/video', simpleRenderer, (c) => c.render(<ChauffeurVideoPage />))
+// Page consignes d'instructions en texte (accessible pour tests mobiles, SANS menu navigation)
+app.get('/chauffeur/video', simpleRenderer, (c) => c.render(<ChauffeurInstructionsPage />))
 
 // Page inscription et tâches
 app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
