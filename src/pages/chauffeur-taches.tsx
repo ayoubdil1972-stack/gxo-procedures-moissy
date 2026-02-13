@@ -7,7 +7,6 @@ export function ChauffeurTachesPage() {
         <title data-i18n="pageTitle">Mes Tâches - GXO Chauffeur</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
-        <script src="/static/task-translations.js"></script>
       </head>
       <body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         {/* Header */}
