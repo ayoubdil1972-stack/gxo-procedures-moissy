@@ -69,23 +69,21 @@ app.get('/api/video/:langue', async (c) => {
   const videoUrl = `https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-${langue}.mp4`
   
   try {
-    // Transférer les headers Range du client vers GitHub
+    // Récupérer les headers Range du client (iOS Safari envoie ça)
     const rangeHeader = c.req.header('Range')
-    const fetchOptions: RequestInit = {}
     
-    if (rangeHeader) {
-      fetchOptions.headers = {
-        'Range': rangeHeader
-      }
-    }
-    
-    const response = await fetch(videoUrl, fetchOptions)
+    // Fetch la vidéo complète SANS Range (GitHub Releases ne supporte pas bien les Ranges)
+    const response = await fetch(videoUrl, { redirect: 'follow' })
     
     if (!response.ok) {
-      return c.json({ error: 'Video not found' }, 404)
+      return c.json({ error: 'Video not found', url: videoUrl }, 404)
     }
     
-    // Streaming direct sans charger en mémoire (support Range Requests)
+    // Charger la vidéo en ArrayBuffer
+    const videoBuffer = await response.arrayBuffer()
+    const totalSize = videoBuffer.byteLength
+    
+    // Headers de base
     const headers: Record<string, string> = {
       'Content-Type': 'video/mp4',
       'Accept-Ranges': 'bytes',
@@ -93,22 +91,33 @@ app.get('/api/video/:langue', async (c) => {
       'Access-Control-Allow-Origin': '*'
     }
     
-    // Copier les headers importants de la réponse GitHub
-    const contentLength = response.headers.get('Content-Length')
-    if (contentLength) {
-      headers['Content-Length'] = contentLength
+    // Si Range Request (iOS Safari)
+    if (rangeHeader) {
+      // Parse Range: bytes=0-1023
+      const match = rangeHeader.match(/bytes=(\d+)-(\d*)/)
+      if (match) {
+        const start = parseInt(match[1], 10)
+        const end = match[2] ? parseInt(match[2], 10) : totalSize - 1
+        const chunkSize = end - start + 1
+        
+        // Extraire le chunk demandé
+        const chunk = videoBuffer.slice(start, end + 1)
+        
+        headers['Content-Length'] = chunkSize.toString()
+        headers['Content-Range'] = `bytes ${start}-${end}/${totalSize}`
+        
+        // Retourner HTTP 206 Partial Content
+        return new Response(chunk, {
+          status: 206,
+          headers
+        })
+      }
     }
     
-    // Transférer Content-Range si présent (pour requêtes partielles)
-    const contentRange = response.headers.get('Content-Range')
-    if (contentRange) {
-      headers['Content-Range'] = contentRange
-    }
-    
-    // Retourner le statut approprié (200 ou 206 Partial Content)
-    // Streaming direct du body sans charger en mémoire
-    return new Response(response.body, {
-      status: response.status,
+    // Pas de Range Request - Retourner la vidéo complète (HTTP 200)
+    headers['Content-Length'] = totalSize.toString()
+    return new Response(videoBuffer, {
+      status: 200,
       headers
     })
   } catch (error) {
