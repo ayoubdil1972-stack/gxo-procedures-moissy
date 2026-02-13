@@ -202,20 +202,29 @@ app.post('/api/chauffeur/chat', async (c) => {
       translated_fr = message // Le message original de l'admin (français)
     }
     
-    // Insérer le message avec traduction
-    await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).bind(
-      chauffeur_id, 
-      senderType, 
-      message, 
-      originalLang,
-      translated_fr,
-      translated_chauffeur,
-      senderType === 'chauffeur' ? 0 : 1, // Si chauffeur envoie, admin n'a pas lu
-      senderType === 'admin' ? 0 : 1      // Si admin envoie, chauffeur n'a pas lu
-    ).run()
+    // Essayer d'insérer avec toutes les colonnes (nouvelle structure)
+    try {
+      await c.env.DB.prepare(`
+        INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        chauffeur_id, 
+        senderType, 
+        message, 
+        originalLang,
+        translated_fr,
+        translated_chauffeur,
+        senderType === 'chauffeur' ? 0 : 1, // Si chauffeur envoie, admin n'a pas lu
+        senderType === 'admin' ? 0 : 1      // Si admin envoie, chauffeur n'a pas lu
+      ).run()
+    } catch (insertError) {
+      // Si erreur (colonnes n'existent pas), utiliser structure simple
+      console.log('Using simple chat_messages structure')
+      await c.env.DB.prepare(`
+        INSERT INTO chat_messages (chauffeur_id, sender, message, read)
+        VALUES (?, ?, ?, 0)
+      `).bind(chauffeur_id, senderType, message).run()
+    }
     
     return c.json({ success: true, translated_fr, translated_chauffeur })
   } catch (error) {
@@ -247,15 +256,19 @@ app.get('/api/chauffeur/chat', async (c) => {
     const messages = results.map(msg => {
       let displayMessage = msg.message
       
-      // Si le viewer est admin, afficher translated_fr (traduction française)
-      if (viewer === 'admin' && msg.translated_fr) {
-        displayMessage = msg.translated_fr
+      // Si les colonnes de traduction existent, les utiliser
+      if (msg.translated_fr && msg.translated_chauffeur) {
+        // Si le viewer est admin, afficher translated_fr (traduction française)
+        if (viewer === 'admin') {
+          displayMessage = msg.translated_fr
+        }
+        
+        // Si le viewer est chauffeur, afficher translated_chauffeur (traduction dans sa langue)
+        if (viewer === 'chauffeur') {
+          displayMessage = msg.translated_chauffeur
+        }
       }
-      
-      // Si le viewer est chauffeur, afficher translated_chauffeur (traduction dans sa langue)
-      if (viewer === 'chauffeur' && msg.translated_chauffeur) {
-        displayMessage = msg.translated_chauffeur
-      }
+      // Sinon, afficher le message original (pas de traduction)
       
       return {
         ...msg,
@@ -442,11 +455,20 @@ app.post('/api/admin/chat', async (c) => {
       translated_chauffeur = await traduireTexte(message, langueChauffeur, 'fr')
     }
     
-    // Insérer le message avec traduction
-    await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
-      VALUES (?, 'admin', ?, 'fr', ?, ?, 1, 0)
-    `).bind(chauffeur_id, message, message, translated_chauffeur).run()
+    // Essayer d'insérer avec toutes les colonnes (nouvelle structure)
+    try {
+      await c.env.DB.prepare(`
+        INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
+        VALUES (?, 'admin', ?, 'fr', ?, ?, 1, 0)
+      `).bind(chauffeur_id, message, message, translated_chauffeur).run()
+    } catch (insertError) {
+      // Si erreur (colonnes n'existent pas), utiliser structure simple
+      console.log('Using simple chat_messages structure for admin')
+      await c.env.DB.prepare(`
+        INSERT INTO chat_messages (chauffeur_id, sender, message, read)
+        VALUES (?, 'admin', ?, 0)
+      `).bind(chauffeur_id, message).run()
+    }
     
     return c.json({ success: true, translated: translated_chauffeur })
   } catch (error) {
