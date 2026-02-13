@@ -269,20 +269,12 @@ app.get('/api/chat/online-status', async (c) => {
 // API: Liste des chauffeurs en cours (pour admin)
 app.get('/api/chauffeur/liste', async (c) => {
   try {
-    // Récupérer les chauffeurs avec leur statut en ligne via LEFT JOIN
+    // Récupérer les chauffeurs actifs (sans chauffeur_sessions pour compatibilité production)
     const { results } = await c.env.DB.prepare(`
       SELECT 
         ca.*,
-        cs.last_heartbeat,
-        cs.is_online,
-        CASE 
-          WHEN cs.last_heartbeat IS NOT NULL 
-            AND (julianday('now') - julianday(cs.last_heartbeat)) * 86400 < 30 
-          THEN 1 
-          ELSE 0 
-        END as online_status
+        0 as online_status
       FROM chauffeur_arrivals ca
-      LEFT JOIN chauffeur_sessions cs ON ca.id = cs.chauffeur_id
       WHERE ca.status = 'in_progress' 
       ORDER BY ca.arrival_time DESC
     `).all()
