@@ -77,7 +77,7 @@ app.get('/chauffeur/taches', (c) => {
   const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
   const validLang = supportedLangs.includes(lang) ? lang : 'fr';
   
-  return c.redirect(`/taches/${validLang}?id=${id}&lang=${validLang}`);
+  return c.redirect(`/taches/${validLang}.html?id=${id}&lang=${validLang}`);
 });
 
 // ===== API CHAUFFEURS =====
