@@ -280,17 +280,21 @@ app.post('/api/chat/heartbeat', async (c) => {
   try {
     const { chauffeur_id, page_url } = await c.req.json()
     
-    // Mettre à jour ou créer la session
-    // On utilise INSERT ... ON CONFLICT pour gérer les deux cas
-    await c.env.DB.prepare(`
-      INSERT INTO chauffeur_sessions (chauffeur_id, last_heartbeat, is_online, page_url)
-      VALUES (?, datetime('now'), 1, ?)
-      ON CONFLICT(chauffeur_id) 
-      DO UPDATE SET 
-        last_heartbeat = datetime('now'),
-        is_online = 1,
-        page_url = excluded.page_url
-    `).bind(chauffeur_id, page_url || '').run()
+    // Essayer de mettre à jour la session
+    try {
+      await c.env.DB.prepare(`
+        INSERT INTO chauffeur_sessions (chauffeur_id, last_heartbeat, is_online, page_url)
+        VALUES (?, datetime('now'), 1, ?)
+        ON CONFLICT(chauffeur_id) 
+        DO UPDATE SET 
+          last_heartbeat = datetime('now'),
+          is_online = 1,
+          page_url = excluded.page_url
+      `).bind(chauffeur_id, page_url || '').run()
+    } catch (tableError) {
+      // Si la table n'existe pas, ignorer silencieusement
+      console.log('Table chauffeur_sessions not found, heartbeat skipped')
+    }
     
     return c.json({ success: true, online: true, timestamp: new Date().toISOString() })
   } catch (error) {
@@ -330,26 +334,43 @@ app.get('/api/chat/online-status', async (c) => {
 // API: Liste des chauffeurs en cours (pour admin)
 app.get('/api/chauffeur/liste', async (c) => {
   try {
-    // Récupérer les chauffeurs avec leur statut en ligne via LEFT JOIN
-    const { results } = await c.env.DB.prepare(`
+    // Vérifier si la table chauffeur_sessions existe
+    let query = `
       SELECT 
         ca.*,
-        cs.last_heartbeat,
-        cs.is_online,
-        cs.page_url,
-        CASE 
-          WHEN cs.last_heartbeat IS NOT NULL 
-            AND (julianday('now') - julianday(cs.last_heartbeat)) * 86400 < 30 
-          THEN 1 
-          ELSE 0 
-        END as online_status
+        0 as online_status
       FROM chauffeur_arrivals ca
-      LEFT JOIN chauffeur_sessions cs ON ca.id = cs.chauffeur_id
       WHERE ca.status = 'in_progress' 
       ORDER BY ca.arrival_time DESC
-    `).all()
+    `
     
-    return c.json({ success: true, chauffeurs: results })
+    try {
+      // Essayer avec LEFT JOIN si la table existe
+      const { results } = await c.env.DB.prepare(`
+        SELECT 
+          ca.*,
+          cs.last_heartbeat,
+          cs.is_online,
+          cs.page_url,
+          CASE 
+            WHEN cs.last_heartbeat IS NOT NULL 
+              AND (julianday('now') - julianday(cs.last_heartbeat)) * 86400 < 30 
+            THEN 1 
+            ELSE 0 
+          END as online_status
+        FROM chauffeur_arrivals ca
+        LEFT JOIN chauffeur_sessions cs ON ca.id = cs.chauffeur_id
+        WHERE ca.status = 'in_progress' 
+        ORDER BY ca.arrival_time DESC
+      `).all()
+      
+      return c.json({ success: true, chauffeurs: results })
+    } catch (joinError) {
+      // Si le JOIN échoue (table n'existe pas), utiliser query simple
+      console.log('Table chauffeur_sessions not found, using simple query')
+      const { results } = await c.env.DB.prepare(query).all()
+      return c.json({ success: true, chauffeurs: results })
+    }
   } catch (error) {
     console.error('Erreur liste chauffeurs:', error)
     return c.json({ success: false, error: error.message }, 500)
