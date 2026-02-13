@@ -122,8 +122,11 @@ app.post('/api/chauffeur/inscription', async (c) => {
     const { pseudo, entreprise, numero_quai, langue, video_completed } = await c.req.json()
     
     const result = await c.env.DB.prepare(`
-      INSERT INTO chauffeur_arrivals (pseudo, entreprise, numero_quai, langue, video_completed)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO chauffeur_arrivals (
+        pseudo, entreprise, numero_quai, langue, video_completed, 
+        status, arrival_time
+      )
+      VALUES (?, ?, ?, ?, ?, 'in_progress', CURRENT_TIMESTAMP)
     `).bind(pseudo, entreprise, numero_quai, langue, video_completed ? 1 : 0).run()
     
     return c.json({ success: true, id: result.meta.last_row_id })
