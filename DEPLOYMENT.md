@@ -126,8 +126,8 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy
 ```
 
 **Vous obtiendrez 2 URLs** :
-- Production : `https://gxo-procedures-moissy.pages.dev`
-- Branch : `https://[branch].gxo-procedures-moissy.pages.dev`
+- Production : `https://gxo-moissy-v2.pages.dev`
+- Branch : `https://[branch].gxo-moissy-v2.pages.dev`
 
 ### 4.3 Lier la base de données au projet Pages
 ```bash
@@ -142,7 +142,7 @@ npx wrangler pages deployment create --project-name gxo-procedures-moissy \
 
 ### 5.1 URL pour le QR Code
 ```
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 
 ### 5.2 Générer le QR Code
@@ -150,7 +150,7 @@ https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
 **Option 1 : En ligne (Recommandé)**
 1. Aller sur https://www.qr-code-generator.com/
 2. Sélectionner "URL"
-3. Coller : `https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur`
+3. Coller : `https://gxo-moissy-v2.pages.dev/qrcode-chauffeur`
 4. Personnaliser :
    - Taille : 1000x1000px minimum
    - Correction d'erreur : Level H (30%)
@@ -160,7 +160,7 @@ https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
 **Option 2 : Avec API**
 ```bash
 # Générer QR code via API
-curl "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur&color=FF5A1A" \
+curl "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://gxo-moissy-v2.pages.dev/qrcode-chauffeur&color=FF5A1A" \
   -o qrcode-gxo.png
 ```
 
@@ -170,7 +170,7 @@ curl "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://gx
 npm install -g qrcode
 
 # Générer
-qrcode -o qrcode-gxo.png -w 1000 "https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur"
+qrcode -o qrcode-gxo.png -w 1000 "https://gxo-moissy-v2.pages.dev/qrcode-chauffeur"
 ```
 
 ---
@@ -201,7 +201,7 @@ git push -u origin main
 ### 7.1 Tests Fonctionnels
 ```bash
 # URL de base
-BASE_URL="https://gxo-procedures-moissy.pages.dev"
+BASE_URL="https://gxo-moissy-v2.pages.dev"
 
 # Test 1 : Page d'accueil QR Code
 curl -I "$BASE_URL/qrcode-chauffeur"
@@ -210,7 +210,7 @@ curl -I "$BASE_URL/qrcode-chauffeur"
 curl -I "$BASE_URL/chauffeur/langue"
 
 # Test 3 : Vidéo français
-curl -I "$BASE_URL/chauffeur/video?lang=fr"
+curl -I "$BASE_URL/chauffeur/consignes?lang=fr"
 
 # Test 4 : Page d'inscription
 curl -I "$BASE_URL/chauffeur/inscription"

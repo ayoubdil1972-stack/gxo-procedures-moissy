@@ -119,14 +119,14 @@ Après avoir configuré les secrets, le workflow fera :
 ```
 ✓ 97 files uploaded
 ✨ Deployment complete!
-🌐 https://gxo-procedures-moissy.pages.dev
+🌐 https://gxo-moissy-v2.pages.dev
 ```
 
 ### Vous pourrez tester :
-- **Page d'accueil** : https://gxo-procedures-moissy.pages.dev
-- **Vidéo NL** : https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
-- **Admin** : https://gxo-procedures-moissy.pages.dev/admin
-- **Accueil** : https://gxo-procedures-moissy.pages.dev/accueil
+- **Page d'accueil** : https://gxo-moissy-v2.pages.dev
+- **Vidéo NL** : https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+- **Admin** : https://gxo-moissy-v2.pages.dev/admin
+- **Accueil** : https://gxo-moissy-v2.pages.dev/accueil
 
 ---
 
@@ -155,7 +155,7 @@ Après avoir configuré les secrets, le workflow fera :
 | **Configurer secrets** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
 | **Voir workflows** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
-| **Site production** | https://gxo-procedures-moissy.pages.dev |
+| **Site production** | https://gxo-moissy-v2.pages.dev |
 
 ---
 
@@ -166,7 +166,7 @@ Après avoir configuré les secrets, le workflow fera :
 - [ ] Les 2 secrets apparaissent dans la liste
 - [ ] Workflow relancé (automatique ou manuel)
 - [ ] Workflow se termine avec succès (✅ vert)
-- [ ] Site accessible sur https://gxo-procedures-moissy.pages.dev
+- [ ] Site accessible sur https://gxo-moissy-v2.pages.dev
 - [ ] Vidéo NL fonctionne sur iPhone 12
 
 ---

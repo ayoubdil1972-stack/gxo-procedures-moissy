@@ -60,7 +60,7 @@ Optimizing build output...
 ### 4. Déploiement sur le CDN (~30s)
 ```
 ✅ Deployment complete!
-🌐 https://gxo-procedures-moissy.pages.dev
+🌐 https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -85,7 +85,7 @@ Allez sur : https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/v
 Vous verrez :
 ```
 ✅ Deployment complete
-🌐 https://gxo-procedures-moissy.pages.dev
+🌐 https://gxo-moissy-v2.pages.dev
 ```
 
 ### Sur GitHub Actions
@@ -105,12 +105,12 @@ Une fois terminé, testez :
 
 ### URL de production
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Vidéo NL sur iPhone 12
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---

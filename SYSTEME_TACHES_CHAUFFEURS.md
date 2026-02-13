@@ -24,7 +24,7 @@ Le nouveau système permet de :
 - 12 langues disponibles : FR, NL, FI, DE, IT, PL, PT, BG, CS, DA, HR, RO
 
 ### **Étape 3 : Vidéo d'Instructions**
-- URL : `/chauffeur/video?lang=XX`
+- URL : `/chauffeur/consignes?lang=XX`
 - Vidéo d'induction sans sous-titres (chargement < 1s)
 - Obligation de regarder la vidéo complète
 
@@ -294,7 +294,7 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy --branch mai
 ## 🧪 Tests
 
 ### **Test Chauffeur**
-1. Ouvrir : `https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur`
+1. Ouvrir : `https://gxo-moissy-v2.pages.dev/qrcode-chauffeur`
 2. Scanner le QR Code
 3. Choisir une langue
 4. Regarder la vidéo
@@ -303,7 +303,7 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy --branch mai
 7. Tester le chat avec l'admin
 
 ### **Test Admin**
-1. Ouvrir : `https://gxo-procedures-moissy.pages.dev/admin/chauffeurs-dashboard`
+1. Ouvrir : `https://gxo-moissy-v2.pages.dev/admin/chauffeurs-dashboard`
 2. Vérifier les statistiques
 3. Voir les chauffeurs actifs dans le tableau
 4. Cliquer sur le bouton chat d'un chauffeur

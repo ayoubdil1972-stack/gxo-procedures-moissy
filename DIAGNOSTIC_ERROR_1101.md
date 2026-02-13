@@ -1,13 +1,13 @@
 # DIAGNOSTIC COMPLET - Error 1101 Cloudflare Pages
 
 ## Résumé du Problème
-- **Symptôme**: Error 1101 en production sur https://gxo-procedures-moissy.pages.dev/chauffeur/consignes
+- **Symptôme**: Error 1101 en production sur https://gxo-moissy-v2.pages.dev/chauffeur/consignes
 - **Environnement**: Fonctionne parfaitement en local (sandbox), crash uniquement sur Cloudflare Pages
 - **Durée**: Persistant depuis plusieurs déploiements
 
 ## Solutions Tentées
 
-### ✅ 1. Suppression Route Vidéo (499f356)
+### ✅ 1. Suppression Route Consignes (499f356)
 - **Problème identifié**: Route `/api/video/:langue` chargeait 3 MB en mémoire
 - **Action**: Supprimé route inutilisée
 - **Résultat**: Bundle réduit de 240→239.88 KB
@@ -41,15 +41,15 @@
 
 ### Tests Production (100% FAIL)
 ```bash
-❌ curl https://gxo-procedures-moissy.pages.dev/chauffeur/consignes?lang=ro → HTTP 500
-❌ curl https://gxo-procedures-moissy.pages.dev/api/translations/ro → error code: 1101
+❌ curl https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=ro → HTTP 500
+❌ curl https://gxo-moissy-v2.pages.dev/api/translations/ro → error code: 1101
 ❌ Toutes les routes /chauffeur/consignes crashent
 ```
 
 ### Autres Routes Production (OK)
 ```bash
-✅ curl https://gxo-procedures-moissy.pages.dev/ → HTTP 200 (homepage OK)
-✅ curl https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur → HTTP 200 (QR OK)
+✅ curl https://gxo-moissy-v2.pages.dev/ → HTTP 200 (homepage OK)
+✅ curl https://gxo-moissy-v2.pages.dev/qrcode-chauffeur → HTTP 200 (QR OK)
 ```
 
 ## Cause Probable du 1101

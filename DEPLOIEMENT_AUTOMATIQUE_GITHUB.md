@@ -68,12 +68,12 @@ Une fois le workflow terminé (✅ vert) :
 
 ### 🌐 URL de production
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### 📱 Testez sur votre iPhone 12
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Résultat attendu :**
@@ -109,7 +109,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 | **GitHub Repo** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy |
 | **GitHub Actions** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **GitHub Secrets** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
-| **Site Production** | https://gxo-procedures-moissy.pages.dev |
+| **Site Production** | https://gxo-moissy-v2.pages.dev |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
 | **Sandbox (temporaire)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
 
@@ -120,11 +120,11 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 - [ ] Les 2 secrets GitHub sont configurés (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
 - [ ] Le workflow GitHub Actions est lancé
 - [ ] Le workflow se termine avec succès (✅ vert)
-- [ ] Le site https://gxo-procedures-moissy.pages.dev s'affiche
+- [ ] Le site https://gxo-moissy-v2.pages.dev s'affiche
 - [ ] La vidéo NL se lance sur iPhone 12 sans erreur
 - [ ] Tester les autres langues (FR, DE, FI, etc.)
-- [ ] Tester la page admin (https://gxo-procedures-moissy.pages.dev/admin)
-- [ ] Tester la page accueil (https://gxo-procedures-moissy.pages.dev/accueil)
+- [ ] Tester la page admin (https://gxo-moissy-v2.pages.dev/admin)
+- [ ] Tester la page accueil (https://gxo-moissy-v2.pages.dev/accueil)
 
 ---
 

@@ -57,7 +57,7 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy
 
 ### **Étape 4 : Vérifier le déploiement**
 
-URL de production : **https://gxo-procedures-moissy.pages.dev**
+URL de production : **https://gxo-moissy-v2.pages.dev**
 
 ---
 
@@ -65,7 +65,7 @@ URL de production : **https://gxo-procedures-moissy.pages.dev**
 
 | Environnement | URL |
 |---------------|-----|
-| **Production** | https://gxo-procedures-moissy.pages.dev |
+| **Production** | https://gxo-moissy-v2.pages.dev |
 | **Sandbox (dev)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
 | **Dashboard Cloudflare** | https://dash.cloudflare.com/profile/api-tokens |
 
@@ -77,7 +77,7 @@ Après le déploiement, testez sur votre iPhone 12 :
 
 **URL de test vidéo néerlandaise :**
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Ce qui devrait se passer :**

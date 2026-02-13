@@ -55,8 +55,8 @@ Temps total estimé : 5-7 minutes
 **→ PARFAIT ! Le site est en ligne.**
 
 **Actions à faire** :
-1. ✅ Ouvrir https://gxo-procedures-moissy.pages.dev
-2. ✅ Tester la vidéo : https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+1. ✅ Ouvrir https://gxo-moissy-v2.pages.dev
+2. ✅ Tester la vidéo : https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 3. ✅ Vérifier sur iPhone 12
 
 **Optionnel** : Si vous voyez encore l'erreur "Workers Builds" sur Cloudflare Dashboard, désactivez le build automatique (2 minutes).
@@ -168,21 +168,21 @@ Deployment complete!
 All checks have passed
 
 Production URL:
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Site accessible :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 → Page d'accueil chargée ✅
 
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 → Vidéo NL avec bouton PLAY orange ✅
 ```
 
 ### Test sur iPhone 12 :
 ```
-Safari → https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+Safari → https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 
 Résultat attendu :
 ┌──────────────────────────┐
@@ -204,8 +204,8 @@ Résultat attendu :
 | **Workflow GitHub Actions** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **Secrets GitHub** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
-| **Site production** | https://gxo-procedures-moissy.pages.dev |
-| **Vidéo test (NL)** | https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl |
+| **Site production** | https://gxo-moissy-v2.pages.dev |
+| **Vidéo test (NL)** | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl |
 | **Site sandbox** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
 
 ---

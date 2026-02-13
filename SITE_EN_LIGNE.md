@@ -2,7 +2,7 @@
 
 ## ✅ URL PUBLIQUE
 
-**Production :** https://8c387848.gxo-procedures-moissy.pages.dev
+**Production :** https://8c387848.gxo-moissy-v2.pages.dev
 
 ---
 
@@ -28,13 +28,13 @@ et modifier le code pour pointer vers ces URLs.
 Vous pouvez déjà tester le site :
 
 **Page d'accueil :**
-https://8c387848.gxo-procedures-moissy.pages.dev
+https://8c387848.gxo-moissy-v2.pages.dev
 
 **Login admin :**
-https://8c387848.gxo-procedures-moissy.pages.dev/login
+https://8c387848.gxo-moissy-v2.pages.dev/login
 
 **QR Code chauffeur :**
-https://8c387848.gxo-procedures-moissy.pages.dev/chauffeur/qr
+https://8c387848.gxo-moissy-v2.pages.dev/chauffeur/qr
 
 ---
 

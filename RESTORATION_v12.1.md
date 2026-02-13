@@ -71,16 +71,16 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue
 ### Vidéo d'Instructions
 ```
 🇫🇷 Français:
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 
 🇳🇱 Nederlands:
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 
 🇩🇪 Deutsch:
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=de
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=de
 
 🇮🇹 Italiano:
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=it
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=it
 ```
 
 ### Inscription Chauffeur
@@ -238,7 +238,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/accueil-chauffeur
 ### Pages Fonctionnelles
 1. ✅ QR Code
 2. ✅ Sélection langue (12 langues)
-3. ✅ Vidéo instructions (12 vidéos)
+3. ✅ Consignes de sécurité (12 vidéos)
 4. ✅ Inscription chauffeur
 5. ✅ Tâches déchargement (5 tâches)
 6. ✅ Dashboard admin temps réel
@@ -272,7 +272,7 @@ npx wrangler d1 migrations apply gxo-chauffeurs-db --remote
 npx wrangler pages deploy dist --project-name gxo-procedures-moissy --branch main
 
 # 4. URL Production
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -348,7 +348,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur
 
 **Test vidéo français:**
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 ```
 
 **Dashboard admin:**

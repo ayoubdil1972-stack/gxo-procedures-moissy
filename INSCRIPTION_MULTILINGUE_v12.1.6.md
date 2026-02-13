@@ -144,7 +144,7 @@ sessionStorage.setItem('chauffeur_langue', 'pl')  // Exemple : Polonais
 
 ### **2. Vidéo d'Instructions**
 ```
-/chauffeur/video?lang=pl
+/chauffeur/consignes?lang=pl
 ↓
 Lecture de la vidéo en polonais
 ```
@@ -272,7 +272,7 @@ Site en ligne : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 ### **Pages Disponibles**
 1. `/qrcode-chauffeur` - Scanner QR Code
 2. `/chauffeur/langue` - Sélection langue (12 langues)
-3. `/chauffeur/video?lang=fr` - Vidéo d'instructions
+3. `/chauffeur/consignes?lang=fr` - Vidéo d'instructions
 4. `/chauffeur/inscription` - **🌍 Inscription MULTILINGUE** (NOUVEAU)
 5. `/chauffeur/taches?id=1` - Validation des tâches
 6. `/accueil-chauffeur` - Dashboard admin

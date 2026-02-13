@@ -228,7 +228,7 @@ Langues testées:
 - ✅ `/chauffeur/taches?id=9` : Interface chauffeur avec traduction
 - ✅ `/chauffeur/inscription` : Inscription multilingue
 - ✅ `/chauffeur/langue` : Sélection de langue
-- ✅ `/chauffeur/video?lang=fr` : Vidéo de formation
+- ✅ `/chauffeur/consignes?lang=fr` : Vidéo de formation
 - ✅ `/qrcode-chauffeur` : Génération QR Code
 
 ---

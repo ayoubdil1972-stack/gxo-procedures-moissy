@@ -197,7 +197,7 @@ group-hover:scale-150
 
 ### URLs
 - **Dev** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/login
-- **Prod** : https://gxo-procedures-moissy.pages.dev/login *(à déployer)*
+- **Prod** : https://gxo-moissy-v2.pages.dev/login *(à déployer)*
 
 ---
 

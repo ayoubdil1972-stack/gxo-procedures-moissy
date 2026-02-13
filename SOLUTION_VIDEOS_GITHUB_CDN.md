@@ -2,7 +2,7 @@
 
 ## ❌ Problème Initial
 
-Les vidéos d'instructions (61 MB, 12 fichiers) ne s'affichaient pas sur le site de production `https://gxo-procedures-moissy.pages.dev/`.
+Les vidéos d'instructions (61 MB, 12 fichiers) ne s'affichaient pas sur le site de production `https://gxo-moissy-v2.pages.dev/`.
 
 ### Diagnostic:
 - **Erreur**: HTTP 404 sur `/static/videos/instructions-nl.mp4`
@@ -90,8 +90,8 @@ fix(videos): Use GitHub CDN for video hosting to bypass Cloudflare Pages 25MB li
 ## ✅ Résultats
 
 ### URLs de Production
-- **Site**: https://gxo-procedures-moissy.pages.dev/
-- **Page vidéo NL**: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl ✅
+- **Site**: https://gxo-moissy-v2.pages.dev/
+- **Page vidéo NL**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl ✅
 - **Repository vidéos**: https://github.com/ayoubdil1972-stack/gxo-video-assets ✅
 
 ### Exemple URL Vidéo Direct
@@ -113,7 +113,7 @@ Content-Length: 5178292 ✅ (5.0 MB)
 
 ```bash
 # Test page production
-curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+curl -I https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 
 # Résultat:
 HTTP/2 200 ✅
@@ -212,7 +212,7 @@ Le site se déploie automatiquement via GitHub Actions à chaque push sur `main`
 Pour toute question sur cette solution:
 - **Repository vidéos**: https://github.com/ayoubdil1972-stack/gxo-video-assets
 - **Repository principal**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
-- **Site production**: https://gxo-procedures-moissy.pages.dev/
+- **Site production**: https://gxo-moissy-v2.pages.dev/
 
 ---
 

@@ -73,8 +73,8 @@ Run npx wrangler pages deploy dist --project-name=gxo-procedures-moissy
 ### 6. ✅ Deployment summary (~5s)
 ```
 🚀 Deployment completed!
-🌐 Production URL: https://gxo-procedures-moissy.pages.dev
-📱 Test vidéo NL: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+🌐 Production URL: https://gxo-moissy-v2.pages.dev
+📱 Test vidéo NL: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---
@@ -109,7 +109,7 @@ Toutes les étapes ont une **coche verte** ✅ :
 ### Message final
 ```
 🚀 Deployment completed!
-🌐 Production URL: https://gxo-procedures-moissy.pages.dev
+🌐 Production URL: https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -118,18 +118,18 @@ Toutes les étapes ont une **coche verte** ✅ :
 
 ### URL de production
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test vidéo NL (iPhone 12)
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ### Autres pages à tester
-- **Admin** : https://gxo-procedures-moissy.pages.dev/admin
-- **Accueil** : https://gxo-procedures-moissy.pages.dev/accueil
-- **Questionnaire** : https://gxo-procedures-moissy.pages.dev/test-questionnaire.html
+- **Admin** : https://gxo-moissy-v2.pages.dev/admin
+- **Accueil** : https://gxo-moissy-v2.pages.dev/accueil
+- **Questionnaire** : https://gxo-moissy-v2.pages.dev/test-questionnaire.html
 
 ---
 
@@ -151,7 +151,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 
 ## 📱 RÉSULTAT ATTENDU SUR IPHONE 12
 
-### Page : /chauffeur/video?lang=nl
+### Page : /chauffeur/consignes?lang=nl
 
 **Ce que vous devriez voir :**
 - ✅ Page **noire** (fond noir)
@@ -188,8 +188,8 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 | Description | URL |
 |-------------|-----|
 | **GitHub Actions** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
-| **Site production** | https://gxo-procedures-moissy.pages.dev |
-| **Vidéo NL** | https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl |
+| **Site production** | https://gxo-moissy-v2.pages.dev |
+| **Vidéo NL** | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
 | **Sandbox (secours)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
 

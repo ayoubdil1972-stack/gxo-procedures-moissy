@@ -84,10 +84,10 @@ cache-control: public, max-age=31536000 ✅
 
 ```bash
 # Page vidéo
-curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+curl -I https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
 
 # Sur iPhone Safari
-# Ouvrir: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+# Ouvrir: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
 # Vérifier: Vidéo se lance sans erreur MIME type
 ```
 

@@ -4,7 +4,7 @@
 
 Votre site **fonctionne parfaitement** dans le sandbox :
 - 🌐 **URL Sandbox** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- 📹 **Vidéo test (NL)** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+- 📹 **Vidéo test (NL)** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 - ✅ **Build réussit** : npm run build → 93 fichiers générés (71 MB)
 - ✅ **Token Cloudflare valide** : W5rEvDMCGvs4_WAYzpKBkNA_uzaIeZ5Vdx8lll4b
 
@@ -76,12 +76,12 @@ Le workflow va :
 
 **URL de production** :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 **Test vidéo NL (iPhone 12)** :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Résultat attendu** :
@@ -166,7 +166,7 @@ GitHub → GitHub Actions build ✅ → Wrangler upload ✅ → CDN ✅
 | **GitHub Actions** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **GitHub Secrets** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
 | **Site sandbox** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
-| **Vidéo test sandbox** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl |
+| **Vidéo test sandbox** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl |
 
 ---
 
@@ -179,7 +179,7 @@ GitHub → GitHub Actions build ✅ → Wrangler upload ✅ → CDN ✅
 - [ ] Cliquer "Run workflow" sur branche `main`
 - [ ] Attendre 5-7 minutes
 - [ ] Vérifier que toutes les étapes sont ✅ vertes
-- [ ] Ouvrir https://gxo-procedures-moissy.pages.dev
+- [ ] Ouvrir https://gxo-moissy-v2.pages.dev
 - [ ] Tester la vidéo sur iPhone 12
 - [ ] ✅ SUCCÈS !
 

@@ -123,7 +123,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 
 ### Test vidéo NL :
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 ```
 
 ---

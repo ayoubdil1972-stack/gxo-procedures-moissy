@@ -8,20 +8,20 @@
 
 ## 🌐 Site Principal - Cloudflare Pages
 
-**Base URL:** https://gxo-procedures-moissy.pages.dev
+**Base URL:** https://gxo-moissy-v2.pages.dev
 
 ### 🚚 Workflow Chauffeur Externe (12 langues)
 
 #### 1️⃣ Point d'entrée QR Code
 ```
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 - Page d'accueil avec logo GXO et bouton "Démarrer"
 - Redirige vers la sélection de langue
 
 #### 2️⃣ Sélection de langue
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+https://gxo-moissy-v2.pages.dev/chauffeur/langue
 ```
 - 12 langues disponibles avec drapeaux :
   - 🇫🇷 Français (fr)
@@ -39,18 +39,18 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/langue
 
 #### 3️⃣ Vidéo d'instructions (par langue)
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=de
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fi
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=da
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=cs
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=bg
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=pl
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=ro
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=pt
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=hr
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=de
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fi
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=da
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=cs
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=bg
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=ro
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pt
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=hr
 ```
 - **✅ CORRIGÉ:** Support Range Requests pour iOS Safari
 - Vidéo obligatoire (pas de skip)
@@ -60,7 +60,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=hr
 
 #### 4️⃣ Inscription chauffeur
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+https://gxo-moissy-v2.pages.dev/chauffeur/inscription
 ```
 - **✅ CORRIGÉ:** Set status='in_progress' pour apparaître dans dashboard
 - Formulaire : Pseudo, Entreprise, Numéro de quai
@@ -68,7 +68,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
 
 #### 5️⃣ Tâches de sécurité (5 étapes)
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id=12
+https://gxo-moissy-v2.pages.dev/chauffeur/taches?id=12
 ```
 - 5 tâches obligatoires :
   1. ✅ EPI porté
@@ -80,7 +80,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id=12
 
 #### 6️⃣ Dashboard chauffeur
 ```
-https://gxo-procedures-moissy.pages.dev/accueil-chauffeur
+https://gxo-moissy-v2.pages.dev/accueil-chauffeur
 ```
 - Vue temps réel des chauffeurs actifs
 - **✅ CORRIGÉ:** Affiche les chauffeurs avec status='in_progress'
@@ -188,26 +188,26 @@ https://github.com/ayoubdil1972-stack/gxo-video-assets
 
 ### Sur iPhone 12 (recommandé)
 
-1. **Scanner le QR Code** → https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+1. **Scanner le QR Code** → https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 2. **Cliquer "Démarrer"** → Redirige vers `/chauffeur/langue`
-3. **Sélectionner langue** (ex: Italien) → Redirige vers `/chauffeur/video?lang=it`
+3. **Sélectionner langue** (ex: Italien) → Redirige vers `/chauffeur/consignes?lang=it`
 4. **Lancer la vidéo** → Bouton PLAY géant sur mobile
 5. **Regarder en entier** → Progress bar 0-100%
 6. **Cliquer "Continuer"** → Redirige vers `/chauffeur/inscription`
 7. **Remplir formulaire** → Pseudo, Entreprise, Quai
 8. **Valider** → Redirige vers `/chauffeur/taches?id=X`
 9. **Compléter 5 tâches** → Validation une par une
-10. **Voir dashboard** → https://gxo-procedures-moissy.pages.dev/accueil-chauffeur
+10. **Voir dashboard** → https://gxo-moissy-v2.pages.dev/accueil-chauffeur
 
 ### URLs de test direct
 ```bash
 # Test vidéo Range Request
-curl -I "https://gxo-procedures-moissy.pages.dev/api/video/bg" \
+curl -I "https://gxo-moissy-v2.pages.dev/api/video/bg" \
   --header "Range: bytes=0-1023"
 # Réponse attendue: HTTP 206 Partial Content
 
 # Test chauffeurs actifs
-curl "https://gxo-procedures-moissy.pages.dev/api/chauffeur/liste"
+curl "https://gxo-moissy-v2.pages.dev/api/chauffeur/liste"
 # Réponse attendue: JSON avec chauffeurs status='in_progress'
 ```
 
@@ -217,7 +217,7 @@ curl "https://gxo-procedures-moissy.pages.dev/api/chauffeur/liste"
 
 **URL d'entrée:**
 ```
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 
 **Outil recommandé:** https://www.qr-code-generator.com/
@@ -240,7 +240,7 @@ https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
 
 **Vérification déploiement:**
 ```bash
-curl -I https://gxo-procedures-moissy.pages.dev
+curl -I https://gxo-moissy-v2.pages.dev
 # Date header = dernier déploiement
 ```
 

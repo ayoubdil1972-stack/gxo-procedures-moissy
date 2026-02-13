@@ -125,8 +125,8 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy
 ```
 
 **Vous obtiendrez 2 URLs** :
-- **Production** : `https://gxo-procedures-moissy.pages.dev`
-- **Branch** : `https://main.gxo-procedures-moissy.pages.dev`
+- **Production** : `https://gxo-moissy-v2.pages.dev`
+- **Branch** : `https://main.gxo-moissy-v2.pages.dev`
 
 ```bash
 # 4. Lier la base de données au projet Pages
@@ -141,13 +141,13 @@ npx wrangler pages deployment create --project-name gxo-procedures-moissy \
 
 #### URL pour le QR Code :
 ```
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 
 #### Méthode 1 : En ligne (RECOMMANDÉ, le plus simple)
 1. Aller sur **https://www.qr-code-generator.com/**
 2. Sélectionner **"URL"**
-3. Coller : `https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur`
+3. Coller : `https://gxo-moissy-v2.pages.dev/qrcode-chauffeur`
 4. Personnaliser :
    - **Taille** : 1000x1000px ou plus
    - **Correction d'erreur** : **Level H** (30% - recommandé)
@@ -158,7 +158,7 @@ https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
 #### Méthode 2 : Avec API (rapide)
 ```bash
 # Télécharger le QR code directement
-curl "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur&color=000000" \
+curl "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://gxo-moissy-v2.pages.dev/qrcode-chauffeur&color=000000" \
   -o qrcode-gxo-chauffeurs.png
 ```
 
@@ -168,7 +168,7 @@ curl "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://gx
 npm install -g qrcode
 
 # Générer
-qrcode -o qrcode-gxo-chauffeurs.png -w 1000 "https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur"
+qrcode -o qrcode-gxo-chauffeurs.png -w 1000 "https://gxo-moissy-v2.pages.dev/qrcode-chauffeur"
 ```
 
 **Impression recommandée** :
@@ -182,13 +182,13 @@ qrcode -o qrcode-gxo-chauffeurs.png -w 1000 "https://gxo-procedures-moissy.pages
 
 ### Test 1 : Site accessible
 ```bash
-curl -I https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+curl -I https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 **Attendu** : HTTP/2 200
 
 ### Test 2 : Vidéo accessible
 ```bash
-curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-fr.mp4
+curl -I https://gxo-moissy-v2.pages.dev/static/videos/instructions-fr.mp4
 ```
 **Attendu** : HTTP/2 200
 
@@ -199,7 +199,7 @@ npx wrangler d1 execute gxo-chauffeurs-db --command="SELECT COUNT(*) as total FR
 **Attendu** : `total = 5` (données de test)
 
 ### Test 4 : Parcours complet (IMPORTANT)
-1. **Ouvrir** : `https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur`
+1. **Ouvrir** : `https://gxo-moissy-v2.pages.dev/qrcode-chauffeur`
 2. **Cliquer** sur "Commencer l'induction"
 3. **Sélectionner** une langue (ex: Français)
 4. **Regarder** la vidéo (devrait charger en < 1s)
@@ -298,7 +298,7 @@ Si ça demande authentification :
 
 #### Pour RH (30 min)
 1. **Accès au système** :
-   - URL : https://gxo-procedures-moissy.pages.dev
+   - URL : https://gxo-moissy-v2.pages.dev
    - Futur : Interface admin (v12.0)
 2. **Vérification des inscriptions** :
    - Consulter la base D1 (via Cloudflare Dashboard)
@@ -429,7 +429,7 @@ Avant de considérer le projet "terminé", vérifiez :
 
 Si vous avez coché tous les items, **le projet est 100% opérationnel** !
 
-**URL Production** : https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+**URL Production** : https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 
 Les chauffeurs peuvent maintenant :
 1. Scanner le QR Code

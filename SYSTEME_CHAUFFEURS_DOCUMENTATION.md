@@ -17,18 +17,18 @@ Le système **GXO Procedures Moissy** inclut un module complet pour l'accueil de
 ```
 🏠 Page QR Code:        https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur
 🌍 Sélection langue:    https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue
-📹 Vidéo (NL):          https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+📹 Consignes (NL):          https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 📝 Inscription:         https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/inscription
 ✅ Tâches:              https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/taches
 ```
 
 ### URLs Production (Bientôt disponibles)
 ```
-🏠 Page QR Code:        https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
-🌍 Sélection langue:    https://gxo-procedures-moissy.pages.dev/chauffeur/langue
-📹 Vidéo (NL):          https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
-📝 Inscription:         https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
-✅ Tâches:              https://gxo-procedures-moissy.pages.dev/chauffeur/taches
+🏠 Page QR Code:        https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
+🌍 Sélection langue:    https://gxo-moissy-v2.pages.dev/chauffeur/langue
+📹 Consignes (NL):          https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+📝 Inscription:         https://gxo-moissy-v2.pages.dev/chauffeur/inscription
+✅ Tâches:              https://gxo-moissy-v2.pages.dev/chauffeur/taches
 ```
 
 ---
@@ -130,7 +130,7 @@ Le système **GXO Procedures Moissy** inclut un module complet pour l'accueil de
 
 ---
 
-### Étape 3 : Vidéo d'instructions (`/chauffeur/video?lang=XX`)
+### Étape 3 : Vidéo d'instructions (`/chauffeur/consignes?lang=XX`)
 
 **Fonctionnalités vidéo** :
 - Lecture automatique compatible iOS/Android
@@ -319,7 +319,7 @@ CREATE TABLE chauffeur_arrivals (
 // Routes publiques (sans authentification)
 app.get('/qrcode-chauffeur', ...)         // Page QR Code
 app.get('/chauffeur/langue', ...)         // Sélection langue
-app.get('/chauffeur/video', ...)          // Vidéo instructions
+app.get('/chauffeur/video', ...)          // Consignes de sécurité
 app.get('/chauffeur/inscription', ...)    // Formulaire inscription
 app.get('/chauffeur/taches', ...)         // Gestion tâches
 
@@ -361,7 +361,7 @@ chauffeur_arrivals (
 ### Status actuel
 ```
 ✅ Sandbox:     https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-⏳ Production:  https://gxo-procedures-moissy.pages.dev (en cours)
+⏳ Production:  https://gxo-moissy-v2.pages.dev (en cours)
 ```
 
 ### Workflow GitHub Actions
@@ -389,13 +389,13 @@ jobs:
 ### Vérification post-déploiement
 ```bash
 # Test QR Code
-curl https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+curl https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 
 # Test sélection langue
-curl https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+curl https://gxo-moissy-v2.pages.dev/chauffeur/langue
 
 # Test vidéo NL
-curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp4
+curl -I https://gxo-moissy-v2.pages.dev/static/videos/instructions-nl.mp4
 # → Doit retourner 200 OK avec Accept-Ranges: bytes
 ```
 
@@ -407,7 +407,7 @@ curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp
 
 1. **QR Code** :
    ```
-   https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+   https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
    ```
    ✅ QR Code visible et scannable
    ✅ Instructions lisibles
@@ -415,7 +415,7 @@ curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp
 
 2. **Sélection langue** :
    ```
-   https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+   https://gxo-moissy-v2.pages.dev/chauffeur/langue
    ```
    ✅ Grille 2 colonnes responsive
    ✅ Drapeaux visible
@@ -423,7 +423,7 @@ curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp
 
 3. **Vidéo** :
    ```
-   https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+   https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
    ```
    ✅ Vidéo se charge instantanément
    ✅ Bouton PLAY orange visible
@@ -434,7 +434,7 @@ curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp
 
 4. **Inscription** :
    ```
-   https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+   https://gxo-moissy-v2.pages.dev/chauffeur/inscription
    ```
    ✅ Formulaire tactile optimisé
    ✅ Clavier mobile adapté
@@ -443,7 +443,7 @@ curl -I https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp
 
 5. **Tâches** :
    ```
-   https://gxo-procedures-moissy.pages.dev/chauffeur/taches
+   https://gxo-moissy-v2.pages.dev/chauffeur/taches
    ```
    ✅ Boutons tactiles larges
    ✅ Feedback visuel immédiat
@@ -560,7 +560,7 @@ https://dash.cloudflare.com/.../analytics
 
 **Liens utiles** :
 - Sandbox: https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- Production: https://gxo-procedures-moissy.pages.dev
+- Production: https://gxo-moissy-v2.pages.dev
 - GitHub: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 - Cloudflare: https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy
 

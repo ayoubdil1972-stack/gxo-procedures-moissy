@@ -60,7 +60,7 @@ Server: cloudflare
 BASE_URL: 'https://pub-2c4381bbcb67487eaca05acc5a5bb501.r2.dev'
 ```
 
-### 2. Page Vidéo (`src/pages/chauffeur-video.tsx`)
+### 2. Page Consignes (`src/pages/chauffeur-video.tsx`)
 ```typescript
 const R2_BASE = 'https://pub-2c4381bbcb67487eaca05acc5a5bb501.r2.dev';
 const videoUrls = {
@@ -85,24 +85,24 @@ dist/_worker.js  255.34 kB ✅
 
 ```
 1️⃣ QR Code
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 
 2️⃣ Sélection Langue
-https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+https://gxo-moissy-v2.pages.dev/chauffeur/langue
 
-3️⃣ Vidéo (exemple Italien)
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
+3️⃣ Consignes (exemple Italien)
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
 ↓ Charge depuis R2
 https://pub-2c4381bbcb67487eaca05acc5a5bb501.r2.dev/instructions-it.mp4
 
 4️⃣ Inscription
-https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+https://gxo-moissy-v2.pages.dev/chauffeur/inscription
 
 5️⃣ Tâches
-https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id=12
+https://gxo-moissy-v2.pages.dev/chauffeur/taches?id=12
 
 6️⃣ Dashboard
-https://gxo-procedures-moissy.pages.dev/accueil-chauffeur
+https://gxo-moissy-v2.pages.dev/accueil-chauffeur
 ```
 
 ### Vidéos R2 Directes (12 langues)
@@ -147,7 +147,7 @@ https://gxo-procedures-moissy.pages.dev/accueil-chauffeur
 
 **URL de test:**
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
 ```
 
 **Vérifications attendues:**

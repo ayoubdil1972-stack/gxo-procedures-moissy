@@ -31,7 +31,7 @@
 - `/chauffeur/taches?id=X` - Interface Chauffeur avec tâches et chat
 - `/chauffeur/inscription` - Inscription multilingue (12 langues)
 - `/chauffeur/langue` - Sélection de langue
-- `/chauffeur/video?lang=fr` - Vidéos de formation multilingues
+- `/chauffeur/consignes?lang=fr` - Vidéos de formation multilingues
 - `/qrcode-chauffeur` - QR Code pour inscription rapide
 
 ---

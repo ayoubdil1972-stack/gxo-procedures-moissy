@@ -290,7 +290,7 @@ Si vous ne voyez pas "Production branch", cherchez "Build configuration" :
 │ ✅ Deployment summary               (5s)    │
 │                                             │
 │ 🌐 Production URL:                          │
-│    https://gxo-procedures-moissy.pages.dev  │
+│    https://gxo-moissy-v2.pages.dev  │
 │                                             │
 └─────────────────────────────────────────────┘
 ```
@@ -301,12 +301,12 @@ Si vous ne voyez pas "Production branch", cherchez "Build configuration" :
 
 ### Test principal :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test vidéo (iPhone 12) :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Ce que vous devriez voir sur iPhone 12** :
@@ -368,7 +368,7 @@ Cochez au fur et à mesure :
 - [ ] ✅ Cliqué sur "Run workflow"
 - [ ] ✅ Attendu 5-7 minutes
 - [ ] ✅ Workflow terminé avec succès ✅
-- [ ] ✅ Ouvert https://gxo-procedures-moissy.pages.dev
+- [ ] ✅ Ouvert https://gxo-moissy-v2.pages.dev
 - [ ] ✅ Testé la vidéo sur iPhone 12
 - [ ] 🎉 **SUCCÈS !**
 

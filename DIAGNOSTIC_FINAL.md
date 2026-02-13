@@ -4,7 +4,7 @@
 
 ### **URL qui FONCTIONNE :**
 ```
-https://a57c5969.gxo-procedures-moissy.pages.dev/
+https://a57c5969.gxo-moissy-v2.pages.dev/
 ```
 - ✅ HTTP/2 200
 - ✅ La page d'accueil charge
@@ -86,12 +86,12 @@ Une fois le nouveau déploiement fait, testez :
 
 **Page d'accueil :**
 ```
-https://NOUVELLE-URL.gxo-procedures-moissy.pages.dev/
+https://NOUVELLE-URL.gxo-moissy-v2.pages.dev/
 ```
 
 **Vidéo néerlandaise (iPhone 12) :**
 ```
-https://NOUVELLE-URL.gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://NOUVELLE-URL.gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Résultat attendu :**
@@ -145,7 +145,7 @@ Après le réupload réussi :
 1. Allez dans **Deployments**
 2. Trouvez le nouveau déploiement
 3. Cliquez sur les **3 points** (...) → **Set as production**
-4. L'URL principale fonctionnera : `https://gxo-procedures-moissy.pages.dev`
+4. L'URL principale fonctionnera : `https://gxo-moissy-v2.pages.dev`
 
 ---
 

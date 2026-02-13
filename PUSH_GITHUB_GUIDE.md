@@ -84,7 +84,7 @@ Value: 8b193b1c61a45eb50fb2dab89cf8bfe5
 Une fois le déploiement terminé (✅ dans GitHub Actions), testez sur votre iPhone 12 :
 
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---

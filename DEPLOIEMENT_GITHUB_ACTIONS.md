@@ -96,7 +96,7 @@ git pull origin main  # Récupérer les dernières modifications
 Une fois le déploiement terminé (✅ point vert), ouvrez sur votre iPhone :
 
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Résultat attendu :**

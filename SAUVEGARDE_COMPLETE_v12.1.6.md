@@ -217,7 +217,7 @@ app.post('/api/admin/cloturer-chauffeur', async (c) => {
 ```
 1. /qrcode-chauffeur          → Scanner QR Code d'entrée
 2. /chauffeur/langue          → Sélection de la langue (12 choix)
-3. /chauffeur/video?lang=fr   → Vidéo d'instructions multilingue
+3. /chauffeur/consignes?lang=fr   → Vidéo d'instructions multilingue
 4. /chauffeur/inscription     → 🌍 Inscription multilingue (NOUVEAU)
 5. /chauffeur/taches?id=1     → Validation des 5 tâches
 6. /accueil-chauffeur         → Dashboard admin temps réel
@@ -231,7 +231,7 @@ app.post('/api/admin/cloturer-chauffeur', async (c) => {
    📱 sessionStorage.setItem('chauffeur_langue', 'pl')
    ↓
 3. Regarder Vidéo
-   🎥 /chauffeur/video?lang=pl
+   🎥 /chauffeur/consignes?lang=pl
    ↓
 4. 🌍 S'inscrire (MULTILINGUE)
    📝 Interface en polonais
@@ -523,7 +523,7 @@ npx wrangler d1 migrations apply gxo-chauffeurs-db
 ```
 1. /qrcode-chauffeur          → QR Code entrée
 2. /chauffeur/langue          → Sélection langue
-3. /chauffeur/video?lang=fr   → Vidéo instructions
+3. /chauffeur/consignes?lang=fr   → Consignes de sécurité
 4. /chauffeur/inscription     → 🌍 Inscription MULTILINGUE
 5. /chauffeur/taches?id=1     → Tâches de déchargement
 6. /accueil-chauffeur         → Dashboard admin

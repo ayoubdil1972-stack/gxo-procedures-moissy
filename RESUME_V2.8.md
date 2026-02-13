@@ -20,7 +20,7 @@
 
 - ✅ **Nom plus descriptif** : Reflète mieux le contenu (procédures) et le lieu (Moissy)
 - ✅ **Sous-titre optimisé** : Tient sur une ligne, meilleure lisibilité mobile
-- ✅ **URL production** : `https://gxo-procedures-moissy.pages.dev` (à déployer)
+- ✅ **URL production** : `https://gxo-moissy-v2.pages.dev` (à déployer)
 - ✅ **Documentation complète** : CHANGELOG_V2.8.md ajouté
 
 ---
@@ -60,7 +60,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 ### Production (à déployer)
 ```bash
 npm run deploy:prod
-# → https://gxo-procedures-moissy.pages.dev
+# → https://gxo-moissy-v2.pages.dev
 ```
 
 ### Archive v2.8 FINAL
@@ -89,7 +89,7 @@ pm2 restart gxo-procedures-moissy
 npm run deploy:prod
 
 # 3. Vérifier
-curl https://gxo-procedures-moissy.pages.dev
+curl https://gxo-moissy-v2.pages.dev
 ```
 
 ---

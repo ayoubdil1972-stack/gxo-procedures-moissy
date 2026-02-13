@@ -126,7 +126,7 @@ const AUTH_CONFIG = {
 ### Pour les utilisateurs
 
 1. **Se connecter**
-   - Aller sur https://gxo-procedures-moissy.pages.dev/login
+   - Aller sur https://gxo-moissy-v2.pages.dev/login
    - Entrer identifiant et mot de passe
    - Cocher "Se souvenir de moi" (optionnel)
    - Cliquer sur "Se connecter"

@@ -246,7 +246,7 @@ curl -s http://localhost:3000 | grep "body.mobile-mode"
 
 ### **URLs**
 - **Sandbox** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- **Production** : https://gxo-procedures-moissy.pages.dev
+- **Production** : https://gxo-moissy-v2.pages.dev
 - **Archive v2.17** : [En cours de création]
 
 ---

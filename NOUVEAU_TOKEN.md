@@ -4,7 +4,7 @@
 
 ```
 ✨ Successfully created the 'gxo-procedures-moissy' project
-🌐 URL: https://gxo-procedures-moissy.pages.dev/
+🌐 URL: https://gxo-moissy-v2.pages.dev/
 ```
 
 ---
@@ -93,12 +93,12 @@ Error: Project not found
 
 ### URL de production :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test vidéo NL (iPhone 12) :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---
@@ -121,7 +121,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 |-------------|-----|
 | **Mettre à jour secret** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
 | **GitHub Actions** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
-| **Site production** | https://gxo-procedures-moissy.pages.dev |
+| **Site production** | https://gxo-moissy-v2.pages.dev |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
 
 ---

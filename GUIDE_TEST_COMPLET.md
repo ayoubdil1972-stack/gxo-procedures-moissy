@@ -25,7 +25,7 @@ Base URL: https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 
 ### 2. Tests Production (Après déploiement)
 ```
-Base URL: https://gxo-procedures-moissy.pages.dev
+Base URL: https://gxo-moissy-v2.pages.dev
 ```
 
 - [ ] Page QR Code charge correctement
@@ -51,25 +51,25 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur
 
 **URL Production** :
 ```
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 
 **Tests à effectuer** :
 ```bash
 # Test 1.1 : Page charge (200 OK)
-curl -I https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+curl -I https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 # Attendu: HTTP/2 200
 
 # Test 1.2 : QR Code présent
-curl -s https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur | grep "qrcode-container"
+curl -s https://gxo-moissy-v2.pages.dev/qrcode-chauffeur | grep "qrcode-container"
 # Attendu: <div id="qrcode-container">
 
 # Test 1.3 : Logo GXO présent
-curl -s https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur | grep "gxo-logo"
+curl -s https://gxo-moissy-v2.pages.dev/qrcode-chauffeur | grep "gxo-logo"
 # Attendu: src="/static/gxo-logo-official.svg"
 
 # Test 1.4 : Lien vers sélection langue
-curl -s https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur | grep "/chauffeur/langue"
+curl -s https://gxo-moissy-v2.pages.dev/qrcode-chauffeur | grep "/chauffeur/langue"
 # Attendu: href="/chauffeur/langue"
 ```
 
@@ -92,25 +92,25 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue
 
 **URL Production** :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+https://gxo-moissy-v2.pages.dev/chauffeur/langue
 ```
 
 **Tests à effectuer** :
 ```bash
 # Test 2.1 : Page charge
-curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+curl -I https://gxo-moissy-v2.pages.dev/chauffeur/langue
 # Attendu: HTTP/2 200
 
 # Test 2.2 : 12 langues présentes
-curl -s https://gxo-procedures-moissy.pages.dev/chauffeur/langue | grep -c "chauffeur/video?lang="
+curl -s https://gxo-moissy-v2.pages.dev/chauffeur/langue | grep -c "chauffeur/video?lang="
 # Attendu: 12
 
 # Test 2.3 : Français présent
-curl -s https://gxo-procedures-moissy.pages.dev/chauffeur/langue | grep "Français"
+curl -s https://gxo-moissy-v2.pages.dev/chauffeur/langue | grep "Français"
 # Attendu: <h3>Français</h3>
 
 # Test 2.4 : Nederlands présent
-curl -s https://gxo-procedures-moissy.pages.dev/chauffeur/langue | grep "Nederlands"
+curl -s https://gxo-moissy-v2.pages.dev/chauffeur/langue | grep "Nederlands"
 # Attendu: <h3>Nederlands</h3>
 ```
 
@@ -143,32 +143,32 @@ curl -s https://gxo-procedures-moissy.pages.dev/chauffeur/langue | grep "Nederla
 
 **URLs à tester** :
 ```
-NL: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
-FR: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
-DE: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=de
+NL: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+FR: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
+DE: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=de
 ... (12 au total)
 ```
 
 **Tests automatiques (pour chaque langue)** :
 ```bash
 # Test 3.1 : Page vidéo charge
-curl -I "https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl"
+curl -I "https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl"
 # Attendu: HTTP/2 200
 
 # Test 3.2 : Fichier vidéo existe
-curl -I "https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp4"
+curl -I "https://gxo-moissy-v2.pages.dev/static/videos/instructions-nl.mp4"
 # Attendu: HTTP/2 200
 # Attendu: Content-Length: ~5000000 (5 MB)
 # Attendu: Accept-Ranges: bytes
 
 # Test 3.3 : Range Request fonctionne (iOS)
-curl -I -H "Range: bytes=0-1023" "https://gxo-procedures-moissy.pages.dev/static/videos/instructions-nl.mp4"
+curl -I -H "Range: bytes=0-1023" "https://gxo-moissy-v2.pages.dev/static/videos/instructions-nl.mp4"
 # Attendu: HTTP/2 206 Partial Content
 # Attendu: Content-Range: bytes 0-1023/5000000
 ```
 
 **Test manuel (iPhone 12 Safari)** :
-1. Ouvrir `https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl`
+1. Ouvrir `https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl`
 2. ✅ Page noire avec bande orange
 3. ✅ Logo GXO centré
 4. ✅ Label "Nederlandse instructies"
@@ -185,7 +185,7 @@ curl -I -H "Range: bytes=0-1023" "https://gxo-procedures-moissy.pages.dev/static
 ```bash
 for lang in nl fr de fi da cs bg pl ro it pt hr; do
   echo "Testing $lang..."
-  curl -I "https://gxo-procedures-moissy.pages.dev/static/videos/instructions-$lang.mp4"
+  curl -I "https://gxo-moissy-v2.pages.dev/static/videos/instructions-$lang.mp4"
 done
 ```
 
@@ -208,21 +208,21 @@ done
 
 **URL** :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+https://gxo-moissy-v2.pages.dev/chauffeur/inscription
 ```
 
 **Tests automatiques** :
 ```bash
 # Test 4.1 : Page charge
-curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+curl -I https://gxo-moissy-v2.pages.dev/chauffeur/inscription
 # Attendu: HTTP/2 200
 
 # Test 4.2 : Formulaire présent
-curl -s https://gxo-procedures-moissy.pages.dev/chauffeur/inscription | grep "<form"
+curl -s https://gxo-moissy-v2.pages.dev/chauffeur/inscription | grep "<form"
 # Attendu: <form...
 
 # Test 4.3 : API inscription fonctionne
-curl -X POST https://gxo-procedures-moissy.pages.dev/api/chauffeur/inscription \
+curl -X POST https://gxo-moissy-v2.pages.dev/api/chauffeur/inscription \
   -H "Content-Type: application/json" \
   -d '{
     "pseudo": "Test Driver",
@@ -252,17 +252,17 @@ curl -X POST https://gxo-procedures-moissy.pages.dev/api/chauffeur/inscription \
 
 **URL** :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/taches
+https://gxo-moissy-v2.pages.dev/chauffeur/taches
 ```
 
 **Tests automatiques** :
 ```bash
 # Test 5.1 : Page charge
-curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/taches
+curl -I https://gxo-moissy-v2.pages.dev/chauffeur/taches
 # Attendu: HTTP/2 200
 
 # Test 5.2 : API validation tâche fonctionne
-curl -X POST https://gxo-procedures-moissy.pages.dev/api/chauffeur/valider-tache \
+curl -X POST https://gxo-moissy-v2.pages.dev/api/chauffeur/valider-tache \
   -H "Content-Type: application/json" \
   -d '{
     "chauffeur_id": 1,
@@ -302,7 +302,7 @@ curl -X POST https://gxo-procedures-moissy.pages.dev/api/chauffeur/valider-tache
    ✅ 12 langues affichées
    
 4. Cliquer sur 🇳🇱 Nederlands
-   ✅ Redirigé vers /chauffeur/video?lang=nl
+   ✅ Redirigé vers /chauffeur/consignes?lang=nl
    ✅ Page vidéo chargée en <1s
    
 5. Cliquer sur bouton PLAY orange

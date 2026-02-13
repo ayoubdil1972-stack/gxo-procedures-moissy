@@ -140,7 +140,7 @@ npx wrangler r2 object list gxo-videos
      ```json
      [
        {
-         "AllowedOrigins": ["https://gxo-procedures-moissy.pages.dev"],
+         "AllowedOrigins": ["https://gxo-moissy-v2.pages.dev"],
          "AllowedMethods": ["GET", "HEAD"],
          "AllowedHeaders": ["*"],
          "MaxAgeSeconds": 3600
@@ -152,7 +152,7 @@ npx wrangler r2 object list gxo-videos
 
 ```bash
 # Créer un domaine personnalisé (optionnel)
-npx wrangler r2 bucket domain add gxo-videos videos.gxo-procedures-moissy.pages.dev
+npx wrangler r2 bucket domain add gxo-videos videos.gxo-moissy-v2.pages.dev
 ```
 
 ### 🔗 Obtenir l'URL Publique
@@ -242,7 +242,7 @@ npm run build
 
 # Test local
 pm2 restart gxo-procedures-moissy
-curl http://localhost:3000/chauffeur/video?lang=fr
+curl http://localhost:3000/chauffeur/consignes?lang=fr
 
 # Commit et push
 git add -A
@@ -253,14 +253,14 @@ git push origin main
 sleep 120
 
 # Tester en production
-curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+curl -I https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
 ```
 
 ---
 
 ## 📱 ÉTAPE 10: Test Final sur iPhone
 
-1. **Ouvrir Safari mobile** → https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+1. **Ouvrir Safari mobile** → https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
 2. **Vérifier:**
    - ✅ Page charge sans erreur
    - ✅ Bouton PLAY apparaît

@@ -72,13 +72,13 @@ wrangler pages deploy dist --project-name gxo-procedures-moissy
 Une fois le déploiement terminé, vous recevrez une URL :
 
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 Testez la vidéo néerlandaise sur votre iPhone 12 :
 
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **✅ Résultat attendu :**

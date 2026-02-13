@@ -41,7 +41,7 @@ https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions
 ### 3️⃣ Projet Cloudflare Pages
 Le projet `gxo-procedures-moissy` existe sur Cloudflare :
 - ✅ Nom : `gxo-procedures-moissy`
-- ✅ URL : https://gxo-procedures-moissy.pages.dev
+- ✅ URL : https://gxo-moissy-v2.pages.dev
 - ✅ Account ID : `8b193b1c61a45eb50fb2dab89cf8bfe5`
 
 **Vérifier sur Cloudflare Dashboard :**
@@ -88,7 +88,7 @@ Le nouveau token est configuré et valide :
 6. **Wrangler** utilise le token pour s'authentifier
 7. **Cloudflare Pages** reçoit les fichiers
 8. **Déploiement** sur le CDN global
-9. **Site disponible** sur https://gxo-procedures-moissy.pages.dev
+9. **Site disponible** sur https://gxo-moissy-v2.pages.dev
 
 ---
 
@@ -127,7 +127,7 @@ npx wrangler pages project list
 ```
 **Résultat attendu :**
 ```
-gxo-procedures-moissy    https://gxo-procedures-moissy.pages.dev
+gxo-procedures-moissy    https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -141,7 +141,7 @@ npx wrangler pages deploy dist --project-name=gxo-procedures-moissy
 🌎 Uploading... (93/93)
 ✨ Success! Uploaded 93 files
 ✅ Deployment complete!
-🌐 https://gxo-procedures-moissy.pages.dev
+🌐 https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -153,7 +153,7 @@ npx wrangler pages deploy dist --project-name=gxo-procedures-moissy
 - [ ] Le workflow GitHub Actions se lance automatiquement
 - [ ] L'étape "Verify secrets" passe (✅ vert)
 - [ ] L'étape "Deploy to Cloudflare Pages" passe (✅ vert)
-- [ ] Le site est accessible sur https://gxo-procedures-moissy.pages.dev
+- [ ] Le site est accessible sur https://gxo-moissy-v2.pages.dev
 
 ### ❌ Connexion échouée si :
 - [ ] L'étape "Verify secrets" échoue (❌ rouge)
@@ -204,12 +204,12 @@ Une fois le workflow terminé (✅ vert), testez le site :
 
 ### URL de production :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test vidéo NL (iPhone 12) :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Si le site s'affiche et la vidéo fonctionne :**
@@ -224,7 +224,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 | **Secrets GitHub** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
 | **Workflow en cours** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
-| **Site production** | https://gxo-procedures-moissy.pages.dev |
+| **Site production** | https://gxo-moissy-v2.pages.dev |
 
 ---
 

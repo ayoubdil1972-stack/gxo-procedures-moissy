@@ -127,7 +127,7 @@ Vous verrez en temps réel :
 Une fois le workflow terminé (✅ point vert), ouvrez sur votre iPhone 12 :
 
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **✅ Résultat attendu :**

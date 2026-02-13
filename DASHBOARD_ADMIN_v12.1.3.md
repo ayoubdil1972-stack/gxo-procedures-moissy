@@ -222,7 +222,7 @@ if (tachesCompletes === 5) {
 ### Parcours Chauffeur (pour tests)
 - **QR Code** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur
 - **Sélection Langue** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue
-- **Vidéo FR** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+- **Vidéo FR** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 - **Inscription** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/inscription
 - **Tâches** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/taches?id=1
 

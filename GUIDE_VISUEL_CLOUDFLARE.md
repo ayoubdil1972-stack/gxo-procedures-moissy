@@ -140,12 +140,12 @@ Deploy to Cloudflare Pages
 
 **URL de production** :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 **Sur iPhone 12 - Safari** :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Résultat attendu** :
@@ -227,7 +227,7 @@ Cochez au fur et à mesure :
 - [ ] ✅ J'ai cliqué sur "Run workflow"
 - [ ] ✅ J'attends 5-7 minutes
 - [ ] ✅ Le workflow est ✅ vert
-- [ ] ✅ J'ai ouvert https://gxo-procedures-moissy.pages.dev
+- [ ] ✅ J'ai ouvert https://gxo-moissy-v2.pages.dev
 - [ ] ✅ La vidéo fonctionne sur iPhone 12
 - [ ] 🎉 **SUCCÈS !**
 

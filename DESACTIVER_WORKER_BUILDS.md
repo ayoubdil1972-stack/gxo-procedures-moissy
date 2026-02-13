@@ -220,12 +220,12 @@ https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions
 
 ### URL de production :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test vidéo (iPhone 12) :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Résultat attendu** :
@@ -306,7 +306,7 @@ Si vraiment vous ne trouvez pas, vous pouvez :
 - [ ] Relancer le workflow "Deploy to Cloudflare Pages"
 - [ ] Attendre 5-7 minutes
 - [ ] Vérifier que le workflow est ✅ vert
-- [ ] Tester https://gxo-procedures-moissy.pages.dev
+- [ ] Tester https://gxo-moissy-v2.pages.dev
 - [ ] Tester la vidéo sur iPhone 12
 - [ ] 🎉 **SUCCÈS !**
 
@@ -326,7 +326,7 @@ Actions → Run workflow → main → Run workflow
 
 ### 3. TEST
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 **Temps total** : ~10 minutes

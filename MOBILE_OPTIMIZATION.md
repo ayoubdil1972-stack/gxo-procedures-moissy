@@ -384,7 +384,7 @@ function restoreDesktopLayout() {
 ## 🌐 URLs d'Accès
 
 - **Développement (Sandbox)** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- **Production** : https://gxo-procedures-moissy.pages.dev
+- **Production** : https://gxo-moissy-v2.pages.dev
 - **Archive v2.18** : [En cours de création]
 
 ---

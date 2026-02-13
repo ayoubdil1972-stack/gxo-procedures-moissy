@@ -2,7 +2,7 @@
 
 ## 🎯 Problème Initial
 Vous aviez une erreur "**aucun fichier format MIME**" sur la page vidéo:
-- URL: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+- URL: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 - Erreur: Les vidéos retournaient HTTP 404
 - Cause: Cloudflare Pages limite les assets statiques à **25 MB maximum**
 - Vos 12 vidéos totalisaient **61 MB** → rejetées silencieusement lors du déploiement
@@ -36,10 +36,10 @@ Le fichier `src/pages/chauffeur-video.tsx` charge maintenant les vidéos depuis 
 ## 🎬 Tests de Production
 
 ### ✅ Page Vidéo Néerlandaise
-**URL**: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+**URL**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 
 ```bash
-curl -I https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+curl -I https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 # HTTP/2 200 ✅
 ```
 
@@ -57,7 +57,7 @@ curl -I https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/ma
 
 ### Test 1: Page Vidéo Complète
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 **Attendu**:
 - ✅ Page se charge avec header GXO
@@ -69,7 +69,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 
 ### Test 2: Page Test Simple
 ```
-https://gxo-procedures-moissy.pages.dev/test-video-github-cdn.html
+https://gxo-moissy-v2.pages.dev/test-video-github-cdn.html
 ```
 **Attendu**:
 - ✅ Page avec 12 boutons de langues
@@ -80,24 +80,24 @@ https://gxo-procedures-moissy.pages.dev/test-video-github-cdn.html
 
 Pour rappel, voici le parcours complet:
 
-1. **QR Code**: https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+1. **QR Code**: https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
    - Scan du QR code
 
-2. **Sélection Langue**: https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+2. **Sélection Langue**: https://gxo-moissy-v2.pages.dev/chauffeur/langue
    - Choix parmi 12 langues
 
-3. **Vidéo Instructions**: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=XX
+3. **Vidéo Instructions**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=XX
    - ✅ **MAINTENANT FONCTIONNEL** avec vidéos GitHub CDN
    - Lecture obligatoire complète
    - Protection anti-skip
 
-4. **Inscription**: https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+4. **Inscription**: https://gxo-moissy-v2.pages.dev/chauffeur/inscription
    - Formulaire: pseudo, entreprise, numéro de quai
 
-5. **Tâches**: https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id=XXX
+5. **Tâches**: https://gxo-moissy-v2.pages.dev/chauffeur/taches?id=XXX
    - Liste des 5 tâches à valider
 
-6. **Dashboard Admin**: https://gxo-procedures-moissy.pages.dev/admin-dashboard-chauffeurs
+6. **Dashboard Admin**: https://gxo-moissy-v2.pages.dev/admin-dashboard-chauffeurs
    - Suivi des chauffeurs en temps réel
 
 ## 📊 Statistiques
@@ -149,10 +149,10 @@ git push origin main
 
 | Page | URL |
 |------|-----|
-| **Site principal** | https://gxo-procedures-moissy.pages.dev/ |
-| **QR Code Chauffeur** | https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur |
-| **Vidéo NL** | https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl |
-| **Test Vidéos** | https://gxo-procedures-moissy.pages.dev/test-video-github-cdn.html |
+| **Site principal** | https://gxo-moissy-v2.pages.dev/ |
+| **QR Code Chauffeur** | https://gxo-moissy-v2.pages.dev/qrcode-chauffeur |
+| **Vidéo NL** | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl |
+| **Test Vidéos** | https://gxo-moissy-v2.pages.dev/test-video-github-cdn.html |
 
 ## ✅ Checklist de Validation
 

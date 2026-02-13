@@ -64,7 +64,7 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy --branch mai
 **Résultat attendu** :
 ```
 ✨ Deployment complete!
-🌐 Production: https://gxo-procedures-moissy.pages.dev
+🌐 Production: https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -87,7 +87,7 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy --branch mai
 
 ```bash
 # Test du site
-curl -I https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+curl -I https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 # Attendu: HTTP/2 200
 
 # Test de la base de données
@@ -96,7 +96,7 @@ npx wrangler d1 execute gxo-chauffeurs-db --remote --command="SELECT COUNT(*) FR
 ```
 
 **Ouvrir dans le navigateur** :
-- https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+- https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 
 ---
 

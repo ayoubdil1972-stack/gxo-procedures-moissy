@@ -134,8 +134,8 @@ https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-proc
 | **Surveiller le déploiement** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **Désactiver Workers Builds** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy/settings/builds-deployments |
 | **Site sandbox (déjà en ligne)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
-| **Site production (bientôt)** | https://gxo-procedures-moissy.pages.dev |
-| **Test vidéo NL** | https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl |
+| **Site production (bientôt)** | https://gxo-moissy-v2.pages.dev |
+| **Test vidéo NL** | https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl |
 
 ---
 
@@ -160,7 +160,7 @@ Steps:
      Success! Uploaded 93 files (71.01 MB)
   ✅ Deployment summary               (5s)
 
-Production URL: https://gxo-procedures-moissy.pages.dev
+Production URL: https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -223,8 +223,8 @@ Changez **"Production branch"** de `main` vers `None` → Save
 
 ### Étape 3 : Tester le site
 ```
-https://gxo-procedures-moissy.pages.dev
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---
@@ -262,7 +262,7 @@ Guides disponibles dans `/home/user/webapp/` :
 
 **Après 10 minutes, vous aurez** :
 - ✅ Site déployé sur Cloudflare Pages
-- ✅ URL de production active : https://gxo-procedures-moissy.pages.dev
+- ✅ URL de production active : https://gxo-moissy-v2.pages.dev
 - ✅ 12 vidéos multilingues accessibles
 - ✅ Interface admin + chauffeur fonctionnelle
 - ✅ Compatible iPhone 12

@@ -75,7 +75,7 @@ Value: 8b193b1c61a45eb50fb2dab89cf8bfe5
 Le workflow se termine avec succès :
 - ✅ Toutes les étapes vertes
 - ✅ Message "Deployment completed!"
-- ✅ Site disponible sur https://gxo-procedures-moissy.pages.dev
+- ✅ Site disponible sur https://gxo-moissy-v2.pages.dev
 
 ### ❌ Scénario 2 : Secrets NON configurés ❌
 Le workflow échoue à l'étape "Deploy to Cloudflare Pages" :
@@ -117,12 +117,12 @@ https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions
 
 ### URL de production
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test de la vidéo NL sur iPhone 12
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ### Résultat attendu
@@ -164,7 +164,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 | **Actions en cours** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **Configurer secrets** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
-| **Site production** | https://gxo-procedures-moissy.pages.dev |
+| **Site production** | https://gxo-moissy-v2.pages.dev |
 | **Sandbox (secours)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
 
 ---
@@ -174,7 +174,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 - [ ] Les 2 secrets GitHub sont configurés
 - [ ] Le workflow est lancé (vert en cours)
 - [ ] Le workflow se termine avec succès (✅)
-- [ ] Le site https://gxo-procedures-moissy.pages.dev s'affiche
+- [ ] Le site https://gxo-moissy-v2.pages.dev s'affiche
 - [ ] La vidéo NL se lance sur iPhone 12
 - [ ] Tester les autres langues (FR, DE, FI, etc.)
 

@@ -85,13 +85,13 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 
 **Cloudflare Pages (production partielle) :**
 ```
-https://a57c5969.gxo-procedures-moissy.pages.dev
+https://a57c5969.gxo-moissy-v2.pages.dev
 ```
 ⚠️ Fonctionne mais manque les fichiers statiques
 
 **Cloudflare Pages (cible) :**
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 ⏳ Nécessite réupload complet avec 97 fichiers
 

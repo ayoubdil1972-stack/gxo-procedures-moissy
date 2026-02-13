@@ -136,7 +136,7 @@ mobileOverlay.addEventListener('click', function() {
 
 ### URL de Test
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 ```
 
 ### Ce Que Vous Verrez
@@ -160,7 +160,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?la
 
 ### URL de Test
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 ```
 
 ### Ce Que Vous Verrez
@@ -340,10 +340,10 @@ npx wrangler pages deploy dist --project-name gxo-procedures-moissy
 ## 🔗 LIENS RAPIDES
 
 **Test Mobile:**
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 
 **Test PC:**
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 
 **Dashboard:**
 https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/accueil-chauffeur

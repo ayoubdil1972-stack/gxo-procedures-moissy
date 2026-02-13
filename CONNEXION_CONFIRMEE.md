@@ -27,7 +27,7 @@ npx wrangler pages project list
 ```
 Project Name              | Project Domains                     | Last Modified
 ------------------------- | ----------------------------------- | -------------
-gxo-procedures-moissy     | gxo-procedures-moissy.pages.dev     | 4 minutes ago
+gxo-procedures-moissy     | gxo-moissy-v2.pages.dev     | 4 minutes ago
 ```
 
 ✅ **Le projet existe sur Cloudflare**
@@ -46,7 +46,7 @@ gxo-procedures-moissy     | gxo-procedures-moissy.pages.dev     | 4 minutes ago
 
 ### ✅ Côté Cloudflare
 - **Projet** : `gxo-procedures-moissy`
-- **URL** : https://gxo-procedures-moissy.pages.dev
+- **URL** : https://gxo-moissy-v2.pages.dev
 - **Account** : Ayoubdil1972@gmail.com's Account
 - **Token** : Valide et actif
 - **Permissions** : Pages (deploy)
@@ -76,7 +76,7 @@ Upload des fichiers vers Cloudflare Pages (93 fichiers)
               ↓
 Déploiement sur le CDN global de Cloudflare
               ↓
-Site disponible sur https://gxo-procedures-moissy.pages.dev
+Site disponible sur https://gxo-moissy-v2.pages.dev
 ```
 
 **Durée totale estimée : 5-7 minutes**
@@ -121,7 +121,7 @@ CLOUDFLARE_ACCOUNT_ID   Updated X minutes ago
 
 **Vous devriez voir :**
 - Nom du projet : `gxo-procedures-moissy`
-- URL : `gxo-procedures-moissy.pages.dev`
+- URL : `gxo-moissy-v2.pages.dev`
 - Déploiements récents
 - Statut : Active
 
@@ -198,7 +198,7 @@ Commit: a3e0162
 7. ✅ **Deployment summary** (~5s)
    ```
    🎉 Deployment completed!
-   🌐 https://gxo-procedures-moissy.pages.dev
+   🌐 https://gxo-moissy-v2.pages.dev
    ```
 
 ---
@@ -209,12 +209,12 @@ Une fois le workflow terminé (✅ toutes les étapes vertes) :
 
 ### URL de production :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test vidéo NL (iPhone 12) :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 **Résultat attendu :**
@@ -239,7 +239,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 | **GitHub Actions** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions | ✅ Workflow en cours |
 | **GitHub Secrets** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions | ✅ Configurés |
 | **Cloudflare Project** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy | ✅ Créé |
-| **Site Production** | https://gxo-procedures-moissy.pages.dev | ⏳ En déploiement |
+| **Site Production** | https://gxo-moissy-v2.pages.dev | ⏳ En déploiement |
 
 ---
 

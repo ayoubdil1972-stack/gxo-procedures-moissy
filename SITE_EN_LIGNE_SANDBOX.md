@@ -23,7 +23,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 
 ### 📱 TEST VIDÉO NL SUR IPHONE 12
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 ```
 
 ---
@@ -40,8 +40,8 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?la
 
 ### Pages disponibles
 - ✅ **Accueil** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- ✅ **Vidéo NL** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
-- ✅ **Vidéo FR** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=fr
+- ✅ **Vidéo NL** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
+- ✅ **Vidéo FR** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=fr
 - ✅ **Admin** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/admin
 - ✅ **Accueil chauffeur** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/accueil
 
@@ -53,7 +53,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?la
 
 ### 2️⃣ Allez sur l'URL
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 ```
 
 ### 3️⃣ Résultat attendu
@@ -95,7 +95,7 @@ npx wrangler pages deploy . --project-name=gxo-procedures-moissy
 | Type | URL | Statut |
 |------|-----|--------|
 | **Sandbox (actuel)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai | ✅ **FONCTIONNE** |
-| **Cloudflare (futur)** | https://gxo-procedures-moissy.pages.dev | ⏳ Sera disponible quand Cloudflare sera rétabli |
+| **Cloudflare (futur)** | https://gxo-moissy-v2.pages.dev | ⏳ Sera disponible quand Cloudflare sera rétabli |
 
 ---
 
@@ -149,7 +149,7 @@ Ou je peux le relancer pour vous immédiatement.
 
 ### 3. Tapez l'URL
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 ```
 
 ### 4. Appuyez sur le bouton PLAY orange
@@ -181,10 +181,10 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?la
 | Description | URL |
 |-------------|-----|
 | **Site sandbox (À UTILISER)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
-| **Vidéo NL (iPhone 12)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl |
+| **Vidéo NL (iPhone 12)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl |
 | **Admin** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/admin |
 | **GitHub Repository** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy |
-| **Cloudflare (futur)** | https://gxo-procedures-moissy.pages.dev |
+| **Cloudflare (futur)** | https://gxo-moissy-v2.pages.dev |
 
 ---
 
@@ -192,7 +192,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?la
 
 ### 1️⃣ **TESTEZ MAINTENANT** sur iPhone 12
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 ```
 
 ### 2️⃣ **Dites-moi le résultat**

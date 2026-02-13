@@ -4,18 +4,17 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 
 ## 🌐 URLs
 
-- **Production**: https://gxo-procedures-moissy.pages.dev
+- **Production**: https://gxo-moissy-v2.pages.dev
 - **GitHub**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
-- **Cloudflare Dashboard**: https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy
+- **Cloudflare Dashboard**: https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-moissy-v2
 
 ## 📱 Fonctionnalités
 
 ### Pour les chauffeurs
-- ✅ Vidéos d'instructions multilingues (NL, FR, DE, FI, DA, CS, BG, PL, RO, IT, ES, PT)
-- ✅ Interface intuitive avec bouton PLAY orange
-- ✅ Barre de progression
-- ✅ Support iPhone/Android avec range requests
-- ✅ Questionnaire de validation
+- ✅ Consignes de sécurité multilingues (12 langues: FR, NL, DE, IT, BG, CS, DA, FI, HR, PL, PT, RO)
+- ✅ Interface responsive avec design moderne
+- ✅ Fichiers HTML statiques ultra-rapides (servis via CDN Cloudflare)
+- ✅ Support parfait sur iPhone/Android
 - ✅ Inscription et gestion des tâches
 
 ### Pour les administrateurs
@@ -31,22 +30,24 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 
 ## 🚀 Déploiement
 
-Le site est déployé automatiquement via GitHub Actions sur Cloudflare Pages.
+Le site est déployé sur Cloudflare Pages.
 
 ### Configuration requise
 - Node.js 20+
 - npm 10+
 
-### Déploiement automatique
-Chaque push sur la branche `main` déclenche un déploiement automatique.
+### Déploiement manuel
+```bash
+npm run deploy:prod
+```
 
 ## 🛠️ Technologies
 
 - **Backend**: Hono (TypeScript)
-- **Frontend**: Vanilla JS avec Tailwind CSS (CDN)
+- **Frontend**: HTML statique avec Tailwind CSS (CDN)
 - **Base de données**: Cloudflare D1 (SQLite)
 - **Hébergement**: Cloudflare Pages
-- **CI/CD**: GitHub Actions
+- **CDN**: Cloudflare global network
 
 ## 📦 Structure
 
@@ -70,7 +71,7 @@ webapp/
 
 URL de test vidéo NL :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 Résultat attendu :
@@ -118,3 +119,29 @@ Pour toute question ou problème, consultez les guides de documentation dans le 
 **Dernière mise à jour :** 12 février 2026  
 **Version :** 12.1.1  
 **Statut :** ✅ Prêt pour le déploiement
+
+## 🌍 URLs des Consignes de Sécurité
+
+Les consignes de sécurité sont disponibles en 12 langues :
+
+- 🇫🇷 **Français**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
+- 🇳🇱 **Néerlandais**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+- 🇩🇪 **Allemand**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=de
+- 🇮🇹 **Italien**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
+- 🇧🇬 **Bulgare**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=bg
+- 🇨🇿 **Tchèque**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=cs
+- 🇩🇰 **Danois**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=da
+- 🇫🇮 **Finnois**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fi
+- 🇭🇷 **Croate**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=hr
+- 🇵🇱 **Polonais**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pl
+- 🇵🇹 **Portugais**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=pt
+- 🇷🇴 **Roumain**: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=ro
+
+**Accès direct** : https://gxo-moissy-v2.pages.dev/chauffeur/langue (sélection de langue)
+
+## 📊 Statistiques
+
+- **Bundle Worker**: 231.42 KB (optimisé)
+- **Fichiers statiques**: 12 fichiers HTML (~7 KB chacun)
+- **Temps de chargement**: < 100ms (CDN Cloudflare)
+- **Compatibilité**: 100% mobile et desktop

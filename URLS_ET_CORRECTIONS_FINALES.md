@@ -2,7 +2,7 @@
 
 ## 🌐 SITE PRODUCTION (Cloudflare Pages)
 
-**Base URL**: https://gxo-procedures-moissy.pages.dev/
+**Base URL**: https://gxo-moissy-v2.pages.dev/
 
 **Repository**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy (PUBLIC)
 
@@ -12,21 +12,21 @@
 
 ### 1️⃣ QR Code - Point d'entrée
 ```
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 - Page d'accueil avec explication du processus
 - Bouton "Démarrer la Procédure"
 
 ### 2️⃣ Sélection Langue
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+https://gxo-moissy-v2.pages.dev/chauffeur/langue
 ```
 - 12 langues disponibles: NL, FR, DE, IT, FI, DA, CS, BG, PL, RO, PT, HR
 - Grandes cartes avec drapeaux
 
 ### 3️⃣ Vidéo Instructions
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang={LANGUE}
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang={LANGUE}
 ```
 
 **Exemples**:
@@ -42,21 +42,21 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang={LANGUE}
 
 ### 4️⃣ Inscription
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+https://gxo-moissy-v2.pages.dev/chauffeur/inscription
 ```
 - Formulaire: pseudo, entreprise, numéro de quai
 - Génère un ID chauffeur unique
 
 ### 5️⃣ Tâches de Sécurité
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id={ID}
+https://gxo-moissy-v2.pages.dev/chauffeur/taches?id={ID}
 ```
 - 5 tâches à valider
 - Exemple: `?id=12`
 
 ### 6️⃣ Dashboard Accueil Chauffeur
 ```
-https://gxo-procedures-moissy.pages.dev/accueil-chauffeur
+https://gxo-moissy-v2.pages.dev/accueil-chauffeur
 ```
 - Récapitulatif et félicitations
 - Liste des chauffeurs actifs en temps réel
@@ -71,7 +71,7 @@ QR Code
   ↓ [Démarrer]
 Langue (sélection parmi 12)
   ↓ [Choisir langue]
-Vidéo (?lang=it par exemple)
+Consignes (?lang=it par exemple)
   ↓ [Regarder vidéo complète]
 Inscription
   ↓ [Remplir formulaire]
@@ -118,7 +118,7 @@ https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/video
 - Vérifier que la base D1 est configurée en production
 
 ### 3. ✅ URLs Cohérentes
-**Toutes les URLs utilisent maintenant**: `https://gxo-procedures-moissy.pages.dev/`
+**Toutes les URLs utilisent maintenant**: `https://gxo-moissy-v2.pages.dev/`
 
 ---
 
@@ -135,7 +135,7 @@ https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/video
 
 Pour déploiement physique, générer un QR code avec:
 ```
-https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 ```
 
 **Outil**: https://www.qr-code-generator.com/
@@ -145,7 +145,7 @@ https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
 ## 📱 TESTS À EFFECTUER SUR IPHONE
 
 ### Test 1: Workflow Complet
-1. Scanner le QR code ou ouvrir: `https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur`
+1. Scanner le QR code ou ouvrir: `https://gxo-moissy-v2.pages.dev/qrcode-chauffeur`
 2. Cliquer "Démarrer"
 3. Sélectionner "Italiano"
 4. **TESTER LA VIDÉO** (doit fonctionner maintenant)
@@ -156,7 +156,7 @@ https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
 ### Test 2: Vidéo Directe
 Ouvrir directement:
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
 ```
 - Vérifier que la vidéo se charge
 - Cliquer sur "▶ Lancer la vidéo"
@@ -182,7 +182,7 @@ npx wrangler d1 execute webapp-production --command="SELECT * FROM chauffeur_arr
 
 ### Option 3: Tester l'API
 ```bash
-curl https://gxo-procedures-moissy.pages.dev/api/chauffeur/liste
+curl https://gxo-moissy-v2.pages.dev/api/chauffeur/liste
 ```
 
 ---
@@ -202,7 +202,7 @@ curl https://gxo-procedures-moissy.pages.dev/api/chauffeur/liste
 ## 📞 SUPPORT
 
 - **Issues**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/issues
-- **Site**: https://gxo-procedures-moissy.pages.dev/
+- **Site**: https://gxo-moissy-v2.pages.dev/
 
 ---
 

@@ -67,7 +67,7 @@ npm run deploy:prod → wrangler pages deploy dist --project-name gxo-procedures
 
 ### URL de production (future)
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ---

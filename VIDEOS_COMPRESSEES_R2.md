@@ -79,9 +79,9 @@ https://pub-2c4381bbcb67487eaca05acc5a5bb501.r2.dev/instructions-it.mp4 (2.9 MB)
 
 **Page de production:**
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
 ...
 ```
 
@@ -134,7 +134,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
 
 **URL de test:**
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
 ```
 
 **Vérifications:**
@@ -177,9 +177,9 @@ const videoUrls = {
 ```
 
 **Test immédiat possible !** Les nouvelles vidéos sont déjà actives sur :
-- https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
-- https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
-- https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
+- https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
+- https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+- https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
 
 ---
 

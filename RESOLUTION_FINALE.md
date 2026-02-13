@@ -40,22 +40,22 @@
 ### Workflow Chauffeur (Production)
 
 ```
-1️⃣ QR Code → https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+1️⃣ QR Code → https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
                ↓ (clic "Démarrer")
                
-2️⃣ Langue   → https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+2️⃣ Langue   → https://gxo-moissy-v2.pages.dev/chauffeur/langue
                ↓ (sélection parmi 12 langues)
                
-3️⃣ Vidéo    → https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=XX
+3️⃣ Vidéo    → https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=XX
                ↓ (lecture complète obligatoire)
                
-4️⃣ Inscrip. → https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+4️⃣ Inscrip. → https://gxo-moissy-v2.pages.dev/chauffeur/inscription
                ↓ (formulaire : pseudo, entreprise, quai)
                
-5️⃣ Tâches   → https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id=XX
+5️⃣ Tâches   → https://gxo-moissy-v2.pages.dev/chauffeur/taches?id=XX
                ↓ (5 tâches de sécurité)
                
-6️⃣ Dashboard→ https://gxo-procedures-moissy.pages.dev/accueil-chauffeur
+6️⃣ Dashboard→ https://gxo-moissy-v2.pages.dev/accueil-chauffeur
                (vue temps réel des chauffeurs actifs)
 ```
 
@@ -92,7 +92,7 @@
 
 ```bash
 # 1. Ouvrir dans Safari mobile
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=it
 
 # 2. Vérifier :
 ✅ Page charge en ~2s
@@ -110,15 +110,15 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=it
 
 ```bash
 # 1. Inscrire un chauffeur de test
-curl -X POST https://gxo-procedures-moissy.pages.dev/api/chauffeur/inscription \
+curl -X POST https://gxo-moissy-v2.pages.dev/api/chauffeur/inscription \
   -H "Content-Type: application/json" \
   -d '{"pseudo":"TestDriver","entreprise":"GXO","numero_quai":"12","langue":"fr","video_completed":true}'
 
 # 2. Vérifier dans la liste
-curl https://gxo-procedures-moissy.pages.dev/api/chauffeur/liste
+curl https://gxo-moissy-v2.pages.dev/api/chauffeur/liste
 
 # 3. Ouvrir le dashboard
-https://gxo-procedures-moissy.pages.dev/accueil-chauffeur
+https://gxo-moissy-v2.pages.dev/accueil-chauffeur
 
 # 4. Vérifier :
 ✅ Carte "TestDriver" affichée
@@ -261,7 +261,7 @@ cache-control: max-age=300
 
 ### Test Cloudflare Pages (13/02/2026 10:00)
 ```bash
-$ curl -I "https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=bg"
+$ curl -I "https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=bg"
 
 HTTP/2 200 
 date: Fri, 13 Feb 2026 10:00:30 GMT
@@ -308,7 +308,7 @@ cf-ray: 9cd37aa85f2ffc57-IAD
 2. **Vidéos:** https://github.com/ayoubdil1972-stack/gxo-video-assets (PUBLIC)
 
 ### Déploiements
-- **Production:** https://gxo-procedures-moissy.pages.dev
+- **Production:** https://gxo-moissy-v2.pages.dev
 - **Vidéos CDN:** https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/
 
 ---

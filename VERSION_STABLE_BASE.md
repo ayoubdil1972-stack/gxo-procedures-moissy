@@ -295,7 +295,7 @@ npx wrangler d1 migrations apply gxo-chauffeurs-db --remote
 npx wrangler pages deploy dist --project-name gxo-procedures-moissy --branch main
 
 # URL Production
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ---

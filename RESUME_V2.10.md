@@ -57,8 +57,8 @@
 - **Login** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/login
 
 ### Production (Cloudflare Pages - À déployer)
-- **URL** : https://gxo-procedures-moissy.pages.dev
-- **Login** : https://gxo-procedures-moissy.pages.dev/login
+- **URL** : https://gxo-moissy-v2.pages.dev
+- **Login** : https://gxo-moissy-v2.pages.dev/login
 
 ### Archive v2.10 FINALE
 - **URL** : https://www.genspark.ai/api/files/s/YmcjLJQe
@@ -191,7 +191,7 @@ setup_cloudflare_api_key
 npm run deploy:prod
 
 # 3. Tester
-curl https://gxo-procedures-moissy.pages.dev/login
+curl https://gxo-moissy-v2.pages.dev/login
 ```
 
 ---

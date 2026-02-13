@@ -206,7 +206,7 @@ npm run build
 # 3. Déployer
 npm run deploy:prod
 
-# URL: https://gxo-procedures-moissy.pages.dev/login
+# URL: https://gxo-moissy-v2.pages.dev/login
 ```
 
 ---

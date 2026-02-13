@@ -513,7 +513,7 @@ Net : +187 lignes
 ```
 1. /qrcode-chauffeur          → Scanner QR Code
 2. /chauffeur/langue          → Sélection langue
-3. /chauffeur/video?lang=fr   → Vidéo instructions
+3. /chauffeur/consignes?lang=fr   → Consignes de sécurité
 4. /chauffeur/inscription     → Inscription multilingue
 5. /chauffeur/taches?id=1     → Validation des tâches
 6. /accueil-chauffeur         → 💬 Dashboard admin avec Chat Multilingue (NOUVEAU)

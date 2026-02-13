@@ -208,7 +208,7 @@ curl -X POST http://localhost:3000/api/chauffeur/inscription \
 # Tester chaque langue
 for lang in fr nl fi de it pl pt bg cs da hr ro; do
   echo "Test $lang"
-  curl -s "http://localhost:3000/chauffeur/video?lang=$lang" | grep "langue-selectionnee"
+  curl -s "http://localhost:3000/chauffeur/consignes?lang=$lang" | grep "langue-selectionnee"
 done
 
 # Vérifier:
@@ -229,8 +229,8 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur
 2. Sélection Langue:
 https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue
 
-3. Vidéo (toutes langues):
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=pl
+3. Consignes (toutes langues):
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=pl
 
 4. Inscription:
 https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/inscription

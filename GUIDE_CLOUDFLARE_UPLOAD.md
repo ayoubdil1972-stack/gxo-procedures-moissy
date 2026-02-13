@@ -107,13 +107,13 @@ Uploading... (97/97) ✅
 Cloudflare va afficher :
 ```
 ✨ Deployment complete!
-🌐 https://XXXXXXXX.gxo-procedures-moissy.pages.dev
+🌐 https://XXXXXXXX.gxo-moissy-v2.pages.dev
 ```
 
 Testez IMMÉDIATEMENT :
 ```bash
 # Tester un fichier statique
-curl -I https://XXXXXXXX.gxo-procedures-moissy.pages.dev/static/gxo-logo.png
+curl -I https://XXXXXXXX.gxo-moissy-v2.pages.dev/static/gxo-logo.png
 
 # Doit retourner : HTTP/2 200 ✅
 ```
@@ -146,7 +146,7 @@ C'est plus sûr car wrangler :
 Utilisez la version sandbox qui fonctionne parfaitement :
 
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 ```
 
 ---

@@ -2,7 +2,7 @@
 
 ## 🚨 PROBLÈME
 
-Le site https://gxo-procedures-moissy.pages.dev affiche une erreur 404.
+Le site https://gxo-moissy-v2.pages.dev affiche une erreur 404.
 
 **Cause :** Le fichier `_worker.js` n'est pas correctement reconnu par Cloudflare Pages.
 
@@ -56,12 +56,12 @@ wrangler pages deploy dist --project-name gxo-procedures-moissy
 
 Testez :
 ```
-https://gxo-procedures-moissy.pages.dev/
+https://gxo-moissy-v2.pages.dev/
 ```
 
 Et la vidéo :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---

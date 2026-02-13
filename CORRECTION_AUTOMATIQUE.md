@@ -98,7 +98,7 @@ https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions
 
 🎉 Deployment summary
    🎉 Deployment completed!
-   🌐 Production URL: https://gxo-procedures-moissy.pages.dev
+   🌐 Production URL: https://gxo-moissy-v2.pages.dev
 ```
 
 ### Si les secrets ne sont pas configurés :
@@ -146,24 +146,24 @@ Le nouveau workflow fait **3 vérifications** :
 
 ### URL de production :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ### Test vidéo NL (iPhone 12) :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ### Autres pages à tester :
-- Admin : https://gxo-procedures-moissy.pages.dev/admin
-- Accueil : https://gxo-procedures-moissy.pages.dev/accueil
-- Inscription chauffeur : https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
+- Admin : https://gxo-moissy-v2.pages.dev/admin
+- Accueil : https://gxo-moissy-v2.pages.dev/accueil
+- Inscription chauffeur : https://gxo-moissy-v2.pages.dev/chauffeur/inscription
 
 ---
 
 ## 📱 RÉSULTAT ATTENDU SUR IPHONE 12
 
-**Page : /chauffeur/video?lang=nl**
+**Page : /chauffeur/consignes?lang=nl**
 
 ✅ Ce que vous devriez voir :
 - Page noire avec bande orange en haut
@@ -187,7 +187,7 @@ https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
 |-------------|-----|
 | **GitHub Actions (VÉRIFIER ICI)** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **Secrets GitHub** | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/settings/secrets/actions |
-| **Site production** | https://gxo-procedures-moissy.pages.dev |
+| **Site production** | https://gxo-moissy-v2.pages.dev |
 | **Cloudflare Dashboard** | https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy |
 | **Sandbox (secours)** | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
 

@@ -62,7 +62,7 @@ dist/_worker.js  254.42 kB
 ### 7. ✅ Deployment summary (~5s)
 ```
 🎉 Deployment completed!
-🌐 https://gxo-procedures-moissy.pages.dev
+🌐 https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -83,8 +83,8 @@ dist/_worker.js  254.42 kB
 ### Message final :
 ```
 🎉 Deployment completed!
-🌐 Production URL: https://gxo-procedures-moissy.pages.dev
-📱 Test vidéo NL: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+🌐 Production URL: https://gxo-moissy-v2.pages.dev
+📱 Test vidéo NL: https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---
@@ -117,12 +117,12 @@ dist/_worker.js  254.42 kB
 
 #### URL de production Cloudflare :
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 #### Test vidéo NL (iPhone 12) :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ### Si le déploiement échoue :
@@ -134,7 +134,7 @@ https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 
 #### Test vidéo NL (iPhone 12) :
 ```
-https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 ```
 
 ---
@@ -147,7 +147,7 @@ Une fois le déploiement terminé :
 
 ### 2️⃣ Tapez l'URL :
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ### 3️⃣ Résultat attendu :
@@ -173,7 +173,7 @@ Le déploiement prend du temps à cause des 93 fichiers (71 MB de vidéos)
 **Si toutes les étapes sont vertes (✅) :**
 ```
 Le site est déployé sur Cloudflare !
-URL : https://gxo-procedures-moissy.pages.dev
+URL : https://gxo-moissy-v2.pages.dev
 ```
 
 **Si l'étape "Deploy to Cloudflare Pages" est rouge (❌) :**
@@ -191,7 +191,7 @@ Copiez-moi l'erreur complète et je vais la corriger
 | **Workflow** | ⏳ En cours | https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/actions |
 | **Token** | ✅ Mis à jour | W5rEvDMCGvs4_WAYzpKBkNA_uzaIeZ5Vdx8lll4b |
 | **Site sandbox** | ✅ En ligne | https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai |
-| **Site Cloudflare** | ⏳ En déploiement | https://gxo-procedures-moissy.pages.dev |
+| **Site Cloudflare** | ⏳ En déploiement | https://gxo-moissy-v2.pages.dev |
 
 ---
 

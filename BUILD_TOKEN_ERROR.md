@@ -110,7 +110,7 @@ Cliquez sur "Run workflow" sur le dernier workflow.
 
 ### 3️⃣ Testez le site
 ```
-https://gxo-procedures-moissy.pages.dev
+https://gxo-moissy-v2.pages.dev
 ```
 
 ---
@@ -189,7 +189,7 @@ Cloudflare Pages propose deux façons de déployer :
 - [ ] Désactiver "Build configuration" ou "Automatic deployments"
 - [ ] Relancer le workflow GitHub Actions
 - [ ] Vérifier que le déploiement réussit
-- [ ] Tester https://gxo-procedures-moissy.pages.dev
+- [ ] Tester https://gxo-moissy-v2.pages.dev
 
 ---
 

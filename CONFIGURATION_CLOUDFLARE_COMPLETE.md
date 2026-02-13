@@ -123,17 +123,17 @@ Une fois déployé avec D1 configuré :
 
 **Page d'accueil :**
 ```
-https://gxo-procedures-moissy.pages.dev/
+https://gxo-moissy-v2.pages.dev/
 ```
 
 **Login admin :**
 ```
-https://gxo-procedures-moissy.pages.dev/login
+https://gxo-moissy-v2.pages.dev/login
 ```
 
 **Vidéo néerlandaise (iPhone 12) :**
 ```
-https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
+https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
 ```
 
 ---

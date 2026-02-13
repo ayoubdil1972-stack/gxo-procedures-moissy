@@ -174,7 +174,7 @@ src/pages/reception.tsx (9 éditions)
 
 ### URLs
 - **Développement (Sandbox)** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- **Production (Cloudflare Pages)** : https://gxo-procedures-moissy.pages.dev *(à déployer)*
+- **Production (Cloudflare Pages)** : https://gxo-moissy-v2.pages.dev *(à déployer)*
 
 ### Commandes
 ```bash

@@ -237,7 +237,7 @@ Après : **3 boutons uniquement**
 🔗 https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/contacts
 
 ### **Production (à déployer)**
-🔗 https://gxo-procedures-moissy.pages.dev/contacts
+🔗 https://gxo-moissy-v2.pages.dev/contacts
 
 ---
 

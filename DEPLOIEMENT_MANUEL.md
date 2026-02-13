@@ -74,32 +74,32 @@ tar -czf gxo-production.tar.gz dist/
 
 1. **Page d'accueil QR Code** :
    ```
-   https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+   https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
    ```
 
 2. **Sélection de langue** :
    ```
-   https://gxo-procedures-moissy.pages.dev/chauffeur/langue
+   https://gxo-moissy-v2.pages.dev/chauffeur/langue
    ```
 
-3. **Vidéo (exemple Français)** :
+3. **Consignes (exemple Français)** :
    ```
-   https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=fr
+   https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=fr
    ```
 
 4. **Vidéo statique** :
    ```
-   https://gxo-procedures-moissy.pages.dev/static/videos/instructions-fr.mp4
+   https://gxo-moissy-v2.pages.dev/static/videos/instructions-fr.mp4
    ```
 
 5. **Test API (si configuré)** :
    ```
-   https://gxo-procedures-moissy.pages.dev/api/chauffeurs
+   https://gxo-moissy-v2.pages.dev/api/chauffeurs
    ```
 
 **Test avec curl** :
 ```bash
-curl -I https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
+curl -I https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
 # Attendu: HTTP/2 200
 ```
 
@@ -178,7 +178,7 @@ git push -u origin main
 
 ### Projet Cloudflare Pages
 - **Nom** : `gxo-procedures-moissy`
-- **URL Production** : `https://gxo-procedures-moissy.pages.dev`
+- **URL Production** : `https://gxo-moissy-v2.pages.dev`
 - **Branch** : `main`
 
 ### Base de Données D1
@@ -225,7 +225,7 @@ ls -la /home/user/webapp/dist/_*
 - [ ] ✅ Base de données D1 liée (Binding `DB`)
 - [ ] ✅ URL principale accessible : `/qrcode-chauffeur`
 - [ ] ✅ Sélection de langue fonctionne : `/chauffeur/langue`
-- [ ] ✅ Vidéos jouent : `/chauffeur/video?lang=fr`
+- [ ] ✅ Vidéos jouent : `/chauffeur/consignes?lang=fr`
 - [ ] ✅ Vidéos statiques accessibles : `/static/videos/instructions-fr.mp4`
 - [ ] ✅ Base de données interrogeable (5 chauffeurs de test)
 
@@ -235,7 +235,7 @@ ls -la /home/user/webapp/dist/_*
 
 Une fois le site accessible, créez le QR Code :
 
-1. **URL** : `https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur`
+1. **URL** : `https://gxo-moissy-v2.pages.dev/qrcode-chauffeur`
 
 2. **Générateur en ligne** : https://www.qr-code-generator.com/
 

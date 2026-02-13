@@ -24,7 +24,7 @@
 - ✅ Grid responsive (2 colonnes mobile / 3 desktop)
 - ✅ **En ligne sur sandbox**
 
-### 3. Vidéos d'instructions (`/chauffeur/video?lang=XX`)
+### 3. Vidéos d'instructions (`/chauffeur/consignes?lang=XX`)
 - ✅ 12 vidéos multilingues (61 MB total)
 - ✅ Support iOS/Android avec Range Requests
 - ✅ Player personnalisé (bouton PLAY orange, barre progression)
@@ -74,18 +74,18 @@
 ```
 🏠 QR Code:       https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur
 🌍 Langues:       https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue
-📹 Vidéo (NL):    https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=nl
+📹 Consignes (NL):    https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/consignes?lang=nl
 📝 Inscription:   https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/inscription
 ✅ Tâches:        https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/taches
 ```
 
 ### Production (Après déploiement)
 ```
-🏠 QR Code:       https://gxo-procedures-moissy.pages.dev/qrcode-chauffeur
-🌍 Langues:       https://gxo-procedures-moissy.pages.dev/chauffeur/langue
-📹 Vidéo (NL):    https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl
-📝 Inscription:   https://gxo-procedures-moissy.pages.dev/chauffeur/inscription
-✅ Tâches:        https://gxo-procedures-moissy.pages.dev/chauffeur/taches
+🏠 QR Code:       https://gxo-moissy-v2.pages.dev/qrcode-chauffeur
+🌍 Langues:       https://gxo-moissy-v2.pages.dev/chauffeur/langue
+📹 Consignes (NL):    https://gxo-moissy-v2.pages.dev/chauffeur/consignes?lang=nl
+📝 Inscription:   https://gxo-moissy-v2.pages.dev/chauffeur/inscription
+✅ Tâches:        https://gxo-moissy-v2.pages.dev/chauffeur/taches
 ```
 
 ---
@@ -311,7 +311,7 @@ git push origin main
 
 ### Liens utiles
 - **Sandbox** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
-- **Production** : https://gxo-procedures-moissy.pages.dev
+- **Production** : https://gxo-moissy-v2.pages.dev
 - **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 - **Cloudflare** : https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-procedures-moissy
 

@@ -77,18 +77,18 @@
 1. **QR Code** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur
 2. **Sélection langue** : https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue
 3. **Vidéos par langue** :
-   - 🇫🇷 Français : `.../chauffeur/video?lang=fr`
-   - 🇳🇱 Nederlands : `.../chauffeur/video?lang=nl`
-   - 🇫🇮 Suomi : `.../chauffeur/video?lang=fi`
-   - 🇩🇪 Deutsch : `.../chauffeur/video?lang=de`
-   - 🇮🇹 Italiano : `.../chauffeur/video?lang=it`
-   - 🇵🇱 Polski : `.../chauffeur/video?lang=pl`
-   - 🇵🇹 Português : `.../chauffeur/video?lang=pt`
-   - 🇧🇬 Български : `.../chauffeur/video?lang=bg`
-   - 🇨🇿 Čeština : `.../chauffeur/video?lang=cs`
-   - 🇩🇰 Dansk : `.../chauffeur/video?lang=da`
-   - 🇭🇷 Hrvatski : `.../chauffeur/video?lang=hr`
-   - 🇷🇴 Română : `.../chauffeur/video?lang=ro`
+   - 🇫🇷 Français : `.../chauffeur/consignes?lang=fr`
+   - 🇳🇱 Nederlands : `.../chauffeur/consignes?lang=nl`
+   - 🇫🇮 Suomi : `.../chauffeur/consignes?lang=fi`
+   - 🇩🇪 Deutsch : `.../chauffeur/consignes?lang=de`
+   - 🇮🇹 Italiano : `.../chauffeur/consignes?lang=it`
+   - 🇵🇱 Polski : `.../chauffeur/consignes?lang=pl`
+   - 🇵🇹 Português : `.../chauffeur/consignes?lang=pt`
+   - 🇧🇬 Български : `.../chauffeur/consignes?lang=bg`
+   - 🇨🇿 Čeština : `.../chauffeur/consignes?lang=cs`
+   - 🇩🇰 Dansk : `.../chauffeur/consignes?lang=da`
+   - 🇭🇷 Hrvatski : `.../chauffeur/consignes?lang=hr`
+   - 🇷🇴 Română : `.../chauffeur/consignes?lang=ro`
 4. **Inscription** : `.../chauffeur/inscription`
 
 ## 📱 Guide de test mobile
