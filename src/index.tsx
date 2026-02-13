@@ -68,7 +68,7 @@ app.get('/chauffeur/inscription', (c) => {
 });
 
 // Page des tâches chauffeur
-app.get('/chauffeur/taches', loginRenderer, (c) => {
+app.get('/chauffeur/taches', simpleRenderer, (c) => {
   return c.render(<ChauffeurTachesPage />);
 });
 
