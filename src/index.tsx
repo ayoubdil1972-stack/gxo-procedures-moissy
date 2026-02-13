@@ -63,6 +63,59 @@ app.get('/chauffeur/taches', (c) => c.render(<ChauffeurTachesPage />))
 
 // ===== API CHAUFFEURS =====
 
+// API: Proxy vidéo - Sert les vidéos depuis GitHub avec support Range Requests pour mobile
+app.get('/api/video/:langue', async (c) => {
+  const langue = c.req.param('langue')
+  const videoUrl = `https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-${langue}.mp4`
+  
+  try {
+    // Transférer les headers Range du client vers GitHub
+    const rangeHeader = c.req.header('Range')
+    const fetchOptions: RequestInit = {}
+    
+    if (rangeHeader) {
+      fetchOptions.headers = {
+        'Range': rangeHeader
+      }
+    }
+    
+    const response = await fetch(videoUrl, fetchOptions)
+    
+    if (!response.ok) {
+      return c.json({ error: 'Video not found' }, 404)
+    }
+    
+    // Transférer la réponse avec tous les headers nécessaires
+    const headers: Record<string, string> = {
+      'Content-Type': 'video/mp4',
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'public, max-age=31536000',
+      'Access-Control-Allow-Origin': '*',
+    }
+    
+    // Transférer Content-Range si présent (pour requêtes partielles)
+    const contentRange = response.headers.get('Content-Range')
+    if (contentRange) {
+      headers['Content-Range'] = contentRange
+    }
+    
+    // Transférer Content-Length
+    const contentLength = response.headers.get('Content-Length')
+    if (contentLength) {
+      headers['Content-Length'] = contentLength
+    }
+    
+    // Retourner le statut approprié (200 ou 206 Partial Content)
+    return new Response(response.body, {
+      status: response.status,
+      headers
+    })
+  } catch (error) {
+    console.error('Erreur chargement vidéo:', error)
+    return c.json({ error: 'Failed to load video' }, 500)
+  }
+})
+
 // API: Inscription chauffeur
 app.post('/api/chauffeur/inscription', async (c) => {
   try {
