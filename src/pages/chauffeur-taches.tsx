@@ -4,19 +4,20 @@ export function ChauffeurTachesPage() {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Mes Tâches - GXO Chauffeur</title>
+        <title data-i18n="pageTitle">Mes Tâches - GXO Chauffeur</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+        <script src="/static/task-translations.js"></script>
       </head>
       <body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         {/* Header */}
         <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-4 shadow-lg">
           <div class="container mx-auto flex items-center justify-between">
             <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-10" />
-            <div class="text-white font-bold text-lg">Mes Tâches</div>
+            <div class="text-white font-bold text-lg" data-i18n="pageTitle">Mes Tâches</div>
             <button id="btn-chat" class="text-white hover:bg-white/20 px-4 py-2 rounded-lg transition-colors relative">
               <i class="fas fa-comments mr-2"></i>
-              Support
+              <span data-i18n="support">Support</span>
               <span id="chat-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
             </button>
           </div>
@@ -37,7 +38,7 @@ export function ChauffeurTachesPage() {
               </div>
               <div class="text-center">
                 <div class="text-4xl font-bold text-[#FF5A1A]" id="progression-percent">0%</div>
-                <div class="text-xs text-gray-500">Complétée</div>
+                <div class="text-xs text-gray-500" data-i18n="completed">Complétée</div>
               </div>
             </div>
             
@@ -57,8 +58,8 @@ export function ChauffeurTachesPage() {
           {/* Message Complet */}
           <div id="message-complet" class="hidden bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-xl p-8 text-center text-white">
             <i class="fas fa-check-circle text-6xl mb-4"></i>
-            <h3 class="text-3xl font-bold mb-2">Félicitations !</h3>
-            <p class="text-lg">Toutes les tâches sont terminées</p>
+            <h3 class="text-3xl font-bold mb-2" data-i18n="congratulations">Félicitations !</h3>
+            <p class="text-lg" data-i18n="allTasksCompleted">Toutes les tâches sont terminées</p>
             <p class="text-sm opacity-90 mt-2">Un agent va venir vous voir</p>
           </div>
         </div>
@@ -70,7 +71,7 @@ export function ChauffeurTachesPage() {
               <div class="flex items-center justify-between">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
                   <i class="fas fa-headset"></i>
-                  Support GXO
+                  <span data-i18n="chat.title">Support GXO</span>
                 </h3>
                 <button id="btn-fermer-chat" class="text-white hover:bg-white/20 p-2 rounded-lg transition-colors">
                   <i class="fas fa-times text-xl"></i>
@@ -85,6 +86,7 @@ export function ChauffeurTachesPage() {
                 <input 
                   type="text" 
                   id="message-input" 
+                  data-i18n-placeholder="chat.placeholder"
                   placeholder="Tapez votre message..."
                   class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#FF5A1A] focus:outline-none"
                 />

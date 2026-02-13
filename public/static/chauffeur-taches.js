@@ -1,45 +1,80 @@
-// Récupérer l'ID du chauffeur depuis l'URL
+// Récupérer l'ID du chauffeur et la langue depuis l'URL
 const urlParams = new URLSearchParams(window.location.search);
 const chauffeurId = urlParams.get('id');
+const lang = urlParams.get('lang') || 'fr';
 
 if (!chauffeurId) {
   window.location.href = '/chauffeur/langue';
 }
 
+// Récupérer les traductions
+const t = taskTranslations[lang] || taskTranslations['fr'];
+
+// Appliquer les traductions au DOM
+function applyTranslations() {
+  // Traductions simples (texte)
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const keys = key.split('.');
+    let value = t;
+    for (const k of keys) {
+      value = value[k];
+    }
+    if (value) el.textContent = value;
+  });
+  
+  // Traductions pour les placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const keys = key.split('.');
+    let value = t;
+    for (const k of keys) {
+      value = value[k];
+    }
+    if (value) el.setAttribute('placeholder', value);
+  });
+  
+  // Mettre à jour le titre
+  document.title = `${t.pageTitle} - GXO`;
+}
+
+// Appliquer les traductions au chargement
+document.addEventListener('DOMContentLoaded', applyTranslations);
+
 // Configuration des 5 tâches
 const TACHES = [
   {
     id: 'task_epi_porte',
-    titre: 'EPI Porté',
-    description: 'Gilet et chaussures de sécurité obligatoires',
+    titre: t.tasks.task_epi_porte.titre,
+    description: t.tasks.task_epi_porte.description,
     icon: 'vest',
     couleur: 'blue'
   },
   {
     id: 'task_placement_quai',
-    titre: 'Placement à Quai',
-    description: 'Véhicule correctement positionné',
+    titre: t.tasks.task_placement_quai.titre,
+    description: t.tasks.task_placement_quai.description,
     icon: 'truck-loading',
     couleur: 'purple'
   },
   {
     id: 'task_palette_change',
-    titre: 'Échange de Palettes',
-    description: 'Palette changée si nécessaire',
+    titre: t.tasks.task_palette_change.titre,
+    description: t.tasks.task_palette_change.description,
     icon: 'pallet',
     couleur: 'yellow'
   },
   {
     id: 'task_accueil_notifie',
-    titre: 'Accueil Notifié',
-    description: 'Informations transmises à l\'accueil',
+    titre: t.tasks.task_accueil_notifie.titre,
+    description: t.tasks.task_accueil_notifie.description,
     icon: 'bell',
     couleur: 'green'
   },
   {
     id: 'task_clefs_remises',
-    titre: 'Clés Remises',
-    description: 'Clés confiées à l\'agent de quai',
+    titre: t.tasks.task_clefs_remises.titre,
+    description: t.tasks.task_clefs_remises.description,
     icon: 'key',
     couleur: 'red'
   }
@@ -128,7 +163,7 @@ function renderTaches(data) {
           ${isCompleted ? `
             <div class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2">
               <i class="fas fa-check"></i>
-              Validé
+              ${t.buttons.validated}
             </div>
           ` : `
             <button 
@@ -136,7 +171,7 @@ function renderTaches(data) {
               class="bg-gradient-to-r ${couleurClass} text-white px-6 py-3 rounded-lg font-bold hover:shadow-lg transition-all flex items-center gap-2"
             >
               <i class="fas fa-check-circle"></i>
-              Valider
+              ${t.buttons.validate}
             </button>
           `}
         </div>
