@@ -1,0 +1,25 @@
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": [
+        "https://gxo-procedures-moissy.pages.dev",
+        "https://*.gxo-procedures-moissy.pages.dev",
+        "http://localhost:3000",
+        "https://*.sandbox.novita.ai"
+      ],
+      "AllowedMethods": [
+        "GET",
+        "HEAD"
+      ],
+      "AllowedHeaders": [
+        "*"
+      ],
+      "ExposeHeaders": [
+        "Content-Length",
+        "Content-Range",
+        "Accept-Ranges"
+      ],
+      "MaxAgeSeconds": 3600
+    }
+  ]
+}
