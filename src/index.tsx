@@ -68,9 +68,16 @@ app.get('/chauffeur/inscription', (c) => {
   return c.html(ChauffeurInscriptionPage({ lang }));
 });
 
-// Page des tâches chauffeur
-app.get('/chauffeur/taches', simpleRenderer, (c) => {
-  return c.render(<ChauffeurTachesPage />);
+// Page des tâches chauffeur - Redirige vers HTML statique selon la langue
+app.get('/chauffeur/taches', (c) => {
+  const lang = c.req.query('lang') || 'fr';
+  const id = c.req.query('id');
+  
+  // Rediriger vers la page HTML statique correspondante
+  const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
+  const validLang = supportedLangs.includes(lang) ? lang : 'fr';
+  
+  return c.redirect(`/static/taches/${validLang}.html?id=${id}&lang=${validLang}`);
 });
 
 // ===== API CHAUFFEURS =====
