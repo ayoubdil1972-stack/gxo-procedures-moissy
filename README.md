@@ -2,6 +2,28 @@
 
 Application de formation et gestion pour les chauffeurs GXO Logistics - Site de Moissy-Cramayel.
 
+**Version** : 14.0.0 | **Date** : 2026-02-13 | **Commit** : `7007e05`
+
+## 🎯 Nouvelles fonctionnalités (v14.0.0)
+
+### ✅ Chat bidirectionnel avec traduction automatique
+- **Communication en temps réel** : Admin ↔ Chauffeur
+- **Traduction automatique** : Italien ↔ Français (extensible à toutes les 12 langues)
+- **Rafraîchissement automatique** : Messages apparaissent sans recharger
+- **Badge compteur** : Nombre de messages non lus
+
+### ✅ Système de statut en ligne/hors ligne
+- **Heartbeat automatique** : Toutes les 5 secondes depuis la page chauffeur
+- **Badge visuel** : 🟢 "En ligne" (vert) / "Hors ligne" (gris)
+- **Mise à jour en temps réel** : Statut actualisé toutes les 2-5 secondes
+
+### ✅ APIs de chat
+- `POST /api/chauffeur/chat` - Chauffeur → Admin (traduction auto IT→FR)
+- `POST /api/admin/chat` - Admin → Chauffeur (traduction auto FR→IT)
+- `GET /api/chauffeur/chat?id={id}&viewer={admin|chauffeur}` - Récupération messages
+- `POST /api/chat/heartbeat` - Heartbeat pour statut en ligne
+- `GET /api/chat/online-status?chauffeur_id={id}` - Vérification statut
+
 ## 🌐 URLs
 
 - **Production**: https://gxo-moissy-v2.pages.dev
@@ -73,7 +95,9 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - ✅ Affichage des 5 tâches EPI avec icônes colorées
 - ✅ Validation immédiate par tâche (animation + badge vert)
 - ✅ Barre de progression temps réel (0% → 100%)
-- ✅ Chat support bidirectionnel avec badge de messages non lus
+- ✅ **Chat support bidirectionnel** avec traduction automatique
+- ✅ Badge de messages non lus sur le bouton chat
+- ✅ **Heartbeat automatique** toutes les 5 secondes
 - ✅ Auto-refresh toutes les 5 secondes
 - ✅ Message de félicitations à 100%
 
@@ -92,8 +116,10 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - ✅ Avatar + nom + entreprise + numéro de quai
 - ✅ Barre de progression colorée par chauffeur
 - ✅ 5 icônes de tâches avec statut (complété/en attente)
-- ✅ Badge "En ligne/Hors ligne"
-- ✅ Bouton "Chat" avec compteur de messages non lus
+- ✅ **Badge statut** : 🟢 "En ligne" (vert) / "Hors ligne" (gris)
+- ✅ **Bouton Chat** avec compteur de messages non lus
+- ✅ **Chat modal** : Envoi/réception messages avec traduction auto
+- ✅ **Rafraîchissement** : Liste toutes les 5s, chat toutes les 2s
 - ✅ Bouton "Clôturer" pour terminer un chauffeur
 - ✅ Auto-refresh toutes les 5 secondes
 - ✅ Statistiques en temps réel (Total, Prêts, En cours)
