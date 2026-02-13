@@ -63,10 +63,10 @@ app.get('/chauffeur/taches', (c) => c.render(<ChauffeurTachesPage />))
 
 // ===== API CHAUFFEURS =====
 
-// API: Proxy vidéo - Sert les vidéos depuis GitHub avec support Range Requests pour mobile
+// API: Proxy vidéo - Sert les vidéos depuis GitHub Releases avec support Range Requests pour mobile
 app.get('/api/video/:langue', async (c) => {
   const langue = c.req.param('langue')
-  const videoUrl = `https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-${langue}.mp4`
+  const videoUrl = `https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/releases/download/v1.0-videos/instructions-${langue}.mp4`
   
   try {
     // Transférer les headers Range du client vers GitHub
@@ -85,16 +85,18 @@ app.get('/api/video/:langue', async (c) => {
       return c.json({ error: 'Video not found' }, 404)
     }
     
-    // Lire le body en ArrayBuffer (nécessaire pour Cloudflare Workers)
-    const videoData = await response.arrayBuffer()
-    
-    // Transférer la réponse avec tous les headers nécessaires
+    // Streaming direct sans charger en mémoire (support Range Requests)
     const headers: Record<string, string> = {
       'Content-Type': 'video/mp4',
       'Accept-Ranges': 'bytes',
       'Cache-Control': 'public, max-age=31536000',
-      'Access-Control-Allow-Origin': '*',
-      'Content-Length': videoData.byteLength.toString()
+      'Access-Control-Allow-Origin': '*'
+    }
+    
+    // Copier les headers importants de la réponse GitHub
+    const contentLength = response.headers.get('Content-Length')
+    if (contentLength) {
+      headers['Content-Length'] = contentLength
     }
     
     // Transférer Content-Range si présent (pour requêtes partielles)
@@ -104,13 +106,17 @@ app.get('/api/video/:langue', async (c) => {
     }
     
     // Retourner le statut approprié (200 ou 206 Partial Content)
-    return new Response(videoData, {
+    // Streaming direct du body sans charger en mémoire
+    return new Response(response.body, {
       status: response.status,
       headers
     })
   } catch (error) {
     console.error('Erreur chargement vidéo:', error)
-    return c.json({ error: 'Failed to load video', message: error.message }, 500)
+    return c.json({ 
+      error: 'Failed to load video', 
+      message: error instanceof Error ? error.message : 'Unknown error' 
+    }, 500)
   }
 })
 

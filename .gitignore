@@ -37,9 +37,6 @@ Thumbs.db
 # Git credentials (NEVER COMMIT)
 .git-credentials
 
-# Large video files - will be deployed separately
-public/static/videos/*.mp4
-
 # Archives
 *.tar.gz
 *.zip

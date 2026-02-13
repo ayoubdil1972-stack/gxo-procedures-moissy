@@ -216,21 +216,20 @@ export function ChauffeurVideoPage() {
           document.getElementById('fullscreen-text').textContent = t.fullscreen;
           
           // URLs des vidéos par langue (12 langues disponibles !)
-          // Chargement depuis Cloudflare R2 (Content-Type: video/mp4 correct pour iOS)
-          const R2_BASE = 'https://pub-2c4381bbcb67487eaca05acc5a5bb501.r2.dev';
+          // Vidéos hébergées sur GitHub Releases, servies via API proxy avec bon MIME type
           const videoUrls = {
-            'fr': R2_BASE + '/instructions-fr.mp4',
-            'nl': R2_BASE + '/instructions-nl.mp4',
-            'fi': R2_BASE + '/instructions-fi.mp4',
-            'bg': R2_BASE + '/instructions-bg.mp4',
-            'cs': R2_BASE + '/instructions-cs.mp4',
-            'da': R2_BASE + '/instructions-da.mp4',
-            'de': R2_BASE + '/instructions-de.mp4',
-            'hr': R2_BASE + '/instructions-hr.mp4',
-            'it': R2_BASE + '/instructions-it.mp4',
-            'pl': R2_BASE + '/instructions-pl.mp4',
-            'pt': R2_BASE + '/instructions-pt.mp4',
-            'ro': R2_BASE + '/instructions-ro.mp4'
+            'fr': '/api/video/fr',
+            'nl': '/api/video/nl',
+            'fi': '/api/video/fi',
+            'bg': '/api/video/bg',
+            'cs': '/api/video/cs',
+            'da': '/api/video/da',
+            'de': '/api/video/de',
+            'hr': '/api/video/hr',
+            'it': '/api/video/it',
+            'pl': '/api/video/pl',
+            'pt': '/api/video/pt',
+            'ro': '/api/video/ro'
           };
           
           const video = document.getElementById('video-instructions');
