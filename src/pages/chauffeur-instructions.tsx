@@ -145,8 +145,8 @@ export function ChauffeurInstructionsPage() {
             const langue = urlParams.get('lang') || 'fr';
             sessionStorage.setItem('chauffeur_langue', langue);
             
-            // Charger le fichier JSON de la langue
-            fetch('/static/translations/' + langue + '.json')
+            // Charger le fichier JSON de la langue depuis l'API
+            fetch('/api/translations/' + langue)
               .then(response => {
                 if (!response.ok) throw new Error('Translation not found');
                 return response.json();

@@ -21,6 +21,7 @@ import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
 import { traduireTexte } from './services/translation'
+import { getTranslation } from './translations-data'
 
 type Bindings = {
   DB: D1Database;
@@ -63,6 +64,13 @@ app.get('/chauffeur/inscription', (c) => c.render(<ChauffeurInscriptionPage />))
 app.get('/chauffeur/taches', (c) => c.render(<ChauffeurTachesPage />))
 
 // ===== API CHAUFFEURS =====
+
+// API: Traductions embarquées dans le Worker
+app.get('/api/translations/:langue', (c) => {
+  const langue = c.req.param('langue')
+  const translation = getTranslation(langue)
+  return c.json(translation)
+})
 
 // API: Inscription chauffeur
 app.post('/api/chauffeur/inscription', async (c) => {
