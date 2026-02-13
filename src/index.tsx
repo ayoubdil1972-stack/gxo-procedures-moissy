@@ -321,23 +321,34 @@ app.get('/api/chat/online-status', async (c) => {
   try {
     const chauffeur_id = c.req.query('chauffeur_id')
     
-    // Récupérer la session du chauffeur
-    const session = await c.env.DB.prepare(`
-      SELECT last_heartbeat, is_online,
-             (julianday('now') - julianday(last_heartbeat)) * 86400 as seconds_ago
-      FROM chauffeur_sessions
-      WHERE chauffeur_id = ?
-    `).bind(chauffeur_id).first()
-    
-    // Considérer en ligne si heartbeat < 30 secondes
-    const isOnline = session && session.seconds_ago < 30
-    
-    return c.json({ 
-      success: true, 
-      online: isOnline,
-      last_heartbeat: session?.last_heartbeat || null,
-      seconds_ago: session?.seconds_ago || null
-    })
+    // Essayer de récupérer la session du chauffeur
+    try {
+      const session = await c.env.DB.prepare(`
+        SELECT last_heartbeat, is_online,
+               (julianday('now') - julianday(last_heartbeat)) * 86400 as seconds_ago
+        FROM chauffeur_sessions
+        WHERE chauffeur_id = ?
+      `).bind(chauffeur_id).first()
+      
+      // Considérer en ligne si heartbeat < 30 secondes
+      const isOnline = session && session.seconds_ago < 30
+      
+      return c.json({ 
+        success: true, 
+        online: isOnline,
+        last_heartbeat: session?.last_heartbeat || null,
+        seconds_ago: session?.seconds_ago || null
+      })
+    } catch (tableError) {
+      // Si la table n'existe pas, retourner offline par défaut
+      console.log('Table chauffeur_sessions not found, returning offline')
+      return c.json({ 
+        success: true, 
+        online: false,
+        last_heartbeat: null,
+        seconds_ago: null
+      })
+    }
   } catch (error) {
     console.error('Erreur statut en ligne:', error)
     return c.json({ success: false, error: error.message }, 500)
