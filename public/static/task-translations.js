@@ -1,5 +1,5 @@
 // Traductions pour la page des tâches chauffeur
-export const taskTranslations = {
+const taskTranslations = {
   fr: {
     pageTitle: 'Tâches à accomplir',
     welcome: 'Bienvenue',
