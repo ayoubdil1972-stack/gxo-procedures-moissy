@@ -99,22 +99,32 @@ app.post('/api/chauffeur/valider-tache', async (c) => {
   try {
     const { chauffeur_id, tache } = await c.req.json()
     
-    // Mapping tâche → colonne booléenne
+    // Mapping tâche → colonne booléenne (accepte les deux formats)
     const colonneMap = {
       'epi': 'task_epi_porte',
+      'task_epi_porte': 'task_epi_porte',
       'placement': 'task_placement_quai',
+      'task_placement_quai': 'task_placement_quai',
       'palette': 'task_palette_change',
+      'task_palette_change': 'task_palette_change',
       'accueil': 'task_accueil_notifie',
-      'clefs': 'task_clefs_remises'
+      'task_accueil_notifie': 'task_accueil_notifie',
+      'clefs': 'task_clefs_remises',
+      'task_clefs_remises': 'task_clefs_remises'
     }
     
     // Mapping tâche → colonne timestamp
     const colonneTimeMap = {
       'epi': 'task_epi_time',
+      'task_epi_porte': 'task_epi_time',
       'placement': 'task_placement_time',
+      'task_placement_quai': 'task_placement_time',
       'palette': 'task_palette_time',
+      'task_palette_change': 'task_palette_time',
       'accueil': 'task_accueil_time',
-      'clefs': 'task_clefs_time'
+      'task_accueil_notifie': 'task_accueil_time',
+      'clefs': 'task_clefs_time',
+      'task_clefs_remises': 'task_clefs_time'
     }
     
     const colonne = colonneMap[tache]
@@ -158,24 +168,15 @@ app.post('/api/chauffeur/chat', async (c) => {
   try {
     const { chauffeur_id, message } = await c.req.json()
     
-    // Récupérer la langue du chauffeur
-    const chauffeur = await c.env.DB.prepare(`
-      SELECT langue FROM chauffeur_arrivals WHERE id = ?
-    `).bind(chauffeur_id).first()
-    
-    const langueChauffeur = chauffeur?.langue || 'fr'
-    
-    // Traduire le message en français pour l'admin (si ce n'est pas déjà en français)
-    let traductionFr = message
-    if (langueChauffeur !== 'fr') {
-      traductionFr = await traduireTexte(message, 'fr', langueChauffeur)
+    if (!chauffeur_id || !message) {
+      return c.json({ success: false, error: 'Données manquantes' }, 400)
     }
     
-    // Insérer le message avec traduction + statuts (delivered_at = now, sender_online = 1)
+    // Insérer le message dans la table chat_messages simple
     await c.env.DB.prepare(`
-      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, delivered_at, sender_online)
-      VALUES (?, 'chauffeur', ?, ?, ?, datetime('now'), 1)
-    `).bind(chauffeur_id, message, langueChauffeur, traductionFr).run()
+      INSERT INTO chat_messages (chauffeur_id, sender, message, read)
+      VALUES (?, 'chauffeur', ?, 0)
+    `).bind(chauffeur_id, message).run()
     
     return c.json({ success: true })
   } catch (error) {
@@ -187,7 +188,7 @@ app.post('/api/chauffeur/chat', async (c) => {
 // API: Récupérer messages chat avec traductions
 app.get('/api/chauffeur/chat', async (c) => {
   try {
-    const chauffeur_id = c.req.query('chauffeur_id')
+    const chauffeur_id = c.req.query('id') || c.req.query('chauffeur_id')
     
     // Récupérer la langue du chauffeur
     const chauffeur = await c.env.DB.prepare(`
