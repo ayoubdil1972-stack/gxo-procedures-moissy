@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GXO Logistics - Инструкции</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col">
+    <!-- Header fixe -->
+    <div class="bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] p-4 shadow-lg">
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between mb-2">
+                <img src="/static/gxo-logo-official.svg" alt="GXO" class="h-10 md:h-12" />
+                <div class="text-white font-bold text-base md:text-lg">🇧🇬 Български</div>
+            </div>
+            <div class="text-center">
+                <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center justify-center gap-2">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Инструкции</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="flex-1 flex items-center justify-center p-4 md:p-6">
+        <div class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-6 md:p-8">
+            
+            <!-- Message de bienvenue -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] rounded-full mb-4">
+                    <i class="fas fa-hand-wave text-white text-3xl"></i>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Здравей</h2>
+                <p class="text-gray-600 text-lg">Добре дошли на нашия сайт</p>
+            </div>
+
+            <!-- Section 1: Consignes de sécurité -->
+            <div class="mb-8 bg-red-50 border-l-4 border-red-500 rounded-lg p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">Задължителни инструкции за безопасност</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-vest text-red-600 text-xl mt-1"></i>
+                                <span class="text-gray-700 text-base md:text-lg leading-relaxed">Носенето на <strong>светлоотразителна жилетка</strong> и <strong>защитни обувки</strong> е <strong class='text-red-600'>задължително на целия обект</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-smoking-ban text-red-600 text-xl mt-1"></i>
+                                <span class="text-gray-700 text-base md:text-lg leading-relaxed"><strong class='text-red-600'>Строго забранено е пушенето</strong> на обекта.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: À l'accueil chauffeur -->
+            <div class="mb-8 bg-blue-50 border-l-4 border-blue-500 rounded-lg p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-clipboard-check text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">На рецепция за шофьори</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-pallet text-blue-600 text-xl mt-1"></i>
+                                <span class="text-gray-700 text-base md:text-lg leading-relaxed">Посочете дали е необходима <strong>смяна на палет</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-truck-loading text-blue-600 text-xl mt-1"></i>
+                                <span class="text-gray-700 text-base md:text-lg leading-relaxed">Посочете дали вашият камион разполага с <strong>хидравлична рампа</strong>.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Placement à quai -->
+            <div class="mb-8 bg-green-50 border-l-4 border-green-500 rounded-lg p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-key text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">Поставяне на платформата</h3>
+                        <p class="text-gray-700 text-base md:text-lg leading-relaxed">Веднага щом бъдете <strong>поставени на платформата</strong>, трябва да <strong class='text-green-600'>предадете ключовете си</strong> на служителя на платформата.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ligne de séparation -->
+            <div class="border-t-2 border-gray-200 my-8"></div>
+
+            <!-- Message important -->
+            <div class="bg-orange-50 border-2 border-orange-300 rounded-lg p-6 mb-8">
+                <div class="flex items-center gap-3 mb-3">
+                    <i class="fas fa-info-circle text-orange-500 text-2xl"></i>
+                    <h4 class="text-lg md:text-xl font-bold text-gray-800">Важно</h4>
+                </div>
+                <p class="text-gray-700 text-base md:text-lg leading-relaxed">Спазването на тези инструкции е от съществено значение за <strong>безопасността на всички</strong> на обекта.</p>
+            </div>
+
+            <!-- Bouton continuer -->
+            <div class="text-center">
+                <a 
+                    href="/chauffeur/inscription"
+                    onclick="sessionStorage.setItem('chauffeur_langue', 'bg'); sessionStorage.setItem('instructions_lues', 'true');"
+                    class="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all cursor-pointer"
+                >
+                    <i class="fas fa-check-circle text-2xl"></i>
+                    <span>Прочетох и разбрах инструкциите</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
