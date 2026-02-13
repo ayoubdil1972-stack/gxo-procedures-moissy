@@ -216,20 +216,20 @@ export function ChauffeurVideoPage() {
           document.getElementById('fullscreen-text').textContent = t.fullscreen;
           
           // URLs des vidéos par langue (12 langues disponibles !)
-          // Utilise l'API proxy pour éviter problèmes CORS sur mobile
+          // Chargement direct depuis GitHub CDN (supporte Range Requests natifs)
           const videoUrls = {
-            'fr': '/api/video/fr',
-            'nl': '/api/video/nl',
-            'fi': '/api/video/fi',
-            'bg': '/api/video/bg',
-            'cs': '/api/video/cs',
-            'da': '/api/video/da',
-            'de': '/api/video/de',
-            'hr': '/api/video/hr',
-            'it': '/api/video/it',
-            'pl': '/api/video/pl',
-            'pt': '/api/video/pt',
-            'ro': '/api/video/ro'
+            'fr': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-fr.mp4',
+            'nl': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-nl.mp4',
+            'fi': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-fi.mp4',
+            'bg': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-bg.mp4',
+            'cs': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-cs.mp4',
+            'da': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-da.mp4',
+            'de': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-de.mp4',
+            'hr': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-hr.mp4',
+            'it': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-it.mp4',
+            'pl': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-pl.mp4',
+            'pt': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-pt.mp4',
+            'ro': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-ro.mp4'
           };
           
           const video = document.getElementById('video-instructions');
