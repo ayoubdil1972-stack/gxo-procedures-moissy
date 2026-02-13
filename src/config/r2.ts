@@ -5,7 +5,7 @@ export const R2_CONFIG = {
   // URL publique de votre bucket R2
   // Format: https://pub-XXXXXXXXXXXXX.r2.dev
   // Obtenir via: Dashboard Cloudflare → R2 → gxo-videos → Settings → Public Access
-  BASE_URL: process.env.R2_PUBLIC_URL || 'https://pub-CHANGEME.r2.dev',
+  BASE_URL: process.env.R2_PUBLIC_URL || 'https://pub-2c4381bbcb67487eaca05acc5a5bb501.r2.dev',
   
   // Nom du bucket
   BUCKET_NAME: 'gxo-videos',

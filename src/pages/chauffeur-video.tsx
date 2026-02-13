@@ -216,20 +216,21 @@ export function ChauffeurVideoPage() {
           document.getElementById('fullscreen-text').textContent = t.fullscreen;
           
           // URLs des vidéos par langue (12 langues disponibles !)
-          // Chargement direct depuis GitHub CDN (supporte Range Requests natifs)
+          // Chargement depuis Cloudflare R2 (Content-Type: video/mp4 correct pour iOS)
+          const R2_BASE = 'https://pub-2c4381bbcb67487eaca05acc5a5bb501.r2.dev';
           const videoUrls = {
-            'fr': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-fr.mp4',
-            'nl': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-nl.mp4',
-            'fi': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-fi.mp4',
-            'bg': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-bg.mp4',
-            'cs': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-cs.mp4',
-            'da': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-da.mp4',
-            'de': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-de.mp4',
-            'hr': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-hr.mp4',
-            'it': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-it.mp4',
-            'pl': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-pl.mp4',
-            'pt': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-pt.mp4',
-            'ro': 'https://raw.githubusercontent.com/ayoubdil1972-stack/gxo-video-assets/main/videos/instructions-ro.mp4'
+            'fr': R2_BASE + '/instructions-fr.mp4',
+            'nl': R2_BASE + '/instructions-nl.mp4',
+            'fi': R2_BASE + '/instructions-fi.mp4',
+            'bg': R2_BASE + '/instructions-bg.mp4',
+            'cs': R2_BASE + '/instructions-cs.mp4',
+            'da': R2_BASE + '/instructions-da.mp4',
+            'de': R2_BASE + '/instructions-de.mp4',
+            'hr': R2_BASE + '/instructions-hr.mp4',
+            'it': R2_BASE + '/instructions-it.mp4',
+            'pl': R2_BASE + '/instructions-pl.mp4',
+            'pt': R2_BASE + '/instructions-pt.mp4',
+            'ro': R2_BASE + '/instructions-ro.mp4'
           };
           
           const video = document.getElementById('video-instructions');
