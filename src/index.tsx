@@ -50,10 +50,11 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
-// Page consignes - SSR pur sans JavaScript côté client
+// Page consignes - HTML pur généré côté serveur (string template)
 app.get('/chauffeur/consignes', (c) => {
   const lang = c.req.query('lang') || 'fr'
-  return c.html(<ChauffeurConsignesPage lang={lang} />)
+  const html = ChauffeurConsignesPage({ lang })
+  return c.html(html)
 })
 
 // Redirection ancienne URL vers nouvelle (compatibilité)
