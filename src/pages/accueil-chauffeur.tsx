@@ -201,11 +201,11 @@ export function AccueilChauffeurPage() {
             <div class="flex flex-wrap gap-2">
               {process.checklist && (
                 <button 
-                  onclick={`showChecklist('${process.id}')`}
+                  onclick={`showChecklistInteractive('${process.id}', ${JSON.stringify(process.checklist)})`}
                   class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
                 >
                   <i class="fas fa-list-check mr-2"></i>
-                  Checklist
+                  Checklist interactive
                 </button>
               )}
               
@@ -220,13 +220,6 @@ export function AccueilChauffeurPage() {
                 </a>
               )}
             </div>
-
-            {/* Hidden checklist data */}
-            {process.checklist && (
-              <div id={`checklist-${process.id}`} class="hidden">
-                {JSON.stringify(process.checklist)}
-              </div>
-            )}
           </div>
         ))}
       </div>
