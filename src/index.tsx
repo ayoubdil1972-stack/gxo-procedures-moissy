@@ -21,7 +21,7 @@ import { ChauffeurLanguePage } from './pages/chauffeur-langue'
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
-import { traduireTexte } from './services/translation'
+import { generateTachesHTML } from './templates/taches-html'
 import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
@@ -77,8 +77,9 @@ app.get('/driver/tasks', (c) => {
   const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
   const validLang = supportedLangs.includes(lang) ? lang : 'fr';
   
-  // Redirection directe vers le fichier HTML
-  return c.redirect(`/taches/${validLang}.html?id=${id}&lang=${validLang}`);
+  // Générer et servir le HTML directement
+  const html = generateTachesHTML(validLang, id);
+  return c.html(html);
 });
 
 // Route alternative /tasks/{lang} - Contournement cache (sans /chauffeur)
@@ -89,8 +90,9 @@ app.get('/tasks/:lang', (c) => {
   const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
   const validLang = supportedLangs.includes(lang) ? lang : 'fr';
   
-  // Redirection vers fichier HTML
-  return c.redirect(`/taches/${validLang}.html?id=${id}&lang=${validLang}`);
+  // Générer et servir le HTML directement
+  const html = generateTachesHTML(validLang, id);
+  return c.html(html);
 });
 
 // Page des tâches chauffeur - ANCIENNE ROUTE (redirige vers nouvelle)
