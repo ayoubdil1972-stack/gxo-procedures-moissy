@@ -9,7 +9,6 @@ export default defineConfig({
       exclude: [
         '/*.html',
         '/consignes/*',
-        '/taches/*',
         '/static/*'
       ]
     })
