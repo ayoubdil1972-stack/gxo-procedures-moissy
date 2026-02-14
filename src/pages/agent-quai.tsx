@@ -1,3 +1,4 @@
+// Updated: 2026-02-14 18:00 - Checklists interactives activées
 export function AgentQuaiPage() {
   const processes = [
     {
