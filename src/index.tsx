@@ -68,16 +68,33 @@ app.get('/chauffeur/inscription', (c) => {
   return c.html(ChauffeurInscriptionPage({ lang }));
 });
 
-// Page des tâches chauffeur - Redirection vers fichiers HTML statiques
+// Page des tâches chauffeur - Page de redirection vers fichier HTML
 app.get('/chauffeur/taches', (c) => {
   const lang = c.req.query('lang') || 'fr';
-  const id = c.req.query('id');
+  const id = c.req.query('id') || '';
   
-  // Cloudflare Pages sert automatiquement /taches/{lang}.html comme /taches/{lang}
   const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
   const validLang = supportedLangs.includes(lang) ? lang : 'fr';
   
-  return c.redirect(`/taches/${validLang}.html?id=${id}&lang=${validLang}`);
+  // Créer une page HTML de redirection instantanée avec meta refresh
+  const redirectHtml = `<!DOCTYPE html>
+<html lang="${validLang}">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=/taches/${validLang}.html?id=${id}&lang=${validLang}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirection...</title>
+  <script>
+    // Redirection JavaScript immédiate
+    window.location.href = '/taches/${validLang}.html?id=${id}&lang=${validLang}';
+  </script>
+</head>
+<body>
+  <p>Redirection en cours...</p>
+</body>
+</html>`;
+  
+  return c.html(redirectHtml);
 });
 
 // ===== API CHAUFFEURS =====

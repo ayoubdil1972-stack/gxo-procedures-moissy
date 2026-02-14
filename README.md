@@ -26,10 +26,12 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 
 ## 🌐 URLs
 
-- **Production**: https://gxo-moissy-v2.pages.dev
+- **Production**: https://gxo-procedures-moissy.pages.dev
+- **Production (alias)**: https://gxo-moissy-v2.pages.dev
 - **GitHub Code**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 - **GitHub Assets**: https://github.com/ayoubdil1972-stack/gxo-video-assets
-- **Cloudflare Dashboard**: https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-moissy-v2
+- **Cloudflare Dashboard (gxo-procedures-moissy)**: https://dash.cloudflare.com/pages/view/gxo-procedures-moissy
+- **Cloudflare Dashboard (gxo-moissy-v2)**: https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-moissy-v2
 
 ## 🚗 Workflow Chauffeur - URLs Principales
 

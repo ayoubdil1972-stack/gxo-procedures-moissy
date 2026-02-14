@@ -4,7 +4,6 @@
   "exclude": [
     "/*.html",
     "/consignes/*",
-    "/taches/*",
     "/static/*"
   ]
 }
