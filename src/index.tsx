@@ -68,33 +68,39 @@ app.get('/chauffeur/inscription', (c) => {
   return c.html(ChauffeurInscriptionPage({ lang }));
 });
 
-// Page des tâches chauffeur - Page de redirection vers fichier HTML
-app.get('/chauffeur/taches', (c) => {
+// ===== NOUVELLE ROUTE TACHES (CONTOURNEMENT CACHE) =====
+// Route /driver/tasks - Nouvelle URL pour contourner le cache Worker
+app.get('/driver/tasks', (c) => {
   const lang = c.req.query('lang') || 'fr';
   const id = c.req.query('id') || '';
   
   const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
   const validLang = supportedLangs.includes(lang) ? lang : 'fr';
   
-  // Créer une page HTML de redirection instantanée avec meta refresh
-  const redirectHtml = `<!DOCTYPE html>
-<html lang="${validLang}">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/taches/${validLang}.html?id=${id}&lang=${validLang}">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirection...</title>
-  <script>
-    // Redirection JavaScript immédiate
-    window.location.href = '/taches/${validLang}.html?id=${id}&lang=${validLang}';
-  </script>
-</head>
-<body>
-  <p>Redirection en cours...</p>
-</body>
-</html>`;
+  // Redirection directe vers le fichier HTML
+  return c.redirect(`/taches/${validLang}.html?id=${id}&lang=${validLang}`);
+});
+
+// Route alternative /tasks/{lang} - Contournement cache (sans /chauffeur)
+app.get('/tasks/:lang', (c) => {
+  const lang = c.req.param('lang');
+  const id = c.req.query('id') || '';
   
-  return c.html(redirectHtml);
+  const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
+  const validLang = supportedLangs.includes(lang) ? lang : 'fr';
+  
+  // Redirection vers fichier HTML
+  return c.redirect(`/taches/${validLang}.html?id=${id}&lang=${validLang}`);
+});
+
+// Page des tâches chauffeur - ANCIENNE ROUTE (redirige vers nouvelle)
+// Cette redirection contourne le cache car elle redirige vers /driver/tasks
+app.get('/chauffeur/taches', (c) => {
+  const lang = c.req.query('lang') || 'fr';
+  const id = c.req.query('id') || '';
+  
+  // Rediriger vers la nouvelle route /driver/tasks qui n'est pas en cache
+  return c.redirect(`/driver/tasks?id=${id}&lang=${lang}`);
 });
 
 // ===== API CHAUFFEURS =====
