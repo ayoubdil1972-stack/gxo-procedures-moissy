@@ -2,9 +2,9 @@
 
 Application de formation et gestion pour les chauffeurs GXO Logistics - Site de Moissy-Cramayel.
 
-**Version** : 14.0.0 | **Date** : 2026-02-13 | **Commit** : `7007e05`
+**Version** : 15.0.0 - STABLE | **Date** : 2026-02-14
 
-## 🎯 Nouvelles fonctionnalités (v14.0.0)
+## 🎯 Fonctionnalités principales (v15.0.0 - Version stable française)
 
 ### ✅ Chat bidirectionnel avec traduction automatique
 - **Communication en temps réel** : Admin ↔ Chauffeur
@@ -16,6 +16,13 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - **Heartbeat automatique** : Toutes les 5 secondes depuis la page chauffeur
 - **Badge visuel** : 🟢 "En ligne" (vert) / "Hors ligne" (gris)
 - **Mise à jour en temps réel** : Statut actualisé toutes les 2-5 secondes
+
+### ✅ Gestion des tâches chauffeur
+- **Version française simple et stable**
+- **5 tâches EPI** : Port des équipements de protection individuelle
+- **Validation immédiate** : Animation + badge vert
+- **Barre de progression** : 0% → 100%
+- **Message de félicitations** : À la complétion de toutes les tâches
 
 ### ✅ APIs de chat
 - `POST /api/chauffeur/chat` - Chauffeur → Admin (traduction auto IT→FR)
@@ -88,16 +95,21 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - Numéro de quai (sélection 1-30)
 - Aucun champ obligatoire
 
-### 5️⃣ Tâches en Temps Réel (12 langues)
+### 5️⃣ Tâches en Temps Réel (Version française)
 
-**⭐ NOUVELLES URLS (Contournement cache Worker)** :
+**Format d'URL** : `https://gxo-moissy-v2.pages.dev/chauffeur/taches?id={chauffeur_id}`
 
-**Format recommandé** : `https://gxo-procedures-moissy.pages.dev/driver/tasks?id={chauffeur_id}&lang={code}`
+**Exemple** : https://gxo-moissy-v2.pages.dev/chauffeur/taches?id=6
 
-**Exemples** :
-- Italien : https://gxo-procedures-moissy.pages.dev/driver/tasks?id=11&lang=it
-- Néerlandais : https://gxo-procedures-moissy.pages.dev/driver/tasks?id=11&lang=nl
-- Allemand : https://gxo-procedures-moissy.pages.dev/driver/tasks?id=11&lang=de
+**Fonctionnalités** :
+- Affichage des 5 tâches EPI avec icônes colorées
+- Validation immédiate par tâche (animation + badge vert)
+- Barre de progression en temps réel (0% → 100%)
+- Chat bidirectionnel avec traduction automatique
+- Badge messages non lus
+- Heartbeat automatique (toutes les 5 secondes)
+- Rafraîchissement auto (toutes les 5 secondes)
+- Message de félicitations à 100%
 
 **Format alternatif court** : `https://gxo-procedures-moissy.pages.dev/tasks/{lang}?id={chauffeur_id}`
 

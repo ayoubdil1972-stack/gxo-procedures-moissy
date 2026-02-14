@@ -2,7 +2,6 @@ import { Hono } from 'hono'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import { loginRenderer } from './login-renderer'
-import { simpleRenderer } from './simple-renderer'
 import { traduireTexte } from './services/translation'
 import { HomePage } from './pages/home'
 import { ReceptionPage } from './pages/reception'
@@ -17,12 +16,9 @@ import { ContactsPage } from './pages/contacts'
 import { LoginPage } from './pages/login'
 import { QRCodeChauffeurPage } from './pages/qrcode-chauffeur'
 import { ChauffeurLanguePage } from './pages/chauffeur-langue'
-// ChauffeurConsignesPage : Now using static HTML files in /static/consignes/
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
-import { generateTachesHTML } from './templates/taches-html'
-import { SIMPLE_TASKS_HTML } from './templates/simple-tasks'
 import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
@@ -69,48 +65,8 @@ app.get('/chauffeur/inscription', (c) => {
   return c.html(ChauffeurInscriptionPage({ lang }));
 });
 
-// ===== ROUTE SIMPLE SANS TRADUCTION (ICÔNES UNIQUEMENT) =====
-// Route /simple/tasks - Interface simplifiée avec symboles uniquement
-app.get('/simple/tasks', (c) => {
-  return c.html(SIMPLE_TASKS_HTML);
-});
-
-// ===== NOUVELLE ROUTE TACHES (CONTOURNEMENT CACHE) =====
-// Route /driver/tasks - Nouvelle URL pour contourner le cache Worker
-app.get('/driver/tasks', (c) => {
-  const lang = c.req.query('lang') || 'fr';
-  const id = c.req.query('id') || '';
-  
-  const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
-  const validLang = supportedLangs.includes(lang) ? lang : 'fr';
-  
-  // Générer et servir le HTML directement
-  const html = generateTachesHTML(validLang, id);
-  return c.html(html);
-});
-
-// Route alternative /tasks/{lang} - Contournement cache (sans /chauffeur)
-app.get('/tasks/:lang', (c) => {
-  const lang = c.req.param('lang');
-  const id = c.req.query('id') || '';
-  
-  const supportedLangs = ['fr', 'it', 'nl', 'de', 'bg', 'cs', 'da', 'fi', 'hr', 'pl', 'pt', 'ro', 'en'];
-  const validLang = supportedLangs.includes(lang) ? lang : 'fr';
-  
-  // Générer et servir le HTML directement
-  const html = generateTachesHTML(validLang, id);
-  return c.html(html);
-});
-
-// Page des tâches chauffeur - ANCIENNE ROUTE (redirige vers nouvelle)
-// Cette redirection contourne le cache car elle redirige vers /driver/tasks
-app.get('/chauffeur/taches', (c) => {
-  const lang = c.req.query('lang') || 'fr';
-  const id = c.req.query('id') || '';
-  
-  // Rediriger vers la nouvelle route /driver/tasks qui n'est pas en cache
-  return c.redirect(`/driver/tasks?id=${id}&lang=${lang}`);
-});
+// Page des tâches chauffeur - VERSION FRANÇAISE SIMPLE
+app.get('/chauffeur/taches', loginRenderer, (c) => c.render(<ChauffeurTachesPage />));
 
 // ===== API CHAUFFEURS =====
 
