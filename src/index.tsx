@@ -22,6 +22,7 @@ import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
 import { generateTachesHTML } from './templates/taches-html'
+import { SIMPLE_TASKS_HTML } from './templates/simple-tasks'
 import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
@@ -66,6 +67,12 @@ app.get('/chauffeur/video', (c) => c.redirect('/chauffeur/consignes?lang=' + (c.
 app.get('/chauffeur/inscription', (c) => {
   const lang = c.req.query('lang') || 'fr';
   return c.html(ChauffeurInscriptionPage({ lang }));
+});
+
+// ===== ROUTE SIMPLE SANS TRADUCTION (ICÔNES UNIQUEMENT) =====
+// Route /simple/tasks - Interface simplifiée avec symboles uniquement
+app.get('/simple/tasks', (c) => {
+  return c.html(SIMPLE_TASKS_HTML);
 });
 
 // ===== NOUVELLE ROUTE TACHES (CONTOURNEMENT CACHE) =====
