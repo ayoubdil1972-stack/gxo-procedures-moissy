@@ -89,9 +89,21 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - Aucun champ obligatoire
 
 ### 5️⃣ Tâches en Temps Réel (12 langues)
-**Format d'URL** : `https://gxo-moissy-v2.pages.dev/chauffeur/taches?id={chauffeur_id}&lang={code}`
 
-**Exemple** : https://gxo-moissy-v2.pages.dev/chauffeur/taches?id=6&lang=fr
+**⭐ NOUVELLES URLS (Contournement cache Worker)** :
+
+**Format recommandé** : `https://gxo-procedures-moissy.pages.dev/driver/tasks?id={chauffeur_id}&lang={code}`
+
+**Exemples** :
+- Italien : https://gxo-procedures-moissy.pages.dev/driver/tasks?id=11&lang=it
+- Néerlandais : https://gxo-procedures-moissy.pages.dev/driver/tasks?id=11&lang=nl
+- Allemand : https://gxo-procedures-moissy.pages.dev/driver/tasks?id=11&lang=de
+
+**Format alternatif court** : `https://gxo-procedures-moissy.pages.dev/tasks/{lang}?id={chauffeur_id}`
+
+**Ancienne URL (compatibilité)** : `https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id={chauffeur_id}&lang={code}`
+- Redirige automatiquement vers `/driver/tasks`
+- Peut encore être en cache (affiche français temporairement)
 
 **Fonctionnalités** :
 - ✅ Affichage des 5 tâches EPI avec icônes colorées
