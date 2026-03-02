@@ -1,0 +1,5 @@
+# Ignorer les fichiers wrangler pour éviter la confusion Workers/Pages
+wrangler.toml
+wrangler.jsonc
+wrangler.json
+*.toml
