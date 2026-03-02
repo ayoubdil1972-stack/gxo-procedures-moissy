@@ -1,4 +1,3 @@
-// Updated: 2026-02-14 18:00 - Checklists interactives activées
 export function AccueilChauffeurPage() {
   const processes = [
     {
@@ -8,16 +7,7 @@ export function AccueilChauffeurPage() {
       duration: '10-15 min',
       level: '🟢',
       vigilance: ['Se présenter à l\'accueil', 'Préparer documents', 'Suivre signalisation'],
-      document: 'Assigner camion à quai-2.docx',
-      checklist: [
-        'Se présenter à l\'accueil réception',
-        'Présenter CMR et bon de livraison',
-        'Indiquer le numéro de commande',
-        'Recevoir l\'assignation du quai',
-        'Suivre la signalisation vers le quai',
-        'Stationner au quai assigné',
-        'Attendre autorisation de déchargement'
-      ]
+      document: 'Assigner camion à quai-2.docx'
     },
     {
       id: 'procedures-securite',
@@ -25,15 +15,7 @@ export function AccueilChauffeurPage() {
       icon: 'fa-shield-alt',
       duration: '5 min',
       level: '🟡',
-      vigilance: ['Port EPI obligatoire', 'Respecter zones', 'Signaler anomalies'],
-      checklist: [
-        'Porter gilet haute visibilité',
-        'Porter chaussures de sécurité',
-        'Respecter les zones piétonnes',
-        'Ne pas entrer dans l\'entrepôt',
-        'Signaler toute anomalie',
-        'Suivre instructions personnel GXO'
-      ]
+      vigilance: ['Port EPI obligatoire', 'Respecter zones', 'Signaler anomalies']
     },
     {
       id: 'dechargement-chauffeur',
@@ -41,16 +23,7 @@ export function AccueilChauffeurPage() {
       icon: 'fa-dolly',
       duration: '30-60 min',
       level: '🟢',
-      vigilance: ['Attendre autorisation', 'Ouvrir portes si demandé', 'Rester disponible'],
-      checklist: [
-        'Attendre signal de l\'agent de quai',
-        'Ouvrir les portes arrière si demandé',
-        'Faciliter l\'accès aux marchandises',
-        'Rester disponible pour questions',
-        'Vérifier les quantités déchargées',
-        'Signaler tout écart ou dommage',
-        'Attendre signature des documents'
-      ]
+      vigilance: ['Attendre autorisation', 'Ouvrir portes si demandé', 'Rester disponible']
     },
     {
       id: 'depart-chauffeur',
@@ -58,15 +31,7 @@ export function AccueilChauffeurPage() {
       icon: 'fa-sign-out-alt',
       duration: '10 min',
       level: '🟢',
-      vigilance: ['Récupérer documents signés', 'Vérifier camion vide', 'Signaler départ'],
-      checklist: [
-        'Récupérer BL signé',
-        'Vérifier que tout est déchargé',
-        'Fermer et sécuriser le camion',
-        'Se présenter à l\'accueil pour départ',
-        'Rendre badge visiteur si applicable',
-        'Sortir par la voie indiquée'
-      ]
+      vigilance: ['Récupérer documents signés', 'Vérifier camion vide', 'Signaler départ']
     }
   ]
 
@@ -200,16 +165,6 @@ export function AccueilChauffeurPage() {
             </div>
 
             <div class="flex flex-wrap gap-2">
-              {process.checklist && (
-                <button 
-                  onclick={`showChecklist('${process.id}', ${JSON.stringify(process.checklist)})`}
-                  class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
-                >
-                  <i class="fas fa-list-check mr-2"></i>
-                  Checklist interactive
-                </button>
-              )}
-              
               {process.document && (
                 <a 
                   href={`/static/documents/${process.document}`}
@@ -223,13 +178,6 @@ export function AccueilChauffeurPage() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Checklist Modal Container */}
-      <div id="modal-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div id="modal-content"></div>
-        </div>
       </div>
       
       {/* Script Dashboard Temps Réel */}

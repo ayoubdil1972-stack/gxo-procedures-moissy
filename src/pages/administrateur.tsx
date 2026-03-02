@@ -1,4 +1,3 @@
-// Updated: 2026-02-14 18:00 - Checklists interactives activées
 export function AdministrateurPage() {
   const processes = [
     {
@@ -7,17 +6,7 @@ export function AdministrateurPage() {
       icon: 'fa-file-alt',
       duration: '10-15 min',
       level: '🟡',
-      vigilance: ['Vérifier données fournisseur', 'Contrôler références', 'Valider quantités'],
-      checklist: [
-        'Ouvrir EWM et accéder module ASN',
-        'Vérifier la réception de l\'ASN',
-        'Contrôler les informations fournisseur',
-        'Valider les références produits',
-        'Vérifier les quantités annoncées',
-        'Assigner au quai approprié',
-        'Créer TU si nécessaire',
-        'Notifier équipe de réception'
-      ]
+      vigilance: ['Vérifier données fournisseur', 'Contrôler références', 'Valider quantités']
     },
     {
       id: 'cloture-livraison-admin',
@@ -25,17 +14,7 @@ export function AdministrateurPage() {
       icon: 'fa-clipboard-check',
       duration: '15-20 min',
       level: '🟡',
-      vigilance: ['Rapprocher BL physique et système', 'Gérer écarts', 'Archiver documents'],
-      checklist: [
-        'Récupérer BL signé de l\'agent de quai',
-        'Vérifier signature chauffeur',
-        'Rapprocher avec ASN dans EWM',
-        'Traiter les écarts si présents',
-        'Valider la clôture dans le système',
-        'Scanner et archiver le BL',
-        'Mettre à jour le statut livraison',
-        'Envoyer notification fournisseur'
-      ]
+      vigilance: ['Rapprocher BL physique et système', 'Gérer écarts', 'Archiver documents']
     },
     {
       id: 'gestion-ecarts',
@@ -43,17 +22,7 @@ export function AdministrateurPage() {
       icon: 'fa-exclamation-triangle',
       duration: '20-30 min',
       level: '🔴',
-      vigilance: ['Documenter précisément', 'Photos si dommages', 'Notification rapide'],
-      checklist: [
-        'Identifier la nature de l\'écart',
-        'Prendre photos si dommages visibles',
-        'Remplir formulaire écart dans EWM',
-        'Indiquer quantités exactes',
-        'Contacter fournisseur si nécessaire',
-        'Créer ticket litige',
-        'Informer responsable exploitation',
-        'Suivre résolution écart'
-      ]
+      vigilance: ['Documenter précisément', 'Photos si dommages', 'Notification rapide']
     },
     {
       id: 'reporting',
@@ -61,17 +30,7 @@ export function AdministrateurPage() {
       icon: 'fa-chart-line',
       duration: '30-45 min',
       level: '🟢',
-      vigilance: ['Données à jour', 'Respect délais', 'Indicateurs précis'],
-      checklist: [
-        'Extraire données EWM journalières',
-        'Compiler nombre de livraisons',
-        'Calculer taux d\'écarts',
-        'Vérifier respect délais déchargement',
-        'Préparer rapport quotidien',
-        'Envoyer au responsable exploitation',
-        'Archiver rapports',
-        'Préparer tableau de bord hebdomadaire'
-      ]
+      vigilance: ['Données à jour', 'Respect délais', 'Indicateurs précis']
     },
     {
       id: 'gestion-documents',
@@ -79,17 +38,7 @@ export function AdministrateurPage() {
       icon: 'fa-folder-open',
       duration: '15-20 min',
       level: '🟢',
-      vigilance: ['Classement correct', 'Numérisation qualité', 'Archivage sécurisé'],
-      checklist: [
-        'Scanner tous les BL de la journée',
-        'Vérifier qualité numérisation',
-        'Nommer fichiers selon nomenclature',
-        'Classer dans arborescence réseau',
-        'Archiver documents papier',
-        'Mettre à jour registre livraisons',
-        'Vérifier accessibilité documents',
-        'Purger anciens documents selon règles'
-      ]
+      vigilance: ['Classement correct', 'Numérisation qualité', 'Archivage sécurisé']
     }
   ]
 
@@ -155,26 +104,8 @@ export function AdministrateurPage() {
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-              {process.checklist && (
-                <button 
-                  onclick={`showChecklist('${process.id}', ${JSON.stringify(process.checklist)})`}
-                  class="gxo-btn bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-600 flex items-center"
-                >
-                  <i class="fas fa-list-check mr-2"></i>
-                  Checklist interactive
-                </button>
-              )}
-            </div>
           </div>
         ))}
-      </div>
-
-      {/* Checklist Modal Container */}
-      <div id="modal-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div id="modal-content"></div>
-        </div>
       </div>
     </div>
   )

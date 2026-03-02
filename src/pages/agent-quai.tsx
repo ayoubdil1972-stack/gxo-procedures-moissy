@@ -1,4 +1,3 @@
-// Updated: 2026-02-14 18:00 - Checklists interactives activées
 export function AgentQuaiPage() {
   const processes = [
     {
@@ -7,17 +6,7 @@ export function AgentQuaiPage() {
       icon: 'fa-hand-paper',
       duration: '10-15 min',
       level: '🟢',
-      vigilance: ['Vérifier assignation', 'Sécuriser zone', 'Briefing chauffeur'],
-      checklist: [
-        'Vérifier assignation camion/quai dans système',
-        'Guider le camion jusqu\'au quai',
-        'Installer calles de sécurité',
-        'Sécuriser la zone de déchargement',
-        'Briefing sécurité avec le chauffeur',
-        'Vérifier documents transport',
-        'Noter heure d\'arrivée',
-        'Autoriser ouverture portes'
-      ]
+      vigilance: ['Vérifier assignation', 'Sécuriser zone', 'Briefing chauffeur']
     },
     {
       id: 'dechargement-quai',
@@ -25,18 +14,7 @@ export function AgentQuaiPage() {
       icon: 'fa-dolly-flatbed',
       duration: '30-60 min',
       level: '🟢',
-      vigilance: ['Respect sécurité', 'Vérifier palettes', 'Noter anomalies'],
-      checklist: [
-        'Inspecter visuellement le chargement',
-        'Décharger palette par palette',
-        'Vérifier état de chaque palette',
-        'Scanner code-barres BL',
-        'Compter quantités physiques',
-        'Noter tout écart ou dommage',
-        'Ranger palettes en zone dédiée',
-        'Photographier anomalies',
-        'Faire signer BL au chauffeur'
-      ]
+      vigilance: ['Respect sécurité', 'Vérifier palettes', 'Noter anomalies']
     },
     {
       id: 'verification-conformite-quai',
@@ -44,17 +22,7 @@ export function AgentQuaiPage() {
       icon: 'fa-check-double',
       duration: '15-20 min',
       level: '🟡',
-      vigilance: ['BL vs physique', 'Références correctes', 'Températures'],
-      checklist: [
-        'Comparer BL avec marchandises reçues',
-        'Vérifier références produits',
-        'Contrôler nombre de palettes',
-        'Vérifier emballages non endommagés',
-        'Contrôler température si produits frais',
-        'Vérifier dates de péremption visibles',
-        'Signaler écarts à l\'administrateur',
-        'Remplir formulaire réception'
-      ]
+      vigilance: ['BL vs physique', 'Références correctes', 'Températures']
     },
     {
       id: 'rangement-palettes',
@@ -62,17 +30,7 @@ export function AgentQuaiPage() {
       icon: 'fa-warehouse',
       duration: '15-20 min',
       level: '🟢',
-      vigilance: ['Zone appropriée', 'Étiquettes claires', 'Stabilité palettes'],
-      checklist: [
-        'Identifier zone de rangement appropriée',
-        'Vérifier stabilité des palettes',
-        'Apposer étiquettes réception',
-        'Scanner code-barres emplacement',
-        'Ranger palettes de manière sécurisée',
-        'Respecter hauteurs maximales',
-        'Laisser allées de circulation dégagées',
-        'Mettre à jour système de localisation'
-      ]
+      vigilance: ['Zone appropriée', 'Étiquettes claires', 'Stabilité palettes']
     },
     {
       id: 'cloture-quai',
@@ -80,17 +38,7 @@ export function AgentQuaiPage() {
       icon: 'fa-door-closed',
       duration: '10 min',
       level: '🟢',
-      vigilance: ['Documents complets', 'Zone propre', 'Quai libre'],
-      checklist: [
-        'Vérifier que tout est déchargé',
-        'Récupérer tous les documents signés',
-        'Retirer calles de sécurité',
-        'Fermer porte du quai',
-        'Nettoyer zone si nécessaire',
-        'Remettre documents à l\'administrateur',
-        'Libérer le quai dans le système',
-        'Noter heure de départ'
-      ]
+      vigilance: ['Documents complets', 'Zone propre', 'Quai libre']
     },
     {
       id: 'gestion-urgences-quai',
@@ -98,17 +46,7 @@ export function AgentQuaiPage() {
       icon: 'fa-ambulance',
       duration: 'Variable',
       level: '🔴',
-      vigilance: ['Sécurité prioritaire', 'Alerter secours', 'Évacuer zone'],
-      checklist: [
-        'Arrêter immédiatement opérations',
-        'Sécuriser la zone',
-        'Alerter secours si nécessaire (18 / 112)',
-        'Prévenir responsable exploitation',
-        'Évacuer personnel si danger',
-        'Ne pas déplacer blessé sans formation',
-        'Utiliser extincteur si petit feu',
-        'Rédiger rapport d\'incident'
-      ]
+      vigilance: ['Sécurité prioritaire', 'Alerter secours', 'Évacuer zone']
     }
   ]
 
@@ -174,26 +112,8 @@ export function AgentQuaiPage() {
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-              {process.checklist && (
-                <button 
-                  onclick={`showChecklist('${process.id}', ${JSON.stringify(process.checklist)})`}
-                  class="gxo-btn bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 flex items-center"
-                >
-                  <i class="fas fa-list-check mr-2"></i>
-                  Checklist interactive
-                </button>
-              )}
-            </div>
           </div>
         ))}
-      </div>
-
-      {/* Checklist Modal Container */}
-      <div id="modal-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div id="modal-content"></div>
-        </div>
       </div>
     </div>
   )
