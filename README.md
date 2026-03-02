@@ -2,13 +2,14 @@
 
 Application de formation et gestion pour les chauffeurs GXO Logistics - Site de Moissy-Cramayel.
 
-**Version** : 17.1.0 - STABLE | **Date** : 2026-03-02
+**Version** : 18.0.0 - STABLE | **Date** : 2026-03-02
 
-## 🎯 Fonctionnalités principales (v17.1.0)
+## 🎯 Fonctionnalités principales (v18.0.0)
 
-### ✅ Checklists procédurales sur toutes les rubriques
-- **5 rubriques complètes** : Réception, Contrôleur, Agent Quai, Administrateur, Accueil Chauffeur
-- **Modal avec liste d'étapes** : Affichage numéroté et détaillé
+### ✅ Checklist interactive sur page Réception uniquement
+- **1 rubrique avec checklist interactive** : Réception
+- **4 rubriques sans checklist** : Contrôleur, Agent Quai, Administrateur, Accueil Chauffeur
+- **Modal avec liste d'étapes** : Affichage numéroté et détaillé sur Réception
 - **Design cohérent** : Interface GXO avec icônes et couleurs
 - **Responsive** : Fonctionne sur mobile et desktop
 - **Stable** : Pas de problème de cache Cloudflare
@@ -31,13 +32,13 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - **Barre de progression** : 0% → 100%
 - **Message de félicitations** : À la complétion de toutes les tâches
 
-### ✅ Procédures détaillées avec checklists
-Chaque rubrique dispose de procédures avec checklists :
-- **Réception** : 8 procédures (réception standard, déchargement, clôture TU, etc.)
-- **Contrôleur Qualité** : 5 procédures (contrôle qualité, quantitatif, conformité, etc.)
-- **Agent de Quai** : 6 procédures (chargement camion, déchargement, contrôle palette, etc.)
-- **Administrateur** : 5 procédures (gestion documents, audit, formation, etc.)
-- **Accueil Chauffeur** : Procédures d'accueil et orientation
+### ✅ Procédures détaillées
+Chaque rubrique dispose de procédures détaillées :
+- **Réception** : 8 procédures **avec checklist interactive**
+- **Contrôleur Qualité** : 5 procédures (sans checklist)
+- **Agent de Quai** : 6 procédures (sans checklist)
+- **Administrateur** : 5 procédures (sans checklist)
+- **Accueil Chauffeur** : 4 procédures (sans checklist)
 
 ## 🌐 URLs
 
@@ -46,13 +47,13 @@ Chaque rubrique dispose de procédures avec checklists :
 - **GitHub Code**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 - **Sandbox Dev**: https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
 
-### 📋 Pages des procédures avec checklists :
+### 📋 Pages des procédures :
 ```
-✅ https://gxo-moissy-v2.pages.dev/reception
-✅ https://gxo-moissy-v2.pages.dev/controleur
-✅ https://gxo-moissy-v2.pages.dev/agent-quai
-✅ https://gxo-moissy-v2.pages.dev/administrateur
-✅ https://gxo-moissy-v2.pages.dev/accueil-chauffeur
+✅ https://gxo-moissy-v2.pages.dev/reception          ← CHECKLIST INTERACTIVE
+✅ https://gxo-moissy-v2.pages.dev/controleur         ← Sans checklist
+✅ https://gxo-moissy-v2.pages.dev/agent-quai         ← Sans checklist
+✅ https://gxo-moissy-v2.pages.dev/administrateur     ← Sans checklist
+✅ https://gxo-moissy-v2.pages.dev/accueil-chauffeur  ← Sans checklist
 ```
 
 ## 🚗 Workflow Chauffeur - URLs Principales
@@ -136,9 +137,9 @@ Chaque rubrique dispose de procédures avec checklists :
 ## 📱 Fonctionnalités
 
 ### Pour les administrateurs (Intranet)
-- ✅ **Checklists procédurales** : 5 rubriques complètes avec modal détaillé
+- ✅ **Checklist interactive sur Réception uniquement** : Modal détaillé avec 8 procédures
 - ✅ **Gestion des procédures** : Réception, Contrôle, Agent Quai, Admin, Accueil
-- ✅ **Documentation accessible** : Checklists étape par étape
+- ✅ **Documentation accessible** : Procédures détaillées étape par étape
 - ✅ **Interface moderne** : Design GXO avec Tailwind CSS
 - ✅ **Dashboard temps réel** des chauffeurs actifs
 - ✅ **Chat bidirectionnel** avec les chauffeurs
@@ -184,12 +185,12 @@ npm run deploy:prod
 webapp/
 ├── src/
 │   ├── index.tsx              # Application Hono principale
-│   ├── pages/                 # Pages TSX avec checklists
-│   │   ├── reception.tsx      # ✅ 8 procédures avec checklists
-│   │   ├── controleur.tsx     # ✅ 5 procédures avec checklists
-│   │   ├── agent-quai.tsx     # ✅ 6 procédures avec checklists
-│   │   ├── administrateur.tsx # ✅ 5 procédures avec checklists
-│   │   ├── accueil-chauffeur.tsx  # ✅ Procédures d'accueil
+│   ├── pages/                 # Pages TSX
+│   │   ├── reception.tsx      # ✅ 8 procédures AVEC checklist interactive
+│   │   ├── controleur.tsx     # 5 procédures sans checklist
+│   │   ├── agent-quai.tsx     # 6 procédures sans checklist
+│   │   ├── administrateur.tsx # 5 procédures sans checklist
+│   │   ├── accueil-chauffeur.tsx  # 4 procédures sans checklist
 │   │   ├── chauffeur-langue.tsx
 │   │   ├── chauffeur-inscription.tsx
 │   │   └── ...
@@ -198,12 +199,12 @@ webapp/
 ├── public/
 │   ├── consignes/             # 12 fichiers HTML statiques
 │   └── static/
-│       ├── app.js             # ✅ Fonction showChecklist() avec modal
+│       ├── app.js             # ✅ Fonction showChecklistInteractive()
 │       ├── images/            # Logos et images
 │       └── *.js               # Scripts frontend
 ├── migrations/                # Migrations D1 (base de données)
 ├── dist/                      # Build output (généré)
-│   ├── _worker.js             # Worker Cloudflare compilé (253.51 kB)
+│   ├── _worker.js             # Worker Cloudflare compilé (245.72 kB)
 │   ├── _routes.json           # Configuration des routes
 │   └── consignes/             # Fichiers HTML statiques copiés
 ├── wrangler.jsonc             # Configuration Cloudflare
@@ -221,7 +222,7 @@ Toutes les pages sont optimisées pour mobile et testées sur :
 - ✅ Design responsive avec Tailwind CSS
 - ✅ Logo GXO visible
 - ✅ Contenu lisible et bien formaté
-- ✅ Checklists fonctionnelles avec modal
+- ✅ Checklist interactive fonctionnelle sur page Réception
 - ✅ Support parfait des caractères spéciaux (12 langues)
 
 ## 🔧 Développement local
@@ -252,15 +253,15 @@ npm run dev:sandbox
 
 ## 📄 Documentation
 
-- [Solution Finale v17.1.0](./SOLUTION_FINALE_V17.md) - Documentation complète de la version actuelle
+- [Solution Finale v17.1.0](./SOLUTION_FINALE_V17.md) - Documentation complète
 - [Guide de déploiement](./GUIDE_RAPIDE_DEPLOIEMENT.md) - Instructions de déploiement
 - [Instructions Cloudflare 2026](./INSTRUCTIONS_CLOUDFLARE_2026.md) - Guide interface 2026
 
 ## 🎯 Statut
 
-- ✅ Version 17.1.0 déployée
-- ✅ 5 rubriques avec checklists fonctionnelles
-- ✅ Build optimisé (253.51 KB)
+- ✅ Version 18.0.0 déployée
+- ✅ Checklist interactive sur Réception uniquement
+- ✅ Build optimisé (245.72 kB - économie de 7.79 kB)
 - ✅ Base de données D1 configurée
 - ✅ Déployé en production
 - ✅ Toutes les APIs testées
@@ -269,12 +270,13 @@ npm run dev:sandbox
 
 ## 📊 Statistiques de Performance
 
-- **Bundle Worker**: 253.51 KB (optimisé)
+- **Bundle Worker**: 245.72 KB (optimisé)
 - **Fichiers statiques**: 12 fichiers HTML (~7 KB chacun)
 - **Temps de chargement**: < 100ms (CDN Cloudflare)
 - **Compatibilité**: 100% mobile et desktop
-- **Checklists**: 24+ procédures disponibles
+- **Procédures**: 28+ procédures disponibles
 - **Rubriques**: 5 sections complètes
+- **Checklists interactives**: 1 rubrique (Réception)
 
 ## 📞 Support
 
@@ -283,7 +285,7 @@ Pour toute question ou problème, consultez les guides de documentation dans le 
 ---
 
 **Dernière mise à jour :** 2 mars 2026  
-**Version :** 17.1.0 - Checklists Fonctionnelles  
+**Version :** 18.0.0 - Checklist uniquement sur Réception  
 **Statut :** ✅ Production - 100% Fonctionnel  
 **Déploiement :** https://gxo-moissy-v2.pages.dev  
-**Build Size :** 253.51 KB
+**Build Size :** 245.72 KB (-7.79 kB vs v17.1.0)
