@@ -1,5 +1,9 @@
 import { jsxRenderer } from 'hono/jsx-renderer'
 
+// Version cache busting - Incrémenter pour forcer le rechargement
+const CACHE_VERSION = '2'
+const addVersion = (url: string) => url.includes('?') ? `${url}&v=${CACHE_VERSION}` : `${url}?v=${CACHE_VERSION}`
+
 export const renderer = jsxRenderer(({ children }) => {
   return (
     <html lang="fr">
@@ -737,16 +741,16 @@ export const renderer = jsxRenderer(({ children }) => {
               </div>
             </a>
             <div class="flex items-center space-x-4" id="nav-links">
-              <a href="/" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
+              <a href="/?v=2" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
                 <i class="fas fa-home mr-2"></i><span>Accueil</span>
               </a>
-              <a href="/bibliotheque" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
+              <a href="/bibliotheque?v=2" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
                 <i class="fas fa-book mr-2"></i><span>Bibliothèque</span>
               </a>
-              <a href="/contacts" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
+              <a href="/contacts?v=2" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
                 <i class="fas fa-address-book mr-2"></i><span>Contacts</span>
               </a>
-              <a href="/anomalies" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
+              <a href="/anomalies?v=2" class="px-3 py-2 rounded-lg transition-all hover:bg-white/20 hover:shadow-md">
                 <i class="fas fa-exclamation-triangle mr-2"></i><span>Anomalies</span>
               </a>
             </div>
@@ -877,6 +881,20 @@ export const renderer = jsxRenderer(({ children }) => {
         <script src="/static/reviews.js"></script>
         <script src="/static/onboarding.js"></script>
         <script src="/static/decision-tree.js"></script>
+        <script dangerouslySetInnerHTML={{ __html: `
+          // Cache busting automatique - Ajouter ?v=2 à tous les liens internes
+          document.addEventListener('DOMContentLoaded', function() {
+            const CACHE_VERSION = '2';
+            const links = document.querySelectorAll('a[href^="/"]');
+            links.forEach(link => {
+              const href = link.getAttribute('href');
+              if (href && !href.includes('?v=') && !href.startsWith('/static/')) {
+                const separator = href.includes('?') ? '&' : '?';
+                link.setAttribute('href', href + separator + 'v=' + CACHE_VERSION);
+              }
+            });
+          });
+        ` }} />
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes shake {
             0%, 100% { transform: translateX(0); }
