@@ -108,6 +108,17 @@ export function AgentQuaiPage() {
                       </ul>
                     </div>
                   )}
+                  
+                  {/* Bouton Vidéo tutoriel */}
+                  <div class="mt-4">
+                    <button 
+                      class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 w-full justify-center"
+                      onclick="alert('Fonctionnalité Vidéo tutoriel à venir')"
+                    >
+                      <i class="fas fa-video"></i>
+                      <span class="font-semibold">Vidéo tutoriel</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
