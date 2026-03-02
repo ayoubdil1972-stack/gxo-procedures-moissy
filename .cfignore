@@ -1,5 +1,4 @@
-# Ignorer les fichiers wrangler pour éviter la confusion Workers/Pages
+# Ignorer les fichiers de configuration Wrangler pour éviter les conflits de déploiement
 wrangler.toml
 wrangler.jsonc
-wrangler.json
-*.toml
+.wrangler/
