@@ -284,9 +284,10 @@ Pour toute question ou problème, consultez les guides de documentation dans le 
 
 ---
 
-**Dernière mise à jour :** 2 mars 2026 11:35 UTC  
-**Version :** 18.1.0 - Vidéo Tutoriel ajouté  
+**Dernière mise à jour :** 2 mars 2026 18:30 UTC  
+**Version :** 18.2.0 - Vidéo Tutoriel + Déploiement automatique stable  
 **Statut :** ✅ Production - 100% Fonctionnel  
 **Déploiement :** https://gxo-procedures-moissy.pages.dev  
 **Build Size :** 247.39 KB  
-<!-- Trigger deploy: force Cloudflare Pages rebuild -->
+**Tag GitHub :** v18.2.0  
+**Commit :** c9b40f3
