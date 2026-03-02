@@ -2,9 +2,16 @@
 
 Application de formation et gestion pour les chauffeurs GXO Logistics - Site de Moissy-Cramayel.
 
-**Version** : 15.0.0 - STABLE | **Date** : 2026-02-14
+**Version** : 17.1.0 - STABLE | **Date** : 2026-03-02
 
-## 🎯 Fonctionnalités principales (v15.0.0 - Version stable française)
+## 🎯 Fonctionnalités principales (v17.1.0)
+
+### ✅ Checklists procédurales sur toutes les rubriques
+- **5 rubriques complètes** : Réception, Contrôleur, Agent Quai, Administrateur, Accueil Chauffeur
+- **Modal avec liste d'étapes** : Affichage numéroté et détaillé
+- **Design cohérent** : Interface GXO avec icônes et couleurs
+- **Responsive** : Fonctionne sur mobile et desktop
+- **Stable** : Pas de problème de cache Cloudflare
 
 ### ✅ Chat bidirectionnel avec traduction automatique
 - **Communication en temps réel** : Admin ↔ Chauffeur
@@ -24,21 +31,29 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - **Barre de progression** : 0% → 100%
 - **Message de félicitations** : À la complétion de toutes les tâches
 
-### ✅ APIs de chat
-- `POST /api/chauffeur/chat` - Chauffeur → Admin (traduction auto IT→FR)
-- `POST /api/admin/chat` - Admin → Chauffeur (traduction auto FR→IT)
-- `GET /api/chauffeur/chat?id={id}&viewer={admin|chauffeur}` - Récupération messages
-- `POST /api/chat/heartbeat` - Heartbeat pour statut en ligne
-- `GET /api/chat/online-status?chauffeur_id={id}` - Vérification statut
+### ✅ Procédures détaillées avec checklists
+Chaque rubrique dispose de procédures avec checklists :
+- **Réception** : 8 procédures (réception standard, déchargement, clôture TU, etc.)
+- **Contrôleur Qualité** : 5 procédures (contrôle qualité, quantitatif, conformité, etc.)
+- **Agent de Quai** : 6 procédures (chargement camion, déchargement, contrôle palette, etc.)
+- **Administrateur** : 5 procédures (gestion documents, audit, formation, etc.)
+- **Accueil Chauffeur** : Procédures d'accueil et orientation
 
 ## 🌐 URLs
 
 - **Production**: https://gxo-procedures-moissy.pages.dev
 - **Production (alias)**: https://gxo-moissy-v2.pages.dev
 - **GitHub Code**: https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
-- **GitHub Assets**: https://github.com/ayoubdil1972-stack/gxo-video-assets
-- **Cloudflare Dashboard (gxo-procedures-moissy)**: https://dash.cloudflare.com/pages/view/gxo-procedures-moissy
-- **Cloudflare Dashboard (gxo-moissy-v2)**: https://dash.cloudflare.com/8b193b1c61a45eb50fb2dab89cf8bfe5/pages/view/gxo-moissy-v2
+- **Sandbox Dev**: https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai
+
+### 📋 Pages des procédures avec checklists :
+```
+✅ https://gxo-moissy-v2.pages.dev/reception
+✅ https://gxo-moissy-v2.pages.dev/controleur
+✅ https://gxo-moissy-v2.pages.dev/agent-quai
+✅ https://gxo-moissy-v2.pages.dev/administrateur
+✅ https://gxo-moissy-v2.pages.dev/accueil-chauffeur
+```
 
 ## 🚗 Workflow Chauffeur - URLs Principales
 
@@ -74,21 +89,6 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 ### 4️⃣ Inscription (12 langues)
 **Format d'URL** : `https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang={code}`
 
-| Langue | URL Directe |
-|--------|-------------|
-| 🇫🇷 Français | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=fr |
-| 🇳🇱 Néerlandais | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=nl |
-| 🇩🇪 Allemand | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=de |
-| 🇮🇹 Italien | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=it |
-| 🇧🇬 Bulgare | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=bg |
-| 🇨🇿 Tchèque | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=cs |
-| 🇩🇰 Danois | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=da |
-| 🇫🇮 Finnois | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=fi |
-| 🇭🇷 Croate | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=hr |
-| 🇵🇱 Polonais | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=pl |
-| 🇵🇹 Portugais | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=pt |
-| 🇷🇴 Roumain | https://gxo-moissy-v2.pages.dev/chauffeur/inscription?lang=ro |
-
 **Formulaire simplifié** :
 - Pseudo/Nom du chauffeur
 - Entreprise
@@ -100,22 +100,6 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 **Format d'URL** : `https://gxo-moissy-v2.pages.dev/chauffeur/taches?id={chauffeur_id}`
 
 **Exemple** : https://gxo-moissy-v2.pages.dev/chauffeur/taches?id=6
-
-**Fonctionnalités** :
-- Affichage des 5 tâches EPI avec icônes colorées
-- Validation immédiate par tâche (animation + badge vert)
-- Barre de progression en temps réel (0% → 100%)
-- Chat bidirectionnel avec traduction automatique
-- Badge messages non lus
-- Heartbeat automatique (toutes les 5 secondes)
-- Rafraîchissement auto (toutes les 5 secondes)
-- Message de félicitations à 100%
-
-**Format alternatif court** : `https://gxo-procedures-moissy.pages.dev/tasks/{lang}?id={chauffeur_id}`
-
-**Ancienne URL (compatibilité)** : `https://gxo-procedures-moissy.pages.dev/chauffeur/taches?id={chauffeur_id}&lang={code}`
-- Redirige automatiquement vers `/driver/tasks`
-- Peut encore être en cache (affiche français temporairement)
 
 **Fonctionnalités** :
 - ✅ Affichage des 5 tâches EPI avec icônes colorées
@@ -147,13 +131,22 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - ✅ **Chat modal** : Envoi/réception messages avec traduction auto
 - ✅ **Rafraîchissement** : Liste toutes les 5s, chat toutes les 2s
 - ✅ Bouton "Clôturer" pour terminer un chauffeur
-- ✅ Auto-refresh toutes les 5 secondes
 - ✅ Statistiques en temps réel (Total, Prêts, En cours)
 
 ## 📱 Fonctionnalités
 
+### Pour les administrateurs (Intranet)
+- ✅ **Checklists procédurales** : 5 rubriques complètes avec modal détaillé
+- ✅ **Gestion des procédures** : Réception, Contrôle, Agent Quai, Admin, Accueil
+- ✅ **Documentation accessible** : Checklists étape par étape
+- ✅ **Interface moderne** : Design GXO avec Tailwind CSS
+- ✅ **Dashboard temps réel** des chauffeurs actifs
+- ✅ **Chat bidirectionnel** avec les chauffeurs
+- ✅ **Suivi de progression** individuel par chauffeur
+- ✅ **Clôture des missions** avec bouton dédié
+
 ### Pour les chauffeurs
-- ✅ **Consignes de sécurité multilingues** (12 langues: FR, NL, DE, IT, BG, CS, DA, FI, HR, PL, PT, RO)
+- ✅ **Consignes de sécurité multilingues** (12 langues)
 - ✅ **Interface responsive** avec design moderne et animations
 - ✅ **Fichiers HTML statiques** ultra-rapides (servis via CDN Cloudflare)
 - ✅ **Support parfait** sur iPhone/Android
@@ -162,23 +155,7 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - ✅ **Validation immédiate** avec animation et badge vert
 - ✅ **Barre de progression** dynamique (0% → 100%)
 - ✅ **Chat support bidirectionnel** avec l'équipe GXO
-- ✅ **Badge de messages non lus** avec compteur
 - ✅ **Auto-refresh** toutes les 5 secondes
-
-### Pour les administrateurs
-- ✅ **Dashboard temps réel** des chauffeurs actifs
-- ✅ **Suivi de progression** individuel par chauffeur
-- ✅ **Chat bidirectionnel** avec les chauffeurs
-- ✅ **Badge de messages non lus** par chauffeur
-- ✅ **Clôture des missions** avec bouton dédié
-- ✅ **Statistiques en direct** (Total, Prêts, En cours)
-- ✅ **Auto-refresh** toutes les 5 secondes
-- ✅ **Base de données D1** (Cloudflare) pour persistence
-
-### Pour l'accueil
-- ✅ **Interface d'accueil simplifiée**
-- ✅ **Gestion des arrivées**
-- ✅ **Documentation disponible**
 
 ## 🚀 Déploiement
 
@@ -207,30 +184,35 @@ npm run deploy:prod
 webapp/
 ├── src/
 │   ├── index.tsx              # Application Hono principale
-│   ├── pages/                 # Pages TSX
+│   ├── pages/                 # Pages TSX avec checklists
+│   │   ├── reception.tsx      # ✅ 8 procédures avec checklists
+│   │   ├── controleur.tsx     # ✅ 5 procédures avec checklists
+│   │   ├── agent-quai.tsx     # ✅ 6 procédures avec checklists
+│   │   ├── administrateur.tsx # ✅ 5 procédures avec checklists
+│   │   ├── accueil-chauffeur.tsx  # ✅ Procédures d'accueil
 │   │   ├── chauffeur-langue.tsx
 │   │   ├── chauffeur-inscription.tsx
 │   │   └── ...
 │   ├── services/              # Services (traduction, etc.)
 │   └── config/                # Configuration
 ├── public/
-│   ├── consignes/             # 12 fichiers HTML statiques (FR, NL, DE, IT, BG, CS, DA, FI, HR, PL, PT, RO)
+│   ├── consignes/             # 12 fichiers HTML statiques
 │   └── static/
+│       ├── app.js             # ✅ Fonction showChecklist() avec modal
 │       ├── images/            # Logos et images
 │       └── *.js               # Scripts frontend
 ├── migrations/                # Migrations D1 (base de données)
 ├── dist/                      # Build output (généré)
-│   ├── _worker.js             # Worker Cloudflare compilé
+│   ├── _worker.js             # Worker Cloudflare compilé (253.51 kB)
 │   ├── _routes.json           # Configuration des routes
 │   └── consignes/             # Fichiers HTML statiques copiés
-├── generate-consignes.cjs     # Script de génération des pages HTML
 ├── wrangler.jsonc             # Configuration Cloudflare
 └── package.json
 ```
 
 ## 📱 Test sur iPhone/Android
 
-Toutes les pages de consignes sont optimisées pour mobile et testées sur :
+Toutes les pages sont optimisées pour mobile et testées sur :
 - ✅ iPhone 12 et versions ultérieures
 - ✅ Appareils Android
 - ✅ Tablettes
@@ -239,7 +221,7 @@ Toutes les pages de consignes sont optimisées pour mobile et testées sur :
 - ✅ Design responsive avec Tailwind CSS
 - ✅ Logo GXO visible
 - ✅ Contenu lisible et bien formaté
-- ✅ Bouton "J'ai lu et compris les consignes" cliquable
+- ✅ Checklists fonctionnelles avec modal
 - ✅ Support parfait des caractères spéciaux (12 langues)
 
 ## 🔧 Développement local
@@ -260,74 +242,39 @@ npm run dev:sandbox
 ### Chauffeur
 - **GET** `/api/chauffeur/progression?id={chauffeur_id}` - Récupérer la progression d'un chauffeur
 - **POST** `/api/chauffeur/valider-tache` - Valider une tâche
-  - Body: `{"chauffeur_id": 1, "tache": "task_epi_porte"}`
 - **GET** `/api/chauffeur/chat?id={chauffeur_id}` - Récupérer les messages chat
 - **POST** `/api/chauffeur/chat` - Envoyer un message
-  - Body: `{"chauffeur_id": 1, "message": "Bonjour"}`
-- **POST** `/api/chauffeur/chat/mark-read` - Marquer les messages comme lus
 - **POST** `/api/chauffeur/inscription` - Inscrire un nouveau chauffeur
-  - Body: `{"pseudo": "Jean", "entreprise": "Transport", "numero_quai": "Q15", "langue": "fr"}`
 
 ### Admin
 - **GET** `/api/chauffeur/liste` - Liste des chauffeurs actifs
 - **POST** `/api/admin/cloturer-chauffeur` - Clôturer un chauffeur
-  - Body: `{"chauffeur_id": 1}`
-
-### Tests Production
-Toutes les APIs sont testées et fonctionnelles :
-```bash
-# Test liste chauffeurs
-curl "https://gxo-moissy-v2.pages.dev/api/chauffeur/liste"
-
-# Test progression
-curl "https://gxo-moissy-v2.pages.dev/api/chauffeur/progression?id=1"
-
-# Test validation tâche
-curl -X POST "https://gxo-moissy-v2.pages.dev/api/chauffeur/valider-tache" \
-  -H "Content-Type: application/json" \
-  -d '{"chauffeur_id": 1, "tache": "task_epi_porte"}'
-
-# Test chat
-curl -X POST "https://gxo-moissy-v2.pages.dev/api/chauffeur/chat" \
-  -H "Content-Type: application/json" \
-  -d '{"chauffeur_id": 1, "message": "Bonjour"}'
-```
 
 ## 📄 Documentation
 
-- [Déploiement Production Réussi](./DEPLOIEMENT_PRODUCTION_SUCCESS.md) - ✅ Tests complets et validation
-- [Corrections Appliquées](./CORRECTIONS_APPLIQUEES.md) - Détail de tous les bugs corrigés
-- [Debug Status](./DEBUG_STATUS.md) - Historique du debugging
-- [Workflow Chauffeur Deploy](./WORKFLOW_CHAUFFEUR_DEPLOY.md) - Documentation du workflow complet
-- [Guide de déploiement automatique](./DEPLOIEMENT_AUTOMATIQUE_GITHUB.md)
-- [Configuration des secrets](./SECRETS_GITHUB_GUIDE.md)
-- [Migration finale - Succès](./MIGRATION_FINALE_SUCCESS.md)
-- [Solution Error 1101](./DIAGNOSTIC_ERROR_1101.md)
+- [Solution Finale v17.1.0](./SOLUTION_FINALE_V17.md) - Documentation complète de la version actuelle
+- [Guide de déploiement](./GUIDE_RAPIDE_DEPLOIEMENT.md) - Instructions de déploiement
+- [Instructions Cloudflare 2026](./INSTRUCTIONS_CLOUDFLARE_2026.md) - Guide interface 2026
 
 ## 🎯 Statut
 
-- ✅ Projet créé sur Cloudflare (gxo-moissy-v2)
-- ✅ 12 langues de consignes fonctionnelles
-- ✅ 12 langues pour inscription et tâches
-- ✅ Build optimisé (251.28 KB)
-- ✅ Base de données D1 configurée et fonctionnelle
+- ✅ Version 17.1.0 déployée
+- ✅ 5 rubriques avec checklists fonctionnelles
+- ✅ Build optimisé (253.51 KB)
+- ✅ Base de données D1 configurée
 - ✅ Déployé en production
-- ✅ 6 chauffeurs actifs en production
-- ✅ Toutes les APIs testées et fonctionnelles
+- ✅ Toutes les APIs testées
 - ✅ Chat bidirectionnel opérationnel
-- ✅ Validation des tâches avec animations
 - ✅ Dashboard admin temps réel
 
 ## 📊 Statistiques de Performance
 
-- **Bundle Worker**: 251.28 KB (optimisé)
+- **Bundle Worker**: 253.51 KB (optimisé)
 - **Fichiers statiques**: 12 fichiers HTML (~7 KB chacun)
 - **Temps de chargement**: < 100ms (CDN Cloudflare)
 - **Compatibilité**: 100% mobile et desktop
-- **Auto-refresh**: 5 secondes
-- **Chauffeurs actifs**: 6 en production
-- **APIs**: 100% fonctionnelles
-- **Error 1101**: ✅ RÉSOLU
+- **Checklists**: 24+ procédures disponibles
+- **Rubriques**: 5 sections complètes
 
 ## 📞 Support
 
@@ -335,8 +282,8 @@ Pour toute question ou problème, consultez les guides de documentation dans le 
 
 ---
 
-**Dernière mise à jour :** 13 février 2026  
-**Version :** 13.0.0 - Workflow Chauffeur Complet  
-**Statut :** ✅ Production - 100% Fonctionnel + Chat + Dashboard Temps Réel  
+**Dernière mise à jour :** 2 mars 2026  
+**Version :** 17.1.0 - Checklists Fonctionnelles  
+**Statut :** ✅ Production - 100% Fonctionnel  
 **Déploiement :** https://gxo-moissy-v2.pages.dev  
-**Chauffeurs Actifs :** 6 en production
+**Build Size :** 253.51 KB
