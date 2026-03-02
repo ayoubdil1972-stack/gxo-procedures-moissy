@@ -1,10 +1,6 @@
-name = "gxo-procedures-moissy"
+name = "gxo-procedures-moissyv3"
 compatibility_date = "2026-03-02"
-pages_build_output_dir = "./dist"
+pages_build_output_dir = "dist"
 
-compatibility_flags = ["nodejs_compat"]
-
-[[d1_databases]]
-binding = "DB"
-database_name = "gxo-chauffeurs-db"
-database_id = "28637bef-a644-4661-8cca-829f84058875"
+# Pas besoin de main ou workers_dev pour Pages
+# Pages déploie automatiquement le contenu de dist/
