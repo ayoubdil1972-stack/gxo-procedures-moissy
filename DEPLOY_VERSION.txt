@@ -1,0 +1,10 @@
+Version: v16.0.0
+Date: 2026-03-02-08-37-01
+Commit: Checklists interactives sur toutes les rubriques
+Status: Production ready
+Features:
+- Reception: Checklist interactive ✅
+- Controleur: Checklist interactive ✅
+- Agent Quai: Checklist interactive ✅
+- Administrateur: Checklist interactive ✅
+- Accueil Chauffeur: Checklist interactive ✅
