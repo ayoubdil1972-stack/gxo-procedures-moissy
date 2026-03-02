@@ -873,7 +873,7 @@ export const renderer = jsxRenderer(({ children }) => {
         </button>
         
         <script src="/static/auth.js"></script>
-        <script src="/static/app.js"></script>
+        <script src="/static/app.v2.js"></script>
         <script src="/static/reviews.js"></script>
         <script src="/static/onboarding.js"></script>
         <script src="/static/decision-tree.js"></script>
