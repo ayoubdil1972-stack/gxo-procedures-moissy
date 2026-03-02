@@ -1,0 +1,17 @@
+{
+  "header": "🇳🇱 Nederlands",
+  "titre": "Instructies",
+  "bienvenue": "Hallo",
+  "sousTitre": "Welkom op onze site",
+  "titreSecurite": "Verplichte veiligheidsinstructies",
+  "consigneEPI": "Het dragen van een <strong>veiligheidsvest</strong> en <strong>veiligheidsschoenen</strong> is <strong class=\"text-red-600\">verplicht</strong> op het hele terrein.",
+  "consigneFumer": "Het is <strong class=\"text-red-600\">strikt verboden om te roken</strong> op het terrein.",
+  "titreAccueil": "Bij de chauffeursontvangst",
+  "consignePalette": "Geef aan of een <strong>palletwissel</strong> noodzakelijk is.",
+  "consigneHayon": "Geef aan of uw vrachtwagen is uitgerust met een <strong>laadklep</strong>.",
+  "titreQuai": "Plaatsing aan het laadperron",
+  "consigneClefs": "Zodra u <strong>aan het perron</strong> bent geplaatst, moet u <strong class=\"text-green-600\">uw sleutels inleveren</strong> bij de perronmedewerker.",
+  "titreImportant": "Belangrijk",
+  "messageImportant": "Het naleven van deze instructies is essentieel voor de <strong>veiligheid van iedereen</strong> op het terrein.",
+  "btnContinuer": "Ik heb de instructies gelezen en begrepen"
+}

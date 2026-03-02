@@ -1,0 +1,17 @@
+{
+  "header": "🇨🇿 Čeština",
+  "titre": "Pokyny",
+  "bienvenue": "Dobrý den",
+  "sousTitre": "Vítejte na našich stránkách",
+  "titreSecurite": "Povinné bezpečnostní pokyny",
+  "consigneEPI": "Nošení <strong>bezpečnostní vesty</strong> a <strong>bezpečnostní obuvi</strong> je <strong class=\"text-red-600\">povinné</strong> na celém místě.",
+  "consigneFumer": "Je <strong class=\"text-red-600\">přísně zakázáno kouřit</strong> na místě.",
+  "titreAccueil": "U řidičské recepce",
+  "consignePalette": "Uveďte, zda je nutná <strong>výměna palety</strong>.",
+  "consigneHayon": "Upřesněte, zda je váš nákladní vůz vybaven <strong>hydraulickým čelem</strong>.",
+  "titreQuai": "Umístění u rampy",
+  "consigneClefs": "Jakmile jste <strong>umístěni u rampy</strong>, musíte <strong class=\"text-green-600\">odevzdat klíče</strong> pracovníkovi rampy.",
+  "titreImportant": "Důležité",
+  "messageImportant": "Dodržování těchto pokynů je nezbytné pro zajištění <strong>bezpečnosti všech</strong> na místě.",
+  "btnContinuer": "Přečetl jsem si a pochopil pokyny"
+}

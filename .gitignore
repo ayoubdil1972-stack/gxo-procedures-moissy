@@ -2,8 +2,8 @@
 node_modules/
 .npm/
 
-# Build output
-dist/
+# Build output (dist/ doit être commité pour Cloudflare Pages)
+# dist/  <-- COMMENTÉ pour permettre le commit
 .wrangler/
 .mf/
 .cache/

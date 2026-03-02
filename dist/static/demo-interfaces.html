@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interface QR Code Chauffeurs - GXO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 20px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { 
+      text-align: center; 
+      font-size: 2.5rem; 
+      margin-bottom: 40px;
+      background: linear-gradient(90deg, #FF5A1A, #FF4500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    .page-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 20px;
+      border: 2px solid rgba(255, 90, 26, 0.3);
+      transition: all 0.3s;
+    }
+    .page-card:hover {
+      border-color: #FF5A1A;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(255, 90, 26, 0.3);
+    }
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #FF5A1A;
+    }
+    .page-desc {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+    .page-features {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    .page-features li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .page-features li:before {
+      content: "✓";
+      color: #4CAF50;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .btn-demo {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(90deg, #FF5A1A, #FF4500);
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .btn-demo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(255, 90, 26, 0.5);
+    }
+    .info-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border: 2px solid rgba(76, 175, 80, 0.3);
+    }
+    .info-title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #4CAF50;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #FF5A1A;
+    }
+    .stat-label {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 8px;
+    }
+    .languages {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      font-size: 2rem;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚚 Interface QR Code Chauffeurs - GXO Logistics Moissy</h1>
+    
+    <!-- Statistiques -->
+    <div class="info-section">
+      <div class="info-title">📊 Statistiques du Système</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Pages Complètes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">7</div>
+          <div class="stat-label">Langues Disponibles</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Tâches Validables</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5</div>
+          <div class="stat-label">API Endpoints</div>
+        </div>
+      </div>
+      <div class="languages">
+        🇫🇷 🇬🇧 🇪🇸 🇵🇱 🇩🇪 🇮🇹 🇧🇬
+      </div>
+    </div>
+
+    <!-- Pages Grid -->
+    <div class="pages-grid">
+      
+      <!-- Page 1: QR Code -->
+      <div class="page-card">
+        <div class="page-title">1️⃣ Page QR Code</div>
+        <div class="page-desc">
+          Interface d'accueil avec QR Code généré dynamiquement pour scanner avec smartphone
+        </div>
+        <ul class="page-features">
+          <li>Logo GXO officiel</li>
+          <li>QR Code dynamique</li>
+          <li>Instructions en 3 étapes</li>
+          <li>Bouton direct pour mobile</li>
+          <li>7 drapeaux de langues</li>
+          <li>Design responsive</li>
+        </ul>
+        <a href="https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/qrcode-chauffeur" target="_blank" class="btn-demo">
+          🔍 Voir la page QR Code
+        </a>
+      </div>
+
+      <!-- Page 2: Sélection Langue -->
+      <div class="page-card">
+        <div class="page-title">2️⃣ Sélection de Langue</div>
+        <div class="page-desc">
+          Choix de la langue avec drapeaux cliquables et design multilingue
+        </div>
+        <ul class="page-features">
+          <li>7 langues disponibles</li>
+          <li>Drapeaux en grand format</li>
+          <li>Hover effects orange GXO</li>
+          <li>Grid responsive 2/3 colonnes</li>
+          <li>Titres trilingues</li>
+          <li>Navigation intuitive</li>
+        </ul>
+        <a href="https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/langue" target="_blank" class="btn-demo">
+          🌍 Voir la sélection de langue
+        </a>
+      </div>
+
+      <!-- Page 3: Vidéo -->
+      <div class="page-card">
+        <div class="page-title">3️⃣ Lecteur Vidéo</div>
+        <div class="page-desc">
+          Vidéo d'instructions avec contrôles, progression et verrouillage
+        </div>
+        <ul class="page-features">
+          <li>Player vidéo HTML5</li>
+          <li>Bouton plein écran</li>
+          <li>Barre de progression animée</li>
+          <li>Timer 00:00 / XX:XX</li>
+          <li>Anti-skip protection</li>
+          <li>Mobile-friendly (playsinline)</li>
+          <li>Bouton TEST pour démo</li>
+        </ul>
+        <a href="https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/video?lang=bg" target="_blank" class="btn-demo">
+          🎬 Voir le lecteur vidéo (BG)
+        </a>
+      </div>
+
+      <!-- Page 4: Inscription + Tâches -->
+      <div class="page-card">
+        <div class="page-title">4️⃣ Inscription & Tâches</div>
+        <div class="page-desc">
+          Formulaire d'inscription suivi de 5 tâches à valider progressivement
+        </div>
+        <ul class="page-features">
+          <li>Formulaire (Pseudo, Entreprise, Quai)</li>
+          <li>5 tâches validables</li>
+          <li>Barre de progression 0-100%</li>
+          <li>Icons colorés par tâche</li>
+          <li>Boutons validation vert</li>
+          <li>Chat flottant (badge)</li>
+          <li>Traductions complètes</li>
+        </ul>
+        <a href="https://3000-ibzeqaecibecjb5vgjy15-8f57ffe2.sandbox.novita.ai/chauffeur/inscription" target="_blank" class="btn-demo">
+          📝 Voir inscription & tâches
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Parcours complet -->
+    <div class="info-section">
+      <div class="info-title">🛣️ Parcours Utilisateur Complet</div>
+      <div style="line-height: 2; color: rgba(255, 255, 255, 0.8);">
+        <p><strong style="color: #FF5A1A;">Étape 1:</strong> Chauffeur scanne le QR Code à l'entrée</p>
+        <p><strong style="color: #FF5A1A;">Étape 2:</strong> Sélectionne sa langue (FR/EN/ES/PL/DE/IT/BG)</p>
+        <p><strong style="color: #FF5A1A;">Étape 3:</strong> Regarde la vidéo d'instructions obligatoire</p>
+        <p><strong style="color: #FF5A1A;">Étape 4:</strong> Remplit le formulaire (nom, entreprise, quai)</p>
+        <p><strong style="color: #FF5A1A;">Étape 5:</strong> Valide les 5 tâches une par une</p>
+        <p><strong style="color: #4CAF50;">Résultat:</strong> Système complet opérationnel, prêt pour production</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; padding: 40px 0; color: rgba(255, 255, 255, 0.5);">
+      <p>GXO HUB Procédures Moissy-Cramayel v8.2</p>
+      <p style="margin-top: 10px;">Système QR Code Chauffeurs Étrangers</p>
+    </div>
+
+  </div>
+</body>
+</html>

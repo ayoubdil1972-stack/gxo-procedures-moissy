@@ -1,0 +1,17 @@
+{
+  "header": "🇩🇪 Deutsch",
+  "titre": "Anweisungen",
+  "bienvenue": "Hallo",
+  "sousTitre": "Willkommen auf unserer Website",
+  "titreSecurite": "Verpflichtende Sicherheitsanweisungen",
+  "consigneEPI": "Das Tragen einer <strong>Sicherheitsweste</strong> und von <strong>Sicherheitsschuhen</strong> ist <strong class=\"text-red-600\">auf dem gesamten Gelände obligatorisch</strong>.",
+  "consigneFumer": "Das Rauchen ist <strong class=\"text-red-600\">auf dem Gelände streng verboten</strong>.",
+  "titreAccueil": "Am Fahrerempfang",
+  "consignePalette": "Geben Sie an, ob ein <strong>Palettenwechsel</strong> erforderlich ist.",
+  "consigneHayon": "Geben Sie an, ob Ihr LKW mit einer <strong>Ladebordwand</strong> ausgestattet ist.",
+  "titreQuai": "Platzierung am Ladedock",
+  "consigneClefs": "Sobald Sie <strong>am Dock</strong> platziert sind, müssen Sie <strong class=\"text-green-600\">Ihre Schlüssel</strong> beim Dock-Mitarbeiter abgeben.",
+  "titreImportant": "Wichtig",
+  "messageImportant": "Die Einhaltung dieser Anweisungen ist für die <strong>Sicherheit aller</strong> auf dem Gelände unerlässlich.",
+  "btnContinuer": "Ich habe die Anweisungen gelesen und verstanden"
+}

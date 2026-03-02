@@ -1,0 +1,17 @@
+{
+  "header": "🇫🇮 Suomi",
+  "titre": "Ohjeet",
+  "bienvenue": "Terve",
+  "sousTitre": "Tervetuloa sivustollemme",
+  "titreSecurite": "Pakolliset turvaohjeet",
+  "consigneEPI": "<strong>Turvaliivi</strong> ja <strong>turvakengät</strong> ovat <strong class=\"text-red-600\">pakollisia</strong> koko alueella.",
+  "consigneFumer": "<strong class=\"text-red-600\">Tupakointi on ehdottomasti kielletty</strong> alueella.",
+  "titreAccueil": "Kuljettajan vastaanotossa",
+  "consignePalette": "Ilmoita, jos <strong>lavavaihto</strong> on tarpeen.",
+  "consigneHayon": "Täsmennä, onko kuorma-autossasi <strong>taka-alaslaitaliivi</strong>.",
+  "titreQuai": "Sijoitus lastauslaiturille",
+  "consigneClefs": "Heti kun sinut on <strong>sijoitettu laiturille</strong>, sinun on <strong class=\"text-green-600\">luovutettava avaimesi</strong> laiturityöntekijälle.",
+  "titreImportant": "Tärkeää",
+  "messageImportant": "Näiden ohjeiden noudattaminen on välttämätöntä <strong>kaikkien turvallisuuden</strong> varmistamiseksi alueella.",
+  "btnContinuer": "Olen lukenut ja ymmärtänyt ohjeet"
+}
