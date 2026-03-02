@@ -578,9 +578,75 @@ function showDecisionTree(processId) {
   alert('Arbre de décision pour: ' + processId + '\n\nCette fonctionnalité sera bientôt disponible avec des diagrammes interactifs.');
 }
 
-// Show basic checklist (non-interactive)
+// Show basic checklist (non-interactive) - Modal version
 function showChecklist(processId) {
-  alert('Checklist pour: ' + processId + '\n\nConsultez le document associé pour voir la procédure détaillée.');
+  const modal = document.getElementById('modal-container');
+  const modalContent = document.getElementById('modal-content');
+  const checklistDataElement = document.getElementById('checklist-' + processId);
+  
+  if (!checklistDataElement) {
+    alert('Checklist non disponible pour: ' + processId);
+    return;
+  }
+  
+  let checklistItems = [];
+  try {
+    checklistItems = JSON.parse(checklistDataElement.textContent);
+  } catch (e) {
+    alert('Erreur de chargement de la checklist');
+    return;
+  }
+  
+  let checklistHtml = `
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-list-check mr-3 text-green-500"></i>
+          Checklist
+        </h3>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+        <p class="text-sm text-blue-800">
+          <i class="fas fa-info-circle mr-2"></i>
+          Suivez ces étapes pour compléter la procédure
+        </p>
+      </div>
+      
+      <div class="space-y-3">
+  `;
+  
+  checklistItems.forEach((item, index) => {
+    checklistHtml += `
+      <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+        <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+          ${index + 1}
+        </div>
+        <div class="flex-1">
+          <p class="text-gray-800">${item}</p>
+        </div>
+      </div>
+    `;
+  });
+  
+  checklistHtml += `
+      </div>
+      
+      <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+        <p class="text-sm text-gray-600 flex items-center">
+          <i class="fas fa-check-circle text-green-500 mr-2"></i>
+          <strong>Total : ${checklistItems.length} étapes</strong>
+        </p>
+      </div>
+    </div>
+  `;
+  
+  modalContent.innerHTML = checklistHtml;
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
 }
 
 // Smooth scroll to anchors
