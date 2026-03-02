@@ -1,7 +1,7 @@
 import { jsxRenderer } from 'hono/jsx-renderer'
 
 // Version cache busting - Incrémenter pour forcer le rechargement
-const CACHE_VERSION = '2'
+const CACHE_VERSION = '18.0.1'
 const addVersion = (url: string) => url.includes('?') ? `${url}&v=${CACHE_VERSION}` : `${url}?v=${CACHE_VERSION}`
 
 export const renderer = jsxRenderer(({ children }) => {
@@ -905,6 +905,7 @@ export const renderer = jsxRenderer(({ children }) => {
             animation: shake 0.5s;
           }
         ` }} />
+        {/* Build: v18.0.1 - 2026-03-02 09:25 UTC - NO CHECKLIST BUTTONS */}
       </body>
     </html>
   )
