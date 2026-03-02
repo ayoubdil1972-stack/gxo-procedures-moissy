@@ -177,7 +177,7 @@ export function AgentQuaiPage() {
             <div class="flex flex-wrap gap-2">
               {process.checklist && (
                 <button 
-                  onclick={`showChecklistInteractive('${process.id}', ${JSON.stringify(process.checklist)})`}
+                  onclick={`showChecklist('${process.id}', ${JSON.stringify(process.checklist)})`}
                   class="gxo-btn bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 flex items-center"
                 >
                   <i class="fas fa-list-check mr-2"></i>
