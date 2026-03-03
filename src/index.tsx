@@ -19,6 +19,7 @@ import { ChauffeurLanguePage } from './pages/chauffeur-langue'
 import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
+import { GestionQuaisPage } from './pages/gestion-quais'
 import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
@@ -47,6 +48,9 @@ app.get('/qrcode-chauffeur', loginRenderer, (c) => c.render(<QRCodeChauffeurPage
 
 // Page sélection langue
 app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage />))
+
+// Page gestion des quais (interface avec glissement)
+app.get('/gestion-quais', loginRenderer, (c) => c.render(<GestionQuaisPage />))
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
@@ -668,5 +672,75 @@ app.get('/api/admin/chauffeurs-actifs', workflowAPI.getChauffeursActifs);
 
 // POST /api/admin/taches/assigner - Assigner nouvelle tâche
 app.post('/api/admin/taches/assigner', workflowAPI.assignerTache);
+
+// ===== GESTION DES QUAIS - API ROUTES =====
+
+// GET /api/quais - Récupérer l'état de tous les quais
+app.get('/api/quais', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM quai_status ORDER BY quai_numero ASC
+    `).all()
+    
+    return c.json({ success: true, quais: results })
+  } catch (error) {
+    console.error('Erreur récupération quais:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// POST /api/quais/:numero - Changer le statut d'un quai
+app.post('/api/quais/:numero', async (c) => {
+  try {
+    const numero = parseInt(c.req.param('numero'))
+    const { statut, commentaire, commentaire_auteur } = await c.req.json()
+    
+    // Validation
+    if (numero < 1 || numero > 30) {
+      return c.json({ success: false, error: 'Numéro de quai invalide (1-30)' }, 400)
+    }
+    
+    if (!['disponible', 'en_cours', 'indisponible'].includes(statut)) {
+      return c.json({ success: false, error: 'Statut invalide' }, 400)
+    }
+    
+    if (statut === 'indisponible' && !commentaire) {
+      return c.json({ success: false, error: 'Commentaire obligatoire pour statut indisponible' }, 400)
+    }
+    
+    // Déterminer timer_start
+    let timer_start = null
+    if (statut === 'en_cours') {
+      timer_start = Date.now() // Timestamp en millisecondes
+    }
+    
+    // Mettre à jour le quai
+    await c.env.DB.prepare(`
+      UPDATE quai_status 
+      SET statut = ?, 
+          timer_start = ?, 
+          commentaire = ?, 
+          commentaire_auteur = ?,
+          updated_at = datetime('now')
+      WHERE quai_numero = ?
+    `).bind(
+      statut,
+      timer_start,
+      commentaire || null,
+      commentaire_auteur || null,
+      numero
+    ).run()
+    
+    // Récupérer le quai mis à jour
+    const quai = await c.env.DB.prepare(`
+      SELECT * FROM quai_status WHERE quai_numero = ?
+    `).bind(numero).first()
+    
+    return c.json({ success: true, quai })
+  } catch (error) {
+    console.error('Erreur mise à jour quai:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
 
 export default app
