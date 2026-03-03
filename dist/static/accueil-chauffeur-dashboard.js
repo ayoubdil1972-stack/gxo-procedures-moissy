@@ -770,12 +770,13 @@ async function envoyerMessageAdmin() {
   input.value = '';
   
   try {
-    const response = await fetch('/api/admin/chat', {
+    const response = await fetch('/api/chauffeur/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chauffeur_id: chatAdminChauffeurId,
-        message: message
+        message: message,
+        sender: 'admin'  // Important : spécifier que c'est l'admin qui envoie
       })
     });
     

@@ -629,10 +629,14 @@ document.getElementById('form-message').addEventListener('submit', async (e) => 
   if (!message) return;
   
   try {
-    await fetch('/api/chauffeur/chat/send', {
+    await fetch('/api/chauffeur/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chauffeur_id: parseInt(chauffeurId), message, lang })
+      body: JSON.stringify({ 
+        chauffeur_id: parseInt(chauffeurId), 
+        message, 
+        sender: 'chauffeur'  // Important : spécifier que c'est le chauffeur qui envoie
+      })
     });
     input.value = '';
     loadMessages();
@@ -644,7 +648,7 @@ document.getElementById('form-message').addEventListener('submit', async (e) => 
 // Charger messages
 async function loadMessages() {
   try {
-    const response = await fetch(`/api/chauffeur/chat?chauffeur_id=${chauffeurId}&lang=${lang}`);
+    const response = await fetch(`/api/chauffeur/chat?id=${chauffeurId}&viewer=chauffeur`);
     const data = await response.json();
     
     if (response.ok && data.messages) {
