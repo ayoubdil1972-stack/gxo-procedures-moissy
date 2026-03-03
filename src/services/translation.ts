@@ -1,24 +1,39 @@
 // Service de traduction pour le chat
-// Utilise l'API Google Translate gratuite (via translate.googleapis.com)
+// Utilise MyMemory Translation API (gratuite, plus fiable pour Cloudflare Workers)
 
 export async function traduireTexte(texte: string, langueCible: string, langueSource: string = 'auto'): Promise<string> {
   try {
-    // API Google Translate gratuite (pas besoin de clé API pour usage basique)
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${langueSource}&tl=${langueCible}&dt=t&q=${encodeURIComponent(texte)}`;
+    console.log(`🔄 Tentative traduction: "${texte}" (${langueSource} → ${langueCible})`);
     
-    const response = await fetch(url);
-    const data = await response.json();
+    // MyMemory Translation API - Gratuite et compatible Cloudflare Workers
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texte)}&langpair=${langueSource}|${langueCible}`;
     
-    // L'API retourne un tableau complexe, extraire le texte traduit
-    if (data && data[0] && data[0][0] && data[0][0][0]) {
-      return data[0][0][0];
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      console.error('❌ Erreur HTTP traduction:', response.status);
+      return texte;
     }
     
-    // Si la traduction échoue, retourner le texte original
+    const data = await response.json();
+    
+    // MyMemory retourne : { responseData: { translatedText: "..." }, responseStatus: 200 }
+    if (data && data.responseData && data.responseData.translatedText) {
+      const traduction = data.responseData.translatedText;
+      console.log(`✅ Traduction réussie: "${traduction}"`);
+      return traduction;
+    }
+    
+    console.warn('⚠️ Format réponse inattendu:', data);
     return texte;
   } catch (error) {
-    console.error('Erreur traduction:', error);
-    // En cas d'erreur, retourner le texte original
+    console.error('❌ Erreur traduction:', error);
     return texte;
   }
 }
@@ -26,15 +41,17 @@ export async function traduireTexte(texte: string, langueCible: string, langueSo
 // Détecter la langue d'un texte
 export async function detecterLangue(texte: string): Promise<string> {
   try {
-    // API simple de détection de langue
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(texte)}`;
+    // Pour détecter la langue, on traduit vers anglais et MyMemory détecte auto
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texte)}&langpair=auto|en`;
     
     const response = await fetch(url);
     const data = await response.json();
     
-    // La langue détectée est dans data[2]
-    if (data && data[2]) {
-      return data[2];
+    // Essayer d'extraire la langue détectée
+    if (data && data.responseData) {
+      // MyMemory ne retourne pas la langue source explicitement
+      // On peut l'estimer en comparant le texte original et traduit
+      return 'auto';
     }
     
     return 'fr'; // Par défaut, français
