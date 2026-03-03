@@ -1,0 +1,11 @@
+#!/bin/bash
+# Force déploiement Cloudflare Pages
+# Ce fichier force un nouveau build à chaque commit
+
+echo "🚀 Force deployment trigger"
+echo "Date: $(date)"
+echo "Commit: $(git rev-parse HEAD)"
+echo "Build size: $(du -h dist/_worker.js | cut -f1)"
+echo ""
+echo "✅ Ready to deploy with MyMemory Translation API"
+exit 0
