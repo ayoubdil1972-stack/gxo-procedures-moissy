@@ -159,9 +159,42 @@ app.get('/api/chauffeur/progression', async (c) => {
   }
 })
 
+// Auto-migration: Créer/mettre à jour la table chat_messages avec colonnes de traduction
+async function ensureChatTableSchema(db: D1Database) {
+  try {
+    // Créer la table avec toutes les colonnes si elle n'existe pas
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS chat_messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        chauffeur_id INTEGER NOT NULL,
+        sender TEXT NOT NULL DEFAULT 'chauffeur',
+        message TEXT NOT NULL,
+        original_lang TEXT DEFAULT 'fr',
+        translated_fr TEXT,
+        translated_chauffeur TEXT,
+        read_by_admin INTEGER DEFAULT 0,
+        read_by_chauffeur INTEGER DEFAULT 0,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (chauffeur_id) REFERENCES chauffeur_arrivals(id)
+      )
+    `).run()
+    
+    // Ajouter les index
+    await db.prepare(`CREATE INDEX IF NOT EXISTS idx_chat_messages_chauffeur_id ON chat_messages(chauffeur_id)`).run()
+    await db.prepare(`CREATE INDEX IF NOT EXISTS idx_chat_messages_timestamp ON chat_messages(timestamp)`).run()
+    
+    console.log('✅ Table chat_messages prête avec colonnes de traduction')
+  } catch (error) {
+    console.error('⚠️ Erreur auto-migration chat_messages:', error.message)
+  }
+}
+
 // API: Envoyer message chat (chauffeur → admin OU admin → chauffeur)
 app.post('/api/chauffeur/chat', async (c) => {
   try {
+    // Assurer que la table a la bonne structure
+    await ensureChatTableSchema(c.env.DB)
+    
     const { chauffeur_id, message, sender } = await c.req.json()
     
     if (!chauffeur_id || !message) {
@@ -201,29 +234,22 @@ app.post('/api/chauffeur/chat', async (c) => {
       translated_fr = message // Le message original de l'admin (français)
     }
     
-    // Essayer d'insérer avec toutes les colonnes (nouvelle structure)
-    try {
-      await c.env.DB.prepare(`
-        INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `).bind(
-        chauffeur_id, 
-        senderType, 
-        message, 
-        originalLang,
-        translated_fr,
-        translated_chauffeur,
-        senderType === 'chauffeur' ? 0 : 1, // Si chauffeur envoie, admin n'a pas lu
-        senderType === 'admin' ? 0 : 1      // Si admin envoie, chauffeur n'a pas lu
-      ).run()
-    } catch (insertError) {
-      // Si erreur (colonnes n'existent pas), utiliser structure simple
-      console.log('Using simple chat_messages structure')
-      await c.env.DB.prepare(`
-        INSERT INTO chat_messages (chauffeur_id, sender, message, read)
-        VALUES (?, ?, ?, 0)
-      `).bind(chauffeur_id, senderType, message).run()
-    }
+    // Insérer le message avec traductions
+    await c.env.DB.prepare(`
+      INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      chauffeur_id, 
+      senderType, 
+      message, 
+      originalLang,
+      translated_fr,
+      translated_chauffeur,
+      senderType === 'chauffeur' ? 0 : 1, // Si chauffeur envoie, admin n'a pas lu
+      senderType === 'admin' ? 0 : 1      // Si admin envoie, chauffeur n'a pas lu
+    ).run()
+    
+    console.log(`✅ Message enregistré avec traductions - FR: "${translated_fr.substring(0, 50)}..." | Chauffeur: "${translated_chauffeur.substring(0, 50)}..."`)
     
     return c.json({ success: true, translated_fr, translated_chauffeur })
   } catch (error) {
@@ -235,6 +261,9 @@ app.post('/api/chauffeur/chat', async (c) => {
 // API: Récupérer messages chat avec traductions
 app.get('/api/chauffeur/chat', async (c) => {
   try {
+    // Assurer que la table a la bonne structure
+    await ensureChatTableSchema(c.env.DB)
+    
     const chauffeur_id = c.req.query('id') || c.req.query('chauffeur_id')
     const viewer = c.req.query('viewer') || 'chauffeur' // 'chauffeur' ou 'admin'
     
