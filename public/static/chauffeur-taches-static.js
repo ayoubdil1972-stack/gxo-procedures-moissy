@@ -635,7 +635,8 @@ document.getElementById('form-message').addEventListener('submit', async (e) => 
       body: JSON.stringify({ 
         chauffeur_id: parseInt(chauffeurId), 
         message, 
-        sender: 'chauffeur'  // Important : spécifier que c'est le chauffeur qui envoie
+        sender: 'chauffeur',  // Important : spécifier que c'est le chauffeur qui envoie
+        lang: lang  // CORRECTIF 1 : Envoyer la langue pour que le backend sache quelle traduction faire
       })
     });
     input.value = '';

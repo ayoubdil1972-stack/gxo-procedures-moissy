@@ -195,21 +195,28 @@ app.post('/api/chauffeur/chat', async (c) => {
     // Assurer que la table a la bonne structure
     await ensureChatTableSchema(c.env.DB)
     
-    const { chauffeur_id, message, sender } = await c.req.json()
+    const { chauffeur_id, message, sender, lang } = await c.req.json()
     
     if (!chauffeur_id || !message) {
       return c.json({ success: false, error: 'Données manquantes' }, 400)
     }
     
-    // Récupérer la langue du chauffeur
-    const chauffeur = await c.env.DB.prepare(`
-      SELECT langue FROM chauffeur_arrivals WHERE id = ?
-    `).bind(chauffeur_id).first()
+    // CORRECTIF 2: Utiliser le paramètre lang envoyé par le frontend en priorité
+    // Sinon, récupérer la langue du chauffeur depuis la DB
+    let langueChauffeur = lang || 'fr'
     
-    const langueChauffeur = chauffeur?.langue || 'fr'
+    if (!lang) {
+      // Fallback : récupérer la langue depuis la DB si non fournie
+      const chauffeur = await c.env.DB.prepare(`
+        SELECT langue FROM chauffeur_arrivals WHERE id = ?
+      `).bind(chauffeur_id).first()
+      
+      langueChauffeur = chauffeur?.langue || 'fr'
+    }
+    
     const senderType = sender || 'chauffeur' // 'chauffeur' ou 'admin'
     
-    console.log(`📝 [CHAT] Message reçu - Sender: ${senderType}, Langue chauffeur: ${langueChauffeur}`)
+    console.log(`📝 [CHAT] Message reçu - Sender: ${senderType}, Langue: ${langueChauffeur} (source: ${lang ? 'frontend' : 'DB'})`)
     
     // Traduction du message
     let translated_fr = message
