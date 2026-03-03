@@ -1071,7 +1071,7 @@ var Br=Object.defineProperty;var Pt=t=>{throw TypeError(t)};var $r=(t,r,i)=>r in
       SELECT * FROM chauffeur_arrivals WHERE id = ?
     `).bind(r).first();return t.json({success:!0,...i})}catch(r){return console.error("Erreur progression:",r),t.json({success:!1,error:r.message},500)}});w.post("/api/chauffeur/chat",async t=>{try{const{chauffeur_id:r,message:i,sender:s}=await t.req.json();if(!r||!i)return t.json({success:!1,error:"Données manquantes"},400);const a=await t.env.DB.prepare(`
       SELECT langue FROM chauffeur_arrivals WHERE id = ?
-    `).bind(r).first(),n=(a==null?void 0:a.langue)||"fr",l=s||"chauffeur";let o=i,c=i,d=n;l==="chauffeur"?(n!=="fr"&&(o=await Et(i,"fr",n)),d=n,c=i):(n!=="fr"&&(c=await Et(i,n,"fr")),d="fr",o=i);try{await t.env.DB.prepare(`
+    `).bind(r).first(),n=(a==null?void 0:a.langue)||"fr",l=s||"chauffeur";let o=i,c=i,d=n;l==="chauffeur"?(n!=="fr"&&(console.log(`🌐 Traduction ${n} → fr:`,i),o=await Et(i,"fr",n),console.log("✅ Résultat traduction:",o)),d=n,c=i):(n!=="fr"&&(console.log(`🌐 Traduction fr → ${n}:`,i),c=await Et(i,n,"fr"),console.log("✅ Résultat traduction:",c)),d="fr",o=i);try{await t.env.DB.prepare(`
         INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(r,l,i,d,o,c,l==="chauffeur"?0:1,l==="admin"?0:1).run()}catch{console.log("Using simple chat_messages structure"),await t.env.DB.prepare(`

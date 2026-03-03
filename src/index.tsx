@@ -184,14 +184,18 @@ app.post('/api/chauffeur/chat', async (c) => {
     if (senderType === 'chauffeur') {
       // Chauffeur → Admin : traduire vers le français
       if (langueChauffeur !== 'fr') {
+        console.log(`🌐 Traduction ${langueChauffeur} → fr:`, message)
         translated_fr = await traduireTexte(message, 'fr', langueChauffeur)
+        console.log(`✅ Résultat traduction:`, translated_fr)
       }
       originalLang = langueChauffeur
       translated_chauffeur = message // Le message original du chauffeur
     } else {
       // Admin → Chauffeur : traduire vers la langue du chauffeur
       if (langueChauffeur !== 'fr') {
+        console.log(`🌐 Traduction fr → ${langueChauffeur}:`, message)
         translated_chauffeur = await traduireTexte(message, langueChauffeur, 'fr')
+        console.log(`✅ Résultat traduction:`, translated_chauffeur)
       }
       originalLang = 'fr'
       translated_fr = message // Le message original de l'admin (français)
