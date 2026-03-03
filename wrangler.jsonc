@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gxo-procedures-moissy",
+  "compatibility_date": "2024-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./dist",
+  
+  // Base de données D1 - gxo-chauffeurs-db
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gxo-chauffeurs-db",
+      "database_id": "28637bef-a644-4661-8cca-829f84058875"
+    }
+  ]
+}
