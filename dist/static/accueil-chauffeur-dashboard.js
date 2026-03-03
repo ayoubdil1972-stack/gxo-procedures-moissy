@@ -593,38 +593,21 @@ function afficherMessagesAdmin(messages) {
     let badgeLangue = '';
     
     if (!isAdmin && msg.translated_fr) {
-      // Message du chauffeur avec traduction disponible
-      afficherBoutonTraduction = true;
-      
-      if (modeTraductionMessage) {
-        // Afficher la traduction française
-        texteAffiche = msg.translated_fr;
-        labelBouton = 'Voir original';
-        badgeLangue = '🇫🇷 Traduit';
-      } else {
-        // Afficher le texte original
-        texteAffiche = msg.message;
-        labelBouton = 'Traduire';
-      }
+      // Message du chauffeur → Admin voit TOUJOURS la traduction française
+      texteAffiche = msg.translated_fr;
+      badgeLangue = '🇫🇷';
     } else if (isAdmin && msg.translated_chauffeur && chatAdminLangueChauffeur !== 'fr') {
-      // Message de l'admin avec traduction dans la langue du chauffeur disponible
-      afficherBoutonTraduction = true;
-      
-      if (modeTraductionMessage) {
-        // Afficher la traduction dans la langue du chauffeur
-        texteAffiche = msg.translated_chauffeur;
-        labelBouton = 'Voir français';
-        const langueEmojis = {
-          'en': '🇬🇧', 'nl': '🇳🇱', 'fi': '🇫🇮', 'de': '🇩🇪', 'it': '🇮🇹',
-          'pl': '🇵🇱', 'pt': '🇵🇹', 'bg': '🇧🇬', 'cs': '🇨🇿', 'da': '🇩🇰',
-          'hr': '🇭🇷', 'ro': '🇷🇴'
-        };
-        badgeLangue = `${langueEmojis[chatAdminLangueChauffeur] || '🌍'} Traduit`;
-      } else {
-        // Afficher le texte français original
-        texteAffiche = msg.message;
-        labelBouton = 'Traduire';
-      }
+      // Message de l'admin → Chauffeur voit TOUJOURS la traduction dans sa langue
+      texteAffiche = msg.translated_chauffeur;
+      const langueEmojis = {
+        'en': '🇬🇧', 'nl': '🇳🇱', 'fi': '🇫🇮', 'de': '🇩🇪', 'it': '🇮🇹',
+        'pl': '🇵🇱', 'pt': '🇵🇹', 'bg': '🇧🇬', 'cs': '🇨🇿', 'da': '🇩🇰',
+        'hr': '🇭🇷', 'ro': '🇷🇴'
+      };
+      badgeLangue = langueEmojis[chatAdminLangueChauffeur] || '🌍';
+    } else {
+      // Pas de traduction disponible OU message déjà dans la bonne langue
+      texteAffiche = msg.message;
     }
     
     return `
@@ -643,16 +626,7 @@ function afficherMessagesAdmin(messages) {
               ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
             </p>
             <div class="flex items-center gap-2">
-              ${afficherBoutonTraduction ? `
-                <button 
-                  onclick="basculerTraductionMessage(${messageId})" 
-                  class="text-xs ${isAdmin ? 'text-blue-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'} flex items-center gap-1 transition-colors"
-                  title="Basculer entre traduction et original"
-                >
-                  <i class="fas fa-language"></i>
-                  <span>${labelBouton}</span>
-                </button>
-              ` : ''}
+              ${badgeLangue ? `<span class="text-xs ${isAdmin ? 'text-blue-100' : 'text-gray-500'}">${badgeLangue}</span>` : ''}
               ${isAdmin ? `
                 <span class="text-xs ${isAdmin ? 'text-blue-200' : 'text-gray-400'}" title="${msg.read_by_chauffeur ? 'Lu' : msg.delivered_at ? 'Envoyé' : 'En attente'}">
                   ${msg.read_by_chauffeur ? '✓✓' : msg.delivered_at ? '✓' : '○'}

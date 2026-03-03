@@ -660,12 +660,30 @@ async function loadMessages() {
       }
       
       container.innerHTML = data.messages.map(m => {
-        const isAdmin = m.auteur === 'admin';
+        const isAdmin = m.auteur === 'admin' || m.sender === 'admin';
+        
+        // Déterminer le texte à afficher
+        let texteAffiche = m.texte || m.message;
+        let badgeLangue = '';
+        
+        // Si c'est un message admin ET qu'une traduction chauffeur existe
+        if (isAdmin && m.translated_chauffeur) {
+          texteAffiche = m.translated_chauffeur;  // Afficher traduction dans langue chauffeur
+          badgeLangue = '🌍';
+        } 
+        // Si c'est un message chauffeur ET qu'une traduction FR existe
+        else if (!isAdmin && m.translated_fr) {
+          texteAffiche = m.message || m.texte;  // Afficher message original du chauffeur
+        }
+        
         return `
           <div class="flex ${isAdmin ? 'justify-start' : 'justify-end'}">
             <div class="${isAdmin ? 'bg-gray-200 text-gray-800' : 'bg-gradient-to-r from-[#FF5A1A] to-[#FF4500] text-white'} px-4 py-2 rounded-lg max-w-xs">
-              <div class="text-xs ${isAdmin ? 'text-gray-500' : 'text-white opacity-75'} mb-1">${isAdmin ? t.chat.admin : t.chat.you}</div>
-              <div>${m.texte}</div>
+              <div class="flex items-center gap-2 mb-1">
+                <div class="text-xs ${isAdmin ? 'text-gray-500' : 'text-white opacity-75'}">${isAdmin ? t.chat.admin : t.chat.you}</div>
+                ${badgeLangue ? `<span class="text-xs">${badgeLangue}</span>` : ''}
+              </div>
+              <div>${texteAffiche}</div>
             </div>
           </div>
         `;
