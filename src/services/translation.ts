@@ -1,12 +1,16 @@
 // Service de traduction pour le chat
 // Utilise MyMemory Translation API (gratuite, plus fiable pour Cloudflare Workers)
 
-export async function traduireTexte(texte: string, langueCible: string, langueSource: string = 'auto'): Promise<string> {
+export async function traduireTexte(texte: string, langueCible: string, langueSource: string = 'autodetect'): Promise<string> {
   try {
-    console.log(`🔄 Tentative traduction: "${texte}" (${langueSource} → ${langueCible})`);
+    // Utiliser 'autodetect' au lieu de 'auto' pour MyMemory
+    const source = langueSource === 'auto' ? 'autodetect' : langueSource;
+    
+    console.log(`🔄 [TRADUCTION] Tentative: "${texte.substring(0, 50)}..." (${source} → ${langueCible})`);
     
     // MyMemory Translation API - Gratuite et compatible Cloudflare Workers
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texte)}&langpair=${langueSource}|${langueCible}`;
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texte)}&langpair=${source}|${langueCible}`;
+    console.log(`🌐 [TRADUCTION] URL API: ${url}`);
     
     const response = await fetch(url, {
       method: 'GET',
@@ -17,23 +21,24 @@ export async function traduireTexte(texte: string, langueCible: string, langueSo
     });
     
     if (!response.ok) {
-      console.error('❌ Erreur HTTP traduction:', response.status);
+      console.error('❌ [TRADUCTION] Erreur HTTP:', response.status);
       return texte;
     }
     
     const data = await response.json();
+    console.log(`📦 [TRADUCTION] Réponse API:`, JSON.stringify(data));
     
     // MyMemory retourne : { responseData: { translatedText: "..." }, responseStatus: 200 }
     if (data && data.responseData && data.responseData.translatedText) {
       const traduction = data.responseData.translatedText;
-      console.log(`✅ Traduction réussie: "${traduction}"`);
+      console.log(`✅ [TRADUCTION] Succès: "${traduction.substring(0, 50)}..."`);
       return traduction;
     }
     
-    console.warn('⚠️ Format réponse inattendu:', data);
+    console.warn('⚠️ [TRADUCTION] Format réponse inattendu:', data);
     return texte;
   } catch (error) {
-    console.error('❌ Erreur traduction:', error);
+    console.error('❌ [TRADUCTION] Erreur exception:', error);
     return texte;
   }
 }

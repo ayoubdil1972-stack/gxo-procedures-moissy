@@ -209,32 +209,41 @@ app.post('/api/chauffeur/chat', async (c) => {
     const langueChauffeur = chauffeur?.langue || 'fr'
     const senderType = sender || 'chauffeur' // 'chauffeur' ou 'admin'
     
+    console.log(`📝 [CHAT] Message reçu - Sender: ${senderType}, Langue chauffeur: ${langueChauffeur}`)
+    
     // Traduction du message
     let translated_fr = message
     let translated_chauffeur = message
     let originalLang = langueChauffeur
     
     if (senderType === 'chauffeur') {
-      // Chauffeur → Admin : traduire vers le français
+      // Chauffeur → Admin : traduire vers le français avec autodetect
+      console.log(`🌐 [CHAT] Chauffeur → Admin - Message: "${message.substring(0, 50)}..."`)
       if (langueChauffeur !== 'fr') {
-        console.log(`🌐 Traduction ${langueChauffeur} → fr:`, message)
-        translated_fr = await traduireTexte(message, 'fr', langueChauffeur)
-        console.log(`✅ Résultat traduction:`, translated_fr)
+        // Utiliser autodetect pour détecter automatiquement la langue
+        translated_fr = await traduireTexte(message, 'fr', 'autodetect')
+        console.log(`✅ [CHAT] Traduction FR: "${translated_fr.substring(0, 50)}..."`)
+      } else {
+        console.log(`ℹ️ [CHAT] Chauffeur français - pas de traduction nécessaire`)
       }
       originalLang = langueChauffeur
       translated_chauffeur = message // Le message original du chauffeur
     } else {
       // Admin → Chauffeur : traduire vers la langue du chauffeur
+      console.log(`🌐 [CHAT] Admin → Chauffeur - Message: "${message.substring(0, 50)}..."`)
       if (langueChauffeur !== 'fr') {
-        console.log(`🌐 Traduction fr → ${langueChauffeur}:`, message)
         translated_chauffeur = await traduireTexte(message, langueChauffeur, 'fr')
-        console.log(`✅ Résultat traduction:`, translated_chauffeur)
+        console.log(`✅ [CHAT] Traduction ${langueChauffeur}: "${translated_chauffeur.substring(0, 50)}..."`)
+      } else {
+        console.log(`ℹ️ [CHAT] Chauffeur français - pas de traduction nécessaire`)
       }
       originalLang = 'fr'
       translated_fr = message // Le message original de l'admin (français)
     }
     
     // Insérer le message avec traductions
+    console.log(`💾 [CHAT] Insertion DB - message: "${message.substring(0, 30)}...", translated_fr: "${translated_fr.substring(0, 30)}...", translated_chauffeur: "${translated_chauffeur.substring(0, 30)}..."`)
+    
     await c.env.DB.prepare(`
       INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -249,7 +258,7 @@ app.post('/api/chauffeur/chat', async (c) => {
       senderType === 'admin' ? 0 : 1      // Si admin envoie, chauffeur n'a pas lu
     ).run()
     
-    console.log(`✅ Message enregistré avec traductions - FR: "${translated_fr.substring(0, 50)}..." | Chauffeur: "${translated_chauffeur.substring(0, 50)}..."`)
+    console.log(`✅ [CHAT] Message enregistré avec succès - ID chauffeur: ${chauffeur_id}`)
     
     return c.json({ success: true, translated_fr, translated_chauffeur })
   } catch (error) {
@@ -267,12 +276,15 @@ app.get('/api/chauffeur/chat', async (c) => {
     const chauffeur_id = c.req.query('id') || c.req.query('chauffeur_id')
     const viewer = c.req.query('viewer') || 'chauffeur' // 'chauffeur' ou 'admin'
     
+    console.log(`📥 [CHAT GET] Récupération messages - Chauffeur: ${chauffeur_id}, Viewer: ${viewer}`)
+    
     // Récupérer la langue du chauffeur
     const chauffeur = await c.env.DB.prepare(`
       SELECT langue FROM chauffeur_arrivals WHERE id = ?
     `).bind(chauffeur_id).first()
     
     const langueChauffeur = chauffeur?.langue || 'fr'
+    console.log(`ℹ️ [CHAT GET] Langue chauffeur: ${langueChauffeur}`)
     
     const { results } = await c.env.DB.prepare(`
       SELECT * FROM chat_messages 
@@ -280,10 +292,12 @@ app.get('/api/chauffeur/chat', async (c) => {
       ORDER BY timestamp ASC
     `).bind(chauffeur_id).all()
     
+    console.log(`📊 [CHAT GET] Nombre de messages: ${results.length}`)
+    
     // Retourner tous les messages avec leurs traductions
     // Le frontend décide quoi afficher (original ou traduction)
     const messages = results.map(msg => {
-      return {
+      const processed = {
         ...msg,
         // Garder tous les champs originaux
         message: msg.message,
@@ -291,6 +305,13 @@ app.get('/api/chauffeur/chat', async (c) => {
         translated_chauffeur: msg.translated_chauffeur || msg.message,
         original_lang: msg.original_lang || 'fr'
       }
+      
+      // Log premier message pour debug
+      if (msg.id === results[0]?.id) {
+        console.log(`📝 [CHAT GET] Premier message - message: "${msg.message?.substring(0, 30)}...", translated_fr: "${msg.translated_fr?.substring(0, 30)}...", translated_chauffeur: "${msg.translated_chauffeur?.substring(0, 30)}..."`)
+      }
+      
+      return processed
     })
     
     return c.json({ 
