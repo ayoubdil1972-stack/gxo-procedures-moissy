@@ -23,6 +23,7 @@ import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
   DB: D1Database;
+  GOOGLE_TRANSLATE_API_KEY?: string; // Clé API Google Cloud Translation
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -228,7 +229,7 @@ app.post('/api/chauffeur/chat', async (c) => {
       console.log(`🌐 [CHAT] Chauffeur → Admin - Message: "${message.substring(0, 50)}..."`)
       if (langueChauffeur !== 'fr') {
         // Utiliser autodetect pour détecter automatiquement la langue
-        translated_fr = await traduireTexte(message, 'fr', 'autodetect')
+        translated_fr = await traduireTexte(message, 'fr', 'auto', c.env.GOOGLE_TRANSLATE_API_KEY)
         console.log(`✅ [CHAT] Traduction FR: "${translated_fr.substring(0, 50)}..."`)
       } else {
         console.log(`ℹ️ [CHAT] Chauffeur français - pas de traduction nécessaire`)
@@ -239,7 +240,7 @@ app.post('/api/chauffeur/chat', async (c) => {
       // Admin → Chauffeur : traduire vers la langue du chauffeur
       console.log(`🌐 [CHAT] Admin → Chauffeur - Message: "${message.substring(0, 50)}..."`)
       if (langueChauffeur !== 'fr') {
-        translated_chauffeur = await traduireTexte(message, langueChauffeur, 'fr')
+        translated_chauffeur = await traduireTexte(message, langueChauffeur, 'fr', c.env.GOOGLE_TRANSLATE_API_KEY)
         console.log(`✅ [CHAT] Traduction ${langueChauffeur}: "${translated_chauffeur.substring(0, 50)}..."`)
       } else {
         console.log(`ℹ️ [CHAT] Chauffeur français - pas de traduction nécessaire`)

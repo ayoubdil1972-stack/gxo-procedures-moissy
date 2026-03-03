@@ -1,44 +1,72 @@
 // Service de traduction pour le chat
-// Utilise MyMemory Translation API (gratuite, plus fiable pour Cloudflare Workers)
+// Utilise Google Cloud Translation API v2 (REST API simple)
 
-export async function traduireTexte(texte: string, langueCible: string, langueSource: string = 'autodetect'): Promise<string> {
+// API Key sera configurée via wrangler secret
+// Pour dev local, mettre GOOGLE_TRANSLATE_API_KEY dans .dev.vars
+
+export async function traduireTexte(
+  texte: string, 
+  langueCible: string, 
+  langueSource: string = 'auto',
+  apiKey?: string
+): Promise<string> {
   try {
-    // Utiliser 'autodetect' au lieu de 'auto' pour MyMemory
-    const source = langueSource === 'auto' ? 'autodetect' : langueSource;
+    // Si pas de clé API, retourner le texte original (mode dégradé)
+    if (!apiKey) {
+      console.warn('⚠️ [TRADUCTION] Pas de clé API Google - mode dégradé');
+      return texte;
+    }
+
+    // Normaliser les codes de langue
+    const source = langueSource === 'autodetect' ? 'auto' : langueSource;
     
-    console.log(`🔄 [TRADUCTION] Tentative: "${texte.substring(0, 50)}..." (${source} → ${langueCible})`);
+    console.log(`🔄 [TRADUCTION] Tentative Google: "${texte.substring(0, 50)}..." (${source} → ${langueCible})`);
     
-    // MyMemory Translation API - Gratuite et compatible Cloudflare Workers
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texte)}&langpair=${source}|${langueCible}`;
-    console.log(`🌐 [TRADUCTION] URL API: ${url}`);
+    // Google Cloud Translation API v2 (REST)
+    // https://cloud.google.com/translate/docs/reference/rest/v2/translate
+    const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
+    
+    const body: any = {
+      q: texte,
+      target: langueCible,
+      format: 'text'
+    };
+    
+    // Si langue source spécifiée (pas auto), l'inclure
+    if (source !== 'auto') {
+      body.source = source;
+    }
     
     const response = await fetch(url, {
-      method: 'GET',
+      method: 'POST',
       headers: {
-        'User-Agent': 'Mozilla/5.0',
-        'Accept': 'application/json'
-      }
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
     });
     
     if (!response.ok) {
-      console.error('❌ [TRADUCTION] Erreur HTTP:', response.status);
+      const errorText = await response.text();
+      console.error('❌ [TRADUCTION] Erreur HTTP:', response.status, errorText);
       return texte;
     }
     
     const data = await response.json();
-    console.log(`📦 [TRADUCTION] Réponse API:`, JSON.stringify(data));
+    console.log(`📦 [TRADUCTION] Réponse Google:`, JSON.stringify(data).substring(0, 200));
     
-    // MyMemory retourne : { responseData: { translatedText: "..." }, responseStatus: 200 }
-    if (data && data.responseData && data.responseData.translatedText) {
-      const traduction = data.responseData.translatedText;
-      console.log(`✅ [TRADUCTION] Succès: "${traduction.substring(0, 50)}..."`);
+    // Google retourne : { data: { translations: [{ translatedText: "...", detectedSourceLanguage: "..." }] } }
+    if (data && data.data && data.data.translations && data.data.translations[0]) {
+      const traduction = data.data.translations[0].translatedText;
+      const langueDetectee = data.data.translations[0].detectedSourceLanguage;
+      
+      console.log(`✅ [TRADUCTION] Succès Google (${langueDetectee || source} → ${langueCible}): "${traduction.substring(0, 50)}..."`);
       return traduction;
     }
     
-    console.warn('⚠️ [TRADUCTION] Format réponse inattendu:', data);
+    console.warn('⚠️ [TRADUCTION] Format réponse Google inattendu:', data);
     return texte;
   } catch (error) {
-    console.error('❌ [TRADUCTION] Erreur exception:', error);
+    console.error('❌ [TRADUCTION] Erreur exception Google:', error);
     return texte;
   }
 }
