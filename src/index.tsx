@@ -280,28 +280,16 @@ app.get('/api/chauffeur/chat', async (c) => {
       ORDER BY timestamp ASC
     `).bind(chauffeur_id).all()
     
-    // Adapter les messages selon le lecteur
+    // Retourner tous les messages avec leurs traductions
+    // Le frontend décide quoi afficher (original ou traduction)
     const messages = results.map(msg => {
-      let displayMessage = msg.message
-      
-      // Si les colonnes de traduction existent, les utiliser
-      if (msg.translated_fr && msg.translated_chauffeur) {
-        // Si le viewer est admin, afficher translated_fr (traduction française)
-        if (viewer === 'admin') {
-          displayMessage = msg.translated_fr
-        }
-        
-        // Si le viewer est chauffeur, afficher translated_chauffeur (traduction dans sa langue)
-        if (viewer === 'chauffeur') {
-          displayMessage = msg.translated_chauffeur
-        }
-      }
-      // Sinon, afficher le message original (pas de traduction)
-      
       return {
         ...msg,
-        message: displayMessage,
-        original_message: msg.message // Garder l'original pour info
+        // Garder tous les champs originaux
+        message: msg.message,
+        translated_fr: msg.translated_fr || msg.message,
+        translated_chauffeur: msg.translated_chauffeur || msg.message,
+        original_lang: msg.original_lang || 'fr'
       }
     })
     

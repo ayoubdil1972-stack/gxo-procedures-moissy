@@ -1094,7 +1094,7 @@ var $r=Object.defineProperty;var qt=t=>{throw TypeError(t)};var Ur=(t,r,i)=>r in
       SELECT * FROM chat_messages 
       WHERE chauffeur_id = ? 
       ORDER BY timestamp ASC
-    `).bind(r).all(),l=n.map(o=>{let c=o.message;return o.translated_fr&&o.translated_chauffeur&&(i==="admin"&&(c=o.translated_fr),i==="chauffeur"&&(c=o.translated_chauffeur)),{...o,message:c,original_message:o.message}});return t.json({success:!0,messages:l,chauffeur_langue:a})}catch(r){return console.error("Erreur récupération messages:",r),t.json({success:!1,error:r.message},500)}});w.post("/api/chat/heartbeat",async t=>{try{const{chauffeur_id:r,page_url:i}=await t.req.json();try{await t.env.DB.prepare(`
+    `).bind(r).all(),l=n.map(o=>({...o,message:o.message,translated_fr:o.translated_fr||o.message,translated_chauffeur:o.translated_chauffeur||o.message,original_lang:o.original_lang||"fr"}));return t.json({success:!0,messages:l,chauffeur_langue:a})}catch(r){return console.error("Erreur récupération messages:",r),t.json({success:!1,error:r.message},500)}});w.post("/api/chat/heartbeat",async t=>{try{const{chauffeur_id:r,page_url:i}=await t.req.json();try{await t.env.DB.prepare(`
         INSERT INTO chauffeur_sessions (chauffeur_id, last_heartbeat, is_online, page_url)
         VALUES (?, datetime('now'), 1, ?)
         ON CONFLICT(chauffeur_id) 
