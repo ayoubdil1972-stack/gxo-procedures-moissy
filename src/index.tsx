@@ -695,9 +695,21 @@ app.post('/api/quais/:numero', async (c) => {
     const numero = parseInt(c.req.param('numero'))
     const { statut, commentaire, commentaire_auteur } = await c.req.json()
     
+    // Liste des numéros de quais valides GXO Moissy (45 quais)
+    const quaisValides = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, // 1-10
+      32, 33, 34, 35, 36, 37, 38, // 32-38
+      45, 46, 47, 48, 49, // 45-49
+      60, 61, 62, // 60-62
+      67, 68, 69, // 67-69
+      75, 76, 77, 78, 79, // 75-79
+      81, 82, 83, 84, 85, 86, 87, // 81-87
+      99, 100, 101, 102, 103 // 99-103
+    ]
+    
     // Validation
-    if (numero < 1 || numero > 30) {
-      return c.json({ success: false, error: 'Numéro de quai invalide (1-30)' }, 400)
+    if (!quaisValides.includes(numero)) {
+      return c.json({ success: false, error: `Numéro de quai invalide. Quais valides : ${quaisValides.join(', ')}` }, 400)
     }
     
     if (!['disponible', 'en_cours', 'indisponible'].includes(statut)) {

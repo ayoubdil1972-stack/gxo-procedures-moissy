@@ -81,7 +81,7 @@ export function AccueilChauffeurPage() {
             <i class="fas fa-warehouse text-2xl"></i>
             <div class="text-left">
               <div class="text-lg">Gestion des Quais</div>
-              <div class="text-xs opacity-75">30 quais de déchargement</div>
+              <div class="text-xs opacity-75">45 quais GXO Moissy</div>
             </div>
             <div class="bg-gray-100 rounded-lg px-3 py-1">
               <span class="text-2xl font-bold text-green-600" id="tab-stat-quais-disponibles">0</span>
@@ -168,7 +168,7 @@ export function AccueilChauffeurPage() {
                   <i class="fas fa-warehouse mr-3"></i>
                   Gestion des Quais de Déchargement
                 </h2>
-                <p class="text-sm opacity-90">Visualisation et gestion de l'état des 30 quais en temps réel</p>
+                <p class="text-sm opacity-90">Visualisation et gestion de l'état des 45 quais GXO Moissy en temps réel</p>
               </div>
               <div class="flex space-x-4">
                 <div class="bg-white/20 rounded-xl px-4 py-2 text-center">
@@ -187,9 +187,9 @@ export function AccueilChauffeurPage() {
             </div>
           </div>
 
-          {/* Grille des 30 quais */}
+          {/* Grille des 45 quais GXO Moissy */}
           <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <div id="quais-grid" class="grid grid-cols-5 gap-4">
+            <div id="quais-grid" class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-9 gap-4">
               {/* Chargement... */}
               <div class="col-span-full flex justify-center py-12">
                 <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent"></div>
