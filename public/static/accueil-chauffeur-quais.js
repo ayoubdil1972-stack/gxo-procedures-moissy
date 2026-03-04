@@ -74,28 +74,28 @@ function renderQuaiCard(quai) {
                         quai.timer_start.trim() !== ''
   
   const timerDisplay = hasValidTimer
-    ? `<div class="timer-display text-xl font-mono font-bold text-gray-900 mt-3 bg-white rounded-lg px-4 py-2 shadow-md border-2 border-gray-300" data-start="${quai.timer_start}">00:00:00</div>`
+    ? `<div class="timer-display text-2xl font-mono font-extrabold text-gray-900 mt-4 bg-white rounded-xl px-5 py-3 shadow-lg border-2 border-gray-400" data-start="${quai.timer_start}">00:00:00</div>`
     : ''
   
   return `
-    <div class="quai-card ${bgColor} rounded-xl shadow-md hover:shadow-xl p-6 cursor-pointer transition-all duration-200 hover:scale-105 min-h-[200px] flex flex-col justify-center"
+    <div class="quai-card ${bgColor} rounded-2xl shadow-lg hover:shadow-2xl p-8 cursor-pointer transition-all duration-200 hover:scale-105 min-h-[240px] flex flex-col justify-center"
          onclick="openQuaiModal(${quai.quai_numero})"
          data-quai="${quai.quai_numero}">
       <div class="text-center">
         <!-- Icône de statut avec badge -->
-        <div class="flex justify-center mb-4">
-          <div class="${iconBg} rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
-            <span class="text-4xl">${icon}</span>
+        <div class="flex justify-center mb-5">
+          <div class="${iconBg} rounded-full w-20 h-20 flex items-center justify-center shadow-xl">
+            <span class="text-5xl">${icon}</span>
           </div>
         </div>
         
         <!-- Numéro du quai -->
-        <div class="font-extrabold text-gray-800 text-2xl mb-2">
+        <div class="font-black text-gray-800 text-3xl mb-3">
           Quai ${quai.quai_numero}
         </div>
         
         <!-- Statut -->
-        <div class="text-sm font-bold uppercase tracking-wide ${getStatusTextColor(quai.statut)} mb-2">
+        <div class="text-base font-bold uppercase tracking-wider ${getStatusTextColor(quai.statut)} mb-2">
           ${getStatusLabel(quai.statut)}
         </div>
         
