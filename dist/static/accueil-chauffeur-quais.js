@@ -257,49 +257,96 @@ function startTimers() {
 // ===== MODAL DE GESTION =====
 
 function openQuaiModal(numero) {
+  console.log('🔵 openQuaiModal appelé avec numero:', numero)
   currentQuaiNumero = numero
   const quai = quais.find(q => q.quai_numero === numero)
   
   if (!quai) {
-    console.error('Quai non trouvé:', numero)
+    console.error('❌ Quai non trouvé:', numero)
     return
   }
   
-  // Remplir le modal
-  document.getElementById('modal-quai-numero').textContent = numero
-  document.getElementById('modal-quai-statut').value = quai.statut
-  document.getElementById('modal-quai-commentaire').value = quai.commentaire || ''
+  console.log('✅ Quai trouvé:', quai)
   
-  // Afficher/masquer le champ commentaire
-  toggleCommentaire()
+  // Remplir le modal
+  const modalNumero = document.getElementById('modal-quai-numero')
+  if (modalNumero) {
+    modalNumero.textContent = numero
+    console.log('✅ Numéro du modal mis à jour:', numero)
+  } else {
+    console.error('❌ Element modal-quai-numero non trouvé')
+  }
+  
+  // Réinitialiser le champ commentaire
+  const commentaireSection = document.getElementById('commentaire-section')
+  const commentaireInput = document.getElementById('quai-commentaire')
+  
+  if (commentaireSection && commentaireInput) {
+    commentaireSection.classList.add('hidden')
+    commentaireInput.value = quai.commentaire || ''
+    console.log('✅ Commentaire réinitialisé')
+  }
   
   // Afficher le modal
-  document.getElementById('modal-quai').classList.remove('hidden')
+  const modal = document.getElementById('modal-quai')
+  if (modal) {
+    modal.classList.remove('hidden')
+    console.log('✅ Modal affiché')
+  } else {
+    console.error('❌ Element modal-quai non trouvé dans le DOM')
+    console.log('DOM disponible:', document.body.innerHTML.substring(0, 500))
+  }
 }
 
 function closeQuaiModal() {
-  document.getElementById('modal-quai').classList.add('hidden')
+  const modal = document.getElementById('modal-quai')
+  if (modal) {
+    modal.classList.add('hidden')
+  }
   currentQuaiNumero = null
+  
+  // Réinitialiser le champ commentaire
+  const commentaireSection = document.getElementById('commentaire-section')
+  const commentaireInput = document.getElementById('quai-commentaire')
+  
+  if (commentaireSection) {
+    commentaireSection.classList.add('hidden')
+  }
+  if (commentaireInput) {
+    commentaireInput.value = ''
+  }
 }
+
+// Rendre les fonctions globalement accessibles
+window.openQuaiModal = openQuaiModal
+window.closeQuaiModal = closeQuaiModal
 
 function toggleCommentaire() {
   const commentaireSection = document.getElementById('commentaire-section')
-  commentaireSection.classList.toggle('hidden')
+  if (commentaireSection) {
+    commentaireSection.classList.toggle('hidden')
+  }
 }
 
+// Rendre toggleCommentaire globalement accessible
+window.toggleCommentaire = toggleCommentaire
+
 async function setQuaiStatus(statut) {
-  if (!currentQuaiNumero) return
+  if (!currentQuaiNumero) {
+    console.error('Aucun quai sélectionné')
+    return
+  }
   
   // Si indisponible, afficher le champ commentaire
   if (statut === 'indisponible') {
     const commentaireSection = document.getElementById('commentaire-section')
-    if (commentaireSection.classList.contains('hidden')) {
+    if (commentaireSection && commentaireSection.classList.contains('hidden')) {
       commentaireSection.classList.remove('hidden')
       return // Ne pas sauvegarder, attendre que l'utilisateur remplisse le commentaire
     }
     
     // Vérifier que le commentaire est rempli
-    const commentaire = document.getElementById('quai-commentaire').value.trim()
+    const commentaire = document.getElementById('quai-commentaire')?.value.trim()
     if (!commentaire) {
       alert('⚠️ Un commentaire est obligatoire pour mettre un quai en "Indisponible"')
       return
@@ -309,6 +356,9 @@ async function setQuaiStatus(statut) {
   // Sauvegarder le statut
   await saveQuaiStatusWithStatut(statut)
 }
+
+// Rendre setQuaiStatus globalement accessible
+window.setQuaiStatus = setQuaiStatus
 
 async function saveQuaiStatusWithStatut(statut) {
   if (!currentQuaiNumero) return
@@ -390,3 +440,4 @@ setTimeout(() => {
   if (errorDiv) errorDiv.classList.add('hidden')
 }, 5000)
 // Version 2.5.0 - ZONES ERGONOMIQUES - 2026-03-04_12:07:12_UTC
+// Version 2.5.1 - MODAL DEBUG FORCE - 2026-03-04_12:14:32_UTC
