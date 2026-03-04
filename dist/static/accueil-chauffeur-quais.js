@@ -1,9 +1,19 @@
-// Gestion des quais - Version intégrée pour page Accueil Chauffeur
-// Gère les 30 quais avec statuts, timer, et commentaires
+// Gestion des quais - Version 2.3.1 avec zones
+// Gère les 45 quais réels GXO Moissy avec organisation par zones
 
 let quais = []
 let currentQuaiNumero = null
 let timerIntervals = {} // Stocke les intervalles des timers
+
+// Définition des zones
+const ZONES = {
+  'zone-1-10': { range: [1, 10], label: 'Zone A', color: 'blue' },
+  'zone-32-38': { range: [32, 38], label: 'Zone B', color: 'purple' },
+  'zone-45-49': { range: [45, 49], label: 'Zone C', color: 'orange' },
+  'zone-60-69': { range: [60, 69], label: 'Zone D', color: 'teal' },
+  'zone-75-87': { range: [75, 87], label: 'Zone E', color: 'pink' },
+  'zone-99-103': { range: [99, 103], label: 'Zone F', color: 'indigo' }
+}
 
 // ===== CHARGEMENT DES DONNÉES =====
 
@@ -18,7 +28,7 @@ async function loadQuais() {
     }
     
     quais = data.quais
-    renderQuais()
+    renderQuaisByZones()
     updateStats()
     startTimers()
   } catch (error) {
@@ -26,70 +36,100 @@ async function loadQuais() {
   }
 }
 
-function renderQuais() {
-  const grid = document.getElementById('quais-grid')
-  
-  if (!grid) {
-    console.error('Element #quais-grid non trouvé')
-    return
-  }
-  
-  if (quais.length === 0) {
-    grid.innerHTML = `
-      <div class="col-span-full text-center py-12">
-        <i class="fas fa-warehouse text-6xl text-gray-300 mb-4"></i>
-        <p class="text-gray-500 text-lg">Aucun quai trouvé</p>
-        <p class="text-gray-400 text-sm mt-2">Vérifiez que la table quai_status est créée</p>
-      </div>
-    `
-    return
-  }
-  
-  grid.innerHTML = quais.map(quai => {
-    const bgColor = getStatusColor(quai.statut)
-    const icon = getStatusIcon(quai.statut)
+function renderQuaisByZones() {
+  // Afficher les quais par zone
+  for (const [zoneId, zone] of Object.entries(ZONES)) {
+    const zoneElement = document.getElementById(`quais-${zoneId}`)
+    if (!zoneElement) continue
     
-    // Validation stricte : n'afficher le timer que si timer_start est valide
-    const hasValidTimer = quai.statut === 'en_cours' && 
-                          quai.timer_start && 
-                          quai.timer_start !== 'null' && 
-                          quai.timer_start !== 'undefined' &&
-                          quai.timer_start.trim() !== ''
+    const zoneQuais = quais.filter(q => {
+      const num = q.quai_numero
+      return num >= zone.range[0] && num <= zone.range[1]
+    })
     
-    const timerDisplay = hasValidTimer
-      ? `<div class="timer-display text-lg font-mono font-bold text-gray-800 mt-2" data-start="${quai.timer_start}">00:00:00</div>`
-      : ''
-    
-    return `
-      <div class="quai-card ${bgColor} rounded-xl shadow-lg p-4 cursor-pointer hover:scale-105 transition-transform"
-           onclick="openQuaiModal(${quai.quai_numero})"
-           data-quai="${quai.quai_numero}">
-        <div class="text-center">
-          <div class="text-2xl mb-2">${icon}</div>
-          <div class="font-bold text-gray-800 text-xl mb-1">Quai ${quai.quai_numero}</div>
-          <div class="text-sm font-semibold text-gray-700">
-            ${getStatusLabel(quai.statut)}
-          </div>
-          ${timerDisplay}
-          ${quai.commentaire ? `
-            <div class="mt-3 text-xs bg-white/50 rounded p-2 text-left">
-              <div class="font-semibold text-gray-800 mb-1">⚠️ ${quai.commentaire}</div>
-              <div class="text-gray-600">Par: ${quai.commentaire_auteur || 'Inconnu'}</div>
-              <div class="text-gray-500">${formatDate(quai.updated_at)}</div>
-            </div>
-          ` : ''}
+    if (zoneQuais.length === 0) {
+      zoneElement.innerHTML = `
+        <div class="col-span-full text-center py-6 text-gray-400">
+          <i class="fas fa-inbox text-3xl mb-2"></i>
+          <p class="text-sm">Aucun quai dans cette zone</p>
         </div>
+      `
+      continue
+    }
+    
+    zoneElement.innerHTML = zoneQuais.map(quai => renderQuaiCard(quai)).join('')
+  }
+}
+
+function renderQuaiCard(quai) {
+  const bgColor = getStatusColor(quai.statut)
+  const icon = getStatusIcon(quai.statut)
+  const iconBg = getStatusIconBg(quai.statut)
+  
+  // Validation stricte : n'afficher le timer que si timer_start est valide
+  const hasValidTimer = quai.statut === 'en_cours' && 
+                        quai.timer_start && 
+                        quai.timer_start !== 'null' && 
+                        quai.timer_start !== 'undefined' &&
+                        quai.timer_start.trim() !== ''
+  
+  const timerDisplay = hasValidTimer
+    ? `<div class="timer-display text-2xl font-mono font-extrabold text-gray-900 mt-4 bg-white rounded-xl px-5 py-3 shadow-lg border-2 border-gray-400" data-start="${quai.timer_start}">00:00:00</div>`
+    : ''
+  
+  return `
+    <div class="quai-card ${bgColor} rounded-2xl shadow-lg hover:shadow-2xl p-8 cursor-pointer transition-all duration-200 hover:scale-105 min-h-[240px] flex flex-col justify-center"
+         onclick="openQuaiModal(${quai.quai_numero})"
+         data-quai="${quai.quai_numero}">
+      <div class="text-center">
+        <!-- Icône de statut avec badge -->
+        <div class="flex justify-center mb-5">
+          <div class="${iconBg} rounded-full w-20 h-20 flex items-center justify-center shadow-xl">
+            <span class="text-5xl">${icon}</span>
+          </div>
+        </div>
+        
+        <!-- Numéro du quai -->
+        <div class="font-black text-gray-800 text-3xl mb-3">
+          Quai ${quai.quai_numero}
+        </div>
+        
+        <!-- Statut -->
+        <div class="text-base font-bold uppercase tracking-wider ${getStatusTextColor(quai.statut)} mb-2">
+          ${getStatusLabel(quai.statut)}
+        </div>
+        
+        <!-- Timer -->
+        ${timerDisplay}
+        
+        <!-- Commentaire -->
+        ${quai.commentaire ? `
+          <div class="mt-3 text-xs bg-white/70 rounded-lg p-3 text-left shadow-inner">
+            <div class="flex items-start space-x-2 mb-1">
+              <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+              <div class="font-semibold text-gray-800">${quai.commentaire}</div>
+            </div>
+            <div class="text-gray-600 flex items-center space-x-1 mt-1">
+              <i class="fas fa-user text-xs"></i>
+              <span>${quai.commentaire_auteur || 'Inconnu'}</span>
+            </div>
+            <div class="text-gray-500 flex items-center space-x-1 mt-1">
+              <i class="fas fa-clock text-xs"></i>
+              <span>${formatDate(quai.updated_at)}</span>
+            </div>
+          </div>
+        ` : ''}
       </div>
-    `
-  }).join('')
+    </div>
+  `
 }
 
 function getStatusColor(statut) {
   switch (statut) {
-    case 'disponible': return 'bg-green-100 border-2 border-green-400'
-    case 'en_cours': return 'bg-yellow-100 border-2 border-yellow-400'
-    case 'indisponible': return 'bg-red-100 border-2 border-red-400'
-    default: return 'bg-gray-100 border-2 border-gray-400'
+    case 'disponible': return 'bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-400'
+    case 'en_cours': return 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400'
+    case 'indisponible': return 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400'
+    default: return 'bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-400'
   }
 }
 
@@ -99,6 +139,24 @@ function getStatusIcon(statut) {
     case 'en_cours': return '⏱️'
     case 'indisponible': return '🚫'
     default: return '❓'
+  }
+}
+
+function getStatusIconBg(statut) {
+  switch (statut) {
+    case 'disponible': return 'bg-green-200'
+    case 'en_cours': return 'bg-yellow-200'
+    case 'indisponible': return 'bg-red-200'
+    default: return 'bg-gray-200'
+  }
+}
+
+function getStatusTextColor(statut) {
+  switch (statut) {
+    case 'disponible': return 'text-green-700'
+    case 'en_cours': return 'text-yellow-700'
+    case 'indisponible': return 'text-red-700'
+    default: return 'text-gray-700'
   }
 }
 
@@ -128,316 +186,175 @@ function updateStats() {
   const enCours = quais.filter(q => q.statut === 'en_cours').length
   const indisponibles = quais.filter(q => q.statut === 'indisponible').length
   
-  const dispStat = document.getElementById('stat-quais-disponibles')
-  const coursStat = document.getElementById('stat-quais-en-cours')
-  const indispStat = document.getElementById('stat-quais-indisponibles')
+  // Stats dans l'onglet
+  const statDispoElement = document.getElementById('stat-quais-disponibles')
+  const statEnCoursElement = document.getElementById('stat-quais-en-cours')
+  const statIndispoElement = document.getElementById('stat-quais-indisponibles')
   
-  if (dispStat) dispStat.textContent = disponibles
-  if (coursStat) coursStat.textContent = enCours
-  if (indispStat) indispStat.textContent = indisponibles
+  if (statDispoElement) statDispoElement.textContent = disponibles
+  if (statEnCoursElement) statEnCoursElement.textContent = enCours
+  if (statIndispoElement) statIndispoElement.textContent = indisponibles
+  
+  // Stats dans le badge de l'onglet
+  const tabBadge = document.getElementById('tab-stat-quais-disponibles')
+  if (tabBadge) tabBadge.textContent = disponibles
 }
 
 // ===== GESTION DES TIMERS =====
 
 function startTimers() {
-  // Arrêter tous les timers existants
+  // Effacer tous les intervalles existants
   Object.values(timerIntervals).forEach(interval => clearInterval(interval))
   timerIntervals = {}
   
-  // Démarrer les timers pour les quais "en_cours"
-  document.querySelectorAll('.timer-display').forEach(timerEl => {
-    const startTimeStr = timerEl.dataset.start
+  // Démarrer les timers pour tous les quais "en_cours"
+  const timerElements = document.querySelectorAll('.timer-display')
+  
+  timerElements.forEach(element => {
+    const startTime = element.getAttribute('data-start')
+    if (!startTime || startTime === 'null' || startTime === 'undefined') return
     
-    // Validation stricte : timer_start doit être défini et non vide
-    if (!startTimeStr || startTimeStr === 'null' || startTimeStr === 'undefined') {
-      console.warn('Timer ignoré : pas de timer_start valide')
-      timerEl.textContent = '00:00:00' // Afficher 00:00:00 par défaut
+    // Parser le datetime SQLite (format: "2024-03-04 12:30:45")
+    const start = new Date(startTime.replace(' ', 'T') + 'Z')
+    
+    if (isNaN(start.getTime())) {
+      console.error('Invalid timer_start:', startTime)
+      element.textContent = '00:00:00'
       return
     }
     
-    // Parser la date de manière robuste avec validation stricte
-    let startTime
-    try {
-      // Si c'est un timestamp numérique
-      if (!isNaN(startTimeStr) && startTimeStr.length > 10) {
-        startTime = new Date(parseInt(startTimeStr))
-      } else {
-        // Si c'est une chaîne de date ISO ou SQLite datetime
-        // Format SQLite: "2026-03-04 12:34:56"
-        // Le remplacer par format ISO: "2026-03-04T12:34:56Z"
-        const isoStr = startTimeStr.trim().replace(' ', 'T') + 'Z'
-        startTime = new Date(isoStr)
-      }
-      
-      // Validation stricte : la date doit être valide
-      if (isNaN(startTime.getTime())) {
-        console.error('❌ Date invalide:', startTimeStr)
-        timerEl.textContent = '00:00:00'
-        return
-      }
-      
-      // Validation stricte : la date ne doit pas être dans le futur (tolérance 10s)
-      const now = new Date()
-      if (startTime.getTime() > now.getTime() + 10000) {
-        console.error('❌ Date dans le futur:', startTimeStr)
-        timerEl.textContent = '00:00:00'
-        return
-      }
-      
-    } catch (e) {
-      console.error('❌ Erreur parsing date:', startTimeStr, e)
-      timerEl.textContent = '00:00:00'
-      return
-    }
-    
-    console.log('✅ Timer démarré pour:', startTimeStr, '→', startTime.toISOString())
-    
+    // Fonction de mise à jour du timer
     const updateTimer = () => {
-      try {
-        const now = new Date()
-        const diff = Math.floor((now - startTime) / 1000) // Différence en secondes
-        
-        // Validation : la différence ne peut pas être négative
-        if (diff < 0) {
-          console.error('❌ Différence négative détectée, timer réinitialisé')
-          timerEl.textContent = '00:00:00'
-          clearInterval(timerIntervals[startTimeStr])
-          delete timerIntervals[startTimeStr]
-          return
-        }
-        
-        // Calcul des heures, minutes, secondes avec validation
-        const hours = Math.floor(diff / 3600)
-        const minutes = Math.floor((diff % 3600) / 60)
-        const seconds = diff % 60
-        
-        // Vérification anti-NaN : tous les chiffres doivent être des nombres valides
-        if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
-          console.error('❌ NaN détecté dans le calcul du timer')
-          timerEl.textContent = '00:00:00'
-          clearInterval(timerIntervals[startTimeStr])
-          delete timerIntervals[startTimeStr]
-          return
-        }
-        
-        // Affichage sécurisé avec padding
-        timerEl.textContent = 
-          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-      } catch (e) {
-        console.error('❌ Erreur dans updateTimer:', e)
-        timerEl.textContent = '00:00:00'
-        clearInterval(timerIntervals[startTimeStr])
-        delete timerIntervals[startTimeStr]
+      const now = new Date()
+      const diff = Math.floor((now - start) / 1000) // Différence en secondes
+      
+      if (diff < 0) {
+        element.textContent = '00:00:00'
+        return
       }
+      
+      const hours = Math.floor(diff / 3600)
+      const minutes = Math.floor((diff % 3600) / 60)
+      const seconds = diff % 60
+      
+      element.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
     }
     
-    updateTimer() // Mise à jour immédiate
+    // Mise à jour immédiate
+    updateTimer()
+    
+    // Mise à jour toutes les secondes
     const interval = setInterval(updateTimer, 1000)
-    timerIntervals[startTimeStr] = interval
+    
+    // Stocker l'intervalle pour le nettoyer plus tard
+    const quaiNumero = element.closest('.quai-card')?.getAttribute('data-quai')
+    if (quaiNumero) {
+      timerIntervals[quaiNumero] = interval
+    }
   })
-  
-  console.log(`✅ ${Object.keys(timerIntervals).length} timer(s) actif(s)`)
 }
 
-// ===== MODALE DE CHANGEMENT DE STATUT =====
+// ===== MODAL DE GESTION =====
 
-function openQuaiModal(quaiNumero) {
-  currentQuaiNumero = quaiNumero
-  const quai = quais.find(q => q.quai_numero === quaiNumero)
+function openQuaiModal(numero) {
+  currentQuaiNumero = numero
+  const quai = quais.find(q => q.quai_numero === numero)
   
-  if (!quai) return
-  
-  const modal = document.createElement('div')
-  modal.id = 'quai-modal'
-  modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'
-  modal.onclick = (e) => {
-    if (e.target === modal) closeQuaiModal()
-  }
-  
-  modal.innerHTML = `
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onclick="event.stopPropagation()">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Quai ${quaiNumero}</h2>
-        <button onclick="closeQuaiModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      
-      <div class="mb-6">
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Statut actuel</label>
-        <div class="p-3 rounded-lg ${getStatusColor(quai.statut)}">
-          <span class="text-lg">${getStatusIcon(quai.statut)}</span>
-          <span class="ml-2 font-semibold text-gray-800">${getStatusLabel(quai.statut)}</span>
-        </div>
-      </div>
-      
-      <div class="mb-6">
-        <label class="block text-sm font-semibold text-gray-700 mb-3">Nouveau statut</label>
-        <div class="space-y-2">
-          <button onclick="selectStatus('disponible')" 
-                  class="status-option w-full p-3 rounded-lg border-2 hover:shadow-lg transition-all ${quai.statut === 'disponible' ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-white'}">
-            <span class="text-xl">✅</span>
-            <span class="ml-2 font-semibold text-gray-800">Disponible</span>
-          </button>
-          
-          <button onclick="selectStatus('en_cours')" 
-                  class="status-option w-full p-3 rounded-lg border-2 hover:shadow-lg transition-all ${quai.statut === 'en_cours' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-300 bg-white'}">
-            <span class="text-xl">⏱️</span>
-            <span class="ml-2 font-semibold text-gray-800">En cours d'utilisation</span>
-          </button>
-          
-          <button onclick="selectStatus('indisponible')" 
-                  class="status-option w-full p-3 rounded-lg border-2 hover:shadow-lg transition-all ${quai.statut === 'indisponible' ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'}">
-            <span class="text-xl">🚫</span>
-            <span class="ml-2 font-semibold text-gray-800">Indisponible</span>
-          </button>
-        </div>
-      </div>
-      
-      <div id="commentaire-section" class="mb-6 hidden">
-        <label class="block text-sm font-semibold text-gray-700 mb-2">
-          Commentaire <span class="text-red-500">*</span>
-        </label>
-        <textarea id="commentaire-input" 
-                  class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none"
-                  rows="3"
-                  placeholder="Ex: Haillon cassé, Porte endommagée..."></textarea>
-        
-        <label class="block text-sm font-semibold text-gray-700 mb-2 mt-3">
-          Votre nom <span class="text-red-500">*</span>
-        </label>
-        <input type="text" id="auteur-input" 
-               class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none"
-               placeholder="Votre nom">
-      </div>
-      
-      <div id="error-message" class="mb-4 hidden">
-        <div class="bg-red-100 border-l-4 border-red-500 p-3 rounded">
-          <p class="text-red-700 text-sm font-semibold" id="error-text"></p>
-        </div>
-      </div>
-      
-      <div class="flex space-x-3">
-        <button onclick="closeQuaiModal()" 
-                class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
-          Annuler
-        </button>
-        <button onclick="saveQuaiStatus()" 
-                class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all">
-          Valider
-        </button>
-      </div>
-    </div>
-  `
-  
-  document.body.appendChild(modal)
-}
-
-function closeQuaiModal() {
-  const modal = document.getElementById('quai-modal')
-  if (modal) modal.remove()
-  currentQuaiNumero = null
-}
-
-function selectStatus(statut) {
-  // Retirer la sélection des autres boutons
-  document.querySelectorAll('.status-option').forEach(btn => {
-    btn.classList.remove('border-green-500', 'bg-green-50', 'border-yellow-500', 'bg-yellow-50', 'border-red-500', 'bg-red-50')
-    btn.classList.add('border-gray-300', 'bg-white')
-  })
-  
-  // Sélectionner le bouton cliqué
-  const button = event.currentTarget
-  button.classList.remove('border-gray-300', 'bg-white')
-  
-  if (statut === 'disponible') {
-    button.classList.add('border-green-500', 'bg-green-50')
-  } else if (statut === 'en_cours') {
-    button.classList.add('border-yellow-500', 'bg-yellow-50')
-  } else if (statut === 'indisponible') {
-    button.classList.add('border-red-500', 'bg-red-50')
-  }
-  
-  // Afficher/masquer la section commentaire
-  const commentSection = document.getElementById('commentaire-section')
-  if (statut === 'indisponible') {
-    commentSection.classList.remove('hidden')
-  } else {
-    commentSection.classList.add('hidden')
-  }
-  
-  // Stocker le statut sélectionné
-  button.dataset.selectedStatus = statut
-}
-
-async function saveQuaiStatus() {
-  // Récupérer le statut sélectionné
-  const selectedButton = document.querySelector('.status-option[data-selected-status]')
-  
-  if (!selectedButton) {
-    showError('Veuillez sélectionner un statut')
+  if (!quai) {
+    console.error('Quai non trouvé:', numero)
     return
   }
   
-  const statut = selectedButton.dataset.selectedStatus
-  const commentaire = document.getElementById('commentaire-input')?.value.trim()
-  const auteur = document.getElementById('auteur-input')?.value.trim()
+  // Remplir le modal
+  document.getElementById('modal-quai-numero').textContent = numero
+  document.getElementById('modal-quai-statut').value = quai.statut
+  document.getElementById('modal-quai-commentaire').value = quai.commentaire || ''
   
-  // Validation pour statut "indisponible"
+  // Afficher/masquer le champ commentaire
+  toggleCommentaire()
+  
+  // Afficher le modal
+  document.getElementById('modal-quai').classList.remove('hidden')
+}
+
+function closeQuaiModal() {
+  document.getElementById('modal-quai').classList.add('hidden')
+  currentQuaiNumero = null
+}
+
+function toggleCommentaire() {
+  const statut = document.getElementById('modal-quai-statut').value
+  const commentaireDiv = document.getElementById('commentaire-container')
+  
   if (statut === 'indisponible') {
-    if (!commentaire) {
-      showError('Le commentaire est obligatoire pour un quai indisponible')
-      return
-    }
-    if (!auteur) {
-      showError('Votre nom est obligatoire')
-      return
-    }
+    commentaireDiv.classList.remove('hidden')
+  } else {
+    commentaireDiv.classList.add('hidden')
+  }
+}
+
+async function saveQuaiStatus() {
+  if (!currentQuaiNumero) return
+  
+  const statut = document.getElementById('modal-quai-statut').value
+  const commentaire = document.getElementById('modal-quai-commentaire').value.trim()
+  
+  // Validation: commentaire obligatoire pour "indisponible"
+  if (statut === 'indisponible' && !commentaire) {
+    alert('⚠️ Un commentaire est obligatoire pour mettre un quai en "Indisponible"')
+    return
   }
   
   try {
     const response = await fetch(`/api/quais/${currentQuaiNumero}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        statut,
+      body: JSON.stringify({ 
+        statut, 
         commentaire: statut === 'indisponible' ? commentaire : null,
-        commentaire_auteur: statut === 'indisponible' ? auteur : null
+        commentaire_auteur: 'Admin' // TODO: Récupérer le nom de l'utilisateur connecté
       })
     })
     
     const data = await response.json()
     
     if (!data.success) {
-      showError(data.error || 'Erreur lors de la mise à jour')
+      alert('❌ Erreur: ' + (data.error || 'Erreur inconnue'))
       return
     }
     
+    // Fermer le modal
     closeQuaiModal()
-    loadQuais() // Recharger les données
+    
+    // Recharger les données
+    await loadQuais()
+    
+    // Message de succès
+    showSuccessMessage(`✅ Quai ${currentQuaiNumero} mis à jour: ${getStatusLabel(statut)}`)
+    
   } catch (error) {
     console.error('Erreur sauvegarde:', error)
-    showError('Erreur de connexion au serveur')
+    alert('❌ Erreur lors de la sauvegarde')
   }
 }
 
-function showError(message) {
-  const errorDiv = document.getElementById('error-message')
-  const errorText = document.getElementById('error-text')
+function showSuccessMessage(message) {
+  // Créer un message toast
+  const toast = document.createElement('div')
+  toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl z-50 animate-fade-in'
+  toast.textContent = message
+  document.body.appendChild(toast)
   
-  if (errorDiv && errorText) {
-    errorText.textContent = message
-    errorDiv.classList.remove('hidden')
-    
-    setTimeout(() => {
-      errorDiv.classList.add('hidden')
-    }, 5000)
-  }
+  // Supprimer après 3 secondes
+  setTimeout(() => {
+    toast.classList.add('animate-fade-out')
+    setTimeout(() => toast.remove(), 500)
+  }, 3000)
 }
 
 // ===== INITIALISATION =====
 
-// Charger les quais au démarrage
+// Charger les quais au chargement de la page
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     loadQuais()
@@ -446,5 +363,12 @@ if (document.readyState === 'loading') {
   })
 } else {
   loadQuais()
+  // Rafraîchir toutes les 30 secondes
   setInterval(loadQuais, 30000)
 }
+
+// Masquer le message d'erreur après 5 secondes
+setTimeout(() => {
+  const errorDiv = document.getElementById('error-message')
+  if (errorDiv) errorDiv.classList.add('hidden')
+}, 5000)
