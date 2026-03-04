@@ -204,7 +204,7 @@ export function AccueilChauffeurPage() {
                 <i class="fas fa-map-marker-alt text-purple-500 mr-2"></i>
                 Zone B (Quais 32-38)
               </h3>
-              <div id="quais-zone-32-38" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3"></div>
+              <div id="quais-zone-32-38" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3"></div>
             </div>
 
             {/* Zone 45-49 */}
@@ -222,7 +222,7 @@ export function AccueilChauffeurPage() {
                 <i class="fas fa-map-marker-alt text-teal-500 mr-2"></i>
                 Zone D (Quais 60-62, 67-69)
               </h3>
-              <div id="quais-zone-60-69" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+              <div id="quais-zone-60-69" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3"></div>
             </div>
 
             {/* Zone 75-87 */}
@@ -231,7 +231,7 @@ export function AccueilChauffeurPage() {
                 <i class="fas fa-map-marker-alt text-pink-500 mr-2"></i>
                 Zone E (Quais 75-79, 81-87)
               </h3>
-              <div id="quais-zone-75-87" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-3"></div>
+              <div id="quais-zone-75-87" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3"></div>
             </div>
 
             {/* Zone 99-103 */}
@@ -414,3 +414,4 @@ export function AccueilChauffeurPage() {
     </div>
   )
 }
+// Version 2.5.2 - GRILLES UNIFORMES - 2026-03-04_12:19:33_UTC
