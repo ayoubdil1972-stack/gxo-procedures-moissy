@@ -2,24 +2,29 @@
 
 Application de formation et gestion pour les chauffeurs GXO Logistics - Site de Moissy-Cramayel.
 
-**Version** : 2.2.1 - STABLE | **Date** : 2026-03-03
+**Version** : 2.3.0 - STABLE | **Date** : 2026-03-04
 
-## 🎯 Fonctionnalités principales (v2.2.1)
+## 🎯 Fonctionnalités principales (v2.3.0)
 
-### 🆕 NOUVEAU - Gestion Visuelle des Quais (v2.2.0)
+### 🆕 NOUVEAU - Gestion des Quais avec Timer Fonctionnel (v2.3.0) ✅
 - **30 quais de déchargement** gérés visuellement en temps réel
 - **3 statuts avec codes couleur** :
   - 🟢 **Disponible** (vert) - Prêt pour chargement/déchargement
   - 🟡 **En cours d'utilisation** (jaune) - Timer automatique HH:MM:SS
   - 🔴 **Indisponible** (rouge) - Avec commentaire obligatoire
-- **Timer automatique** : Démarre à 00:00:00, s'incrémente chaque seconde, reset au retour "Disponible"
+- **Timer automatique validé** ✅ : 
+  - Démarre à **00:00:00** à chaque mise en "En cours"
+  - S'incrémente chaque seconde (HH:MM:SS)
+  - **Reset complet** à chaque cycle (pas de reprise de l'ancien temps)
+  - **Aucun bug NaN** : Validation stricte des données
+  - Persiste après rafraîchissement de page
 - **Système de commentaires** : Champ obligatoire pour quais indisponibles (raison panne, nom auteur, date/heure auto)
-- **Interface à onglets ergonomique** (v2.2.1): Navigation intuitive entre "Chauffeurs Actifs" et "Gestion des Quais"
+- **Interface à onglets ergonomique** : Navigation intuitive entre "Chauffeurs Actifs" et "Gestion des Quais"
 - **Rafraîchissement automatique** : Toutes les 30 secondes sans rechargement
 - **Statistiques temps réel** : Badges avec nombre de quais Disponibles, En cours, Indisponibles
 - **Intégré dans Accueil Chauffeur** : Interface unifiée et cohérente, tout en un seul endroit
-- **Persistance des données** : Statuts et timers conservés après rafraîchissement de page
-- **Affichage responsive** : Grille adaptative 5×6 pour desktop, empilée pour mobile
+- **Persistance Cloudflare D1** : Statuts et timers stockés en base de données
+- **Affichage responsive** : Grille 6×5 pour desktop, adaptée pour mobile
 
 ### ✅ Chat bidirectionnel avec traduction automatique (v2.1.0)
 - **Communication en temps réel** : Admin ↔ Chauffeur
@@ -69,6 +74,31 @@ Chaque rubrique dispose de procédures détaillées :
 - **Agent de Quai** : 6 procédures (sans checklist)
 - **Administrateur** : 5 procédures (sans checklist)
 - **Accueil Chauffeur** : 4 procédures (sans checklist)
+
+## 🐛 Corrections v2.3.0
+
+### Timer des Quais - Corrections Majeures ✅
+- ✅ **Fix validation stricte `timer_start`** : Empêche l'affichage de NaN:NaN:NaN
+- ✅ **Fix parsing SQLite datetime** : Frontend parse correctement les dates SQLite (`YYYY-MM-DD HH:MM:SS`)
+- ✅ **Fix reset complet du timer** : Timer repart toujours de 00:00:00 à chaque nouveau cycle
+- ✅ **Fix gestion des valeurs NULL** : Timer masqué quand `timer_start` est NULL/undefined/invalide
+- ✅ **Fix cache Cloudflare/navigateur** : Ajout de `.deployment-version` pour forcer le cache bust
+- ✅ **Fix timestamps numériques obsolètes** : Migration D1 pour nettoyer anciens timestamps
+
+### Documentation Ajoutée
+- 📋 **GUIDE_DEPANNAGE_QUAIS_PRODUCTION.md** (6.4 KB) : Guide complet de dépannage étape par étape
+- 📋 **SQL_NETTOYAGE_PRODUCTION.sql** : Script SQL pour réinitialiser les quais en production
+- 📋 **TIMER_QUAIS_CORRECTION.md** : Documentation technique des corrections timer
+- 📋 **GUIDE_DEPLOIEMENT_PRODUCTION_QUAIS.md** : Guide de déploiement en production
+
+### Tests Validés
+- ✅ Timer démarre à 00:00:00
+- ✅ Timer s'incrémente correctement (HH:MM:SS)
+- ✅ Timer disparaît en mode "Disponible"
+- ✅ Timer repart de 00:00:00 à chaque nouveau cycle
+- ✅ Timer persiste après rafraîchissement de page
+- ✅ Aucun affichage de NaN:NaN:NaN
+- ✅ Plusieurs timers peuvent tourner simultanément
 
 ## 🌐 URLs
 
@@ -340,26 +370,85 @@ npm run dev:sandbox
    - Inscription, tâches, statut, langue, entreprise
 2. **chat_messages** - Chat bilatéral avec traduction
    - Messages admin ↔ chauffeurs avec traductions FR et langue chauffeur
-3. **quai_status** - Gestion des 30 quais (NOUVEAU v2.2.0)
-   - Statut, timer_start, commentaire, auteur, timestamps
+3. **quai_status** - Gestion des 30 quais (v2.2.0, corrigé v2.3.0)
+   - Statut, timer_start (SQLite datetime), commentaire, auteur, timestamps
 
 ## 📞 Support
 
-Pour toute question ou problème, consultez les guides de documentation dans le dépôt.
+Pour toute question ou problème, consultez les guides de documentation dans le dépôt :
+- **GUIDE_DEPANNAGE_QUAIS_PRODUCTION.md** - Dépannage gestion des quais
+- **GUIDE_DEPLOIEMENT_PRODUCTION_QUAIS.md** - Déploiement en production
+- **TIMER_QUAIS_CORRECTION.md** - Documentation technique timer
 
 ---
 
-**Dernière mise à jour :** 3 mars 2026 11:00 UTC  
-**Version :** 2.2.1 - Système d'onglets ergonomique + Gestion des quais  
+## 📜 Historique des Versions
+
+### v2.3.0 (4 mars 2026) - Timer Quais Validé ✅
+**Corrections majeures** :
+- ✅ Fix validation stricte timer_start (pas de NaN)
+- ✅ Fix parsing SQLite datetime en frontend
+- ✅ Fix reset complet du timer à chaque cycle
+- ✅ Fix cache Cloudflare et navigateur
+- 📋 Documentation complète : 4 guides créés (≈18 KB)
+
+**Tests validés** :
+- Timer démarre à 00:00:00
+- Timer s'incrémente correctement (HH:MM:SS)
+- Timer disparaît en mode "Disponible"
+- Timer repart de 00:00:00 à chaque nouveau cycle
+- Timer persiste après rafraîchissement
+- Aucun bug NaN
+- Plusieurs timers simultanés fonctionnels
+
+**Commits** : `68fde8d`, `ec46844`  
+**Tag** : `v2.3.0`
+
+### v2.2.1 (3 mars 2026) - Système d'Onglets Ergonomique
+- ✅ Interface à onglets : Chauffeurs Actifs / Gestion des Quais
+- ✅ Navigation intuitive avec badges statistiques
+- ✅ Rafraîchissement automatique distinct par onglet
+- **Tag** : `v2.2.1` | **Commit** : `710c6b2`
+
+### v2.2.0 (3 mars 2026) - Gestion des Quais
+- ✅ 30 quais de déchargement avec 3 statuts colorés
+- ✅ Timer automatique HH:MM:SS pour quais "En cours"
+- ✅ Système de commentaires pour quais indisponibles
+- ✅ Persistance Cloudflare D1
+- **Tag** : `v2.2.0`
+
+### v2.1.0 (2 mars 2026) - Google Cloud Translation
+- ✅ Remplacement MyMemory → Google Cloud Translation API v2
+- ✅ Support de 13 langues européennes
+- ✅ 500K caractères gratuits/mois (vs 1K mots/jour)
+- ✅ 99.9% précision (vs 90%)
+- **Tag** : `v2.1.0`
+
+### v2.0.0 (1 mars 2026) - Workflow Chauffeur Complet
+- ✅ QR Code + Sélection langue
+- ✅ Consignes vidéo multilingues (12 langues)
+- ✅ Inscription chauffeur
+- ✅ Tâches EPI interactives (5 tâches)
+- ✅ Chat bidirectionnel avec traduction
+- ✅ Dashboard admin temps réel
+- ✅ Système de heartbeat (statut en ligne/hors ligne)
+- **Tag** : `v2.0.0`
+
+---
+
+**Dernière mise à jour :** 4 mars 2026 07:00 UTC  
+**Version :** 2.3.0 - Timer Quais Validé ✅  
 **Statut :** ✅ Production - 100% Fonctionnel  
 **Déploiement principal :** https://gxomoissyprocedures.com  
-**Build Size :** 261.70 KB  
-**Tag GitHub :** v2.2.1  
-**Commit :** 710c6b2  
+**Build Size :** 262.27 KB  
+**Tag GitHub :** v2.3.0  
+**Commit :** ec46844  
 
-**Nouvelles fonctionnalités v2.2** :
-- ✅ Gestion visuelle de 30 quais avec timer automatique
-- ✅ Système d'onglets ergonomique (Chauffeurs/Quais)
-- ✅ Chat bilatéral avec Google Cloud Translation API
-- ✅ Support de 13 langues européennes
+**Garanties v2.3.0** :
+- ✅ Timer démarre toujours à 00:00:00
+- ✅ Timer s'incrémente correctement (HH:MM:SS)
+- ✅ Aucun affichage de NaN:NaN:NaN
+- ✅ Reset complet à chaque cycle
+- ✅ Persistance après rafraîchissement
+- ✅ Timers multiples simultanés fonctionnels
 - ✅ Interface responsive et moderne
