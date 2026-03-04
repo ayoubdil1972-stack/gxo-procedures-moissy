@@ -48,7 +48,15 @@ function renderQuais() {
   grid.innerHTML = quais.map(quai => {
     const bgColor = getStatusColor(quai.statut)
     const icon = getStatusIcon(quai.statut)
-    const timerDisplay = quai.statut === 'en_cours' && quai.timer_start 
+    
+    // Validation stricte : n'afficher le timer que si timer_start est valide
+    const hasValidTimer = quai.statut === 'en_cours' && 
+                          quai.timer_start && 
+                          quai.timer_start !== 'null' && 
+                          quai.timer_start !== 'undefined' &&
+                          quai.timer_start.trim() !== ''
+    
+    const timerDisplay = hasValidTimer
       ? `<div class="timer-display text-lg font-mono font-bold text-gray-800 mt-2" data-start="${quai.timer_start}">00:00:00</div>`
       : ''
     
@@ -138,24 +146,97 @@ function startTimers() {
   
   // Démarrer les timers pour les quais "en_cours"
   document.querySelectorAll('.timer-display').forEach(timerEl => {
-    const startTime = new Date(timerEl.dataset.start)
+    const startTimeStr = timerEl.dataset.start
+    
+    // Validation stricte : timer_start doit être défini et non vide
+    if (!startTimeStr || startTimeStr === 'null' || startTimeStr === 'undefined') {
+      console.warn('Timer ignoré : pas de timer_start valide')
+      timerEl.textContent = '00:00:00' // Afficher 00:00:00 par défaut
+      return
+    }
+    
+    // Parser la date de manière robuste avec validation stricte
+    let startTime
+    try {
+      // Si c'est un timestamp numérique
+      if (!isNaN(startTimeStr) && startTimeStr.length > 10) {
+        startTime = new Date(parseInt(startTimeStr))
+      } else {
+        // Si c'est une chaîne de date ISO ou SQLite datetime
+        // Format SQLite: "2026-03-04 12:34:56"
+        // Le remplacer par format ISO: "2026-03-04T12:34:56Z"
+        const isoStr = startTimeStr.trim().replace(' ', 'T') + 'Z'
+        startTime = new Date(isoStr)
+      }
+      
+      // Validation stricte : la date doit être valide
+      if (isNaN(startTime.getTime())) {
+        console.error('❌ Date invalide:', startTimeStr)
+        timerEl.textContent = '00:00:00'
+        return
+      }
+      
+      // Validation stricte : la date ne doit pas être dans le futur (tolérance 10s)
+      const now = new Date()
+      if (startTime.getTime() > now.getTime() + 10000) {
+        console.error('❌ Date dans le futur:', startTimeStr)
+        timerEl.textContent = '00:00:00'
+        return
+      }
+      
+    } catch (e) {
+      console.error('❌ Erreur parsing date:', startTimeStr, e)
+      timerEl.textContent = '00:00:00'
+      return
+    }
+    
+    console.log('✅ Timer démarré pour:', startTimeStr, '→', startTime.toISOString())
     
     const updateTimer = () => {
-      const now = new Date()
-      const diff = Math.floor((now - startTime) / 1000) // Différence en secondes
-      
-      const hours = Math.floor(diff / 3600)
-      const minutes = Math.floor((diff % 3600) / 60)
-      const seconds = diff % 60
-      
-      timerEl.textContent = 
-        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+      try {
+        const now = new Date()
+        const diff = Math.floor((now - startTime) / 1000) // Différence en secondes
+        
+        // Validation : la différence ne peut pas être négative
+        if (diff < 0) {
+          console.error('❌ Différence négative détectée, timer réinitialisé')
+          timerEl.textContent = '00:00:00'
+          clearInterval(timerIntervals[startTimeStr])
+          delete timerIntervals[startTimeStr]
+          return
+        }
+        
+        // Calcul des heures, minutes, secondes avec validation
+        const hours = Math.floor(diff / 3600)
+        const minutes = Math.floor((diff % 3600) / 60)
+        const seconds = diff % 60
+        
+        // Vérification anti-NaN : tous les chiffres doivent être des nombres valides
+        if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+          console.error('❌ NaN détecté dans le calcul du timer')
+          timerEl.textContent = '00:00:00'
+          clearInterval(timerIntervals[startTimeStr])
+          delete timerIntervals[startTimeStr]
+          return
+        }
+        
+        // Affichage sécurisé avec padding
+        timerEl.textContent = 
+          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+      } catch (e) {
+        console.error('❌ Erreur dans updateTimer:', e)
+        timerEl.textContent = '00:00:00'
+        clearInterval(timerIntervals[startTimeStr])
+        delete timerIntervals[startTimeStr]
+      }
     }
     
     updateTimer() // Mise à jour immédiate
     const interval = setInterval(updateTimer, 1000)
-    timerIntervals[timerEl.dataset.start] = interval
+    timerIntervals[startTimeStr] = interval
   })
+  
+  console.log(`✅ ${Object.keys(timerIntervals).length} timer(s) actif(s)`)
 }
 
 // ===== MODALE DE CHANGEMENT DE STATUT =====

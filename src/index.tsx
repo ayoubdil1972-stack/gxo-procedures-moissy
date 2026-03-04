@@ -708,28 +708,46 @@ app.post('/api/quais/:numero', async (c) => {
       return c.json({ success: false, error: 'Commentaire obligatoire pour statut indisponible' }, 400)
     }
     
-    // Déterminer timer_start
-    let timer_start = null
+    // Mettre à jour le quai avec gestion du timer
     if (statut === 'en_cours') {
-      timer_start = Date.now() // Timestamp en millisecondes
+      // Démarrer le timer avec datetime SQLite
+      await c.env.DB.prepare(`
+        UPDATE quai_status 
+        SET statut = ?, 
+            timer_start = datetime('now'),
+            commentaire = NULL,
+            commentaire_auteur = NULL,
+            updated_at = datetime('now')
+        WHERE quai_numero = ?
+      `).bind(statut, numero).run()
+    } else if (statut === 'disponible') {
+      // Réinitialiser le timer
+      await c.env.DB.prepare(`
+        UPDATE quai_status 
+        SET statut = ?, 
+            timer_start = NULL,
+            commentaire = NULL,
+            commentaire_auteur = NULL,
+            updated_at = datetime('now')
+        WHERE quai_numero = ?
+      `).bind(statut, numero).run()
+    } else {
+      // Statut indisponible avec commentaire
+      await c.env.DB.prepare(`
+        UPDATE quai_status 
+        SET statut = ?, 
+            timer_start = NULL,
+            commentaire = ?, 
+            commentaire_auteur = ?,
+            updated_at = datetime('now')
+        WHERE quai_numero = ?
+      `).bind(
+        statut,
+        commentaire || null,
+        commentaire_auteur || null,
+        numero
+      ).run()
     }
-    
-    // Mettre à jour le quai
-    await c.env.DB.prepare(`
-      UPDATE quai_status 
-      SET statut = ?, 
-          timer_start = ?, 
-          commentaire = ?, 
-          commentaire_auteur = ?,
-          updated_at = datetime('now')
-      WHERE quai_numero = ?
-    `).bind(
-      statut,
-      timer_start,
-      commentaire || null,
-      commentaire_auteur || null,
-      numero
-    ).run()
     
     // Récupérer le quai mis à jour
     const quai = await c.env.DB.prepare(`
