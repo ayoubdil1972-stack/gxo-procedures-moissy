@@ -1,9 +1,19 @@
-// Gestion des quais - Version 2.4.1 - Modèle classique élargi
-// Gère les 45 quais réels GXO Moissy
+// Gestion des quais - Version 2.3.1 avec zones
+// Gère les 45 quais réels GXO Moissy avec organisation par zones
 
 let quais = []
 let currentQuaiNumero = null
 let timerIntervals = {} // Stocke les intervalles des timers
+
+// Définition des zones
+const ZONES = {
+  'zone-1-10': { range: [1, 10], label: 'Zone A', color: 'blue' },
+  'zone-32-38': { range: [32, 38], label: 'Zone B', color: 'purple' },
+  'zone-45-49': { range: [45, 49], label: 'Zone C', color: 'orange' },
+  'zone-60-69': { range: [60, 69], label: 'Zone D', color: 'teal' },
+  'zone-75-87': { range: [75, 87], label: 'Zone E', color: 'pink' },
+  'zone-99-103': { range: [99, 103], label: 'Zone F', color: 'indigo' }
+}
 
 // ===== CHARGEMENT DES DONNÉES =====
 
@@ -18,7 +28,7 @@ async function loadQuais() {
     }
     
     quais = data.quais
-    renderQuais()
+    renderQuaisByZones()
     updateStats()
     startTimers()
   } catch (error) {
@@ -26,25 +36,29 @@ async function loadQuais() {
   }
 }
 
-function renderQuais() {
-  const grid = document.getElementById('quais-grid')
-  
-  if (!grid) {
-    console.error('Element quais-grid introuvable')
-    return
+function renderQuaisByZones() {
+  // Afficher les quais par zone
+  for (const [zoneId, zone] of Object.entries(ZONES)) {
+    const zoneElement = document.getElementById(`quais-${zoneId}`)
+    if (!zoneElement) continue
+    
+    const zoneQuais = quais.filter(q => {
+      const num = q.quai_numero
+      return num >= zone.range[0] && num <= zone.range[1]
+    })
+    
+    if (zoneQuais.length === 0) {
+      zoneElement.innerHTML = `
+        <div class="col-span-full text-center py-6 text-gray-400">
+          <i class="fas fa-inbox text-3xl mb-2"></i>
+          <p class="text-sm">Aucun quai dans cette zone</p>
+        </div>
+      `
+      continue
+    }
+    
+    zoneElement.innerHTML = zoneQuais.map(quai => renderQuaiCard(quai)).join('')
   }
-  
-  if (quais.length === 0) {
-    grid.innerHTML = `
-      <div class="col-span-full text-center py-12 text-gray-400">
-        <i class="fas fa-inbox text-4xl mb-4"></i>
-        <p>Aucun quai disponible</p>
-      </div>
-    `
-    return
-  }
-  
-  grid.innerHTML = quais.map(quai => renderQuaiCard(quai)).join('')
 }
 
 function renderQuaiCard(quai) {
@@ -60,11 +74,11 @@ function renderQuaiCard(quai) {
                         quai.timer_start.trim() !== ''
   
   const timerDisplay = hasValidTimer
-    ? `<div class="timer-display text-xl font-mono font-bold text-gray-800 mt-3 bg-white/80 rounded-lg px-4 py-2 shadow-md border border-gray-300" data-start="${quai.timer_start}">00:00:00</div>`
+    ? `<div class="timer-display text-base font-mono font-bold text-gray-800 mt-2 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
     : ''
   
   return `
-    <div class="quai-card ${bgColor} rounded-xl shadow-md hover:shadow-xl p-5 cursor-pointer transition-all duration-200 hover:scale-105 min-h-[180px] flex flex-col justify-center"
+    <div class="quai-card ${bgColor} rounded-xl shadow-md hover:shadow-xl p-5 cursor-pointer transition-all duration-200 hover:scale-105"
          onclick="openQuaiModal(${quai.quai_numero})"
          data-quai="${quai.quai_numero}">
       <div class="text-center">
@@ -76,12 +90,12 @@ function renderQuaiCard(quai) {
         </div>
         
         <!-- Numéro du quai -->
-        <div class="font-bold text-gray-800 text-2xl mb-2">
+        <div class="font-extrabold text-gray-800 text-2xl mb-1">
           Quai ${quai.quai_numero}
         </div>
         
         <!-- Statut -->
-        <div class="text-sm font-semibold uppercase tracking-wide ${getStatusTextColor(quai.statut)} mb-1">
+        <div class="text-sm font-bold uppercase tracking-wide ${getStatusTextColor(quai.statut)} mb-1">
           ${getStatusLabel(quai.statut)}
         </div>
         
@@ -90,13 +104,18 @@ function renderQuaiCard(quai) {
         
         <!-- Commentaire -->
         ${quai.commentaire ? `
-          <div class="mt-3 text-xs bg-white/60 rounded-lg p-2 text-left shadow-sm">
+          <div class="mt-3 text-xs bg-white/70 rounded-lg p-3 text-left shadow-inner">
             <div class="flex items-start space-x-2 mb-1">
-              <i class="fas fa-comment-exclamation text-red-500 mt-0.5 text-xs"></i>
-              <div class="font-medium text-gray-800 leading-tight">${quai.commentaire}</div>
+              <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+              <div class="font-semibold text-gray-800">${quai.commentaire}</div>
             </div>
-            <div class="text-gray-600 text-[10px] mt-1">
-              <i class="fas fa-user mr-1"></i>${quai.commentaire_auteur || 'Inconnu'}
+            <div class="text-gray-600 flex items-center space-x-1 mt-1">
+              <i class="fas fa-user text-xs"></i>
+              <span>${quai.commentaire_auteur || 'Inconnu'}</span>
+            </div>
+            <div class="text-gray-500 flex items-center space-x-1 mt-1">
+              <i class="fas fa-clock text-xs"></i>
+              <span>${formatDate(quai.updated_at)}</span>
             </div>
           </div>
         ` : ''}
@@ -107,10 +126,10 @@ function renderQuaiCard(quai) {
 
 function getStatusColor(statut) {
   switch (statut) {
-    case 'disponible': return 'bg-gradient-to-br from-green-100 to-green-200 border-2 border-green-400'
-    case 'en_cours': return 'bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-400'
-    case 'indisponible': return 'bg-gradient-to-br from-red-100 to-red-200 border-2 border-red-400'
-    default: return 'bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-gray-400'
+    case 'disponible': return 'bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-400'
+    case 'en_cours': return 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400'
+    case 'indisponible': return 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400'
+    default: return 'bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-400'
   }
 }
 
@@ -264,27 +283,39 @@ function closeQuaiModal() {
 }
 
 function toggleCommentaire() {
-  const statut = document.getElementById('modal-quai-statut').value
-  const commentaireDiv = document.getElementById('commentaire-container')
-  
-  if (statut === 'indisponible') {
-    commentaireDiv.classList.remove('hidden')
-  } else {
-    commentaireDiv.classList.add('hidden')
-  }
+  const commentaireSection = document.getElementById('commentaire-section')
+  commentaireSection.classList.toggle('hidden')
 }
 
-async function saveQuaiStatus() {
+async function setQuaiStatus(statut) {
   if (!currentQuaiNumero) return
   
-  const statut = document.getElementById('modal-quai-statut').value
-  const commentaire = document.getElementById('modal-quai-commentaire').value.trim()
-  
-  // Validation: commentaire obligatoire pour "indisponible"
-  if (statut === 'indisponible' && !commentaire) {
-    alert('⚠️ Un commentaire est obligatoire pour mettre un quai en "Indisponible"')
-    return
+  // Si indisponible, afficher le champ commentaire
+  if (statut === 'indisponible') {
+    const commentaireSection = document.getElementById('commentaire-section')
+    if (commentaireSection.classList.contains('hidden')) {
+      commentaireSection.classList.remove('hidden')
+      return // Ne pas sauvegarder, attendre que l'utilisateur remplisse le commentaire
+    }
+    
+    // Vérifier que le commentaire est rempli
+    const commentaire = document.getElementById('quai-commentaire').value.trim()
+    if (!commentaire) {
+      alert('⚠️ Un commentaire est obligatoire pour mettre un quai en "Indisponible"')
+      return
+    }
   }
+  
+  // Sauvegarder le statut
+  await saveQuaiStatusWithStatut(statut)
+}
+
+async function saveQuaiStatusWithStatut(statut) {
+  if (!currentQuaiNumero) return
+  
+  const commentaire = statut === 'indisponible' 
+    ? document.getElementById('quai-commentaire').value.trim()
+    : null
   
   try {
     const response = await fetch(`/api/quais/${currentQuaiNumero}`, {
@@ -292,7 +323,7 @@ async function saveQuaiStatus() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         statut, 
-        commentaire: statut === 'indisponible' ? commentaire : null,
+        commentaire,
         commentaire_auteur: 'Admin' // TODO: Récupérer le nom de l'utilisateur connecté
       })
     })
@@ -304,64 +335,53 @@ async function saveQuaiStatus() {
       return
     }
     
+    // Afficher un message de succès
+    showSuccessMessage(`✅ Quai ${currentQuaiNumero} mis à jour avec succès !`)
+    
     // Fermer le modal
     closeQuaiModal()
     
+    // Réinitialiser le champ commentaire
+    document.getElementById('quai-commentaire').value = ''
+    document.getElementById('commentaire-section').classList.add('hidden')
+    
     // Recharger les données
     await loadQuais()
-    
-    // Message de succès
-    showSuccessMessage(`✅ Quai ${currentQuaiNumero} mis à jour: ${getStatusLabel(statut)}`)
-    
   } catch (error) {
-    console.error('Erreur sauvegarde:', error)
-    alert('❌ Erreur lors de la sauvegarde')
+    console.error('Erreur lors de la mise à jour du quai:', error)
+    alert('❌ Erreur lors de la mise à jour du quai')
   }
 }
 
 function showSuccessMessage(message) {
-  // Créer un message toast
+  // Créer un élément toast
   const toast = document.createElement('div')
-  toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl z-50 animate-fade-in'
-  toast.textContent = message
+  toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 flex items-center space-x-3 animate-slide-in'
+  toast.innerHTML = `
+    <i class="fas fa-check-circle text-2xl"></i>
+    <span class="font-semibold">${message}</span>
+  `
   document.body.appendChild(toast)
   
   // Supprimer après 3 secondes
   setTimeout(() => {
-    toast.classList.add('animate-fade-out')
-    setTimeout(() => toast.remove(), 500)
+    toast.remove()
   }, 3000)
 }
 
 // ===== INITIALISATION =====
 
-// Charger les quais au chargement de la page SEULEMENT si l'onglet Quais est visible
-function initQuais() {
-  const quaisContent = document.getElementById('content-quais')
-  
-  // Si l'onglet quais est déjà visible (pas hidden), charger immédiatement
-  if (quaisContent && !quaisContent.classList.contains('hidden')) {
-    loadQuais()
-    // Rafraîchir toutes les 30 secondes
-    setInterval(loadQuais, 30000)
-  }
-}
-
-// Fonction globale appelée par le système d'onglets
-window.onQuaisTabActivated = function() {
-  // Charger les quais la première fois que l'onglet est activé
-  if (quais.length === 0) {
-    loadQuais()
-    // Rafraîchir toutes les 30 secondes
-    setInterval(loadQuais, 30000)
-  }
-}
-
-// Initialiser au chargement de la page
+// Charger les quais au chargement de la page
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initQuais)
+  document.addEventListener('DOMContentLoaded', () => {
+    loadQuais()
+    // Rafraîchir toutes les 30 secondes
+    setInterval(loadQuais, 30000)
+  })
 } else {
-  initQuais()
+  loadQuais()
+  // Rafraîchir toutes les 30 secondes
+  setInterval(loadQuais, 30000)
 }
 
 // Masquer le message d'erreur après 5 secondes
@@ -369,4 +389,4 @@ setTimeout(() => {
   const errorDiv = document.getElementById('error-message')
   if (errorDiv) errorDiv.classList.add('hidden')
 }, 5000)
-// Version 2.4.3 - 2026-03-04_12:02:53
+// Version 2.5.0 - ZONES ERGONOMIQUES - 2026-03-04_12:07:12_UTC

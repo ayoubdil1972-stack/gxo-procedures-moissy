@@ -187,12 +187,126 @@ export function AccueilChauffeurPage() {
             </div>
           </div>
 
-          {/* Grille des 45 quais GXO Moissy */}
-          <div class="bg-white rounded-xl shadow-lg p-6">
-            <div id="quais-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-4">
-              <div class="col-span-full text-center py-8 text-gray-400">
-                <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
-                <p>Chargement des quais...</p>
+          {/* Grille des 45 quais GXO Moissy - Organisation par zones */}
+          <div class="space-y-6">
+            {/* Zone 1-10 */}
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                Zone A (Quais 1-10)
+              </h3>
+              <div id="quais-zone-1-10" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3"></div>
+            </div>
+
+            {/* Zone 32-38 */}
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-purple-500 mr-2"></i>
+                Zone B (Quais 32-38)
+              </h3>
+              <div id="quais-zone-32-38" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3"></div>
+            </div>
+
+            {/* Zone 45-49 */}
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>
+                Zone C (Quais 45-49)
+              </h3>
+              <div id="quais-zone-45-49" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3"></div>
+            </div>
+
+            {/* Zone 60-69 */}
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-teal-500 mr-2"></i>
+                Zone D (Quais 60-62, 67-69)
+              </h3>
+              <div id="quais-zone-60-69" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+            </div>
+
+            {/* Zone 75-87 */}
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-pink-500 mr-2"></i>
+                Zone E (Quais 75-79, 81-87)
+              </h3>
+              <div id="quais-zone-75-87" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-3"></div>
+            </div>
+
+            {/* Zone 99-103 */}
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-indigo-500 mr-2"></i>
+                Zone F (Quais 99-103)
+              </h3>
+              <div id="quais-zone-99-103" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3"></div>
+            </div>
+
+            {/* Vue d'ensemble masquée - pour le chargement initial */}
+            <div id="quais-grid" class="hidden"></div>
+          </div>
+
+          {/* Modal de gestion du quai */}
+          <div id="modal-quai" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden">
+              <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6">
+                <h3 class="text-2xl font-bold flex items-center">
+                  <i class="fas fa-warehouse mr-3"></i>
+                  Gestion du Quai <span id="modal-quai-numero" class="ml-2"></span>
+                </h3>
+              </div>
+              
+              <div class="p-6">
+                <div class="mb-6">
+                  <label class="block text-sm font-bold text-gray-700 mb-3">
+                    <i class="fas fa-traffic-light mr-2 text-green-500"></i>
+                    Changer le statut
+                  </label>
+                  <div class="space-y-3">
+                    <button onclick="setQuaiStatus('disponible')" 
+                            class="w-full bg-gradient-to-r from-green-400 to-green-500 text-white px-6 py-3 rounded-xl hover:from-green-500 hover:to-green-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
+                      <span class="text-2xl mr-3">✅</span>
+                      Disponible - Prêt pour chargement
+                    </button>
+                    <button onclick="setQuaiStatus('en_cours')" 
+                            class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-yellow-500 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
+                      <span class="text-2xl mr-3">⏱️</span>
+                      En cours d'utilisation - Timer actif
+                    </button>
+                    <button onclick="toggleCommentaire()" 
+                            class="w-full bg-gradient-to-r from-red-400 to-red-500 text-white px-6 py-3 rounded-xl hover:from-red-500 hover:to-red-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
+                      <span class="text-2xl mr-3">🚫</span>
+                      Indisponible - Problème signalé
+                    </button>
+                  </div>
+                </div>
+
+                <div id="commentaire-section" class="hidden mb-6">
+                  <label class="block text-sm font-bold text-gray-700 mb-2">
+                    <i class="fas fa-comment-alt mr-2 text-red-500"></i>
+                    Commentaire obligatoire
+                  </label>
+                  <textarea 
+                    id="quai-commentaire" 
+                    rows="3" 
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all resize-none"
+                    placeholder="Décrivez le problème (obligatoire pour marquer indisponible)..."
+                  ></textarea>
+                  <button onclick="setQuaiStatus('indisponible')" 
+                          class="w-full mt-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg font-semibold">
+                    <i class="fas fa-check mr-2"></i>
+                    Confirmer l'indisponibilité
+                  </button>
+                </div>
+
+                <div class="flex space-x-3">
+                  <button onclick="closeQuaiModal()" 
+                          class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-xl hover:bg-gray-300 transition-all font-semibold">
+                    <i class="fas fa-times mr-2"></i>
+                    Annuler
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -287,74 +401,6 @@ export function AccueilChauffeurPage() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Modal de gestion des quais */}
-      <div id="modal-quai" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
-          <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-t-xl">
-            <div class="flex items-center justify-between">
-              <h3 class="text-2xl font-bold">
-                <i class="fas fa-warehouse mr-2"></i>
-                Gestion Quai <span id="modal-quai-numero"></span>
-              </h3>
-              <button onclick="closeQuaiModal()" class="text-white hover:text-gray-200 transition-colors">
-                <i class="fas fa-times text-2xl"></i>
-              </button>
-            </div>
-          </div>
-          
-          <div class="p-6">
-            <div class="mb-6">
-              <label class="block text-gray-700 font-semibold mb-2">
-                <i class="fas fa-traffic-light mr-2"></i>
-                Statut du quai
-              </label>
-              <select 
-                id="modal-quai-statut" 
-                onchange="toggleCommentaire()"
-                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none text-lg"
-              >
-                <option value="disponible">🟢 Disponible - Prêt pour chargement</option>
-                <option value="en_cours">🟡 En cours d'utilisation - Timer actif</option>
-                <option value="indisponible">🔴 Indisponible - Problème signalé</option>
-              </select>
-            </div>
-            
-            <div id="commentaire-container" class="mb-6 hidden">
-              <label class="block text-gray-700 font-semibold mb-2">
-                <i class="fas fa-comment-exclamation mr-2 text-red-500"></i>
-                Commentaire <span class="text-red-500">*</span>
-              </label>
-              <textarea 
-                id="modal-quai-commentaire"
-                rows="3"
-                placeholder="Décrivez le problème (obligatoire pour statut Indisponible)..."
-                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none resize-none"
-              ></textarea>
-              <p class="text-xs text-gray-500 mt-1">
-                <i class="fas fa-info-circle mr-1"></i>
-                Le commentaire sera visible par tous les utilisateurs
-              </p>
-            </div>
-            
-            <div class="flex space-x-3">
-              <button 
-                onclick="saveQuaiStatus()"
-                class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
-              >
-                <i class="fas fa-save mr-2"></i>
-                Enregistrer
-              </button>
-              <button 
-                onclick="closeQuaiModal()"
-                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
       
       {/* Script Système d'Onglets */}
