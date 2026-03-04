@@ -74,28 +74,28 @@ function renderQuaiCard(quai) {
                         quai.timer_start.trim() !== ''
   
   const timerDisplay = hasValidTimer
-    ? `<div class="timer-display text-base font-mono font-bold text-gray-800 mt-2 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
+    ? `<div class="timer-display text-xl font-mono font-bold text-gray-900 mt-3 bg-white rounded-lg px-4 py-2 shadow-md border-2 border-gray-300" data-start="${quai.timer_start}">00:00:00</div>`
     : ''
   
   return `
-    <div class="quai-card ${bgColor} rounded-xl shadow-md hover:shadow-xl p-5 cursor-pointer transition-all duration-200 hover:scale-105"
+    <div class="quai-card ${bgColor} rounded-xl shadow-md hover:shadow-xl p-6 cursor-pointer transition-all duration-200 hover:scale-105 min-h-[200px] flex flex-col justify-center"
          onclick="openQuaiModal(${quai.quai_numero})"
          data-quai="${quai.quai_numero}">
       <div class="text-center">
         <!-- Icône de statut avec badge -->
-        <div class="flex justify-center mb-3">
-          <div class="${iconBg} rounded-full w-14 h-14 flex items-center justify-center shadow-lg">
-            <span class="text-3xl">${icon}</span>
+        <div class="flex justify-center mb-4">
+          <div class="${iconBg} rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+            <span class="text-4xl">${icon}</span>
           </div>
         </div>
         
         <!-- Numéro du quai -->
-        <div class="font-extrabold text-gray-800 text-2xl mb-1">
+        <div class="font-extrabold text-gray-800 text-2xl mb-2">
           Quai ${quai.quai_numero}
         </div>
         
         <!-- Statut -->
-        <div class="text-sm font-bold uppercase tracking-wide ${getStatusTextColor(quai.statut)} mb-1">
+        <div class="text-sm font-bold uppercase tracking-wide ${getStatusTextColor(quai.statut)} mb-2">
           ${getStatusLabel(quai.statut)}
         </div>
         
