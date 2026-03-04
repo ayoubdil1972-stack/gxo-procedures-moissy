@@ -1,19 +1,9 @@
-// Gestion des quais - Version 2.3.1 avec zones
-// Gère les 45 quais réels GXO Moissy avec organisation par zones
+// Gestion des quais - Version 2.4.1 - Modèle classique élargi
+// Gère les 45 quais réels GXO Moissy
 
 let quais = []
 let currentQuaiNumero = null
 let timerIntervals = {} // Stocke les intervalles des timers
-
-// Définition des zones
-const ZONES = {
-  'zone-1-10': { range: [1, 10], label: 'Zone A', color: 'blue' },
-  'zone-32-38': { range: [32, 38], label: 'Zone B', color: 'purple' },
-  'zone-45-49': { range: [45, 49], label: 'Zone C', color: 'orange' },
-  'zone-60-69': { range: [60, 69], label: 'Zone D', color: 'teal' },
-  'zone-75-87': { range: [75, 87], label: 'Zone E', color: 'pink' },
-  'zone-99-103': { range: [99, 103], label: 'Zone F', color: 'indigo' }
-}
 
 // ===== CHARGEMENT DES DONNÉES =====
 
@@ -28,7 +18,7 @@ async function loadQuais() {
     }
     
     quais = data.quais
-    renderQuaisByZones()
+    renderQuais()
     updateStats()
     startTimers()
   } catch (error) {
@@ -36,29 +26,25 @@ async function loadQuais() {
   }
 }
 
-function renderQuaisByZones() {
-  // Afficher les quais par zone
-  for (const [zoneId, zone] of Object.entries(ZONES)) {
-    const zoneElement = document.getElementById(`quais-${zoneId}`)
-    if (!zoneElement) continue
-    
-    const zoneQuais = quais.filter(q => {
-      const num = q.quai_numero
-      return num >= zone.range[0] && num <= zone.range[1]
-    })
-    
-    if (zoneQuais.length === 0) {
-      zoneElement.innerHTML = `
-        <div class="col-span-full text-center py-6 text-gray-400">
-          <i class="fas fa-inbox text-3xl mb-2"></i>
-          <p class="text-sm">Aucun quai dans cette zone</p>
-        </div>
-      `
-      continue
-    }
-    
-    zoneElement.innerHTML = zoneQuais.map(quai => renderQuaiCard(quai)).join('')
+function renderQuais() {
+  const grid = document.getElementById('quais-grid')
+  
+  if (!grid) {
+    console.error('Element quais-grid introuvable')
+    return
   }
+  
+  if (quais.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full text-center py-12 text-gray-400">
+        <i class="fas fa-inbox text-4xl mb-4"></i>
+        <p>Aucun quai disponible</p>
+      </div>
+    `
+    return
+  }
+  
+  grid.innerHTML = quais.map(quai => renderQuaiCard(quai)).join('')
 }
 
 function renderQuaiCard(quai) {
@@ -74,28 +60,28 @@ function renderQuaiCard(quai) {
                         quai.timer_start.trim() !== ''
   
   const timerDisplay = hasValidTimer
-    ? `<div class="timer-display text-2xl font-mono font-extrabold text-gray-900 mt-4 bg-white rounded-xl px-5 py-3 shadow-lg border-2 border-gray-400" data-start="${quai.timer_start}">00:00:00</div>`
+    ? `<div class="timer-display text-xl font-mono font-bold text-gray-800 mt-3 bg-white/80 rounded-lg px-4 py-2 shadow-md border border-gray-300" data-start="${quai.timer_start}">00:00:00</div>`
     : ''
   
   return `
-    <div class="quai-card ${bgColor} rounded-2xl shadow-lg hover:shadow-2xl p-8 cursor-pointer transition-all duration-200 hover:scale-105 min-h-[240px] flex flex-col justify-center"
+    <div class="quai-card ${bgColor} rounded-xl shadow-md hover:shadow-xl p-5 cursor-pointer transition-all duration-200 hover:scale-105 min-h-[180px] flex flex-col justify-center"
          onclick="openQuaiModal(${quai.quai_numero})"
          data-quai="${quai.quai_numero}">
       <div class="text-center">
         <!-- Icône de statut avec badge -->
-        <div class="flex justify-center mb-5">
-          <div class="${iconBg} rounded-full w-20 h-20 flex items-center justify-center shadow-xl">
-            <span class="text-5xl">${icon}</span>
+        <div class="flex justify-center mb-3">
+          <div class="${iconBg} rounded-full w-14 h-14 flex items-center justify-center shadow-lg">
+            <span class="text-3xl">${icon}</span>
           </div>
         </div>
         
         <!-- Numéro du quai -->
-        <div class="font-black text-gray-800 text-3xl mb-3">
+        <div class="font-bold text-gray-800 text-2xl mb-2">
           Quai ${quai.quai_numero}
         </div>
         
         <!-- Statut -->
-        <div class="text-base font-bold uppercase tracking-wider ${getStatusTextColor(quai.statut)} mb-2">
+        <div class="text-sm font-semibold uppercase tracking-wide ${getStatusTextColor(quai.statut)} mb-1">
           ${getStatusLabel(quai.statut)}
         </div>
         
@@ -104,18 +90,13 @@ function renderQuaiCard(quai) {
         
         <!-- Commentaire -->
         ${quai.commentaire ? `
-          <div class="mt-3 text-xs bg-white/70 rounded-lg p-3 text-left shadow-inner">
+          <div class="mt-3 text-xs bg-white/60 rounded-lg p-2 text-left shadow-sm">
             <div class="flex items-start space-x-2 mb-1">
-              <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
-              <div class="font-semibold text-gray-800">${quai.commentaire}</div>
+              <i class="fas fa-comment-exclamation text-red-500 mt-0.5 text-xs"></i>
+              <div class="font-medium text-gray-800 leading-tight">${quai.commentaire}</div>
             </div>
-            <div class="text-gray-600 flex items-center space-x-1 mt-1">
-              <i class="fas fa-user text-xs"></i>
-              <span>${quai.commentaire_auteur || 'Inconnu'}</span>
-            </div>
-            <div class="text-gray-500 flex items-center space-x-1 mt-1">
-              <i class="fas fa-clock text-xs"></i>
-              <span>${formatDate(quai.updated_at)}</span>
+            <div class="text-gray-600 text-[10px] mt-1">
+              <i class="fas fa-user mr-1"></i>${quai.commentaire_auteur || 'Inconnu'}
             </div>
           </div>
         ` : ''}
@@ -126,10 +107,10 @@ function renderQuaiCard(quai) {
 
 function getStatusColor(statut) {
   switch (statut) {
-    case 'disponible': return 'bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-400'
-    case 'en_cours': return 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400'
-    case 'indisponible': return 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400'
-    default: return 'bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-400'
+    case 'disponible': return 'bg-gradient-to-br from-green-100 to-green-200 border-2 border-green-400'
+    case 'en_cours': return 'bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-400'
+    case 'indisponible': return 'bg-gradient-to-br from-red-100 to-red-200 border-2 border-red-400'
+    default: return 'bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-gray-400'
   }
 }
 
