@@ -288,6 +288,74 @@ export function AccueilChauffeurPage() {
           </div>
         ))}
       </div>
+
+      {/* Modal de gestion des quais */}
+      <div id="modal-quai" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
+          <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-t-xl">
+            <div class="flex items-center justify-between">
+              <h3 class="text-2xl font-bold">
+                <i class="fas fa-warehouse mr-2"></i>
+                Gestion Quai <span id="modal-quai-numero"></span>
+              </h3>
+              <button onclick="closeQuaiModal()" class="text-white hover:text-gray-200 transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="p-6">
+            <div class="mb-6">
+              <label class="block text-gray-700 font-semibold mb-2">
+                <i class="fas fa-traffic-light mr-2"></i>
+                Statut du quai
+              </label>
+              <select 
+                id="modal-quai-statut" 
+                onchange="toggleCommentaire()"
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none text-lg"
+              >
+                <option value="disponible">🟢 Disponible - Prêt pour chargement</option>
+                <option value="en_cours">🟡 En cours d'utilisation - Timer actif</option>
+                <option value="indisponible">🔴 Indisponible - Problème signalé</option>
+              </select>
+            </div>
+            
+            <div id="commentaire-container" class="mb-6 hidden">
+              <label class="block text-gray-700 font-semibold mb-2">
+                <i class="fas fa-comment-exclamation mr-2 text-red-500"></i>
+                Commentaire <span class="text-red-500">*</span>
+              </label>
+              <textarea 
+                id="modal-quai-commentaire"
+                rows="3"
+                placeholder="Décrivez le problème (obligatoire pour statut Indisponible)..."
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none resize-none"
+              ></textarea>
+              <p class="text-xs text-gray-500 mt-1">
+                <i class="fas fa-info-circle mr-1"></i>
+                Le commentaire sera visible par tous les utilisateurs
+              </p>
+            </div>
+            
+            <div class="flex space-x-3">
+              <button 
+                onclick="saveQuaiStatus()"
+                class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
+              >
+                <i class="fas fa-save mr-2"></i>
+                Enregistrer
+              </button>
+              <button 
+                onclick="closeQuaiModal()"
+                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       
       {/* Script Système d'Onglets */}
       <script src="/static/accueil-chauffeur-tabs.js"></script>
