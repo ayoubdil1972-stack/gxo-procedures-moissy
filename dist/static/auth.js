@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     '/qrcode-chauffeur',
     '/chauffeur/langue',
     '/chauffeur/video',
-    '/chauffeur/inscription'
+    '/chauffeur/inscription',
+    '/accueil-chauffeur'
   ];
   
   if (publicPaths.includes(path)) {

@@ -335,17 +335,33 @@ function showSuccessMessage(message) {
 
 // ===== INITIALISATION =====
 
-// Charger les quais au chargement de la page
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
+// Charger les quais au chargement de la page SEULEMENT si l'onglet Quais est visible
+function initQuais() {
+  const quaisContent = document.getElementById('content-quais')
+  
+  // Si l'onglet quais est déjà visible (pas hidden), charger immédiatement
+  if (quaisContent && !quaisContent.classList.contains('hidden')) {
     loadQuais()
     // Rafraîchir toutes les 30 secondes
     setInterval(loadQuais, 30000)
-  })
+  }
+}
+
+// Fonction globale appelée par le système d'onglets
+window.onQuaisTabActivated = function() {
+  // Charger les quais la première fois que l'onglet est activé
+  if (quais.length === 0) {
+    loadQuais()
+    // Rafraîchir toutes les 30 secondes
+    setInterval(loadQuais, 30000)
+  }
+}
+
+// Initialiser au chargement de la page
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initQuais)
 } else {
-  loadQuais()
-  // Rafraîchir toutes les 30 secondes
-  setInterval(loadQuais, 30000)
+  initQuais()
 }
 
 // Masquer le message d'erreur après 5 secondes
