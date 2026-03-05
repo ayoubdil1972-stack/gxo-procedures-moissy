@@ -268,6 +268,12 @@ app.get('/scan-fin-dechargement', (c) => {
     `)
   }
   
+  // Générer les options de palettes (1-33)
+  const palettesOptions = Array.from({length: 33}, (_, i) => {
+    const num = i + 1
+    return `<option value="${num}">${num} palette${num > 1 ? 's' : ''}</option>`
+  }).join('')
+  
   // Page de formulaire de fin de déchargement
   return c.html(`
     <!DOCTYPE html>
@@ -275,7 +281,7 @@ app.get('/scan-fin-dechargement', (c) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Fin Déchargement Quai \${quaiNumero} - GXO Moissy</title>
+      <title>Fin Déchargement Quai ${quaiNumero} - GXO Moissy</title>
       <script src="https://cdn.tailwindcss.com"></script>
       <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
       <style>
@@ -317,7 +323,7 @@ app.get('/scan-fin-dechargement', (c) => {
                 <i class="fas fa-clipboard-check text-green-600 mr-3"></i>
                 Fin de Déchargement
               </h1>
-              <p class="text-gray-600 mt-2">Quai n°\${quaiNumero}</p>
+              <p class="text-gray-600 mt-2">Quai n°${quaiNumero}</p>
             </div>
             <div class="text-5xl">📦</div>
           </div>
@@ -357,7 +363,7 @@ app.get('/scan-fin-dechargement', (c) => {
                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                 >
                   <option value="">Sélectionner...</option>
-                  \${Array.from({length: 33}, (_, i) => \`<option value="\${i+1}">\${i+1} palette\${i+1 > 1 ? 's' : ''}</option>\`).join('')}
+                  ${palettesOptions}
                 </select>
               </div>
 
@@ -374,7 +380,7 @@ app.get('/scan-fin-dechargement', (c) => {
                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                 >
                   <option value="">Sélectionner...</option>
-                  \${Array.from({length: 33}, (_, i) => \`<option value="\${i+1}">\${i+1} palette\${i+1 > 1 ? 's' : ''}</option>\`).join('')}
+                  ${palettesOptions}
                 </select>
               </div>
             </div>
@@ -593,7 +599,7 @@ app.get('/scan-fin-dechargement', (c) => {
           
           const formData = new FormData(this);
           const data = {
-            quai_numero: \${quaiNumero},
+            quai_numero: ${quaiNumero},
             nom_agent: formData.get('nom_agent'),
             palettes_attendues: parseInt(formData.get('palettes_attendues')),
             palettes_recues: parseInt(formData.get('palettes_recues')),

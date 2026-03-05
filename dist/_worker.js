@@ -1837,13 +1837,33 @@ var Vr=Object.defineProperty;var jt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
         </div>
       </body>
       </html>
-    `)});b.get("/scan-fin-dechargement",t=>t.req.query("quai")?t.html(`
+    `)});b.get("/scan-fin-dechargement",t=>{const r=t.req.query("quai");if(!r)return t.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erreur - Scanner GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"><\/script>
+      </head>
+      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
+          <div class="text-6xl mb-4">❌</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-4">Code-barres invalide</h1>
+          <p class="text-gray-600 mb-6">Le QR Code scanné ne contient pas de numéro de quai valide.</p>
+          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
+            Retour à l'accueil
+          </a>
+        </div>
+      </body>
+      </html>
+    `);const s=Array.from({length:33},(i,a)=>{const n=a+1;return`<option value="${n}">${n} palette${n>1?"s":""}</option>`}).join("");return t.html(`
     <!DOCTYPE html>
     <html lang="fr">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Fin Déchargement Quai \${quaiNumero} - GXO Moissy</title>
+      <title>Fin Déchargement Quai ${r} - GXO Moissy</title>
       <script src="https://cdn.tailwindcss.com"><\/script>
       <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
       <style>
@@ -1885,7 +1905,7 @@ var Vr=Object.defineProperty;var jt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
                 <i class="fas fa-clipboard-check text-green-600 mr-3"></i>
                 Fin de Déchargement
               </h1>
-              <p class="text-gray-600 mt-2">Quai n°\${quaiNumero}</p>
+              <p class="text-gray-600 mt-2">Quai n°${r}</p>
             </div>
             <div class="text-5xl">📦</div>
           </div>
@@ -1925,7 +1945,7 @@ var Vr=Object.defineProperty;var jt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                 >
                   <option value="">Sélectionner...</option>
-                  \${Array.from({length: 33}, (_, i) => \`<option value="\${i+1}">\${i+1} palette\${i+1 > 1 ? 's' : ''}</option>\`).join('')}
+                  ${s}
                 </select>
               </div>
 
@@ -1942,7 +1962,7 @@ var Vr=Object.defineProperty;var jt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                 >
                   <option value="">Sélectionner...</option>
-                  \${Array.from({length: 33}, (_, i) => \`<option value="\${i+1}">\${i+1} palette\${i+1 > 1 ? 's' : ''}</option>\`).join('')}
+                  ${s}
                 </select>
               </div>
             </div>
@@ -2161,7 +2181,7 @@ var Vr=Object.defineProperty;var jt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
           
           const formData = new FormData(this);
           const data = {
-            quai_numero: \${quaiNumero},
+            quai_numero: ${r},
             nom_agent: formData.get('nom_agent'),
             palettes_attendues: parseInt(formData.get('palettes_attendues')),
             palettes_recues: parseInt(formData.get('palettes_recues')),
@@ -2206,27 +2226,7 @@ var Vr=Object.defineProperty;var jt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
       <\/script>
     </body>
     </html>
-  `):t.html(`
-      <!DOCTYPE html>
-      <html lang="fr">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Erreur - Scanner GXO Moissy</title>
-        <script src="https://cdn.tailwindcss.com"><\/script>
-      </head>
-      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
-          <div class="text-6xl mb-4">❌</div>
-          <h1 class="text-2xl font-bold text-red-600 mb-4">Code-barres invalide</h1>
-          <p class="text-gray-600 mb-6">Le QR Code scanné ne contient pas de numéro de quai valide.</p>
-          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
-            Retour à l'accueil
-          </a>
-        </div>
-      </body>
-      </html>
-    `));b.get("/chauffeur/consignes",t=>{const r=t.req.query("lang")||"fr";return t.redirect(`/consignes/${r}`)});b.get("/chauffeur/video",t=>t.redirect("/chauffeur/consignes?lang="+(t.req.query("lang")||"fr")));b.get("/chauffeur/inscription",t=>{const r=t.req.query("lang")||"fr";return t.html(Oi({lang:r}))});b.get("/chauffeur/taches",$e,t=>t.render(e(Mi,{})));b.post("/api/chauffeur/inscription",async t=>{try{const{pseudo:r,entreprise:s,numero_quai:i,langue:a,video_completed:n}=await t.req.json(),l=await t.env.DB.prepare(`
+  `)});b.get("/chauffeur/consignes",t=>{const r=t.req.query("lang")||"fr";return t.redirect(`/consignes/${r}`)});b.get("/chauffeur/video",t=>t.redirect("/chauffeur/consignes?lang="+(t.req.query("lang")||"fr")));b.get("/chauffeur/inscription",t=>{const r=t.req.query("lang")||"fr";return t.html(Oi({lang:r}))});b.get("/chauffeur/taches",$e,t=>t.render(e(Mi,{})));b.post("/api/chauffeur/inscription",async t=>{try{const{pseudo:r,entreprise:s,numero_quai:i,langue:a,video_completed:n}=await t.req.json(),l=await t.env.DB.prepare(`
       INSERT INTO chauffeur_arrivals (
         pseudo, entreprise, numero_quai, langue, video_completed, 
         status, arrival_time
