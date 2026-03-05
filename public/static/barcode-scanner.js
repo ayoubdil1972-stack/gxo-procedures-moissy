@@ -148,18 +148,23 @@ function attachScannerListeners() {
  */
 async function handleBarcodeScan(barcode) {
   console.log('🔄 Traitement du scan:', barcode)
+  console.log('📍 URL actuelle:', window.location.href)
+  console.log('📋 Mapping disponible:', Object.keys(BARCODE_MAPPING).length, 'codes')
   
   // Vérifier si le code-barres est dans le mapping
   const quaiNumero = BARCODE_MAPPING[barcode]
   
   if (!quaiNumero) {
     console.warn('⚠️ Code-barres non reconnu:', barcode)
+    console.warn('💡 Codes valides:', Object.keys(BARCODE_MAPPING).slice(0, 10).join(', '), '...')
     showScanError(`Code-barres non reconnu: ${barcode}`)
     playScanErrorSound()
+    alert(`❌ Code-barres non reconnu: ${barcode}\n\nCodes valides: D001-D010, D032-D038, D045-D049, etc.`)
     return
   }
   
   console.log('✅ Quai identifié:', quaiNumero)
+  console.log('⏱️ Démarrage de la séquence de scan...')
   
   // Ajouter à l'historique
   addToScanHistory(barcode, quaiNumero)
@@ -173,7 +178,8 @@ async function handleBarcodeScan(barcode) {
   // Jouer un son de confirmation
   playScanSuccessSound()
   
-  // Démarrer le timer du quai
+  // Démarrer le timer du quai (CRITIQUE)
+  console.log('🎯 Appel de startQuaiTimer pour quai', quaiNumero)
   await startQuaiTimer(quaiNumero)
   
   // Envoyer à l'API backend
@@ -184,6 +190,8 @@ async function handleBarcodeScan(barcode) {
   
   // Scroll vers le quai
   scrollToQuai(quaiNumero)
+  
+  console.log('✅ Séquence de scan terminée pour', barcode, '→ Quai', quaiNumero)
 }
 
 /**
@@ -192,9 +200,11 @@ async function handleBarcodeScan(barcode) {
  */
 async function startQuaiTimer(quaiNumero) {
   console.log('⏱️ Démarrage du timer pour Quai', quaiNumero)
+  console.log('🌐 URL API:', `/api/quais/${quaiNumero}`)
   
   try {
     // Utiliser l'API existante pour mettre le quai en "en_cours"
+    console.log('📤 Envoi de la requête POST...')
     const response = await fetch(`/api/quais/${quaiNumero}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -205,31 +215,42 @@ async function startQuaiTimer(quaiNumero) {
       })
     })
     
+    console.log('📥 Réponse reçue, status:', response.status)
     const data = await response.json()
+    console.log('📊 Données reçues:', data)
     
     if (data.success) {
       console.log('✅ Timer démarré pour Quai', quaiNumero)
       console.log('📊 Données retournées:', data.quai)
+      console.log('⏰ Timer start:', data.quai?.timer_start)
+      
+      // Afficher un message de confirmation
+      alert(`✅ SUCCÈS !\n\nQuai ${quaiNumero} activé\nTimer démarré: ${data.quai?.timer_start || 'maintenant'}\n\nLe quai devrait passer en JAUNE dans quelques secondes...`)
       
       // FORCER le rechargement avec un délai pour laisser le temps à la DB
       setTimeout(async () => {
+        console.log('🔄 Début du rechargement des quais...')
         if (typeof loadQuais === 'function') {
           console.log('🔄 Rechargement des quais...')
           await loadQuais()
           console.log('✅ Quais rechargés')
         } else {
           console.error('❌ loadQuais n\'existe pas - tentative de rechargement de la page')
+          alert('⚠️ La fonction loadQuais n\'existe pas.\n\nLa page va se recharger pour afficher le changement...')
           // Alternative : recharger toute la page
           window.location.reload()
         }
-      }, 300) // Délai de 300ms pour assurer la synchro
+      }, 500) // Augmenté à 500ms pour plus de sécurité
     } else {
       console.error('❌ Erreur démarrage timer:', data.error)
       showScanError(`Erreur: ${data.error}`)
+      alert(`❌ ERREUR !\n\nImpossible de démarrer le timer du Quai ${quaiNumero}\n\nErreur: ${data.error}`)
     }
   } catch (error) {
     console.error('❌ Erreur lors du démarrage du timer:', error)
+    console.error('🔍 Détails:', error.message, error.stack)
     showScanError('Erreur de connexion au serveur')
+    alert(`❌ ERREUR RÉSEAU !\n\nImpossible de contacter le serveur\n\nErreur: ${error.message}\n\nVérifiez votre connexion internet.`)
   }
 }
 
