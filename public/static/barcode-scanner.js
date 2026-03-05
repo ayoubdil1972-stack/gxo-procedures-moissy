@@ -122,17 +122,40 @@ function attachScannerListeners() {
     scannerState.lastInputTime = currentTime
   })
   
-  // Listener global : maintenir le focus sur l'input
-  document.addEventListener('keydown', (e) => {
-    // Ignorer si on tape dans un autre input/textarea
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-      if (e.target.id !== 'barcode-scan-input') {
-        return
-      }
+  // Listener global : maintenir le focus sur l'input (DÉSACTIVÉ pour permettre la saisie dans d'autres champs)
+  // Ce listener est commenté pour éviter que le scanner HID ne vole le focus
+  // des autres champs de saisie (commentaire, recherche, etc.)
+  
+  // document.addEventListener('keydown', (e) => {
+  //   // Ignorer si on tape dans un autre input/textarea
+  //   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+  //     if (e.target.id !== 'barcode-scan-input') {
+  //       return
+  //     }
+  //   }
+  //   
+  //   // Rediriger les touches vers l'input de scan
+  //   if (scannerState.isActive && e.target.id !== 'barcode-scan-input') {
+  //     scanInput.focus()
+  //   }
+  // })
+  
+  // À la place, on focus uniquement l'input de scan au clic sur la page
+  // (mais pas quand on clique sur un autre input/textarea)
+  document.addEventListener('click', (e) => {
+    // Ne pas récupérer le focus si on clique sur un input, textarea, button ou select
+    if (
+      e.target.tagName === 'INPUT' ||
+      e.target.tagName === 'TEXTAREA' ||
+      e.target.tagName === 'BUTTON' ||
+      e.target.tagName === 'SELECT' ||
+      e.target.closest('input, textarea, button, select')
+    ) {
+      return
     }
     
-    // Rediriger les touches vers l'input de scan
-    if (scannerState.isActive && e.target.id !== 'barcode-scan-input') {
+    // Sinon, focus sur l'input de scan pour permettre le scan HID
+    if (scannerState.isActive && scanInput) {
       scanInput.focus()
     }
   })
