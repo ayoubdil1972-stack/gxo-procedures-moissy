@@ -215,10 +215,9 @@ app.get('/scan', (c) => {
                 console.log('Notification sonore non disponible');
               }
               
-              // Redirection automatique après 3 secondes
-              setTimeout(() => {
-                window.location.href = '/accueil-chauffeur';
-              }, 3000);
+              // PAS de redirection automatique - l'agent reste sur la page de confirmation
+              // Il peut cliquer manuellement sur "Voir le tableau des quais" s'il le souhaite
+              console.log('✅ Scan terminé - Restez sur cette page ou cliquez sur un bouton pour naviguer');
             } else {
               throw new Error(data.error || 'Erreur inconnue');
             }
