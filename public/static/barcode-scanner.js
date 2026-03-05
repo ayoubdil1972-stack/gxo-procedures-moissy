@@ -209,11 +209,20 @@ async function startQuaiTimer(quaiNumero) {
     
     if (data.success) {
       console.log('✅ Timer démarré pour Quai', quaiNumero)
+      console.log('📊 Données retournées:', data.quai)
       
-      // Recharger les quais pour afficher le timer
-      if (typeof loadQuais === 'function') {
-        await loadQuais()
-      }
+      // FORCER le rechargement avec un délai pour laisser le temps à la DB
+      setTimeout(async () => {
+        if (typeof loadQuais === 'function') {
+          console.log('🔄 Rechargement des quais...')
+          await loadQuais()
+          console.log('✅ Quais rechargés')
+        } else {
+          console.error('❌ loadQuais n\'existe pas - tentative de rechargement de la page')
+          // Alternative : recharger toute la page
+          window.location.reload()
+        }
+      }, 300) // Délai de 300ms pour assurer la synchro
     } else {
       console.error('❌ Erreur démarrage timer:', data.error)
       showScanError(`Erreur: ${data.error}`)

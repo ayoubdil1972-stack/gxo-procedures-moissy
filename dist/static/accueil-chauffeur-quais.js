@@ -66,12 +66,27 @@ function renderQuaiCard(quai) {
   const icon = getStatusIcon(quai.statut)
   const iconBg = getStatusIconBg(quai.statut)
   
+  // DEBUG - Logs détaillés pour les quais scannés
+  if (quai.statut === 'en_cours' || quai.timer_start) {
+    console.log(`🐛 Debug Quai ${quai.quai_numero}:`, {
+      statut: quai.statut,
+      timer_start: quai.timer_start,
+      timer_start_type: typeof quai.timer_start,
+      timer_start_length: quai.timer_start ? quai.timer_start.length : 0
+    })
+  }
+  
   // Validation stricte : n'afficher le timer que si timer_start est valide
   const hasValidTimer = quai.statut === 'en_cours' && 
                         quai.timer_start && 
                         quai.timer_start !== 'null' && 
                         quai.timer_start !== 'undefined' &&
                         quai.timer_start.trim() !== ''
+  
+  // DEBUG - Afficher le résultat de la validation
+  if (quai.statut === 'en_cours' || quai.timer_start) {
+    console.log(`  → hasValidTimer: ${hasValidTimer}`)
+  }
   
   const timerDisplay = hasValidTimer
     ? `<div class="timer-display text-base font-mono font-bold text-gray-800 mt-2 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
