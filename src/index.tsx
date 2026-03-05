@@ -773,4 +773,110 @@ app.post('/api/quais/:numero', async (c) => {
   }
 })
 
+// POST /api/quai/scan - Enregistrer un scan de code-barres
+app.post('/api/quai/scan', async (c) => {
+  try {
+    const { barcode, quai, action, timestamp } = await c.req.json()
+    
+    // Validation
+    if (!barcode || !quai || !action) {
+      return c.json({ 
+        success: false, 
+        error: 'Paramètres manquants (barcode, quai, action requis)' 
+      }, 400)
+    }
+    
+    // Créer la table des scans si elle n'existe pas
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS quai_scans (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        barcode TEXT NOT NULL,
+        quai_numero INTEGER NOT NULL,
+        action TEXT NOT NULL,
+        scan_timestamp TEXT NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
+    
+    // Enregistrer le scan
+    const result = await c.env.DB.prepare(`
+      INSERT INTO quai_scans (barcode, quai_numero, action, scan_timestamp)
+      VALUES (?, ?, ?, ?)
+    `).bind(barcode, quai, action, timestamp || new Date().toISOString()).run()
+    
+    // Récupérer les statistiques de scan
+    const stats = await c.env.DB.prepare(`
+      SELECT 
+        COUNT(*) as total_scans,
+        COUNT(DISTINCT quai_numero) as unique_quais,
+        MAX(scan_timestamp) as last_scan
+      FROM quai_scans
+      WHERE date(scan_timestamp) = date('now')
+    `).first()
+    
+    return c.json({ 
+      success: true, 
+      scan_id: result.meta.last_row_id,
+      barcode,
+      quai,
+      action,
+      timestamp,
+      stats
+    })
+  } catch (error) {
+    console.error('Erreur enregistrement scan:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// GET /api/quai/scans - Récupérer l'historique des scans
+app.get('/api/quai/scans', async (c) => {
+  try {
+    const limit = parseInt(c.req.query('limit') || '50')
+    const quaiNumero = c.req.query('quai')
+    
+    let query = `
+      SELECT * FROM quai_scans 
+      ${quaiNumero ? 'WHERE quai_numero = ?' : ''}
+      ORDER BY created_at DESC 
+      LIMIT ?
+    `
+    
+    const { results } = quaiNumero
+      ? await c.env.DB.prepare(query).bind(parseInt(quaiNumero), limit).all()
+      : await c.env.DB.prepare(query).bind(limit).all()
+    
+    // Compter le total des scans
+    const totalQuery = `
+      SELECT COUNT(*) as total FROM quai_scans
+      ${quaiNumero ? 'WHERE quai_numero = ?' : ''}
+    `
+    const totalResult = quaiNumero
+      ? await c.env.DB.prepare(totalQuery).bind(parseInt(quaiNumero)).first()
+      : await c.env.DB.prepare(totalQuery).first()
+    
+    const total = (totalResult as { total: number })?.total || 0
+    
+    return c.json({ 
+      success: true, 
+      scans: results,
+      total,
+      limit
+    })
+  } catch (error) {
+    // Si la table n'existe pas encore, retourner une liste vide
+    if (error.message?.includes('no such table')) {
+      return c.json({ 
+        success: true, 
+        scans: [],
+        total: 0,
+        limit: 0
+      })
+    }
+    
+    console.error('Erreur récupération scans:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 export default app

@@ -187,6 +187,53 @@ export function AccueilChauffeurPage() {
             </div>
           </div>
 
+          {/* Panneau de scan code-barres et historique */}
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            {/* Indicateur de scan actif */}
+            <div class="lg:col-span-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-xl p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                  <div class="bg-white/20 p-4 rounded-full animate-pulse">
+                    <i class="fas fa-barcode text-3xl"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-2xl font-bold mb-1">Scanner Code-Barres Actif</h3>
+                    <p class="text-sm opacity-90">Scannez un code-barres (ex: D075) pour démarrer automatiquement le timer du quai</p>
+                    <div class="mt-2 flex items-center space-x-2 text-xs opacity-75">
+                      <i class="fas fa-info-circle"></i>
+                      <span>45 quais configurés • Détection automatique • Timer en temps réel</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="bg-white/20 rounded-xl px-4 py-2">
+                    <div class="text-3xl font-bold" id="scan-counter">0</div>
+                    <div class="text-xs opacity-75">Scans</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Historique des scans */}
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="font-bold text-gray-800 mb-4 flex items-center justify-between">
+                <span>
+                  <i class="fas fa-history text-blue-500 mr-2"></i>
+                  Derniers Scans
+                </span>
+                <button onclick="loadScanHistory()" class="text-blue-500 hover:text-blue-700 text-xs">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </h3>
+              <div id="scan-history-list" class="space-y-2 max-h-48 overflow-y-auto">
+                <div class="text-center text-gray-400 py-8">
+                  <i class="fas fa-inbox text-4xl mb-2"></i>
+                  <p class="text-sm">Aucun scan enregistré</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Grille des 45 quais GXO Moissy - Organisation par zones */}
           <div class="space-y-6">
             {/* Zone 1-10 */}
@@ -411,6 +458,9 @@ export function AccueilChauffeurPage() {
       
       {/* Script Gestion des Quais (version intégrée) */}
       <script src="/static/accueil-chauffeur-quais.js"></script>
+      
+      {/* Script Scanner Code-Barres pour Quais */}
+      <script src="/static/barcode-scanner.js"></script>
     </div>
   )
 }
