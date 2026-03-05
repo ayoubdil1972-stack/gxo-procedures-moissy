@@ -237,6 +237,410 @@ app.get('/scan', (c) => {
   `)
 })
 
+// ===== ROUTE DE SCAN FIN DE DÉCHARGEMENT =====
+// Cette route est appelée quand on scanne le QR Code de fin de déchargement
+// URL Format: https://gxomoissyprocedures.com/scan-fin-dechargement?quai=75
+app.get('/scan-fin-dechargement', (c) => {
+  const quaiNumero = c.req.query('quai')
+  
+  // Validation du numéro de quai
+  if (!quaiNumero) {
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erreur - Scanner GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
+          <div class="text-6xl mb-4">❌</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-4">Code-barres invalide</h1>
+          <p class="text-gray-600 mb-6">Le QR Code scanné ne contient pas de numéro de quai valide.</p>
+          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
+            Retour à l'accueil
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  }
+  
+  // Page de formulaire de fin de déchargement
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Fin Déchargement Quai \${quaiNumero} - GXO Moissy</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+      <style>
+        .checkbox-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 0.75rem;
+        }
+        .checkbox-item {
+          display: flex;
+          align-items: center;
+          padding: 0.75rem;
+          border: 2px solid #e5e7eb;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .checkbox-item:hover {
+          border-color: #3b82f6;
+          background-color: #eff6ff;
+        }
+        .checkbox-item input:checked + label {
+          font-weight: 600;
+          color: #2563eb;
+        }
+        .checkbox-item input:checked ~ .checkbox-border {
+          border-color: #2563eb;
+          background-color: #dbeafe;
+        }
+      </style>
+    </head>
+    <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-4">
+      <div class="max-w-3xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-3xl font-bold text-gray-800">
+                <i class="fas fa-clipboard-check text-green-600 mr-3"></i>
+                Fin de Déchargement
+              </h1>
+              <p class="text-gray-600 mt-2">Quai n°\${quaiNumero}</p>
+            </div>
+            <div class="text-5xl">📦</div>
+          </div>
+        </div>
+
+        <!-- Formulaire -->
+        <form id="fin-dechargement-form" class="space-y-6">
+          <!-- Nom -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fas fa-user text-blue-600 mr-2"></i>
+              Nom de l'agent
+            </label>
+            <input 
+              type="text" 
+              id="nom-agent" 
+              name="nom_agent"
+              required
+              placeholder="Entrez votre nom"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+            />
+          </div>
+
+          <!-- Nombre de palettes -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Palettes attendues -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-truck-loading text-orange-600 mr-2"></i>
+                  Palettes attendues
+                </label>
+                <select 
+                  id="palettes-attendues" 
+                  name="palettes_attendues"
+                  required
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                >
+                  <option value="">Sélectionner...</option>
+                  \${Array.from({length: 33}, (_, i) => \`<option value="\${i+1}">\${i+1} palette\${i+1 > 1 ? 's' : ''}</option>\`).join('')}
+                </select>
+              </div>
+
+              <!-- Palettes reçues -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                  Palettes reçues
+                </label>
+                <select 
+                  id="palettes-recues" 
+                  name="palettes_recues"
+                  required
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                >
+                  <option value="">Sélectionner...</option>
+                  \${Array.from({length: 33}, (_, i) => \`<option value="\${i+1}">\${i+1} palette\${i+1 > 1 ? 's' : ''}</option>\`).join('')}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Palettes à rendre -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">
+              <i class="fas fa-exchange-alt text-purple-600 mr-2"></i>
+              Les palettes sont à rendre ?
+            </label>
+            <div class="flex gap-4">
+              <label class="flex-1 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="palettes_a_rendre" 
+                  value="oui" 
+                  required
+                  class="peer hidden"
+                />
+                <div class="p-4 border-2 border-gray-300 rounded-lg text-center peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300">
+                  <i class="fas fa-check-circle text-2xl text-green-600 mb-2"></i>
+                  <div>Oui</div>
+                </div>
+              </label>
+              <label class="flex-1 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="palettes_a_rendre" 
+                  value="non" 
+                  required
+                  class="peer hidden"
+                />
+                <div class="p-4 border-2 border-gray-300 rounded-lg text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300">
+                  <i class="fas fa-times-circle text-2xl text-red-600 mb-2"></i>
+                  <div>Non</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Problématiques -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">
+              <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+              Problématiques rencontrées (cocher si applicable)
+            </label>
+            <div class="space-y-2">
+              <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  name="probleme[]" 
+                  value="palettes_largeur"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span class="ml-3 text-gray-700">Palettes chargées en largeur</span>
+              </label>
+              
+              <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  name="probleme[]" 
+                  value="palettes_instables"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span class="ml-3 text-gray-700">Palettes instables / chargées de manière incorrecte</span>
+              </label>
+              
+              <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  name="probleme[]" 
+                  value="palettes_mal_dechargees"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span class="ml-3 text-gray-700">Palettes mal déchargées</span>
+              </label>
+              
+              <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  name="probleme[]" 
+                  value="marchandises_dangereuses"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span class="ml-3 text-gray-700">Marchandises dangereuses non chargées à l'arrière</span>
+              </label>
+              
+              <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  name="probleme[]" 
+                  value="palettes_mal_filmees"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span class="ml-3 text-gray-700">Palettes mal filmées</span>
+              </label>
+              
+              <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  name="probleme[]" 
+                  value="mauvais_formulaire_tu"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span class="ml-3 text-gray-700">Mauvais formulaire TU entrant</span>
+              </label>
+              
+              <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  name="probleme[]" 
+                  value="autres"
+                  id="probleme-autres"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span class="ml-3 text-gray-700 font-semibold">Autres</span>
+              </label>
+            </div>
+
+            <!-- Champ Autres (affiché si "Autres" coché) -->
+            <div id="autres-details" class="mt-4 hidden">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-edit text-orange-600 mr-2"></i>
+                Précisez la problématique
+              </label>
+              <textarea 
+                id="autres-commentaire"
+                name="autres_commentaire"
+                rows="3"
+                placeholder="Décrivez la problématique..."
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Remarques -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fas fa-comment text-indigo-600 mr-2"></i>
+              Remarques / Commentaires
+            </label>
+            <textarea 
+              id="remarques"
+              name="remarques"
+              rows="4"
+              placeholder="Ajoutez vos remarques ou commentaires..."
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Boutons -->
+          <div class="flex gap-4">
+            <button 
+              type="submit"
+              class="flex-1 bg-green-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-green-700 transition-all shadow-lg hover:shadow-xl"
+            >
+              <i class="fas fa-check-circle mr-2"></i>
+              Valider le Déchargement
+            </button>
+            <a 
+              href="/accueil-chauffeur"
+              class="bg-gray-200 text-gray-800 px-6 py-4 rounded-lg font-semibold hover:bg-gray-300 transition-all"
+            >
+              <i class="fas fa-times mr-2"></i>
+              Annuler
+            </a>
+          </div>
+        </form>
+
+        <!-- Messages de succès/erreur -->
+        <div id="success-message" class="hidden mt-6 bg-green-100 border-2 border-green-500 rounded-xl p-6 text-center">
+          <div class="text-5xl mb-4">✅</div>
+          <h2 class="text-2xl font-bold text-green-800 mb-2">Déchargement Validé !</h2>
+          <p class="text-green-700 mb-4">Les informations ont été enregistrées avec succès.</p>
+          <div class="flex gap-4 justify-center">
+            <a href="/accueil-chauffeur" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-all">
+              <i class="fas fa-home mr-2"></i>
+              Retour à l'accueil
+            </a>
+            <button onclick="window.location.reload()" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-all">
+              <i class="fas fa-redo mr-2"></i>
+              Nouveau formulaire
+            </button>
+          </div>
+        </div>
+
+        <div id="error-message" class="hidden mt-6 bg-red-100 border-2 border-red-500 rounded-xl p-6 text-center">
+          <div class="text-5xl mb-4">❌</div>
+          <h2 class="text-2xl font-bold text-red-800 mb-2">Erreur</h2>
+          <p id="error-text" class="text-red-700 mb-4"></p>
+          <button onclick="document.getElementById('error-message').classList.add('hidden')" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-all">
+            <i class="fas fa-times mr-2"></i>
+            Fermer
+          </button>
+        </div>
+      </div>
+
+      <script>
+        // Afficher le champ "Autres" si coché
+        document.getElementById('probleme-autres').addEventListener('change', function() {
+          const autresDetails = document.getElementById('autres-details');
+          if (this.checked) {
+            autresDetails.classList.remove('hidden');
+            document.getElementById('autres-commentaire').setAttribute('required', 'required');
+          } else {
+            autresDetails.classList.add('hidden');
+            document.getElementById('autres-commentaire').removeAttribute('required');
+            document.getElementById('autres-commentaire').value = '';
+          }
+        });
+
+        // Soumission du formulaire
+        document.getElementById('fin-dechargement-form').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(this);
+          const data = {
+            quai_numero: \${quaiNumero},
+            nom_agent: formData.get('nom_agent'),
+            palettes_attendues: parseInt(formData.get('palettes_attendues')),
+            palettes_recues: parseInt(formData.get('palettes_recues')),
+            palettes_a_rendre: formData.get('palettes_a_rendre'),
+            problemes: formData.getAll('probleme[]'),
+            autres_commentaire: formData.get('autres_commentaire'),
+            remarques: formData.get('remarques'),
+            timestamp: new Date().toISOString()
+          };
+
+          console.log('📦 Données du formulaire:', data);
+
+          try {
+            const response = await fetch('/api/fin-dechargement', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            console.log('✅ Réponse API:', result);
+
+            if (result.success) {
+              // Cacher le formulaire
+              document.getElementById('fin-dechargement-form').classList.add('hidden');
+              // Afficher le message de succès
+              document.getElementById('success-message').classList.remove('hidden');
+              // Scroll vers le haut
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              throw new Error(result.error || 'Erreur inconnue');
+            }
+          } catch (error) {
+            console.error('❌ Erreur:', error);
+            document.getElementById('error-text').textContent = error.message || 'Impossible d\\'enregistrer les données';
+            document.getElementById('error-message').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      </script>
+    </body>
+    </html>
+  `)
+})
+
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
 // Page consignes - Redirection vers fichiers HTML statiques (Cloudflare Pages sert automatiquement public/)
@@ -870,6 +1274,113 @@ app.get('/api/quais', async (c) => {
     return c.json({ success: true, quais: results })
   } catch (error) {
     console.error('Erreur récupération quais:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// API: Enregistrer les données de fin de déchargement
+app.post('/api/fin-dechargement', async (c) => {
+  try {
+    const data = await c.req.json()
+    console.log('📦 Données reçues fin déchargement:', data)
+
+    // Validation des données
+    if (!data.quai_numero || !data.nom_agent || !data.palettes_attendues || !data.palettes_recues || !data.palettes_a_rendre) {
+      return c.json({ success: false, error: 'Données manquantes' }, 400)
+    }
+
+    // Créer la table si elle n'existe pas
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS fin_dechargement (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        quai_numero INTEGER NOT NULL,
+        nom_agent TEXT NOT NULL,
+        palettes_attendues INTEGER NOT NULL,
+        palettes_recues INTEGER NOT NULL,
+        palettes_a_rendre TEXT NOT NULL,
+        problemes TEXT,
+        autres_commentaire TEXT,
+        remarques TEXT,
+        timestamp TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
+
+    // Convertir le tableau de problèmes en JSON string
+    const problemesJson = JSON.stringify(data.problemes || [])
+
+    // Insérer les données
+    const result = await c.env.DB.prepare(`
+      INSERT INTO fin_dechargement (
+        quai_numero, nom_agent, palettes_attendues, palettes_recues,
+        palettes_a_rendre, problemes, autres_commentaire, remarques, timestamp
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      data.quai_numero,
+      data.nom_agent,
+      data.palettes_attendues,
+      data.palettes_recues,
+      data.palettes_a_rendre,
+      problemesJson,
+      data.autres_commentaire || null,
+      data.remarques || null,
+      data.timestamp
+    ).run()
+
+    console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
+
+    // Mettre à jour le statut du quai à "disponible"
+    await c.env.DB.prepare(`
+      UPDATE quai_status 
+      SET statut = 'disponible', 
+          timer_start = NULL,
+          commentaire = NULL,
+          commentaire_auteur = NULL,
+          updated_at = datetime('now')
+      WHERE quai_numero = ?
+    `).bind(data.quai_numero).run()
+
+    console.log('✅ Quai', data.quai_numero, 'marqué comme disponible')
+
+    return c.json({ 
+      success: true, 
+      id: result.meta.last_row_id,
+      message: 'Déchargement enregistré avec succès'
+    })
+  } catch (error) {
+    console.error('❌ Erreur enregistrement fin déchargement:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// API: Récupérer l'historique des fins de déchargement
+app.get('/api/fin-dechargement', async (c) => {
+  try {
+    const quai = c.req.query('quai')
+    const limit = parseInt(c.req.query('limit') || '50')
+    
+    let query = 'SELECT * FROM fin_dechargement'
+    let params = []
+    
+    if (quai) {
+      query += ' WHERE quai_numero = ?'
+      params.push(parseInt(quai))
+    }
+    
+    query += ' ORDER BY created_at DESC LIMIT ?'
+    params.push(limit)
+    
+    const { results } = await c.env.DB.prepare(query).bind(...params).all()
+    
+    // Parser les problèmes JSON
+    const formattedResults = results.map(row => ({
+      ...row,
+      problemes: JSON.parse(row.problemes || '[]')
+    }))
+    
+    return c.json({ success: true, data: formattedResults })
+  } catch (error) {
+    console.error('❌ Erreur récupération fins déchargement:', error)
     return c.json({ success: false, error: error.message }, 500)
   }
 })
