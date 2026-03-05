@@ -498,7 +498,7 @@ export function AccueilChauffeurPage() {
       <script src="/static/accueil-chauffeur-quais.js"></script>
       
       {/* Script de Scan Manuel */}
-      <script>{`
+      <script dangerouslySetInnerHTML={{ __html: `
         function triggerManualScan() {
           const input = document.getElementById('manual-scan-input');
           const resultDiv = document.getElementById('manual-scan-result');
@@ -518,7 +518,7 @@ export function AccueilChauffeurPage() {
             resultDiv.innerHTML = '<span class="text-green-200">✅ Code scanné : ' + barcode + '</span>';
             
             // Effacer l'input après 1 seconde
-            setTimeout(() => {
+            setTimeout(function() {
               input.value = '';
               resultDiv.innerHTML = '';
             }, 2000);
@@ -529,17 +529,17 @@ export function AccueilChauffeurPage() {
         }
         
         // Auto-focus sur l'input au chargement
-        window.addEventListener('load', () => {
+        window.addEventListener('load', function() {
           const input = document.getElementById('manual-scan-input');
           if (input) {
             // Focus uniquement si on est sur l'onglet Quais
-            const quaisTab = document.querySelector('[onclick*="showTab(\\'quais\\')"]');
+            const quaisTab = document.getElementById('tab-quais');
             if (quaisTab && quaisTab.classList.contains('tab-active')) {
-              setTimeout(() => input.focus(), 500);
+              setTimeout(function() { input.focus(); }, 500);
             }
           }
         });
-      `}</script>
+      ` }} />
       
       {/* Script Scanner Code-Barres pour Quais */}
       <script src="/static/barcode-scanner.js"></script>
