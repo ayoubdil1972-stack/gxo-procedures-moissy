@@ -234,6 +234,44 @@ export function AccueilChauffeurPage() {
             </div>
           </div>
 
+          {/* Interface de Scan Manuel - NOUVELLE FONCTIONNALITÉ */}
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-xl p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-center gap-4">
+              <div class="flex-shrink-0">
+                <div class="bg-white/20 rounded-full p-4">
+                  <i class="fas fa-qrcode text-white text-4xl"></i>
+                </div>
+              </div>
+              <div class="flex-1 text-center md:text-left">
+                <h3 class="text-2xl font-bold text-white mb-2">
+                  Scanner un Code-Barres
+                </h3>
+                <p class="text-white/90 text-sm">
+                  Tapez ou collez le code (ex: D075, D001) puis appuyez sur Entrée ou Scanner
+                </p>
+              </div>
+              <div class="flex-1 max-w-md">
+                <div class="flex gap-2">
+                  <input 
+                    type="text" 
+                    id="manual-scan-input"
+                    placeholder="Code-barres (ex: D075)"
+                    class="flex-1 px-4 py-3 rounded-lg border-2 border-white/30 bg-white/10 text-white placeholder-white/60 focus:outline-none focus:border-white focus:bg-white/20 font-mono text-lg uppercase"
+                    onkeypress="if(event.key==='Enter') triggerManualScan()"
+                  />
+                  <button 
+                    onclick="triggerManualScan()"
+                    class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+                  >
+                    <i class="fas fa-search"></i>
+                    Scanner
+                  </button>
+                </div>
+                <div id="manual-scan-result" class="mt-2 text-sm"></div>
+              </div>
+            </div>
+          </div>
+
           {/* Grille des 45 quais GXO Moissy - Organisation par zones */}
           <div class="space-y-6">
             {/* Zone 1-10 */}
@@ -458,6 +496,50 @@ export function AccueilChauffeurPage() {
       
       {/* Script Gestion des Quais (version intégrée) */}
       <script src="/static/accueil-chauffeur-quais.js"></script>
+      
+      {/* Script de Scan Manuel */}
+      <script>{`
+        function triggerManualScan() {
+          const input = document.getElementById('manual-scan-input');
+          const resultDiv = document.getElementById('manual-scan-result');
+          const barcode = input.value.trim().toUpperCase();
+          
+          if (!barcode) {
+            resultDiv.innerHTML = '<span class="text-red-200">⚠️ Veuillez saisir un code-barres</span>';
+            return;
+          }
+          
+          console.log('🔍 Scan manuel déclenché:', barcode);
+          resultDiv.innerHTML = '<span class="text-yellow-200">⏳ Traitement en cours...</span>';
+          
+          // Appeler la fonction de scan du barcode-scanner.js
+          if (typeof handleBarcodeScan === 'function') {
+            handleBarcodeScan(barcode);
+            resultDiv.innerHTML = '<span class="text-green-200">✅ Code scanné : ' + barcode + '</span>';
+            
+            // Effacer l'input après 1 seconde
+            setTimeout(() => {
+              input.value = '';
+              resultDiv.innerHTML = '';
+            }, 2000);
+          } else {
+            resultDiv.innerHTML = '<span class="text-red-200">❌ Scanner non initialisé. Rechargez la page.</span>';
+            console.error('handleBarcodeScan non disponible');
+          }
+        }
+        
+        // Auto-focus sur l'input au chargement
+        window.addEventListener('load', () => {
+          const input = document.getElementById('manual-scan-input');
+          if (input) {
+            // Focus uniquement si on est sur l'onglet Quais
+            const quaisTab = document.querySelector('[onclick*="showTab(\\'quais\\')"]');
+            if (quaisTab && quaisTab.classList.contains('tab-active')) {
+              setTimeout(() => input.focus(), 500);
+            }
+          }
+        });
+      `}</script>
       
       {/* Script Scanner Code-Barres pour Quais */}
       <script src="/static/barcode-scanner.js"></script>
