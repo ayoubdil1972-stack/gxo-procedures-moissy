@@ -2,16 +2,34 @@
 
 Application de formation et gestion pour les chauffeurs GXO Logistics - Site de Moissy-Cramayel.
 
-**Version** : 2.3.0 - STABLE | **Date** : 2026-03-04
+**Version** : 2.5.2 - STABLE | **Date** : 2026-03-04
 
-## 🎯 Fonctionnalités principales (v2.3.0)
+## 🎯 Fonctionnalités principales (v2.5.2)
 
-### 🆕 NOUVEAU - Gestion des Quais avec Timer Fonctionnel (v2.3.0) ✅
-- **30 quais de déchargement** gérés visuellement en temps réel
+### 🆕 NOUVEAU - Gestion des 45 Quais avec Organisation par Zones (v2.5.0) ✅
+- **45 quais de déchargement GXO Moissy** gérés visuellement en temps réel
+- **Organisation en 6 zones ergonomiques** :
+  - 🔵 **Zone A (Quais 1-10)** - 10 quais
+  - 🟣 **Zone B (Quais 32-38)** - 7 quais
+  - 🟠 **Zone C (Quais 45-49)** - 5 quais
+  - 🔷 **Zone D (Quais 60-62, 67-69)** - 6 quais
+  - 🌸 **Zone E (Quais 75-79, 81-87)** - 12 quais
+  - 🟦 **Zone F (Quais 99-103)** - 5 quais
+- **Grille responsive standardisée** (v2.5.2) :
+  - Mobile : 2 colonnes
+  - Petit écran : 3 colonnes
+  - Moyen/Grand écran : 5 colonnes
+  - **Toutes les zones identiques visuellement**
 - **3 statuts avec codes couleur** :
-  - 🟢 **Disponible** (vert) - Prêt pour chargement/déchargement
-  - 🟡 **En cours d'utilisation** (jaune) - Timer automatique HH:MM:SS
-  - 🔴 **Indisponible** (rouge) - Avec commentaire obligatoire
+  - ✅ **Disponible - Prêt pour chargement** (vert)
+  - ⏱️ **En cours d'utilisation - Timer actif** (jaune) 
+  - 🚫 **Indisponible - Problème signalé** (rouge)
+- **Modal de gestion fonctionnel** (v2.5.1) ✅ :
+  - 3 boutons pour changer le statut
+  - Validation immédiate pour "Disponible" et "En cours"
+  - Champ commentaire obligatoire pour "Indisponible"
+  - Toast de confirmation après chaque action
+  - Fonctions globalement accessibles (window.xxx)
 - **Timer automatique validé** ✅ : 
   - Démarre à **00:00:00** à chaque mise en "En cours"
   - S'incrémente chaque seconde (HH:MM:SS)
@@ -24,7 +42,8 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - **Statistiques temps réel** : Badges avec nombre de quais Disponibles, En cours, Indisponibles
 - **Intégré dans Accueil Chauffeur** : Interface unifiée et cohérente, tout en un seul endroit
 - **Persistance Cloudflare D1** : Statuts et timers stockés en base de données
-- **Affichage responsive** : Grille 6×5 pour desktop, adaptée pour mobile
+- **Design moderne** : Cartes avec dégradés, ombres, animations hover
+- **Interface cohérente** : Même style pour toutes les cartes et zones
 
 ### ✅ Chat bidirectionnel avec traduction automatique (v2.1.0)
 - **Communication en temps réel** : Admin ↔ Chauffeur
@@ -49,12 +68,6 @@ Application de formation et gestion pour les chauffeurs GXO Logistics - Site de 
 - **Responsive** : Fonctionne sur mobile et desktop
 - **Stable** : Pas de problème de cache Cloudflare
 
-### ✅ Chat bidirectionnel avec traduction automatique
-- **Communication en temps réel** : Admin ↔ Chauffeur
-- **Traduction automatique** : Italien ↔ Français (extensible à toutes les 12 langues)
-- **Rafraîchissement automatique** : Messages apparaissent sans recharger
-- **Badge compteur** : Nombre de messages non lus
-
 ### ✅ Système de statut en ligne/hors ligne
 - **Heartbeat automatique** : Toutes les 5 secondes depuis la page chauffeur
 - **Badge visuel** : 🟢 "En ligne" (vert) / "Hors ligne" (gris)
@@ -75,9 +88,32 @@ Chaque rubrique dispose de procédures détaillées :
 - **Administrateur** : 5 procédures (sans checklist)
 - **Accueil Chauffeur** : 4 procédures (sans checklist)
 
-## 🐛 Corrections v2.3.0
+## 🐛 Corrections v2.5.2
 
-### Timer des Quais - Corrections Majeures ✅
+### Interface Uniformisée pour Toutes les Zones ✅
+- ✅ **Fix grilles différentes** : Toutes les zones ont maintenant la même grille responsive (2-3-5-5 colonnes)
+- ✅ **Fix Zone B** : Ancienne grille 2-3-4-7 → Nouvelle grille 2-3-5-5 (identique aux autres)
+- ✅ **Fix Zone D** : Ancienne grille 2-3-3-6 → Nouvelle grille 2-3-5-5 (identique aux autres)
+- ✅ **Fix Zone E** : Ancienne grille 2-4-6-6 → Nouvelle grille 2-3-5-5 (identique aux autres)
+- ✅ **Interface cohérente** : Toutes les cartes et zones visuellement identiques
+- ✅ **Même espacement** : Gap-3 uniforme dans toutes les zones
+
+### Modal de Gestion Fonctionnel (v2.5.1) ✅
+- ✅ **Fix fonctions globales** : openQuaiModal, closeQuaiModal, setQuaiStatus, toggleCommentaire exportées via window.xxx
+- ✅ **Fix éléments DOM** : Suppression des références à modal-quai-statut (obsolète)
+- ✅ **Fix validation** : Ajout de vérifications d'existence des éléments (?.value)
+- ✅ **Fix logs debug** : Console logs détaillés pour faciliter le dépannage
+- ✅ **Fix logique modal** : Correction de l'ouverture, fermeture et gestion des statuts
+
+### Organisation par Zones Ergonomiques (v2.5.0) ✅
+- ✅ **45 quais réels GXO Moissy** : Passage de 30 à 45 quais
+- ✅ **Organisation en 6 zones** : A, B, C, D, E, F avec couleurs distinctes
+- ✅ **Design moderne** : Cartes arrondies avec dégradés et ombres
+- ✅ **Commentaires visibles** : Auteur, date, contenu affichés sur les cartes
+- ✅ **Légende des statuts** : Section dédiée avec explications claires
+- ✅ **Interface responsive** : Adaptation mobile/tablette/desktop
+
+### Timer des Quais - Corrections Majeures (v2.3.0) ✅
 - ✅ **Fix validation stricte `timer_start`** : Empêche l'affichage de NaN:NaN:NaN
 - ✅ **Fix parsing SQLite datetime** : Frontend parse correctement les dates SQLite (`YYYY-MM-DD HH:MM:SS`)
 - ✅ **Fix reset complet du timer** : Timer repart toujours de 00:00:00 à chaque nouveau cycle
@@ -92,6 +128,11 @@ Chaque rubrique dispose de procédures détaillées :
 - 📋 **GUIDE_DEPLOIEMENT_PRODUCTION_QUAIS.md** : Guide de déploiement en production
 
 ### Tests Validés
+- ✅ 45 quais s'affichent correctement
+- ✅ Organisation en 6 zones visuellement distinctes
+- ✅ Toutes les zones ont la même grille responsive
+- ✅ Modal s'ouvre et se ferme correctement
+- ✅ 3 statuts fonctionnels avec validation appropriée
 - ✅ Timer démarre à 00:00:00
 - ✅ Timer s'incrémente correctement (HH:MM:SS)
 - ✅ Timer disparaît en mode "Disponible"
@@ -99,6 +140,9 @@ Chaque rubrique dispose de procédures détaillées :
 - ✅ Timer persiste après rafraîchissement de page
 - ✅ Aucun affichage de NaN:NaN:NaN
 - ✅ Plusieurs timers peuvent tourner simultanément
+- ✅ Commentaires obligatoires pour "Indisponible"
+- ✅ Toast de succès après chaque action
+- ✅ Interface cohérente sur tous les écrans
 
 ## 🌐 URLs
 
@@ -110,7 +154,7 @@ Chaque rubrique dispose de procédures détaillées :
 
 ### 📋 Pages principales :
 ```
-✅ https://gxomoissyprocedures.com/accueil-chauffeur     ← DASHBOARD avec onglets Chauffeurs/Quais
+✅ https://gxomoissyprocedures.com/accueil-chauffeur     ← DASHBOARD avec onglets Chauffeurs/Quais (45 quais)
 ✅ https://gxomoissyprocedures.com/reception              ← Checklist interactive
 ✅ https://gxomoissyprocedures.com/controleur             ← Sans checklist
 ✅ https://gxomoissyprocedures.com/agent-quai             ← Sans checklist
@@ -154,7 +198,7 @@ Chaque rubrique dispose de procédures détaillées :
 **Formulaire simplifié** :
 - Pseudo/Nom du chauffeur
 - Entreprise
-- Numéro de quai (sélection 1-30)
+- Numéro de quai (sélection parmi les 45 quais GXO)
 - Aucun champ obligatoire
 
 ### 5️⃣ Tâches en Temps Réel (Version française)
@@ -183,7 +227,7 @@ Chaque rubrique dispose de procédures détaillées :
 ### 6️⃣ Dashboard Admin - Accueil Chauffeur
 **https://gxomoissyprocedures.com/accueil-chauffeur**
 
-**Système d'onglets ergonomique** (v2.2.1):
+**Système d'onglets ergonomique** (v2.5.2):
 - 🟠 **Onglet "Chauffeurs Actifs"** (actif par défaut)
   - Liste des chauffeurs actifs en temps réel
   - Avatar + nom + entreprise + numéro de quai
@@ -196,14 +240,17 @@ Chaque rubrique dispose de procédures détaillées :
   - Bouton "Clôturer" pour terminer un chauffeur
   - Statistiques en temps réel (Total, Prêts, En cours)
 
-- 🟢 **Onglet "Gestion des Quais"** (v2.2.0)
-  - Grille de 30 quais (5×6) avec statuts colorés
-  - Statistiques : Disponibles, En cours, Indisponibles
-  - Clic sur un quai → Modal de changement de statut
-  - Timer automatique pour quais "En cours"
-  - Commentaires obligatoires pour quais "Indisponibles"
-  - Rafraîchissement automatique toutes les 30 secondes
-  - Légende des statuts avec codes couleur
+- 🟢 **Onglet "Gestion des Quais"** (v2.5.0 → v2.5.2)
+  - **45 quais GXO Moissy** organisés en 6 zones (A-F)
+  - **Zones ergonomiques** avec couleurs distinctes
+  - **Grille responsive uniforme** : 2-3-5-5 colonnes pour toutes les zones
+  - **Statistiques** : Disponibles, En cours, Indisponibles
+  - **Modal de gestion** : 3 boutons pour changer le statut
+  - **Timer automatique** : HH:MM:SS pour quais "En cours"
+  - **Commentaires obligatoires** : Pour quais "Indisponibles"
+  - **Rafraîchissement automatique** : Toutes les 30 secondes
+  - **Légende des statuts** : Avec codes couleur
+  - **Design moderne** : Cartes avec dégradés, ombres, animations
 
 **Navigation** :
 - Clic sur un onglet → Bascule instantanée entre sections
@@ -213,6 +260,8 @@ Chaque rubrique dispose de procédures détaillées :
 ## 📱 Fonctionnalités
 
 ### Pour les administrateurs (Intranet)
+- ✅ **Gestion de 45 quais en 6 zones** : Interface moderne et ergonomique
+- ✅ **Modal de gestion intuitif** : 3 boutons pour changer les statuts
 - ✅ **Checklist interactive sur Réception uniquement** : Modal détaillé avec 8 procédures
 - ✅ **Gestion des procédures** : Réception, Contrôle, Agent Quai, Admin, Accueil
 - ✅ **Documentation accessible** : Procédures détaillées étape par étape
@@ -227,7 +276,7 @@ Chaque rubrique dispose de procédures détaillées :
 - ✅ **Interface responsive** avec design moderne et animations
 - ✅ **Fichiers HTML statiques** ultra-rapides (servis via CDN Cloudflare)
 - ✅ **Support parfait** sur iPhone/Android
-- ✅ **Inscription simplifiée** (pseudo, entreprise, quai 1-30)
+- ✅ **Inscription simplifiée** (pseudo, entreprise, quai parmi les 45)
 - ✅ **Page des tâches en temps réel** avec 5 tâches EPI
 - ✅ **Validation immédiate** avec animation et badge vert
 - ✅ **Barre de progression** dynamique (0% → 100%)
@@ -266,7 +315,7 @@ webapp/
 │   │   ├── controleur.tsx     # 5 procédures sans checklist
 │   │   ├── agent-quai.tsx     # 6 procédures sans checklist
 │   │   ├── administrateur.tsx # 5 procédures sans checklist
-│   │   ├── accueil-chauffeur.tsx  # 4 procédures sans checklist
+│   │   ├── accueil-chauffeur.tsx  # 4 procédures + Dashboard 45 quais
 │   │   ├── chauffeur-langue.tsx
 │   │   ├── chauffeur-inscription.tsx
 │   │   └── ...
@@ -276,11 +325,14 @@ webapp/
 │   ├── consignes/             # 12 fichiers HTML statiques
 │   └── static/
 │       ├── app.js             # ✅ Fonction showChecklistInteractive()
+│       ├── accueil-chauffeur-quais.js  # ✅ Gestion 45 quais avec zones
+│       ├── accueil-chauffeur-tabs.js   # ✅ Système d'onglets
+│       ├── accueil-chauffeur-dashboard.js  # ✅ Dashboard chauffeurs
 │       ├── images/            # Logos et images
 │       └── *.js               # Scripts frontend
 ├── migrations/                # Migrations D1 (base de données)
 ├── dist/                      # Build output (généré)
-│   ├── _worker.js             # Worker Cloudflare compilé (245.72 kB)
+│   ├── _worker.js             # Worker Cloudflare compilé (267 kB)
 │   ├── _routes.json           # Configuration des routes
 │   └── consignes/             # Fichiers HTML statiques copiés
 ├── wrangler.jsonc             # Configuration Cloudflare
@@ -298,6 +350,8 @@ Toutes les pages sont optimisées pour mobile et testées sur :
 - ✅ Design responsive avec Tailwind CSS
 - ✅ Logo GXO visible
 - ✅ Contenu lisible et bien formaté
+- ✅ Grille responsive uniforme pour les 45 quais
+- ✅ Modal de gestion fonctionnel sur mobile
 - ✅ Checklist interactive fonctionnelle sur page Réception
 - ✅ Support parfait des caractères spéciaux (12 langues)
 
@@ -327,6 +381,10 @@ npm run dev:sandbox
 - **GET** `/api/chauffeur/liste` - Liste des chauffeurs actifs
 - **POST** `/api/admin/cloturer-chauffeur` - Clôturer un chauffeur
 
+### Quais (v2.5.0)
+- **GET** `/api/quais` - Liste des 45 quais avec statuts
+- **POST** `/api/quais/{numero}` - Mettre à jour le statut d'un quai
+
 ## 📄 Documentation
 
 - [Solution Finale v17.1.0](./SOLUTION_FINALE_V17.md) - Documentation complète
@@ -335,29 +393,33 @@ npm run dev:sandbox
 
 ## 🎯 Statut
 
-- ✅ Version 2.2.1 déployée
+- ✅ Version 2.5.2 déployée
+- ✅ 45 quais GXO Moissy organisés en 6 zones ergonomiques
+- ✅ Grille responsive uniforme pour toutes les zones
+- ✅ Modal de gestion fonctionnel avec 3 statuts
+- ✅ Timer automatique HH:MM:SS validé
 - ✅ Système d'onglets ergonomique entre Chauffeurs et Quais
-- ✅ Gestion visuelle de 30 quais avec timer automatique
 - ✅ Chat bidirectionnel avec Google Cloud Translation API
 - ✅ Support de 13 langues européennes
 - ✅ Checklist interactive sur Réception uniquement
-- ✅ Build optimisé (261.70 KB)
+- ✅ Build optimisé (267 KB)
 - ✅ Base de données D1 configurée (gxo-chauffeurs-db)
 - ✅ Déployé sur domaines personnalisés
 - ✅ Toutes les APIs testées
 - ✅ Dashboard admin temps réel avec onglets
 - ✅ Interface responsive mobile et desktop
+- ✅ Design moderne et cohérent
 
 ## 📊 Statistiques de Performance
 
-- **Bundle Worker**: 261.70 KB
+- **Bundle Worker**: 267 KB
 - **Fichiers statiques**: 12 fichiers HTML (~7 KB chacun) + Scripts JS
 - **Temps de chargement**: < 100ms (CDN Cloudflare)
 - **Compatibilité**: 100% mobile et desktop
 - **Procédures**: 28+ procédures disponibles
 - **Rubriques**: 5 sections complètes
 - **Checklists interactives**: 1 rubrique (Réception)
-- **Quais gérés**: 30 avec 3 statuts
+- **Quais gérés**: 45 organisés en 6 zones
 - **Langues supportées**: 13 langues européennes
 - **Rafraîchissement automatique**: Dashboard 5s, Quais 30s, Chat 2s
 
@@ -370,8 +432,10 @@ npm run dev:sandbox
    - Inscription, tâches, statut, langue, entreprise
 2. **chat_messages** - Chat bilatéral avec traduction
    - Messages admin ↔ chauffeurs avec traductions FR et langue chauffeur
-3. **quai_status** - Gestion des 30 quais (v2.2.0, corrigé v2.3.0)
+3. **quai_status** - Gestion des 45 quais GXO Moissy (v2.5.0)
+   - 45 quais numérotés selon les zones réelles GXO
    - Statut, timer_start (SQLite datetime), commentaire, auteur, timestamps
+   - Organisation : Zones 1-10, 32-38, 45-49, 60-69, 75-87, 99-103
 
 ## 📞 Support
 
@@ -383,6 +447,45 @@ Pour toute question ou problème, consultez les guides de documentation dans le 
 ---
 
 ## 📜 Historique des Versions
+
+### v2.5.2 (4 mars 2026) - Grilles Uniformes ✅
+**Interface cohérente** :
+- ✅ Standardisation de toutes les grilles de zones (2-3-5-5 colonnes)
+- ✅ Fix Zone B : 2-3-4-7 → 2-3-5-5 colonnes
+- ✅ Fix Zone D : 2-3-3-6 → 2-3-5-5 colonnes
+- ✅ Fix Zone E : 2-4-6-6 → 2-3-5-5 colonnes
+- ✅ Toutes les zones visuellement identiques
+- ✅ Espacement uniforme (gap-3) dans toutes les zones
+- ✅ Interface professionnelle et cohérente
+
+**Commits** : `de5f0e9`  
+**Tag** : `v2.5.2`
+
+### v2.5.1 (4 mars 2026) - Modal de Gestion Fonctionnel ✅
+**Corrections modal** :
+- ✅ Ajout window.openQuaiModal, closeQuaiModal, setQuaiStatus, toggleCommentaire
+- ✅ Suppression références obsolètes (modal-quai-statut)
+- ✅ Ajout vérifications existence éléments (?.value)
+- ✅ Ajout logs debug détaillés (console.log)
+- ✅ Correction logique ouverture/fermeture modal
+- ✅ Fix gestion des 3 statuts avec validation appropriée
+
+**Commits** : `db88d0c`  
+**Tag** : `v2.5.1`
+
+### v2.5.0 (4 mars 2026) - 45 Quais avec Zones Ergonomiques ✅
+**Organisation par zones** :
+- ✅ Passage de 30 à 45 quais réels GXO Moissy
+- ✅ Organisation en 6 zones (A-F) avec couleurs distinctes
+- ✅ Design moderne : cartes arrondies, dégradés, ombres
+- ✅ Modal de gestion avec 3 boutons de statuts
+- ✅ Commentaires visibles avec auteur et date
+- ✅ Légende des statuts dédiée
+- ✅ Interface responsive adaptée aux 6 zones
+- ✅ Restauration de la version ergonomique (commit d364ab3)
+
+**Commits** : `8282429`  
+**Tag** : `v2.5.0`
 
 ### v2.3.0 (4 mars 2026) - Timer Quais Validé ✅
 **Corrections majeures** :
@@ -436,19 +539,26 @@ Pour toute question ou problème, consultez les guides de documentation dans le 
 
 ---
 
-**Dernière mise à jour :** 4 mars 2026 07:00 UTC  
-**Version :** 2.3.0 - Timer Quais Validé ✅  
+**Dernière mise à jour :** 4 mars 2026 12:00 UTC  
+**Version :** 2.5.2 - Grilles Uniformes ✅  
 **Statut :** ✅ Production - 100% Fonctionnel  
 **Déploiement principal :** https://gxomoissyprocedures.com  
-**Build Size :** 262.27 KB  
-**Tag GitHub :** v2.3.0  
-**Commit :** ec46844  
+**Build Size :** 267 KB  
+**Tag GitHub :** v2.5.2  
+**Commit :** de5f0e9  
 
-**Garanties v2.3.0** :
+**Garanties v2.5.2** :
+- ✅ 45 quais GXO Moissy organisés en 6 zones (A-F)
+- ✅ Grilles responsive uniformes pour toutes les zones (2-3-5-5 colonnes)
+- ✅ Modal de gestion fonctionnel avec 3 statuts
 - ✅ Timer démarre toujours à 00:00:00
 - ✅ Timer s'incrémente correctement (HH:MM:SS)
 - ✅ Aucun affichage de NaN:NaN:NaN
 - ✅ Reset complet à chaque cycle
 - ✅ Persistance après rafraîchissement
 - ✅ Timers multiples simultanés fonctionnels
-- ✅ Interface responsive et moderne
+- ✅ Commentaires obligatoires pour "Indisponible"
+- ✅ Toast de succès après chaque action
+- ✅ Interface cohérente et professionnelle
+- ✅ Design moderne avec dégradés et animations
+- ✅ Responsive parfait mobile/tablette/desktop
