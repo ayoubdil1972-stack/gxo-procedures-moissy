@@ -20,6 +20,7 @@ import { ChauffeurInscriptionPage } from './pages/chauffeur-inscription'
 import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
 import { GestionQuaisPage } from './pages/gestion-quais'
+import { PDFBarcodesPage } from './pages/pdf-barcodes'
 import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
@@ -51,6 +52,11 @@ app.get('/chauffeur/langue', loginRenderer, (c) => c.render(<ChauffeurLanguePage
 
 // Page gestion des quais (interface avec glissement)
 app.get('/gestion-quais', loginRenderer, (c) => c.render(<GestionQuaisPage />))
+
+// Page générateur PDF codes-barres (raw HTML)
+app.get('/pdf-barcodes', (c) => {
+  return c.html(PDFBarcodesPage())
+})
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
