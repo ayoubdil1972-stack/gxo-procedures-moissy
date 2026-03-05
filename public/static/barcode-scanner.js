@@ -44,6 +44,9 @@ function initBarcodeScanner() {
   // Activer les listeners
   attachScannerListeners()
   
+  // Protéger les champs de saisie contre le vol de focus
+  protectInputFields()
+  
   // Afficher l'indicateur de scanner actif
   showScannerIndicator()
   
@@ -53,7 +56,65 @@ function initBarcodeScanner() {
 }
 
 /**
+ * Protège tous les champs de saisie contre le vol de focus
+ */
+function protectInputFields() {
+  console.log('🛡️ Protection des champs de saisie...')
+  
+  // Fonction pour protéger un champ
+  function protectField(field) {
+    if (field.id === 'barcode-scan-input') {
+      return // Ne pas protéger l'input du scanner lui-même
+    }
+    
+    // Empêcher la perte de focus quand on clique dedans
+    field.addEventListener('focus', (e) => {
+      console.log('🔒 Champ protégé a reçu le focus:', field.id || field.name || field.placeholder)
+      e.stopPropagation()
+    }, { capture: true })
+    
+    // Empêcher blur non désiré
+    field.addEventListener('blur', (e) => {
+      // Remettre le focus immédiatement si blur causé par le scanner
+      const relatedTarget = e.relatedTarget
+      if (relatedTarget && relatedTarget.id === 'barcode-scan-input') {
+        console.log('⚠️ Blur causé par scanner, restauration du focus sur:', field.id || field.placeholder)
+        e.preventDefault()
+        setTimeout(() => field.focus(), 10)
+      }
+    }, { capture: true })
+  }
+  
+  // Protéger tous les inputs et textareas existants
+  setTimeout(() => {
+    document.querySelectorAll('input:not(#barcode-scan-input), textarea').forEach(protectField)
+    console.log('✅ Champs de saisie protégés')
+  }, 500)
+  
+  // Observer les nouveaux champs ajoutés dynamiquement
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if ((node.tagName === 'INPUT' || node.tagName === 'TEXTAREA') && node.id !== 'barcode-scan-input') {
+          protectField(node)
+        }
+        // Chercher aussi dans les enfants
+        if (node.querySelectorAll) {
+          node.querySelectorAll('input:not(#barcode-scan-input), textarea').forEach(protectField)
+        }
+      })
+    })
+  })
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  })
+}
+
+/**
  * Crée un input caché pour capturer les scans du scanner HID
+ * IMPORTANT : Ne plus forcer le focus automatiquement pour permettre la saisie dans d'autres champs
  */
 function createHiddenScanInput() {
   // Vérifier si l'input existe déjà
@@ -70,15 +131,10 @@ function createHiddenScanInput() {
     document.body.appendChild(scanInput)
   }
   
-  // Garder le focus sur l'input
-  scanInput.focus()
+  // NE PLUS forcer le focus automatiquement
+  // L'input sera focusé uniquement via le listener click ci-dessous
   
-  // Remettre le focus si perdu
-  document.addEventListener('click', () => {
-    if (scannerState.isActive) {
-      scanInput.focus()
-    }
-  })
+  // Le listener click a été déplacé dans attachScannerListeners()
 }
 
 /**
@@ -143,19 +199,28 @@ function attachScannerListeners() {
   // À la place, on focus uniquement l'input de scan au clic sur la page
   // (mais pas quand on clique sur un autre input/textarea)
   document.addEventListener('click', (e) => {
-    // Ne pas récupérer le focus si on clique sur un input, textarea, button ou select
-    if (
-      e.target.tagName === 'INPUT' ||
-      e.target.tagName === 'TEXTAREA' ||
-      e.target.tagName === 'BUTTON' ||
-      e.target.tagName === 'SELECT' ||
-      e.target.closest('input, textarea, button, select')
-    ) {
+    // Liste complète des éléments interactifs à ignorer
+    const interactiveElements = ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT', 'A', 'LABEL']
+    
+    // Ne pas récupérer le focus si on clique sur un élément interactif
+    if (interactiveElements.includes(e.target.tagName)) {
+      console.log('🛑 Clic sur élément interactif, pas de focus scanner:', e.target.tagName)
       return
+    }
+    
+    // Vérifier aussi les parents (pour les clics à l'intérieur d'un élément)
+    let parent = e.target.parentElement
+    while (parent) {
+      if (interactiveElements.includes(parent.tagName)) {
+        console.log('🛑 Clic dans élément interactif (parent), pas de focus scanner:', parent.tagName)
+        return
+      }
+      parent = parent.parentElement
     }
     
     // Sinon, focus sur l'input de scan pour permettre le scan HID
     if (scannerState.isActive && scanInput) {
+      console.log('✅ Focus sur scanner HID (clic zone vide)')
       scanInput.focus()
     }
   })
