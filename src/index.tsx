@@ -21,6 +21,7 @@ import { ChauffeurTachesPage } from './pages/chauffeur-taches'
 import { AdminDashboardChauffeurs } from './pages/admin-dashboard-chauffeurs'
 import { GestionQuaisPage } from './pages/gestion-quais'
 import { PDFBarcodesPage } from './pages/pdf-barcodes'
+import { QRCodeGeneratorPage } from './pages/qrcode-generator'
 import * as workflowAPI from './routes/chauffeur-workflow-api'
 
 type Bindings = {
@@ -56,6 +57,185 @@ app.get('/gestion-quais', loginRenderer, (c) => c.render(<GestionQuaisPage />))
 // Page générateur PDF codes-barres (raw HTML)
 app.get('/pdf-barcodes', (c) => {
   return c.html(PDFBarcodesPage())
+})
+
+// Page générateur QR Codes avec URL automatique
+app.get('/qrcode-generator', (c) => {
+  return c.html(QRCodeGeneratorPage())
+})
+
+// ===== ROUTE DE SCAN AUTOMATIQUE QR CODE =====
+// Cette route est appelée automatiquement quand on scanne un QR Code
+// URL Format: https://gxomoissyprocedures.com/scan?quai=75
+app.get('/scan', (c) => {
+  const quaiNumero = c.req.query('quai')
+  const action = c.req.query('action') || 'start' // start, stop, info
+  
+  // Validation du numéro de quai
+  if (!quaiNumero) {
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erreur - Scanner GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
+          <div class="text-6xl mb-4">❌</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-4">Code-barres invalide</h1>
+          <p class="text-gray-600 mb-6">Le QR Code scanné ne contient pas de numéro de quai valide.</p>
+          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
+            Retour à l'accueil
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  }
+  
+  // Page de traitement automatique du scan
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Scan Quai ${quaiNumero} - GXO Moissy</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gradient-to-br from-blue-500 to-purple-600 min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+        <!-- État de chargement -->
+        <div id="loading" class="text-center">
+          <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto mb-6"></div>
+          <h1 class="text-2xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-qrcode text-blue-500 mr-2"></i>
+            Traitement du scan...
+          </h1>
+          <p class="text-gray-600">Quai ${quaiNumero}</p>
+        </div>
+        
+        <!-- Succès -->
+        <div id="success" class="hidden text-center">
+          <div class="text-6xl mb-4">✅</div>
+          <h1 class="text-2xl font-bold text-green-600 mb-2">Scan réussi !</h1>
+          <p class="text-gray-600 mb-4">Quai <span class="font-bold text-2xl text-blue-600">${quaiNumero}</span></p>
+          <div class="bg-green-50 border-2 border-green-500 rounded-xl p-4 mb-6">
+            <p class="text-sm text-green-800 font-semibold mb-2">
+              <i class="fas fa-check-circle mr-2"></i>
+              Timer démarré
+            </p>
+            <p class="text-xs text-green-700">Le quai est maintenant marqué comme "En cours d'utilisation"</p>
+          </div>
+          <div class="space-y-3">
+            <a href="/accueil-chauffeur" class="block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-all">
+              <i class="fas fa-home mr-2"></i>
+              Voir le tableau des quais
+            </a>
+            <button onclick="window.location.reload()" class="block w-full bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-all">
+              <i class="fas fa-redo mr-2"></i>
+              Scanner un autre quai
+            </button>
+          </div>
+        </div>
+        
+        <!-- Erreur -->
+        <div id="error" class="hidden text-center">
+          <div class="text-6xl mb-4">❌</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-2">Erreur</h1>
+          <p class="text-gray-600 mb-4" id="error-message">Une erreur s'est produite</p>
+          <div class="space-y-3">
+            <button onclick="window.location.reload()" class="block w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-all">
+              <i class="fas fa-redo mr-2"></i>
+              Réessayer
+            </button>
+            <a href="/accueil-chauffeur" class="block bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-all">
+              <i class="fas fa-home mr-2"></i>
+              Retour à l'accueil
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <script>
+        // Auto-démarrage du timer pour le quai scanné
+        async function autoStartQuai() {
+          const quaiNumero = ${quaiNumero};
+          const action = '${action}';
+          
+          console.log('🎯 Scan automatique détecté:', quaiNumero);
+          console.log('📍 URL:', window.location.href);
+          console.log('⚡ Action:', action);
+          
+          try {
+            // Appel API pour démarrer le timer
+            const response = await fetch('/api/quais/' + quaiNumero, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                statut: 'en_cours',
+                commentaire: null,
+                commentaire_auteur: 'Scan QR Code'
+              })
+            });
+            
+            const data = await response.json();
+            console.log('✅ Réponse API:', data);
+            
+            if (data.success) {
+              // Enregistrer le scan dans l'historique
+              await fetch('/api/quai/scan', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  barcode: 'D' + String(quaiNumero).padStart(3, '0'),
+                  quai: quaiNumero,
+                  action: 'start_timer',
+                  timestamp: new Date().toISOString()
+                })
+              });
+              
+              // Afficher le succès
+              document.getElementById('loading').classList.add('hidden');
+              document.getElementById('success').classList.remove('hidden');
+              
+              // Notification sonore (si disponible)
+              try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUKXi7LhjHgU7k9nyw3YpBSh+zPDajToJFl628ux8JAU2jdXzxnwsBS1+zPDajToJF2628ux8JAU2jdXzxnwsBS1+zPDajToJF2628ux8JAU=');
+                audio.play().catch(() => console.log('Audio non disponible'));
+              } catch (e) {
+                console.log('Notification sonore non disponible');
+              }
+              
+              // Redirection automatique après 3 secondes
+              setTimeout(() => {
+                window.location.href = '/accueil-chauffeur';
+              }, 3000);
+            } else {
+              throw new Error(data.error || 'Erreur inconnue');
+            }
+          } catch (error) {
+            console.error('❌ Erreur:', error);
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.remove('hidden');
+            document.getElementById('error-message').textContent = error.message || 'Impossible de démarrer le timer';
+          }
+        }
+        
+        // Démarrage automatique au chargement de la page
+        window.addEventListener('load', autoStartQuai);
+      </script>
+    </body>
+    </html>
+  `)
 })
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
