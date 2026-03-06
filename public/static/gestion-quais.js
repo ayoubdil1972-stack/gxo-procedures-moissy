@@ -97,6 +97,10 @@ async function loadQuais() {
       if (quai.statut === 'en_cours' && quai.timer_start) {
         startTimer(quai.quai_numero, quai.timer_start)
       }
+      // Afficher le timer figé pour les quais en fin de déchargement
+      if (quai.statut === 'fin_dechargement' && quai.timer_start) {
+        displayFrozenTimer(quai.quai_numero, quai.timer_start)
+      }
     })
   } catch (error) {
     console.error('Erreur chargement quais:', error)
@@ -112,18 +116,21 @@ function renderQuais() {
     const statusColors = {
       'disponible': 'bg-green-500',
       'en_cours': 'bg-yellow-500',
+      'fin_dechargement': 'bg-blue-500',
       'indisponible': 'bg-red-500'
     }
     
     const statusIcons = {
       'disponible': 'fa-check-circle',
       'en_cours': 'fa-clock',
+      'fin_dechargement': 'fa-clipboard-check',
       'indisponible': 'fa-exclamation-triangle'
     }
     
     const statusLabels = {
       'disponible': 'Disponible',
       'en_cours': 'En cours',
+      'fin_dechargement': 'Fin de déchargement',
       'indisponible': 'Indisponible'
     }
     
@@ -145,10 +152,24 @@ function renderQuais() {
             </div>
           ` : ''}
           
+          ${quai.statut === 'fin_dechargement' && quai.timer_start ? `
+            <div class="text-xs mb-2 opacity-90">Timer figé:</div>
+            <div class="timer-display bg-black bg-opacity-30 rounded-lg py-2 px-3 mt-1" id="timer-${quai.quai_numero}">
+              00:00:00
+            </div>
+          ` : ''}
+          
           ${quai.statut === 'indisponible' ? `
             <div class="mt-2 text-xs opacity-90">
               <i class="fas fa-info-circle mr-1"></i>
               Cliquer pour détails
+            </div>
+          ` : ''}
+          
+          ${quai.statut === 'fin_dechargement' && quai.commentaire ? `
+            <div class="mt-2 text-xs opacity-90">
+              <i class="fas fa-info-circle mr-1"></i>
+              ${quai.commentaire}
             </div>
           ` : ''}
         </div>
@@ -184,6 +205,21 @@ function stopTimer(quaiNumero) {
     clearInterval(timerIntervals[quaiNumero])
     delete timerIntervals[quaiNumero]
   }
+}
+
+// Afficher le timer figé pour les quais en fin de déchargement
+function displayFrozenTimer(quaiNumero, timerStart) {
+  const timerElement = document.getElementById(`timer-${quaiNumero}`)
+  if (!timerElement) return
+  
+  // Calculer le temps écoulé au moment où le déchargement a été terminé
+  const elapsed = Date.now() - timerStart
+  const hours = Math.floor(elapsed / 3600000)
+  const minutes = Math.floor((elapsed % 3600000) / 60000)
+  const seconds = Math.floor((elapsed % 60000) / 1000)
+  
+  timerElement.textContent = 
+    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
 // ===== GESTION DE LA MODALE =====

@@ -1467,18 +1467,17 @@ app.post('/api/fin-dechargement', async (c) => {
 
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
-    // Mettre à jour le statut du quai à "disponible"
+    // Mettre à jour le statut du quai à "fin_dechargement" (timer reste figé)
     await c.env.DB.prepare(`
       UPDATE quai_status 
-      SET statut = 'disponible', 
-          timer_start = NULL,
-          commentaire = NULL,
-          commentaire_auteur = NULL,
+      SET statut = 'fin_dechargement',
+          commentaire = 'Déchargement terminé - ' || nom_agent || ' - ' || fournisseur,
+          commentaire_auteur = nom_agent,
           updated_at = datetime('now')
       WHERE quai_numero = ?
     `).bind(data.quai_numero).run()
 
-    console.log('✅ Quai', data.quai_numero, 'marqué comme disponible')
+    console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé')
 
     return c.json({ 
       success: true, 
@@ -1546,7 +1545,7 @@ app.post('/api/quais/:numero', async (c) => {
       return c.json({ success: false, error: `Numéro de quai invalide. Quais valides : ${quaisValides.join(', ')}` }, 400)
     }
     
-    if (!['disponible', 'en_cours', 'indisponible'].includes(statut)) {
+    if (!['disponible', 'en_cours', 'indisponible', 'fin_dechargement'].includes(statut)) {
       return c.json({ success: false, error: 'Statut invalide' }, 400)
     }
     
