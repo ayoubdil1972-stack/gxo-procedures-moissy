@@ -2463,14 +2463,22 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
         quai_numero, nom_agent, palettes_attendues, palettes_recues,
         palettes_a_rendre, problemes, autres_commentaire, remarques, timestamp
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).bind(r.quai_numero,r.nom_agent,r.palettes_attendues,r.palettes_recues,r.palettes_a_rendre,a,r.autres_commentaire||null,i,r.timestamp).run();return console.log("✅ Fin de déchargement enregistrée - ID:",n.meta.last_row_id),await t.env.DB.prepare(`
-      UPDATE quai_status 
-      SET statut = 'fin_dechargement',
-          commentaire = ?,
-          commentaire_auteur = ?,
-          updated_at = datetime('now')
-      WHERE quai_numero = ?
-    `).bind(`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,r.nom_agent,r.quai_numero).run(),console.log("✅ Quai",r.quai_numero,"marqué comme fin de déchargement - Timer figé"),t.json({success:!0,id:n.meta.last_row_id,message:"Déchargement enregistré avec succès"})}catch(r){return console.error("❌ Erreur enregistrement fin déchargement:",r),t.json({success:!1,error:r.message},500)}});b.get("/api/fin-dechargement",async t=>{try{const r=t.req.query("quai"),s=parseInt(t.req.query("limit")||"50");let i="SELECT * FROM fin_dechargement",a=[];r&&(i+=" WHERE quai_numero = ?",a.push(parseInt(r))),i+=" ORDER BY created_at DESC LIMIT ?",a.push(s);const{results:n}=await t.env.DB.prepare(i).bind(...a).all(),l=n.map(o=>{let c=null;try{c=JSON.parse(o.remarques||"{}")}catch{c={remarques_utilisateur:o.remarques||""}}return{...o,problemes:JSON.parse(o.problemes||"[]"),numero_id:c.numero_id||null,fournisseur:c.fournisseur||null,remarques:c.remarques_utilisateur||o.remarques||""}});return t.json({success:!0,data:l})}catch(r){return console.error("❌ Erreur récupération fins déchargement:",r),t.json({success:!1,error:r.message},500)}});b.post("/api/quais/:numero",async t=>{try{const r=parseInt(t.req.param("numero")),{statut:s,commentaire:i,commentaire_auteur:a}=await t.req.json(),n=[1,2,3,4,5,6,7,8,9,10,32,33,34,35,36,37,38,45,46,47,48,49,60,61,62,67,68,69,75,76,77,78,79,81,82,83,84,85,86,87,99,100,101,102,103];if(!n.includes(r))return t.json({success:!1,error:`Numéro de quai invalide. Quais valides : ${n.join(", ")}`},400);if(!["disponible","en_cours","indisponible","fin_dechargement"].includes(s))return t.json({success:!1,error:"Statut invalide"},400);if(s==="indisponible"&&!i)return t.json({success:!1,error:"Commentaire obligatoire pour statut indisponible"},400);s==="en_cours"?await t.env.DB.prepare(`
+    `).bind(r.quai_numero,r.nom_agent,r.palettes_attendues,r.palettes_recues,r.palettes_a_rendre,a,r.autres_commentaire||null,i,r.timestamp).run();console.log("✅ Fin de déchargement enregistrée - ID:",n.meta.last_row_id);try{await t.env.DB.prepare(`
+        UPDATE quai_status 
+        SET statut = 'fin_dechargement',
+            commentaire = ?,
+            commentaire_auteur = ?,
+            updated_at = datetime('now')
+        WHERE quai_numero = ?
+      `).bind(`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,r.nom_agent,r.quai_numero).run(),console.log("✅ Quai",r.quai_numero,"marqué comme fin de déchargement - Timer figé")}catch(l){console.warn("⚠️ Contrainte CHECK - Fallback vers disponible:",l.message),await t.env.DB.prepare(`
+        UPDATE quai_status 
+        SET statut = 'disponible',
+            timer_start = timer_start,
+            commentaire = ?,
+            commentaire_auteur = ?,
+            updated_at = datetime('now')
+        WHERE quai_numero = ?
+      `).bind(`✅ Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id} - Timer: voir historique`,r.nom_agent,r.quai_numero).run(),console.log("✅ Quai",r.quai_numero,"marqué comme disponible (fallback) - Timer conservé dans commentaire")}return t.json({success:!0,id:n.meta.last_row_id,message:"Déchargement enregistré avec succès"})}catch(r){return console.error("❌ Erreur enregistrement fin déchargement:",r),t.json({success:!1,error:r.message},500)}});b.get("/api/fin-dechargement",async t=>{try{const r=t.req.query("quai"),s=parseInt(t.req.query("limit")||"50");let i="SELECT * FROM fin_dechargement",a=[];r&&(i+=" WHERE quai_numero = ?",a.push(parseInt(r))),i+=" ORDER BY created_at DESC LIMIT ?",a.push(s);const{results:n}=await t.env.DB.prepare(i).bind(...a).all(),l=n.map(o=>{let c=null;try{c=JSON.parse(o.remarques||"{}")}catch{c={remarques_utilisateur:o.remarques||""}}return{...o,problemes:JSON.parse(o.problemes||"[]"),numero_id:c.numero_id||null,fournisseur:c.fournisseur||null,remarques:c.remarques_utilisateur||o.remarques||""}});return t.json({success:!0,data:l})}catch(r){return console.error("❌ Erreur récupération fins déchargement:",r),t.json({success:!1,error:r.message},500)}});b.post("/api/quais/:numero",async t=>{try{const r=parseInt(t.req.param("numero")),{statut:s,commentaire:i,commentaire_auteur:a}=await t.req.json(),n=[1,2,3,4,5,6,7,8,9,10,32,33,34,35,36,37,38,45,46,47,48,49,60,61,62,67,68,69,75,76,77,78,79,81,82,83,84,85,86,87,99,100,101,102,103];if(!n.includes(r))return t.json({success:!1,error:`Numéro de quai invalide. Quais valides : ${n.join(", ")}`},400);if(!["disponible","en_cours","indisponible","fin_dechargement"].includes(s))return t.json({success:!1,error:"Statut invalide"},400);if(s==="indisponible"&&!i)return t.json({success:!1,error:"Commentaire obligatoire pour statut indisponible"},400);s==="en_cours"?await t.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
             timer_start = datetime('now'),

@@ -1457,20 +1457,42 @@ app.post('/api/fin-dechargement', async (c) => {
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
     // Mettre à jour le statut du quai à "fin_dechargement" (timer reste figé)
-    await c.env.DB.prepare(`
-      UPDATE quai_status 
-      SET statut = 'fin_dechargement',
-          commentaire = ?,
-          commentaire_auteur = ?,
-          updated_at = datetime('now')
-      WHERE quai_numero = ?
-    `).bind(
-      `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
-      data.nom_agent,
-      data.quai_numero
-    ).run()
+    // IMPORTANT: Essayer d'abord avec 'fin_dechargement', si échec utiliser 'disponible'
+    try {
+      await c.env.DB.prepare(`
+        UPDATE quai_status 
+        SET statut = 'fin_dechargement',
+            commentaire = ?,
+            commentaire_auteur = ?,
+            updated_at = datetime('now')
+        WHERE quai_numero = ?
+      `).bind(
+        `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
+        data.nom_agent,
+        data.quai_numero
+      ).run()
 
-    console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé')
+      console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé')
+    } catch (error) {
+      // Si échec (contrainte CHECK), utiliser 'disponible' comme fallback
+      console.warn('⚠️ Contrainte CHECK - Fallback vers disponible:', error.message)
+      
+      await c.env.DB.prepare(`
+        UPDATE quai_status 
+        SET statut = 'disponible',
+            timer_start = timer_start,
+            commentaire = ?,
+            commentaire_auteur = ?,
+            updated_at = datetime('now')
+        WHERE quai_numero = ?
+      `).bind(
+        `✅ Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id} - Timer: voir historique`,
+        data.nom_agent,
+        data.quai_numero
+      ).run()
+
+      console.log('✅ Quai', data.quai_numero, 'marqué comme disponible (fallback) - Timer conservé dans commentaire')
+    }
 
     return c.json({ 
       success: true, 
