@@ -268,8 +268,8 @@ app.get('/scan-fin-dechargement', (c) => {
     `)
   }
   
-  // Générer les options de palettes (1-33)
-  const palettesOptions = Array.from({length: 33}, (_, i) => {
+  // Générer les options de palettes (1-68)
+  const palettesOptions = Array.from({length: 68}, (_, i) => {
     const num = i + 1
     return `<option value="${num}">${num} palette${num > 1 ? 's' : ''}</option>`
   }).join('')
@@ -1405,24 +1405,42 @@ app.post('/api/fin-dechargement', async (c) => {
       return c.json({ success: false, error: 'Données manquantes' }, 400)
     }
 
-    // Créer la table si elle n'existe pas
-    await c.env.DB.prepare(`
-      CREATE TABLE IF NOT EXISTS fin_dechargement (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        quai_numero INTEGER NOT NULL,
-        nom_agent TEXT NOT NULL,
-        numero_id TEXT NOT NULL,
-        fournisseur TEXT NOT NULL,
-        palettes_attendues INTEGER NOT NULL,
-        palettes_recues INTEGER NOT NULL,
-        palettes_a_rendre TEXT NOT NULL,
-        problemes TEXT,
-        autres_commentaire TEXT,
-        remarques TEXT,
-        timestamp TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `).run()
+    // Créer/Mettre à jour la table si nécessaire
+    try {
+      // Essayer de créer la table avec toutes les colonnes
+      await c.env.DB.prepare(`
+        CREATE TABLE IF NOT EXISTS fin_dechargement (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          quai_numero INTEGER NOT NULL,
+          nom_agent TEXT NOT NULL,
+          numero_id TEXT,
+          fournisseur TEXT,
+          palettes_attendues INTEGER NOT NULL,
+          palettes_recues INTEGER NOT NULL,
+          palettes_a_rendre TEXT NOT NULL,
+          problemes TEXT,
+          autres_commentaire TEXT,
+          remarques TEXT,
+          timestamp TEXT NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `).run()
+      
+      // Tenter d'ajouter les colonnes si elles n'existent pas (ignorera l'erreur si elles existent déjà)
+      try {
+        await c.env.DB.prepare(`ALTER TABLE fin_dechargement ADD COLUMN numero_id TEXT`).run()
+      } catch (e) {
+        // Colonne existe déjà, c'est OK
+      }
+      
+      try {
+        await c.env.DB.prepare(`ALTER TABLE fin_dechargement ADD COLUMN fournisseur TEXT`).run()
+      } catch (e) {
+        // Colonne existe déjà, c'est OK
+      }
+    } catch (error) {
+      console.error('⚠️ Erreur création/mise à jour table:', error)
+    }
 
     // Convertir le tableau de problèmes en JSON string
     const problemesJson = JSON.stringify(data.problemes || [])
