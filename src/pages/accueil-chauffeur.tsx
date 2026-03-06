@@ -363,6 +363,11 @@ export function AccueilChauffeurPage() {
                       <span class="text-2xl mr-3">⏱️</span>
                       En cours d'utilisation - Timer actif
                     </button>
+                    <button onclick="setQuaiStatus('fin_dechargement')" 
+                            class="w-full bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-3 rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
+                      <span class="text-2xl mr-3">📋</span>
+                      Fin de déchargement - Timer figé
+                    </button>
                     <button onclick="toggleCommentaire()" 
                             class="w-full bg-gradient-to-r from-red-400 to-red-500 text-white px-6 py-3 rounded-xl hover:from-red-500 hover:to-red-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
                       <span class="text-2xl mr-3">🚫</span>

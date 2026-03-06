@@ -1,9 +1,49 @@
-// Gestion des quais - Version 2.3.1 avec zones
+// Gestion des quais - Version 3.0.0 avec statut Fin de déchargement
 // Gère les 45 quais réels GXO Moissy avec organisation par zones
+// NOUVEAU : Support du statut "fin_dechargement" avec timer figé
 
 let quais = []
 let currentQuaiNumero = null
 let timerIntervals = {} // Stocke les intervalles des timers
+
+// NOUVEAU : Cache localStorage pour les statuts "fin_dechargement"
+const FIN_DECHARGEMENT_KEY = 'gxo_quais_fin_dechargement'
+
+// Fonctions utilitaires pour le cache
+function getFinDechargementCache() {
+  try {
+    return JSON.parse(localStorage.getItem(FIN_DECHARGEMENT_KEY) || '{}')
+  } catch (e) {
+    return {}
+  }
+}
+
+function setFinDechargementCache(quaiNumero, data) {
+  const cache = getFinDechargementCache()
+  cache[quaiNumero] = {
+    timer_start: data.timer_start,
+    commentaire: data.commentaire,
+    timestamp: new Date().toISOString()
+  }
+  localStorage.setItem(FIN_DECHARGEMENT_KEY, JSON.stringify(cache))
+}
+
+function removeFinDechargementCache(quaiNumero) {
+  const cache = getFinDechargementCache()
+  delete cache[quaiNumero]
+  localStorage.setItem(FIN_DECHARGEMENT_KEY, JSON.stringify(cache))
+}
+
+function isQuaiFinDechargement(quai) {
+  // Vérifier si le quai est en "fin_dechargement" soit dans le cache, soit via le commentaire
+  const cache = getFinDechargementCache()
+  if (cache[quai.quai_numero]) return true
+  
+  // Détecter aussi via le commentaire qui contient "Déchargement terminé"
+  if (quai.commentaire && quai.commentaire.includes('Déchargement terminé')) return true
+  
+  return false
+}
 
 // Définition des zones
 const ZONES = {
@@ -62,35 +102,50 @@ function renderQuaisByZones() {
 }
 
 function renderQuaiCard(quai) {
-  const bgColor = getStatusColor(quai.statut)
-  const icon = getStatusIcon(quai.statut)
-  const iconBg = getStatusIconBg(quai.statut)
+  // NOUVEAU : Détecter si le quai est en "fin_dechargement"
+  const isFinDechargement = isQuaiFinDechargement(quai)
+  const cache = getFinDechargementCache()
+  const cachedData = cache[quai.quai_numero]
+  
+  // Utiliser le statut réel ou "fin_dechargement" si détecté
+  const displayStatut = isFinDechargement ? 'fin_dechargement' : quai.statut
+  
+  const bgColor = getStatusColor(displayStatut)
+  const icon = getStatusIcon(displayStatut)
+  const iconBg = getStatusIconBg(displayStatut)
   
   // DEBUG - Logs détaillés pour les quais scannés
-  if (quai.statut === 'en_cours' || quai.timer_start) {
+  if (quai.statut === 'en_cours' || quai.timer_start || isFinDechargement) {
     console.log(`🐛 Debug Quai ${quai.quai_numero}:`, {
-      statut: quai.statut,
-      timer_start: quai.timer_start,
-      timer_start_type: typeof quai.timer_start,
-      timer_start_length: quai.timer_start ? quai.timer_start.length : 0
+      statut_reel: quai.statut,
+      statut_affiche: displayStatut,
+      is_fin_dechargement: isFinDechargement,
+      timer_start: quai.timer_start || (cachedData && cachedData.timer_start),
+      cache_existe: !!cachedData
     })
   }
   
-  // Validation stricte : n'afficher le timer que si timer_start est valide
-  const hasValidTimer = (quai.statut === 'en_cours' || quai.statut === 'fin_dechargement') && 
-                        quai.timer_start && 
-                        quai.timer_start !== 'null' && 
-                        quai.timer_start !== 'undefined' &&
-                        quai.timer_start.trim() !== ''
-  
-  // DEBUG - Afficher le résultat de la validation
-  if (quai.statut === 'en_cours' || quai.timer_start) {
-    console.log(`  → hasValidTimer: ${hasValidTimer}`)
+  // Déterminer le timer à afficher
+  let timerStart = quai.timer_start
+  if (isFinDechargement && cachedData && cachedData.timer_start) {
+    timerStart = cachedData.timer_start
   }
   
-  const timerLabel = quai.statut === 'fin_dechargement' ? 'Timer figé:' : ''
+  // Validation stricte : n'afficher le timer que si timer_start est valide
+  const hasValidTimer = (quai.statut === 'en_cours' || isFinDechargement) && 
+                        timerStart && 
+                        timerStart !== 'null' && 
+                        timerStart !== 'undefined' &&
+                        String(timerStart).trim() !== ''
+  
+  // DEBUG - Afficher le résultat de la validation
+  if (quai.statut === 'en_cours' || quai.timer_start || isFinDechargement) {
+    console.log(`  → hasValidTimer: ${hasValidTimer}, timerStart: ${timerStart}`)
+  }
+  
+  const timerLabel = isFinDechargement ? 'Timer figé:' : ''
   const timerDisplay = hasValidTimer
-    ? `${timerLabel ? `<div class="text-xs text-gray-700 mt-1">${timerLabel}</div>` : ''}<div class="timer-display text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}" data-frozen="${quai.statut === 'fin_dechargement'}">00:00:00</div>`
+    ? `${timerLabel ? `<div class="text-xs text-gray-700 mt-1">${timerLabel}</div>` : ''}<div class="timer-display text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${timerStart}" data-frozen="${isFinDechargement}">00:00:00</div>`
     : ''
   
   return `
@@ -400,12 +455,30 @@ async function saveQuaiStatusWithStatut(statut) {
     : null
   
   try {
+    // NOUVEAU : Si fin_dechargement, enregistrer dans le cache avec le timer actuel
+    if (statut === 'fin_dechargement') {
+      const quai = quais.find(q => q.quai_numero === currentQuaiNumero)
+      if (quai && quai.timer_start) {
+        setFinDechargementCache(currentQuaiNumero, {
+          timer_start: quai.timer_start,
+          commentaire: `Fin de déchargement - Quai ${currentQuaiNumero}`
+        })
+        console.log(`📋 Quai ${currentQuaiNumero} marqué en fin_dechargement dans le cache`)
+      }
+      
+      // Envoyer "disponible" à l'API mais avec un commentaire spécial
+      statut = 'disponible'
+    } else {
+      // Si on change vers un autre statut, retirer du cache fin_dechargement
+      removeFinDechargementCache(currentQuaiNumero)
+    }
+    
     const response = await fetch(`/api/quais/${currentQuaiNumero}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         statut, 
-        commentaire,
+        commentaire: commentaire || (statut === 'disponible' ? null : commentaire),
         commentaire_auteur: 'Admin' // TODO: Récupérer le nom de l'utilisateur connecté
       })
     })
