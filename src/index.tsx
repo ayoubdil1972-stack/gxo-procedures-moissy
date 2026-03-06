@@ -1426,17 +1426,21 @@ app.post('/api/fin-dechargement', async (c) => {
         )
       `).run()
       
+      console.log('✅ Table fin_dechargement vérifiée')
+      
       // Tenter d'ajouter les colonnes si elles n'existent pas (ignorera l'erreur si elles existent déjà)
       try {
         await c.env.DB.prepare(`ALTER TABLE fin_dechargement ADD COLUMN numero_id TEXT`).run()
+        console.log('✅ Colonne numero_id ajoutée')
       } catch (e) {
-        // Colonne existe déjà, c'est OK
+        console.log('ℹ️ Colonne numero_id existe déjà ou erreur:', e.message)
       }
       
       try {
         await c.env.DB.prepare(`ALTER TABLE fin_dechargement ADD COLUMN fournisseur TEXT`).run()
+        console.log('✅ Colonne fournisseur ajoutée')
       } catch (e) {
-        // Colonne existe déjà, c'est OK
+        console.log('ℹ️ Colonne fournisseur existe déjà ou erreur:', e.message)
       }
     } catch (error) {
       console.error('⚠️ Erreur création/mise à jour table:', error)

@@ -2460,7 +2460,7 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
           timestamp TEXT NOT NULL,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
-      `).run();try{await t.env.DB.prepare("ALTER TABLE fin_dechargement ADD COLUMN numero_id TEXT").run()}catch{}try{await t.env.DB.prepare("ALTER TABLE fin_dechargement ADD COLUMN fournisseur TEXT").run()}catch{}}catch(a){console.error("⚠️ Erreur création/mise à jour table:",a)}const s=JSON.stringify(r.problemes||[]),i=await t.env.DB.prepare(`
+      `).run(),console.log("✅ Table fin_dechargement vérifiée");try{await t.env.DB.prepare("ALTER TABLE fin_dechargement ADD COLUMN numero_id TEXT").run(),console.log("✅ Colonne numero_id ajoutée")}catch(a){console.log("ℹ️ Colonne numero_id existe déjà ou erreur:",a.message)}try{await t.env.DB.prepare("ALTER TABLE fin_dechargement ADD COLUMN fournisseur TEXT").run(),console.log("✅ Colonne fournisseur ajoutée")}catch(a){console.log("ℹ️ Colonne fournisseur existe déjà ou erreur:",a.message)}}catch(a){console.error("⚠️ Erreur création/mise à jour table:",a)}const s=JSON.stringify(r.problemes||[]),i=await t.env.DB.prepare(`
       INSERT INTO fin_dechargement (
         quai_numero, nom_agent, numero_id, fournisseur, palettes_attendues, palettes_recues,
         palettes_a_rendre, problemes, autres_commentaire, remarques, timestamp
