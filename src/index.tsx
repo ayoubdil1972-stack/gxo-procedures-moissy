@@ -1441,7 +1441,7 @@ app.post('/api/fin-dechargement', async (c) => {
       INSERT INTO fin_dechargement (
         quai_numero, nom_agent, palettes_attendues, palettes_recues,
         palettes_a_rendre, problemes, autres_commentaire, remarques, timestamp
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
     `).bind(
       data.quai_numero,
       data.nom_agent,
@@ -1450,8 +1450,7 @@ app.post('/api/fin-dechargement', async (c) => {
       data.palettes_a_rendre,
       problemesJson,
       data.autres_commentaire || null,
-      remarquesJson,  // Contient numero_id + fournisseur + remarques
-      data.timestamp
+      remarquesJson  // Contient numero_id + fournisseur + remarques
     ).run()
 
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
@@ -1459,20 +1458,46 @@ app.post('/api/fin-dechargement', async (c) => {
     // Mettre à jour le statut du quai à "fin_dechargement" (timer reste figé)
     // IMPORTANT: Essayer d'abord avec 'fin_dechargement', si échec utiliser 'disponible'
     try {
+      // Récupérer le timer_start pour calculer la durée
+      const quaiData = await c.env.DB.prepare(`
+        SELECT timer_start FROM quai_status WHERE quai_numero = ?
+      `).bind(data.quai_numero).first()
+
+      console.log('📊 Quai data:', quaiData)
+
+      let timerDuration = null
+      if (quaiData?.timer_start) {
+        // Calculer la durée en secondes
+        // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
+        const startTime = new Date(quaiData.timer_start.replace(' ', 'T') + 'Z').getTime()
+        const endTime = Date.now()
+        timerDuration = Math.floor((endTime - startTime) / 1000)
+        console.log(`⏱️ Durée calculée: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
+      }
+
+      console.log('💾 UPDATE avec:', {
+        timerDuration,
+        commentaire: `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
+        commentaire_auteur: data.nom_agent,
+        quai_numero: data.quai_numero
+      })
+
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = 'fin_dechargement',
+            timer_duration = ?,
             commentaire = ?,
             commentaire_auteur = ?,
             updated_at = datetime('now')
         WHERE quai_numero = ?
       `).bind(
+        timerDuration,
         `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
         data.nom_agent,
         data.quai_numero
       ).run()
 
-      console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé')
+      console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé à', timerDuration, 'secondes')
     } catch (error) {
       // Si échec (contrainte CHECK), utiliser 'disponible' comme fallback
       console.warn('⚠️ Contrainte CHECK - Fallback vers disponible:', error.message)

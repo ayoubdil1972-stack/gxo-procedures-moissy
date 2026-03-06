@@ -98,8 +98,8 @@ async function loadQuais() {
         startTimer(quai.quai_numero, quai.timer_start)
       }
       // Afficher le timer figé pour les quais en fin de déchargement
-      if (quai.statut === 'fin_dechargement' && quai.timer_start) {
-        displayFrozenTimer(quai.quai_numero, quai.timer_start)
+      if (quai.statut === 'fin_dechargement' && quai.timer_duration) {
+        displayFrozenTimer(quai.quai_numero, quai.timer_duration)
       }
     })
   } catch (error) {
@@ -152,7 +152,7 @@ function renderQuais() {
             </div>
           ` : ''}
           
-          ${quai.statut === 'fin_dechargement' && quai.timer_start ? `
+          ${quai.statut === 'fin_dechargement' && quai.timer_duration ? `
             <div class="text-xs mb-2 opacity-90">Timer figé:</div>
             <div class="timer-display bg-black bg-opacity-30 rounded-lg py-2 px-3 mt-1" id="timer-${quai.quai_numero}">
               00:00:00
@@ -208,12 +208,12 @@ function stopTimer(quaiNumero) {
 }
 
 // Afficher le timer figé pour les quais en fin de déchargement
-function displayFrozenTimer(quaiNumero, timerStart) {
+function displayFrozenTimer(quaiNumero, timerDuration) {
   const timerElement = document.getElementById(`timer-${quaiNumero}`)
   if (!timerElement) return
   
-  // Calculer le temps écoulé au moment où le déchargement a été terminé
-  const elapsed = Date.now() - timerStart
+  // timerDuration est déjà en secondes, pas besoin de calculer
+  const elapsed = timerDuration * 1000 // Convertir en millisecondes pour la compatibilité
   const hours = Math.floor(elapsed / 3600000)
   const minutes = Math.floor((elapsed % 3600000) / 60000)
   const seconds = Math.floor((elapsed % 60000) / 1000)
