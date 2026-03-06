@@ -180,6 +180,10 @@ export function AccueilChauffeurPage() {
                   <div class="text-xs opacity-75">En cours</div>
                 </div>
                 <div class="bg-white/20 rounded-xl px-4 py-2 text-center">
+                  <div class="text-3xl font-bold text-blue-300" id="stat-quais-fin-dechargement">0</div>
+                  <div class="text-xs opacity-75">Fin déchargement</div>
+                </div>
+                <div class="bg-white/20 rounded-xl px-4 py-2 text-center">
                   <div class="text-3xl font-bold text-red-300" id="stat-quais-indisponibles">0</div>
                   <div class="text-xs opacity-75">Indisponibles</div>
                 </div>
@@ -402,7 +406,7 @@ export function AccueilChauffeurPage() {
               <i class="fas fa-info-circle text-green-500 mr-2"></i>
               Légende des Statuts
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
                 <div class="w-4 h-4 bg-green-500 rounded-full"></div>
                 <span class="text-sm font-semibold text-gray-700">Disponible - Prêt pour chargement</span>
@@ -410,6 +414,10 @@ export function AccueilChauffeurPage() {
               <div class="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
                 <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
                 <span class="text-sm font-semibold text-gray-700">En cours d'utilisation - Timer actif</span>
+              </div>
+              <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+                <span class="text-sm font-semibold text-gray-700">Fin de déchargement - Timer figé</span>
               </div>
               <div class="flex items-center space-x-3 p-3 bg-red-50 rounded-lg">
                 <div class="w-4 h-4 bg-red-500 rounded-full"></div>

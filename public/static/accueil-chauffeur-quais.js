@@ -77,7 +77,7 @@ function renderQuaiCard(quai) {
   }
   
   // Validation stricte : n'afficher le timer que si timer_start est valide
-  const hasValidTimer = quai.statut === 'en_cours' && 
+  const hasValidTimer = (quai.statut === 'en_cours' || quai.statut === 'fin_dechargement') && 
                         quai.timer_start && 
                         quai.timer_start !== 'null' && 
                         quai.timer_start !== 'undefined' &&
@@ -88,8 +88,9 @@ function renderQuaiCard(quai) {
     console.log(`  → hasValidTimer: ${hasValidTimer}`)
   }
   
+  const timerLabel = quai.statut === 'fin_dechargement' ? 'Timer figé:' : ''
   const timerDisplay = hasValidTimer
-    ? `<div class="timer-display text-base font-mono font-bold text-gray-800 mt-2 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
+    ? `${timerLabel ? `<div class="text-xs text-gray-700 mt-1">${timerLabel}</div>` : ''}<div class="timer-display text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}" data-frozen="${quai.statut === 'fin_dechargement'}">00:00:00</div>`
     : ''
   
   return `
@@ -143,6 +144,7 @@ function getStatusColor(statut) {
   switch (statut) {
     case 'disponible': return 'bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-400'
     case 'en_cours': return 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400'
+    case 'fin_dechargement': return 'bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-400'
     case 'indisponible': return 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400'
     default: return 'bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-400'
   }
@@ -152,6 +154,7 @@ function getStatusIcon(statut) {
   switch (statut) {
     case 'disponible': return '✅'
     case 'en_cours': return '⏱️'
+    case 'fin_dechargement': return '📋'
     case 'indisponible': return '🚫'
     default: return '❓'
   }
@@ -161,6 +164,7 @@ function getStatusIconBg(statut) {
   switch (statut) {
     case 'disponible': return 'bg-green-200'
     case 'en_cours': return 'bg-yellow-200'
+    case 'fin_dechargement': return 'bg-blue-200'
     case 'indisponible': return 'bg-red-200'
     default: return 'bg-gray-200'
   }
@@ -170,6 +174,7 @@ function getStatusTextColor(statut) {
   switch (statut) {
     case 'disponible': return 'text-green-700'
     case 'en_cours': return 'text-yellow-700'
+    case 'fin_dechargement': return 'text-blue-700'
     case 'indisponible': return 'text-red-700'
     default: return 'text-gray-700'
   }
@@ -179,6 +184,7 @@ function getStatusLabel(statut) {
   switch (statut) {
     case 'disponible': return 'Disponible'
     case 'en_cours': return 'En cours'
+    case 'fin_dechargement': return 'Fin de déchargement'
     case 'indisponible': return 'Indisponible'
     default: return 'Inconnu'
   }
@@ -199,15 +205,18 @@ function formatDate(dateString) {
 function updateStats() {
   const disponibles = quais.filter(q => q.statut === 'disponible').length
   const enCours = quais.filter(q => q.statut === 'en_cours').length
+  const finDechargement = quais.filter(q => q.statut === 'fin_dechargement').length
   const indisponibles = quais.filter(q => q.statut === 'indisponible').length
   
   // Stats dans l'onglet
   const statDispoElement = document.getElementById('stat-quais-disponibles')
   const statEnCoursElement = document.getElementById('stat-quais-en-cours')
+  const statFinDechargementElement = document.getElementById('stat-quais-fin-dechargement')
   const statIndispoElement = document.getElementById('stat-quais-indisponibles')
   
   if (statDispoElement) statDispoElement.textContent = disponibles
   if (statEnCoursElement) statEnCoursElement.textContent = enCours
+  if (statFinDechargementElement) statFinDechargementElement.textContent = finDechargement
   if (statIndispoElement) statIndispoElement.textContent = indisponibles
   
   // Stats dans le badge de l'onglet
@@ -227,6 +236,8 @@ function startTimers() {
   
   timerElements.forEach(element => {
     const startTime = element.getAttribute('data-start')
+    const isFrozen = element.getAttribute('data-frozen') === 'true'
+    
     if (!startTime || startTime === 'null' || startTime === 'undefined') return
     
     // Parser le datetime SQLite (format: "2024-03-04 12:30:45")
@@ -258,7 +269,13 @@ function startTimers() {
     // Mise à jour immédiate
     updateTimer()
     
-    // Mise à jour toutes les secondes
+    // Si le timer est figé (fin_dechargement), ne pas créer d'intervalle
+    if (isFrozen) {
+      console.log('⏸️ Timer figé pour quai', element.closest('.quai-card')?.getAttribute('data-quai'))
+      return
+    }
+    
+    // Mise à jour toutes les secondes pour les timers actifs (en_cours)
     const interval = setInterval(updateTimer, 1000)
     
     // Stocker l'intervalle pour le nettoyer plus tard
