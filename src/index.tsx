@@ -1405,67 +1405,52 @@ app.post('/api/fin-dechargement', async (c) => {
       return c.json({ success: false, error: 'Données manquantes' }, 400)
     }
 
-    // Créer/Mettre à jour la table si nécessaire
-    try {
-      // Essayer de créer la table avec toutes les colonnes
-      await c.env.DB.prepare(`
-        CREATE TABLE IF NOT EXISTS fin_dechargement (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          quai_numero INTEGER NOT NULL,
-          nom_agent TEXT NOT NULL,
-          numero_id TEXT,
-          fournisseur TEXT,
-          palettes_attendues INTEGER NOT NULL,
-          palettes_recues INTEGER NOT NULL,
-          palettes_a_rendre TEXT NOT NULL,
-          problemes TEXT,
-          autres_commentaire TEXT,
-          remarques TEXT,
-          timestamp TEXT NOT NULL,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-      `).run()
-      
-      console.log('✅ Table fin_dechargement vérifiée')
-      
-      // Tenter d'ajouter les colonnes si elles n'existent pas (ignorera l'erreur si elles existent déjà)
-      try {
-        await c.env.DB.prepare(`ALTER TABLE fin_dechargement ADD COLUMN numero_id TEXT`).run()
-        console.log('✅ Colonne numero_id ajoutée')
-      } catch (e) {
-        console.log('ℹ️ Colonne numero_id existe déjà ou erreur:', e.message)
-      }
-      
-      try {
-        await c.env.DB.prepare(`ALTER TABLE fin_dechargement ADD COLUMN fournisseur TEXT`).run()
-        console.log('✅ Colonne fournisseur ajoutée')
-      } catch (e) {
-        console.log('ℹ️ Colonne fournisseur existe déjà ou erreur:', e.message)
-      }
-    } catch (error) {
-      console.error('⚠️ Erreur création/mise à jour table:', error)
+    // SOLUTION DE CONTOURNEMENT: Stocker numero_id et fournisseur dans remarques comme JSON
+    // Cela évite les erreurs de colonnes manquantes
+    const remarquesData = {
+      numero_id: data.numero_id,
+      fournisseur: data.fournisseur,
+      remarques_utilisateur: data.remarques || ''
     }
+    const remarquesJson = JSON.stringify(remarquesData)
 
     // Convertir le tableau de problèmes en JSON string
     const problemesJson = JSON.stringify(data.problemes || [])
 
-    // Insérer les données
+    // Créer la table avec structure minimale (colonnes de base seulement)
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS fin_dechargement (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        quai_numero INTEGER NOT NULL,
+        nom_agent TEXT NOT NULL,
+        palettes_attendues INTEGER NOT NULL,
+        palettes_recues INTEGER NOT NULL,
+        palettes_a_rendre TEXT NOT NULL,
+        problemes TEXT,
+        autres_commentaire TEXT,
+        remarques TEXT,
+        timestamp TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
+
+    console.log('✅ Table fin_dechargement vérifiée (structure de base)')
+
+    // Insérer les données SANS numero_id et fournisseur comme colonnes séparées
     const result = await c.env.DB.prepare(`
       INSERT INTO fin_dechargement (
-        quai_numero, nom_agent, numero_id, fournisseur, palettes_attendues, palettes_recues,
+        quai_numero, nom_agent, palettes_attendues, palettes_recues,
         palettes_a_rendre, problemes, autres_commentaire, remarques, timestamp
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       data.quai_numero,
       data.nom_agent,
-      data.numero_id,
-      data.fournisseur,
       data.palettes_attendues,
       data.palettes_recues,
       data.palettes_a_rendre,
       problemesJson,
       data.autres_commentaire || null,
-      data.remarques || null,
+      remarquesJson,  // Contient numero_id + fournisseur + remarques
       data.timestamp
     ).run()
 
@@ -1475,11 +1460,15 @@ app.post('/api/fin-dechargement', async (c) => {
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'fin_dechargement',
-          commentaire = 'Déchargement terminé - ' || nom_agent || ' - ' || fournisseur,
-          commentaire_auteur = nom_agent,
+          commentaire = ?,
+          commentaire_auteur = ?,
           updated_at = datetime('now')
       WHERE quai_numero = ?
-    `).bind(data.quai_numero).run()
+    `).bind(
+      `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
+      data.nom_agent,
+      data.quai_numero
+    ).run()
 
     console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé')
 
@@ -1513,11 +1502,25 @@ app.get('/api/fin-dechargement', async (c) => {
     
     const { results } = await c.env.DB.prepare(query).bind(...params).all()
     
-    // Parser les problèmes JSON
-    const formattedResults = results.map(row => ({
-      ...row,
-      problemes: JSON.parse(row.problemes || '[]')
-    }))
+    // Parser les problèmes JSON et extraire numero_id/fournisseur du champ remarques
+    const formattedResults = results.map(row => {
+      let remarquesData = null
+      try {
+        // Essayer de parser remarques comme JSON
+        remarquesData = JSON.parse(row.remarques || '{}')
+      } catch (e) {
+        // Si ce n'est pas du JSON, c'est du texte simple
+        remarquesData = { remarques_utilisateur: row.remarques || '' }
+      }
+      
+      return {
+        ...row,
+        problemes: JSON.parse(row.problemes || '[]'),
+        numero_id: remarquesData.numero_id || null,
+        fournisseur: remarquesData.fournisseur || null,
+        remarques: remarquesData.remarques_utilisateur || row.remarques || ''
+      }
+    })
     
     return c.json({ success: true, data: formattedResults })
   } catch (error) {
