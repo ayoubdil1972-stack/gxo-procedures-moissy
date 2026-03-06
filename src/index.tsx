@@ -331,20 +331,64 @@ app.get('/scan-fin-dechargement', (c) => {
 
         <!-- Formulaire -->
         <form id="fin-dechargement-form" class="space-y-6">
-          <!-- Nom -->
+          <!-- Informations agent et fournisseur -->
           <div class="bg-white rounded-xl shadow-lg p-6">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              <i class="fas fa-user text-blue-600 mr-2"></i>
-              Nom de l'agent
-            </label>
-            <input 
-              type="text" 
-              id="nom-agent" 
-              name="nom_agent"
-              required
-              placeholder="Entrez votre nom"
-              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
-            />
+            <div class="grid md:grid-cols-3 gap-4">
+              <!-- Nom -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-user text-blue-600 mr-2"></i>
+                  Nom de l'agent
+                </label>
+                <input 
+                  type="text" 
+                  id="nom-agent" 
+                  name="nom_agent"
+                  required
+                  placeholder="Entrez votre nom"
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                />
+              </div>
+
+              <!-- N°ID -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-id-card text-purple-600 mr-2"></i>
+                  N°ID
+                </label>
+                <input 
+                  type="text" 
+                  id="numero-id" 
+                  name="numero_id"
+                  required
+                  placeholder="1827314"
+                  pattern="[0-9]{7}"
+                  maxlength="7"
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                  style="font-family: monospace;"
+                />
+              </div>
+
+              <!-- Fournisseur -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-building text-indigo-600 mr-2"></i>
+                  Fournisseur
+                </label>
+                <input 
+                  type="text" 
+                  id="fournisseur" 
+                  name="fournisseur"
+                  required
+                  placeholder="Nom du fournisseur"
+                  list="fournisseurs-datalist"
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                />
+                <datalist id="fournisseurs-datalist">
+                  <!-- Suggestions seront chargées dynamiquement -->
+                </datalist>
+              </div>
+            </div>
           </div>
 
           <!-- Nombre de palettes -->
@@ -580,6 +624,62 @@ app.get('/scan-fin-dechargement', (c) => {
       </div>
 
       <script>
+        // ===== GESTION AUTOCOMPLETE NOMS ET FOURNISSEURS =====
+        
+        // Charger les noms et fournisseurs depuis localStorage
+        function loadStoredData() {
+          const storedNoms = JSON.parse(localStorage.getItem('gxo_agent_names') || '[]');
+          const storedFournisseurs = JSON.parse(localStorage.getItem('gxo_fournisseurs') || '[]');
+          
+          // Créer datalist pour les noms
+          const nomsDatalist = document.createElement('datalist');
+          nomsDatalist.id = 'noms-datalist';
+          storedNoms.forEach(nom => {
+            const option = document.createElement('option');
+            option.value = nom;
+            nomsDatalist.appendChild(option);
+          });
+          document.body.appendChild(nomsDatalist);
+          document.getElementById('nom-agent').setAttribute('list', 'noms-datalist');
+          
+          // Créer datalist pour les fournisseurs
+          const fournisseursDatalist = document.getElementById('fournisseurs-datalist');
+          storedFournisseurs.forEach(fournisseur => {
+            const option = document.createElement('option');
+            option.value = fournisseur;
+            fournisseursDatalist.appendChild(option);
+          });
+          
+          console.log('📋 Chargé:', storedNoms.length, 'noms et', storedFournisseurs.length, 'fournisseurs');
+        }
+        
+        // Sauvegarder un nouveau nom
+        function saveAgentName(nom) {
+          if (!nom || nom.trim() === '') return;
+          const stored = JSON.parse(localStorage.getItem('gxo_agent_names') || '[]');
+          if (!stored.includes(nom.trim())) {
+            stored.push(nom.trim());
+            localStorage.setItem('gxo_agent_names', JSON.stringify(stored));
+            console.log('💾 Nom sauvegardé:', nom);
+          }
+        }
+        
+        // Sauvegarder un nouveau fournisseur
+        function saveFournisseur(fournisseur) {
+          if (!fournisseur || fournisseur.trim() === '') return;
+          const stored = JSON.parse(localStorage.getItem('gxo_fournisseurs') || '[]');
+          if (!stored.includes(fournisseur.trim())) {
+            stored.push(fournisseur.trim());
+            localStorage.setItem('gxo_fournisseurs', JSON.stringify(stored));
+            console.log('💾 Fournisseur sauvegardé:', fournisseur);
+          }
+        }
+        
+        // Charger au démarrage
+        loadStoredData();
+        
+        // ===== GESTION DU FORMULAIRE =====
+        
         // Afficher le champ "Autres" si coché
         document.getElementById('probleme-autres').addEventListener('change', function() {
           const autresDetails = document.getElementById('autres-details');
@@ -598,9 +698,19 @@ app.get('/scan-fin-dechargement', (c) => {
           e.preventDefault();
           
           const formData = new FormData(this);
+          const nomAgent = formData.get('nom_agent');
+          const numeroId = formData.get('numero_id');
+          const fournisseur = formData.get('fournisseur');
+          
+          // Sauvegarder les nouvelles données
+          saveAgentName(nomAgent);
+          saveFournisseur(fournisseur);
+          
           const data = {
             quai_numero: ${quaiNumero},
-            nom_agent: formData.get('nom_agent'),
+            nom_agent: nomAgent,
+            numero_id: numeroId,
+            fournisseur: fournisseur,
             palettes_attendues: parseInt(formData.get('palettes_attendues')),
             palettes_recues: parseInt(formData.get('palettes_recues')),
             palettes_a_rendre: formData.get('palettes_a_rendre'),
@@ -1291,7 +1401,7 @@ app.post('/api/fin-dechargement', async (c) => {
     console.log('📦 Données reçues fin déchargement:', data)
 
     // Validation des données
-    if (!data.quai_numero || !data.nom_agent || !data.palettes_attendues || !data.palettes_recues || !data.palettes_a_rendre) {
+    if (!data.quai_numero || !data.nom_agent || !data.numero_id || !data.fournisseur || !data.palettes_attendues || !data.palettes_recues || !data.palettes_a_rendre) {
       return c.json({ success: false, error: 'Données manquantes' }, 400)
     }
 
@@ -1301,6 +1411,8 @@ app.post('/api/fin-dechargement', async (c) => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         quai_numero INTEGER NOT NULL,
         nom_agent TEXT NOT NULL,
+        numero_id TEXT NOT NULL,
+        fournisseur TEXT NOT NULL,
         palettes_attendues INTEGER NOT NULL,
         palettes_recues INTEGER NOT NULL,
         palettes_a_rendre TEXT NOT NULL,
@@ -1318,12 +1430,14 @@ app.post('/api/fin-dechargement', async (c) => {
     // Insérer les données
     const result = await c.env.DB.prepare(`
       INSERT INTO fin_dechargement (
-        quai_numero, nom_agent, palettes_attendues, palettes_recues,
+        quai_numero, nom_agent, numero_id, fournisseur, palettes_attendues, palettes_recues,
         palettes_a_rendre, problemes, autres_commentaire, remarques, timestamp
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       data.quai_numero,
       data.nom_agent,
+      data.numero_id,
+      data.fournisseur,
       data.palettes_attendues,
       data.palettes_recues,
       data.palettes_a_rendre,
