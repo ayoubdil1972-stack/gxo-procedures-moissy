@@ -85,19 +85,27 @@ function renderQuaiCard(quai) {
   let timerDisplay = ''
   
   if (quai.statut === 'en_cours' && quai.timer_start) {
-    // Timer actif qui défile
-    timerDisplay = `<div class="timer-display text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}" data-frozen="false">00:00:00</div>`
-  } else if (quai.statut === 'fin_dechargement' && quai.timer_duration) {
-    // Timer figé : afficher la durée en HH:MM:SS
-    const hours = Math.floor(quai.timer_duration / 3600)
-    const minutes = Math.floor((quai.timer_duration % 3600) / 60)
-    const seconds = quai.timer_duration % 60
-    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-    
-    timerDisplay = `
-      <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
-      <div class="text-base font-mono font-bold text-blue-700 mt-1 bg-blue-50 rounded-lg px-3 py-2 border-2 border-blue-300">${formattedTime}</div>
-    `
+    // Timer actif qui défile - UNIQUEMENT pour statut "en_cours"
+    timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
+  } else if (quai.statut === 'fin_dechargement') {
+    // Timer FIGÉ : afficher la durée statique (PAS de data-start, PAS de classe timer-display)
+    if (quai.timer_duration && quai.timer_duration > 0) {
+      const hours = Math.floor(quai.timer_duration / 3600)
+      const minutes = Math.floor((quai.timer_duration % 3600) / 60)
+      const seconds = quai.timer_duration % 60
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+      
+      timerDisplay = `
+        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
+        <div class="timer-frozen text-base font-mono font-bold text-blue-700 mt-1 bg-blue-50 rounded-lg px-3 py-2 border-2 border-blue-300">${formattedTime}</div>
+      `
+    } else {
+      // Fallback si timer_duration est null ou 0
+      timerDisplay = `
+        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
+        <div class="timer-frozen text-base font-mono font-bold text-gray-500 mt-1 bg-gray-50 rounded-lg px-3 py-2 border-2 border-gray-300">Non disponible</div>
+      `
+    }
   }
   
   return `
@@ -240,19 +248,25 @@ function startTimers() {
   Object.values(timerIntervals).forEach(interval => clearInterval(interval))
   timerIntervals = {}
   
-  // Démarrer les timers uniquement pour les quais "en_cours" (pas pour "fin_dechargement")
-  const timerElements = document.querySelectorAll('.timer-display[data-frozen="false"]')
+  // IMPORTANT : Démarrer les timers UNIQUEMENT pour les éléments avec classe "timer-active"
+  // Les timers figés (classe "timer-frozen") ne doivent JAMAIS être traités ici
+  const timerElements = document.querySelectorAll('.timer-active')
+  
+  console.log(`⏱️ Démarrage de ${timerElements.length} timer(s) actif(s)`)
   
   timerElements.forEach(element => {
     const startTime = element.getAttribute('data-start')
     
-    if (!startTime || startTime === 'null' || startTime === 'undefined') return
+    if (!startTime || startTime === 'null' || startTime === 'undefined') {
+      console.warn('⚠️ Timer actif sans data-start:', element)
+      return
+    }
     
     // Parser le datetime SQLite (format: "2024-03-04 12:30:45")
     const start = new Date(startTime.replace(' ', 'T') + 'Z')
     
     if (isNaN(start.getTime())) {
-      console.error('Invalid timer_start:', startTime)
+      console.error('❌ Invalid timer_start:', startTime)
       element.textContent = '00:00:00'
       return
     }
@@ -277,15 +291,20 @@ function startTimers() {
     // Mise à jour immédiate
     updateTimer()
     
-    // Mise à jour toutes les secondes pour les timers actifs (en_cours)
+    // Mise à jour toutes les secondes
     const interval = setInterval(updateTimer, 1000)
     
-    // Stocker l'intervalle pour le nettoyer plus tard
+    // Stocker l'intervalle
     const quaiNumero = element.closest('.quai-card')?.getAttribute('data-quai')
     if (quaiNumero) {
       timerIntervals[quaiNumero] = interval
+      console.log(`✅ Timer actif démarré pour quai ${quaiNumero}`)
     }
   })
+  
+  // Log les timers figés (pour debug)
+  const frozenTimers = document.querySelectorAll('.timer-frozen')
+  console.log(`❄️ ${frozenTimers.length} timer(s) figé(s) (non traités)`)
 }
 
 // ===== MODAL DE GESTION =====
