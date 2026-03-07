@@ -71,24 +71,26 @@ function renderQuaiCard(quai) {
   const iconBg = getStatusIconBg(displayStatut)
   
   // DEBUG - Logs détaillés pour les quais avec timer
-  if (quai.statut === 'en_cours' || quai.statut === 'fin_dechargement' || quai.timer_start) {
+  if (quai.statut === 'en_cours' || quai.statut === 'fin_dechargement' || quai.statut === 'en_controle' || quai.statut === 'fin_controle' || quai.timer_start || quai.timer_controle_start) {
     console.log(`🐛 Debug Quai ${quai.quai_numero}:`, {
       statut: quai.statut,
       timer_start: quai.timer_start,
       timer_duration: quai.timer_duration,
+      timer_controle_start: quai.timer_controle_start,
+      timer_controle_duration: quai.timer_controle_duration,
       commentaire: quai.commentaire
     })
   }
   
-  // Timer pour statut "en_cours" : timer actif basé sur timer_start
-  // Timer pour statut "fin_dechargement" : timer figé basé sur timer_duration
+  // Gestion des timers selon le statut
   let timerDisplay = ''
   
+  // DÉCHARGEMENT : Statut "en_cours"
   if (quai.statut === 'en_cours' && quai.timer_start) {
-    // Timer actif qui défile - UNIQUEMENT pour statut "en_cours"
     timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
-  } else if (quai.statut === 'fin_dechargement') {
-    // Timer FIGÉ : afficher la durée statique (PAS de data-start, PAS de classe timer-display)
+  } 
+  // DÉCHARGEMENT : Statut "fin_dechargement"
+  else if (quai.statut === 'fin_dechargement') {
     if (quai.timer_duration && quai.timer_duration > 0) {
       const hours = Math.floor(quai.timer_duration / 3600)
       const minutes = Math.floor((quai.timer_duration % 3600) / 60)
@@ -100,9 +102,31 @@ function renderQuaiCard(quai) {
         <div class="timer-frozen text-base font-mono font-bold text-blue-700 mt-1 bg-blue-50 rounded-lg px-3 py-2 border-2 border-blue-300">${formattedTime}</div>
       `
     } else {
-      // Fallback si timer_duration est null ou 0
       timerDisplay = `
         <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
+        <div class="timer-frozen text-base font-mono font-bold text-gray-500 mt-1 bg-gray-50 rounded-lg px-3 py-2 border-2 border-gray-300">Non disponible</div>
+      `
+    }
+  }
+  // CONTRÔLE : Statut "en_controle"
+  else if (quai.statut === 'en_controle' && quai.timer_controle_start) {
+    timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_controle_start}">00:00:00</div>`
+  }
+  // CONTRÔLE : Statut "fin_controle"
+  else if (quai.statut === 'fin_controle') {
+    if (quai.timer_controle_duration && quai.timer_controle_duration > 0) {
+      const hours = Math.floor(quai.timer_controle_duration / 3600)
+      const minutes = Math.floor((quai.timer_controle_duration % 3600) / 60)
+      const seconds = quai.timer_controle_duration % 60
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+      
+      timerDisplay = `
+        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du contrôle:</div>
+        <div class="timer-frozen text-base font-mono font-bold text-purple-700 mt-1 bg-purple-50 rounded-lg px-3 py-2 border-2 border-purple-300">${formattedTime}</div>
+      `
+    } else {
+      timerDisplay = `
+        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du contrôle:</div>
         <div class="timer-frozen text-base font-mono font-bold text-gray-500 mt-1 bg-gray-50 rounded-lg px-3 py-2 border-2 border-gray-300">Non disponible</div>
       `
     }
@@ -160,6 +184,8 @@ function getStatusColor(statut) {
     case 'disponible': return 'bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-400'
     case 'en_cours': return 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400'
     case 'fin_dechargement': return 'bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-400'
+    case 'en_controle': return 'bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-400'
+    case 'fin_controle': return 'bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-400'
     case 'indisponible': return 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400'
     default: return 'bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-400'
   }
@@ -170,6 +196,8 @@ function getStatusIcon(statut) {
     case 'disponible': return '✅'
     case 'en_cours': return '⏱️'
     case 'fin_dechargement': return '📋'
+    case 'en_controle': return '🔍'
+    case 'fin_controle': return '📝'
     case 'indisponible': return '🚫'
     default: return '❓'
   }
@@ -180,6 +208,8 @@ function getStatusIconBg(statut) {
     case 'disponible': return 'bg-green-200'
     case 'en_cours': return 'bg-yellow-200'
     case 'fin_dechargement': return 'bg-blue-200'
+    case 'en_controle': return 'bg-orange-200'
+    case 'fin_controle': return 'bg-purple-200'
     case 'indisponible': return 'bg-red-200'
     default: return 'bg-gray-200'
   }
@@ -190,6 +220,8 @@ function getStatusTextColor(statut) {
     case 'disponible': return 'text-green-700'
     case 'en_cours': return 'text-yellow-700'
     case 'fin_dechargement': return 'text-blue-700'
+    case 'en_controle': return 'text-orange-700'
+    case 'fin_controle': return 'text-purple-700'
     case 'indisponible': return 'text-red-700'
     default: return 'text-gray-700'
   }
@@ -200,6 +232,8 @@ function getStatusLabel(statut) {
     case 'disponible': return 'Disponible'
     case 'en_cours': return 'En cours'
     case 'fin_dechargement': return 'Fin de déchargement'
+    case 'en_controle': return 'En contrôle'
+    case 'fin_controle': return 'Fin de contrôle'
     case 'indisponible': return 'Indisponible'
     default: return 'Inconnu'
   }
@@ -221,9 +255,11 @@ function updateStats() {
   const disponibles = quais.filter(q => q.statut === 'disponible').length
   const enCours = quais.filter(q => q.statut === 'en_cours').length
   const finDechargement = quais.filter(q => q.statut === 'fin_dechargement').length
+  const enControle = quais.filter(q => q.statut === 'en_controle').length
+  const finControle = quais.filter(q => q.statut === 'fin_controle').length
   const indisponibles = quais.filter(q => q.statut === 'indisponible').length
   
-  console.log('📊 Stats Quais:', { disponibles, enCours, finDechargement, indisponibles })
+  console.log('📊 Stats Quais:', { disponibles, enCours, finDechargement, enControle, finControle, indisponibles })
   
   // Stats dans l'onglet
   const statDispoElement = document.getElementById('stat-quais-disponibles')
