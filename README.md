@@ -5,15 +5,16 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.2.0  
+**Version actuelle** : 3.2.1  
 **Dernière mise à jour** : 2026-03-07  
-**Backup** : https://www.genspark.ai/api/files/s/w907DzIf  
+**Backup** : https://www.genspark.ai/api/files/s/EfK2bwnV  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
 ### 🆕 **NOUVEAU : Système de Contrôle Qualité**
-- **Statut "En contrôle"** : Timer actif pour le contrôle qualité
-- **Statut "Fin de contrôle"** : Timer figé + conservation des données de déchargement
-- **QR Codes dédiés** : Début de contrôle (C001-C103) et Fin de contrôle (FC001-FC103)
+- **Statut "En contrôle"** : Timer actif pour le contrôle qualité  
+- **Statut "Fin de contrôle"** : Timer figé + conservation des données de déchargement  
+- **QR Codes dédiés** : Début de contrôle (C001-C103) et Fin de contrôle (FC001-FC103)  
+- **Légende améliorée** : Icônes uniformes pour tous les statuts (✅⏱️📋🔍📝🚫)
 
 ---
 
@@ -519,6 +520,15 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 
 ## 🔄 Changelog
 
+### v3.2.1 (2026-03-07) - CORRECTIONS FINALES 🔧
+- 🔧 **Routes QR codes** : Ajout `/download-qr-controle` et `/download-qr-fin-controle`
+- ✨ **Légende uniformisée** : Icônes ajoutées pour tous les statuts (✅⏱️📋🔍📝🚫)
+- ✅ **Tests finaux** : Workflow 100% validé (Déchargement 5s → Contrôle 3s)
+- 📦 **Fichiers HTML** : Copiés dans dist/ pour accessibilité production
+- 🔗 **URLs fonctionnelles** :
+  - https://gxomoissyprocedures.com/download-qr-controle
+  - https://gxomoissyprocedures.com/download-qr-fin-controle
+
 ### v3.2.0 (2026-03-07) - SYSTÈME DE CONTRÔLE QUALITÉ 🆕
 - 🆕 **Nouveau statut "En contrôle"** : Timer actif (orange 🔍)
 - 🆕 **Nouveau statut "Fin de contrôle"** : Timer figé (violet 📝)
@@ -589,5 +599,5 @@ Pour toute question ou problème :
 ---
 
 **Dernière mise à jour** : 2026-03-07  
-**Version** : 3.2.0  
-**Statut** : ✅ Production stable avec système de contrôle qualité
+**Version** : 3.2.1  
+**Statut** : ✅ Production stable avec système de contrôle qualité + légende uniformisée
