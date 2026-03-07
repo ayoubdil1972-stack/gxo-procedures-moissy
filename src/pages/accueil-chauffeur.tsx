@@ -411,22 +411,30 @@ export function AccueilChauffeurPage() {
               <i class="fas fa-info-circle text-green-500 mr-2"></i>
               Légende des Statuts
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                <div class="w-4 h-4 bg-green-500 rounded-full"></div>
-                <span class="text-sm font-semibold text-gray-700">Disponible - Prêt pour chargement</span>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div class="flex items-center space-x-2 p-3 bg-green-50 rounded-lg">
+                <div class="w-4 h-4 bg-green-500 rounded-full flex-shrink-0"></div>
+                <span class="text-xs font-semibold text-gray-700">Disponible</span>
               </div>
-              <div class="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
-                <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                <span class="text-sm font-semibold text-gray-700">En cours d'utilisation - Timer actif</span>
+              <div class="flex items-center space-x-2 p-3 bg-yellow-50 rounded-lg">
+                <div class="w-4 h-4 bg-yellow-500 rounded-full flex-shrink-0"></div>
+                <span class="text-xs font-semibold text-gray-700">En cours</span>
               </div>
-              <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
-                <span class="text-sm font-semibold text-gray-700">Fin de déchargement - Timer figé</span>
+              <div class="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg">
+                <div class="w-4 h-4 bg-blue-500 rounded-full flex-shrink-0"></div>
+                <span class="text-xs font-semibold text-gray-700">Fin de déchargement</span>
               </div>
-              <div class="flex items-center space-x-3 p-3 bg-red-50 rounded-lg">
-                <div class="w-4 h-4 bg-red-500 rounded-full"></div>
-                <span class="text-sm font-semibold text-gray-700">Indisponible - Problème signalé</span>
+              <div class="flex items-center space-x-2 p-3 bg-orange-50 rounded-lg">
+                <div class="w-4 h-4 bg-orange-500 rounded-full flex-shrink-0"></div>
+                <span class="text-xs font-semibold text-gray-700">🔍 En contrôle</span>
+              </div>
+              <div class="flex items-center space-x-2 p-3 bg-purple-50 rounded-lg">
+                <div class="w-4 h-4 bg-purple-400 rounded-full flex-shrink-0"></div>
+                <span class="text-xs font-semibold text-gray-700">📝 Fin de contrôle</span>
+              </div>
+              <div class="flex items-center space-x-2 p-3 bg-red-50 rounded-lg">
+                <div class="w-4 h-4 bg-red-500 rounded-full flex-shrink-0"></div>
+                <span class="text-xs font-semibold text-gray-700">Indisponible</span>
               </div>
             </div>
           </div>
