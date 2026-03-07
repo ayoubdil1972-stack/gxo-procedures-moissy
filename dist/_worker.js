@@ -2468,12 +2468,13 @@ var $r=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Vr=(t,r,s)=>r in
       `).bind(r.quai_numero).first();console.log("📊 Quai data:",l);let o=null;if(l!=null&&l.timer_start){const c=new Date(l.timer_start.replace(" ","T")+"Z").getTime(),d=Date.now();o=Math.floor((d-c)/1e3),console.log(`⏱️ Durée calculée: ${o}s (${Math.floor(o/3600)}h ${Math.floor(o%3600/60)}m ${o%60}s)`)}console.log("💾 UPDATE avec:",{timerDuration:o,commentaire:`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,commentaire_auteur:r.nom_agent,quai_numero:r.quai_numero}),await t.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = 'fin_dechargement',
+            timer_start = NULL,
             timer_duration = ?,
             commentaire = ?,
             commentaire_auteur = ?,
             updated_at = datetime('now')
         WHERE quai_numero = ?
-      `).bind(o,`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,r.nom_agent,r.quai_numero).run(),console.log("✅ Quai",r.quai_numero,"marqué comme fin de déchargement - Timer figé à",o,"secondes")}catch(l){console.warn("⚠️ Contrainte CHECK - Fallback vers disponible:",l.message),await t.env.DB.prepare(`
+      `).bind(o,`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,r.nom_agent,r.quai_numero).run(),console.log("✅ Quai",r.quai_numero,"marqué comme fin de déchargement - Timer figé à",o,"secondes (timer_start supprimé)")}catch(l){console.warn("⚠️ Contrainte CHECK - Fallback vers disponible:",l.message),await t.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = 'disponible',
             timer_start = timer_start,

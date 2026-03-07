@@ -1,49 +1,10 @@
-// Gestion des quais - Version 3.0.0 avec statut Fin de déchargement
+// Gestion des quais - Version 3.1.0 avec statut Fin de déchargement
 // Gère les 45 quais réels GXO Moissy avec organisation par zones
-// NOUVEAU : Support du statut "fin_dechargement" avec timer figé
+// Timer figé basé sur timer_duration (durée calculée en secondes)
 
 let quais = []
 let currentQuaiNumero = null
 let timerIntervals = {} // Stocke les intervalles des timers
-
-// NOUVEAU : Cache localStorage pour les statuts "fin_dechargement"
-const FIN_DECHARGEMENT_KEY = 'gxo_quais_fin_dechargement'
-
-// Fonctions utilitaires pour le cache
-function getFinDechargementCache() {
-  try {
-    return JSON.parse(localStorage.getItem(FIN_DECHARGEMENT_KEY) || '{}')
-  } catch (e) {
-    return {}
-  }
-}
-
-function setFinDechargementCache(quaiNumero, data) {
-  const cache = getFinDechargementCache()
-  cache[quaiNumero] = {
-    timer_start: data.timer_start,
-    commentaire: data.commentaire,
-    timestamp: new Date().toISOString()
-  }
-  localStorage.setItem(FIN_DECHARGEMENT_KEY, JSON.stringify(cache))
-}
-
-function removeFinDechargementCache(quaiNumero) {
-  const cache = getFinDechargementCache()
-  delete cache[quaiNumero]
-  localStorage.setItem(FIN_DECHARGEMENT_KEY, JSON.stringify(cache))
-}
-
-function isQuaiFinDechargement(quai) {
-  // Vérifier si le quai est en "fin_dechargement" soit dans le cache, soit via le commentaire
-  const cache = getFinDechargementCache()
-  if (cache[quai.quai_numero]) return true
-  
-  // Détecter aussi via le commentaire qui contient "Déchargement terminé"
-  if (quai.commentaire && quai.commentaire.includes('Déchargement terminé')) return true
-  
-  return false
-}
 
 // Définition des zones
 const ZONES = {
@@ -102,51 +63,50 @@ function renderQuaisByZones() {
 }
 
 function renderQuaiCard(quai) {
-  // NOUVEAU : Détecter si le quai est en "fin_dechargement"
-  const isFinDechargement = isQuaiFinDechargement(quai)
-  const cache = getFinDechargementCache()
-  const cachedData = cache[quai.quai_numero]
-  
-  // Utiliser le statut réel ou "fin_dechargement" si détecté
-  const displayStatut = isFinDechargement ? 'fin_dechargement' : quai.statut
+  // Déterminer le statut à afficher (prioriser le statut réel de la DB)
+  const displayStatut = quai.statut
   
   const bgColor = getStatusColor(displayStatut)
   const icon = getStatusIcon(displayStatut)
   const iconBg = getStatusIconBg(displayStatut)
   
-  // DEBUG - Logs détaillés pour les quais scannés
-  if (quai.statut === 'en_cours' || quai.timer_start || isFinDechargement) {
+  // DEBUG - Logs détaillés pour les quais avec timer
+  if (quai.statut === 'en_cours' || quai.statut === 'fin_dechargement' || quai.timer_start) {
     console.log(`🐛 Debug Quai ${quai.quai_numero}:`, {
-      statut_reel: quai.statut,
-      statut_affiche: displayStatut,
-      is_fin_dechargement: isFinDechargement,
-      timer_start: quai.timer_start || (cachedData && cachedData.timer_start),
-      cache_existe: !!cachedData
+      statut: quai.statut,
+      timer_start: quai.timer_start,
+      timer_duration: quai.timer_duration,
+      commentaire: quai.commentaire
     })
   }
   
-  // Déterminer le timer à afficher
-  let timerStart = quai.timer_start
-  if (isFinDechargement && cachedData && cachedData.timer_start) {
-    timerStart = cachedData.timer_start
+  // Timer pour statut "en_cours" : timer actif basé sur timer_start
+  // Timer pour statut "fin_dechargement" : timer figé basé sur timer_duration
+  let timerDisplay = ''
+  
+  if (quai.statut === 'en_cours' && quai.timer_start) {
+    // Timer actif qui défile - UNIQUEMENT pour statut "en_cours"
+    timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
+  } else if (quai.statut === 'fin_dechargement') {
+    // Timer FIGÉ : afficher la durée statique (PAS de data-start, PAS de classe timer-display)
+    if (quai.timer_duration && quai.timer_duration > 0) {
+      const hours = Math.floor(quai.timer_duration / 3600)
+      const minutes = Math.floor((quai.timer_duration % 3600) / 60)
+      const seconds = quai.timer_duration % 60
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+      
+      timerDisplay = `
+        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
+        <div class="timer-frozen text-base font-mono font-bold text-blue-700 mt-1 bg-blue-50 rounded-lg px-3 py-2 border-2 border-blue-300">${formattedTime}</div>
+      `
+    } else {
+      // Fallback si timer_duration est null ou 0
+      timerDisplay = `
+        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
+        <div class="timer-frozen text-base font-mono font-bold text-gray-500 mt-1 bg-gray-50 rounded-lg px-3 py-2 border-2 border-gray-300">Non disponible</div>
+      `
+    }
   }
-  
-  // Validation stricte : n'afficher le timer que si timer_start est valide
-  const hasValidTimer = (quai.statut === 'en_cours' || isFinDechargement) && 
-                        timerStart && 
-                        timerStart !== 'null' && 
-                        timerStart !== 'undefined' &&
-                        String(timerStart).trim() !== ''
-  
-  // DEBUG - Afficher le résultat de la validation
-  if (quai.statut === 'en_cours' || quai.timer_start || isFinDechargement) {
-    console.log(`  → hasValidTimer: ${hasValidTimer}, timerStart: ${timerStart}`)
-  }
-  
-  const timerLabel = isFinDechargement ? 'Timer figé:' : ''
-  const timerDisplay = hasValidTimer
-    ? `${timerLabel ? `<div class="text-xs text-gray-700 mt-1">${timerLabel}</div>` : ''}<div class="timer-display text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${timerStart}" data-frozen="${isFinDechargement}">00:00:00</div>`
-    : ''
   
   return `
     <div class="quai-card ${bgColor} rounded-xl shadow-md hover:shadow-xl p-5 cursor-pointer transition-all duration-200 hover:scale-105"
@@ -263,6 +223,8 @@ function updateStats() {
   const finDechargement = quais.filter(q => q.statut === 'fin_dechargement').length
   const indisponibles = quais.filter(q => q.statut === 'indisponible').length
   
+  console.log('📊 Stats Quais:', { disponibles, enCours, finDechargement, indisponibles })
+  
   // Stats dans l'onglet
   const statDispoElement = document.getElementById('stat-quais-disponibles')
   const statEnCoursElement = document.getElementById('stat-quais-en-cours')
@@ -286,20 +248,25 @@ function startTimers() {
   Object.values(timerIntervals).forEach(interval => clearInterval(interval))
   timerIntervals = {}
   
-  // Démarrer les timers pour tous les quais "en_cours"
-  const timerElements = document.querySelectorAll('.timer-display')
+  // IMPORTANT : Démarrer les timers UNIQUEMENT pour les éléments avec classe "timer-active"
+  // Les timers figés (classe "timer-frozen") ne doivent JAMAIS être traités ici
+  const timerElements = document.querySelectorAll('.timer-active')
+  
+  console.log(`⏱️ Démarrage de ${timerElements.length} timer(s) actif(s)`)
   
   timerElements.forEach(element => {
     const startTime = element.getAttribute('data-start')
-    const isFrozen = element.getAttribute('data-frozen') === 'true'
     
-    if (!startTime || startTime === 'null' || startTime === 'undefined') return
+    if (!startTime || startTime === 'null' || startTime === 'undefined') {
+      console.warn('⚠️ Timer actif sans data-start:', element)
+      return
+    }
     
     // Parser le datetime SQLite (format: "2024-03-04 12:30:45")
     const start = new Date(startTime.replace(' ', 'T') + 'Z')
     
     if (isNaN(start.getTime())) {
-      console.error('Invalid timer_start:', startTime)
+      console.error('❌ Invalid timer_start:', startTime)
       element.textContent = '00:00:00'
       return
     }
@@ -324,21 +291,20 @@ function startTimers() {
     // Mise à jour immédiate
     updateTimer()
     
-    // Si le timer est figé (fin_dechargement), ne pas créer d'intervalle
-    if (isFrozen) {
-      console.log('⏸️ Timer figé pour quai', element.closest('.quai-card')?.getAttribute('data-quai'))
-      return
-    }
-    
-    // Mise à jour toutes les secondes pour les timers actifs (en_cours)
+    // Mise à jour toutes les secondes
     const interval = setInterval(updateTimer, 1000)
     
-    // Stocker l'intervalle pour le nettoyer plus tard
+    // Stocker l'intervalle
     const quaiNumero = element.closest('.quai-card')?.getAttribute('data-quai')
     if (quaiNumero) {
       timerIntervals[quaiNumero] = interval
+      console.log(`✅ Timer actif démarré pour quai ${quaiNumero}`)
     }
   })
+  
+  // Log les timers figés (pour debug)
+  const frozenTimers = document.querySelectorAll('.timer-frozen')
+  console.log(`❄️ ${frozenTimers.length} timer(s) figé(s) (non traités)`)
 }
 
 // ===== MODAL DE GESTION =====
@@ -455,30 +421,12 @@ async function saveQuaiStatusWithStatut(statut) {
     : null
   
   try {
-    // NOUVEAU : Si fin_dechargement, enregistrer dans le cache avec le timer actuel
-    if (statut === 'fin_dechargement') {
-      const quai = quais.find(q => q.quai_numero === currentQuaiNumero)
-      if (quai && quai.timer_start) {
-        setFinDechargementCache(currentQuaiNumero, {
-          timer_start: quai.timer_start,
-          commentaire: `Fin de déchargement - Quai ${currentQuaiNumero}`
-        })
-        console.log(`📋 Quai ${currentQuaiNumero} marqué en fin_dechargement dans le cache`)
-      }
-      
-      // Envoyer "disponible" à l'API mais avec un commentaire spécial
-      statut = 'disponible'
-    } else {
-      // Si on change vers un autre statut, retirer du cache fin_dechargement
-      removeFinDechargementCache(currentQuaiNumero)
-    }
-    
     const response = await fetch(`/api/quais/${currentQuaiNumero}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         statut, 
-        commentaire: commentaire || (statut === 'disponible' ? null : commentaire),
+        commentaire: commentaire,
         commentaire_auteur: 'Admin' // TODO: Récupérer le nom de l'utilisateur connecté
       })
     })

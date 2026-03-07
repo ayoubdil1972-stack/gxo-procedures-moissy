@@ -1485,6 +1485,7 @@ app.post('/api/fin-dechargement', async (c) => {
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = 'fin_dechargement',
+            timer_start = NULL,
             timer_duration = ?,
             commentaire = ?,
             commentaire_auteur = ?,
@@ -1497,7 +1498,7 @@ app.post('/api/fin-dechargement', async (c) => {
         data.quai_numero
       ).run()
 
-      console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé à', timerDuration, 'secondes')
+      console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé à', timerDuration, 'secondes (timer_start supprimé)')
     } catch (error) {
       // Si échec (contrainte CHECK), utiliser 'disponible' comme fallback
       console.warn('⚠️ Contrainte CHECK - Fallback vers disponible:', error.message)
