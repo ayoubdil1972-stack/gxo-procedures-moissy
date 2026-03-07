@@ -5,7 +5,9 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.1.0  
+**Version actuelle** : 3.1.1  
+**Dernière mise à jour** : 2026-03-07  
+**Backup** : https://www.genspark.ai/api/files/s/w907DzIf  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
 ---
@@ -454,6 +456,14 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 ---
 
 ## 🔄 Changelog
+
+### v3.1.1 (2026-03-07) - CRITIQUE
+- 🔥 **FIX CRITIQUE** : `timer_start = NULL` pour statut "Fin de déchargement"
+- ✅ Timer ne recalcule PLUS en arrière-plan
+- ✅ Timer figé ne change JAMAIS (même après rafraîchissement)
+- ✅ Valeur stockée définitivement dans la base
+- 🧪 Test validé : 2 vérifications espacées → timer_duration inchangé
+- 📦 Backup : https://www.genspark.ai/api/files/s/w907DzIf
 
 ### v3.1.0 (2026-03-06)
 - ✅ **Timer figé 100% statique** pour statut "Fin de déchargement"
