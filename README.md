@@ -5,7 +5,7 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.2.1  
+**Version actuelle** : 3.2.2  
 **Dernière mise à jour** : 2026-03-07  
 **Backup** : https://www.genspark.ai/api/files/s/EfK2bwnV  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
@@ -13,7 +13,9 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 ### 🆕 **NOUVEAU : Système de Contrôle Qualité**
 - **Statut "En contrôle"** : Timer actif pour le contrôle qualité  
 - **Statut "Fin de contrôle"** : Timer figé + conservation des données de déchargement  
-- **QR Codes dédiés** : Début de contrôle (C001-C103) et Fin de contrôle (FC001-FC103)  
+- **QR Codes dédiés** : 
+  - 📥 [Télécharger QR Début de contrôle](https://gxomoissyprocedures.com/download-qr-controle) (C001-C103)
+  - 📥 [Télécharger QR Fin de contrôle](https://gxomoissyprocedures.com/download-qr-fin-controle) (FC001-FC103)
 - **Légende améliorée** : Icônes uniformes pour tous les statuts (✅⏱️📋🔍📝🚫)
 
 ---
@@ -520,6 +522,16 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 
 ## 🔄 Changelog
 
+### v3.2.2 (2026-03-07) - FIX BOUCLE DE REDIRECTION ✅
+- 🔧 **Correction critique** : Boucle de redirection sur les pages QR codes
+- ✅ **Solution** : HTML intégré directement dans les routes backend avec `c.html()`
+- 🌐 **Pages accessibles** :
+  - https://gxomoissyprocedures.com/download-qr-controle (code 200 OK)
+  - https://gxomoissyprocedures.com/download-qr-fin-controle (code 200 OK)
+- 📦 **Format PDF** : 45 QR codes par fichier, disposition 3×5, format A4 portrait
+- 🔗 **Génération QR** : Utilise QRious + jsPDF, génération côté client, téléchargement instantané
+- ✅ **Test validation** : Les deux pages fonctionnent sans redirection infinie
+
 ### v3.2.1 (2026-03-07) - CORRECTIONS FINALES 🔧
 - 🔧 **Routes QR codes** : Ajout `/download-qr-controle` et `/download-qr-fin-controle`
 - ✨ **Légende uniformisée** : Icônes ajoutées pour tous les statuts (✅⏱️📋🔍📝🚫)
@@ -574,6 +586,23 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 
 ---
 
+## 📥 Téléchargement QR Codes
+
+### Pages de génération PDF
+- **QR Codes Début de Contrôle** : https://gxomoissyprocedures.com/download-qr-controle  
+  Format : C001-C103 (45 codes), disposition 3×5, A4 portrait, haute qualité
+  
+- **QR Codes Fin de Contrôle** : https://gxomoissyprocedures.com/download-qr-fin-controle  
+  Format : FC001-FC103 (45 codes), disposition 3×5, A4 portrait, haute qualité
+
+### Fonctionnalités
+- ✅ Génération instantanée côté client (QRious + jsPDF)
+- ✅ Téléchargement automatique au format PDF
+- ✅ Prêt pour impression directe (300 DPI équivalent)
+- ✅ Nom de fichier avec date automatique
+
+---
+
 ## 👥 Équipe
 
 - **Développeur principal** : Assistant IA Claude
@@ -599,5 +628,5 @@ Pour toute question ou problème :
 ---
 
 **Dernière mise à jour** : 2026-03-07  
-**Version** : 3.2.1  
-**Statut** : ✅ Production stable avec système de contrôle qualité + légende uniformisée
+**Version** : 3.2.2  
+**Statut** : ✅ Production stable - Système de contrôle qualité + QR codes téléchargeables
