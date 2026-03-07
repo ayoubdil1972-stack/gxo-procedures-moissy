@@ -5,10 +5,15 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.1.1  
+**Version actuelle** : 3.2.0  
 **Dernière mise à jour** : 2026-03-07  
 **Backup** : https://www.genspark.ai/api/files/s/w907DzIf  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+
+### 🆕 **NOUVEAU : Système de Contrôle Qualité**
+- **Statut "En contrôle"** : Timer actif pour le contrôle qualité
+- **Statut "Fin de contrôle"** : Timer figé + conservation des données de déchargement
+- **QR Codes dédiés** : Début de contrôle (C001-C103) et Fin de contrôle (FC001-FC103)
 
 ---
 
@@ -29,17 +34,19 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 | **Disponible** | 🟢 Vert | ✅ | Prêt pour chargement | Aucun |
 | **En cours** | 🟡 Jaune | ⏱️ | Déchargement actif | ⏱️ Défile en temps réel |
 | **Fin de déchargement** | 🔵 Bleu | 📋 | Opération terminée | ⏱️ **FIGÉ** sur durée exacte |
+| **🆕 En contrôle** | 🟠 Orange | 🔍 | Contrôle qualité en cours | ⏱️ Défile en temps réel |
+| **🆕 Fin de contrôle** | 🟣 Violet clair | 📝 | Contrôle terminé | ⏱️ **FIGÉ** sur durée exacte |
 | **Indisponible** | 🔴 Rouge | 🚫 | Problème signalé | Aucun |
 
 #### Workflow complet
 
 ```
-1️⃣  SCAN QR START (ex: "D075")
+1️⃣  SCAN QR START DÉCHARGEMENT (ex: "D075")
     ↓
     Statut: Disponible → En cours
-    Timer: Démarrage automatique (00:00:01 → 00:00:02 → ...)
+    Timer déchargement: Démarrage automatique (00:00:01 → 00:00:02 → ...)
     
-2️⃣  SCAN QR FIN (ex: "F075")
+2️⃣  SCAN QR FIN DÉCHARGEMENT (ex: "F075")
     ↓
     Formulaire de fin de déchargement :
     - Nom agent
@@ -50,15 +57,27 @@ Application web complète pour la gestion en temps réel des quais de déchargem
     - Commentaires
     ↓
     Statut: En cours → Fin de déchargement
-    Timer: FIGÉ sur durée exacte (ex: 01:23:45)
+    Timer déchargement: FIGÉ sur durée exacte (ex: 01:23:45)
     Commentaire: "Déchargement terminé - Jean Dupont - Transport Express - ID:TEST123"
     
-3️⃣  ACTION MANUELLE (clic sur carte bleue)
+3️⃣  🆕 SCAN QR START CONTRÔLE (ex: "C075")
+    ↓
+    Statut: Fin de déchargement → En contrôle
+    Timer contrôle: Démarrage automatique (00:00:00 → 00:00:01 → ...)
+    ✅ Conservation : Durée déchargement + Commentaire
+    
+4️⃣  🆕 SCAN QR FIN CONTRÔLE (ex: "FC075")
+    ↓
+    Statut: En contrôle → Fin de contrôle
+    Timer contrôle: FIGÉ sur durée exacte (ex: 00:15:32)
+    ✅ Conservation : Tout l'historique (déchargement + contrôle)
+    
+5️⃣  ACTION MANUELLE (clic sur carte violette)
     ↓
     Modal → Bouton "Disponible"
     ↓
-    Statut: Fin de déchargement → Disponible
-    Timer: Disparaît
+    Statut: Fin de contrôle → Disponible
+    Timers: Disparaissent
 ```
 
 #### Timer figé - Caractéristiques
@@ -80,6 +99,49 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 │  ⏱️ Durée du déchargement:     │
 │  ┌─────────────────────────┐  │
 │  │      01:23:45           │  │  ← FIGÉ
+│  └─────────────────────────┘  │
+│                                │
+│  Déchargement terminé -        │
+│  Jean Dupont -                 │
+│  Transport Express -           │
+│  ID:ABC123                     │
+└────────────────────────────────┘
+```
+
+#### 🆕 QR Codes de Contrôle Qualité
+
+**📥 Téléchargement des PDF**
+
+| Type | URL | Contenu | Format |
+|------|-----|---------|--------|
+| **Début de contrôle** | [download-qr-controle.html](https://gxomoissyprocedures.com/download-qr-controle.html) | C001 à C103 (45 QR codes) | PDF A4, Haute qualité |
+| **Fin de contrôle** | [download-qr-fin-controle.html](https://gxomoissyprocedures.com/download-qr-fin-controle.html) | FC001 à FC103 (45 QR codes) | PDF A4, Haute qualité |
+
+**Fonctionnement :**
+- **C075** (Début contrôle) → Démarre le timer de contrôle (orange 🔍)
+- **FC075** (Fin contrôle) → Fige le timer et affiche la durée exacte (violet 📝)
+
+**Caractéristiques :**
+- ✅ Génération PDF instantanée dans le navigateur
+- ✅ Format identique aux QR codes de déchargement
+- ✅ 45 QR codes par fichier (zones A-F)
+- ✅ Impression haute qualité (300 DPI)
+- ✅ Découpe facile pour placement sur site
+
+**Exemple visuel - Fin de contrôle :**
+```
+┌────────────────────────────────┐
+│         📝 Fin de              │
+│          contrôle              │
+│                                │
+│  ⏱️ Durée du contrôle:         │
+│  ┌─────────────────────────┐  │
+│  │      00:15:32           │  │  ← FIGÉ
+│  └─────────────────────────┘  │
+│                                │
+│  ⏱️ Durée du déchargement:     │
+│  ┌─────────────────────────┐  │
+│  │      01:23:45           │  │  ← CONSERVÉ
 │  └─────────────────────────┘  │
 │                                │
 │  Déchargement terminé -        │
@@ -457,6 +519,20 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 
 ## 🔄 Changelog
 
+### v3.2.0 (2026-03-07) - SYSTÈME DE CONTRÔLE QUALITÉ 🆕
+- 🆕 **Nouveau statut "En contrôle"** : Timer actif (orange 🔍)
+- 🆕 **Nouveau statut "Fin de contrôle"** : Timer figé (violet 📝)
+- 📋 **Conservation des données** : Durée déchargement + commentaire agent + fournisseur
+- 🔄 **Workflow complet** : Déchargement → Contrôle → Fin → Disponible
+- 📦 **Colonnes BDD** : `timer_controle_start` et `timer_controle_duration`
+- 🔐 **Migration SQL** : UPDATE CHECK constraint pour accepter les nouveaux statuts
+- 📥 **QR Codes PDF** :
+  - Début de contrôle : C001-C103 (download-qr-controle.html)
+  - Fin de contrôle : FC001-FC103 (download-qr-fin-controle.html)
+- ✅ **Test workflow** : 100% validé (Déchargement 5s → Contrôle 4s)
+- 🎨 **Légende** : 6 statuts affichés (au lieu de 4)
+- 🚀 **Déploiement** : Production https://gxomoissyprocedures.com
+
 ### v3.1.1 (2026-03-07) - CRITIQUE
 - 🔥 **FIX CRITIQUE** : `timer_start = NULL` pour statut "Fin de déchargement"
 - ✅ Timer ne recalcule PLUS en arrière-plan
@@ -512,6 +588,6 @@ Pour toute question ou problème :
 
 ---
 
-**Dernière mise à jour** : 2026-03-06  
-**Version** : 3.1.0  
-**Statut** : ✅ Production stable
+**Dernière mise à jour** : 2026-03-07  
+**Version** : 3.2.0  
+**Statut** : ✅ Production stable avec système de contrôle qualité
