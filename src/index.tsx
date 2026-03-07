@@ -983,15 +983,330 @@ app.get('/scan-fin-controle', async (c) => {
 })
 
 // ===== PAGES DE TÉLÉCHARGEMENT QR CODES =====
-// Routes pour servir les pages HTML de génération de QR codes
 
+// QR Codes Début de Contrôle
 app.get('/download-qr-controle', (c) => {
-  return c.redirect('/download-qr-controle.html')
-})
+  return c.html(`<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Codes Début de Contrôle - GXO Moissy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-qrcode text-orange-600 mr-3"></i>
+                        QR Codes - Début de Contrôle
+                    </h1>
+                    <p class="text-gray-600">GXO Moissy - 45 QR codes pour les quais</p>
+                </div>
+                <div class="text-6xl">🔍</div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-8 text-center mb-6">
+                <div class="text-white mb-4">
+                    <i class="fas fa-file-pdf text-6xl mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">Générer le PDF</h2>
+                    <p class="text-lg opacity-90">45 QR codes - Format A4 - Haute qualité</p>
+                </div>
+                <button 
+                    id="generatePDF"
+                    onclick="generatePDF()"
+                    class="inline-block bg-white text-orange-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+                >
+                    <i class="fas fa-file-pdf mr-2"></i>
+                    Générer et Télécharger le PDF
+                </button>
+                <div id="loading" class="hidden mt-4 text-white">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                    Génération en cours...
+                </div>
+            </div>
 
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-orange-50 rounded-xl p-6">
+                    <h3 class="font-bold text-orange-900 mb-3">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Contenu du PDF
+                    </h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><i class="fas fa-check text-orange-600 mr-2"></i>45 QR codes (C001-C103)</li>
+                        <li><i class="fas fa-check text-orange-600 mr-2"></i>Organisés par zones (A-F)</li>
+                        <li><i class="fas fa-check text-orange-600 mr-2"></i>Format A4 portrait</li>
+                    </ul>
+                </div>
+
+                <div class="bg-blue-50 rounded-xl p-6">
+                    <h3 class="font-bold text-blue-900 mb-3">
+                        <i class="fas fa-clipboard-check mr-2"></i>
+                        Fonctionnalité
+                    </h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><i class="fas fa-check text-orange-600 mr-2"></i>Démarre le timer de contrôle</li>
+                        <li><i class="fas fa-check text-orange-600 mr-2"></i>Statut "En contrôle"</li>
+                        <li><i class="fas fa-check text-orange-600 mr-2"></i>Conservation des données</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="/accueil-chauffeur" class="inline-block bg-white text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all shadow-md">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Retour à la gestion des quais
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <script>
+        const quaisGXO = [1,2,3,4,5,6,7,8,9,10,32,33,34,35,36,37,38,45,46,47,48,49,60,61,62,67,68,69,75,76,77,78,79,81,82,83,84,85,86,87,99,100,101,102,103];
+
+        async function generatePDF() {
+            const button = document.getElementById('generatePDF');
+            const loading = document.getElementById('loading');
+            
+            button.disabled = true;
+            button.classList.add('opacity-50');
+            loading.classList.remove('hidden');
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const margin = 10;
+                const qrSize = 50;
+                const cols = 3;
+                const rows = 5;
+                const spacingX = (pageWidth - 2 * margin - cols * qrSize) / (cols - 1);
+                const spacingY = (pageHeight - 2 * margin - rows * qrSize) / (rows - 1);
+
+                let currentRow = 0;
+                let currentCol = 0;
+
+                for (let i = 0; i < quaisGXO.length; i++) {
+                    const quaiNum = quaisGXO[i];
+                    const qrCode = String(quaiNum).padStart(3, '0');
+                    const url = window.location.origin + '/scan-controle?quai=' + quaiNum;
+
+                    if (i > 0 && i % (cols * rows) === 0) {
+                        pdf.addPage();
+                        currentRow = 0;
+                        currentCol = 0;
+                    }
+
+                    const x = margin + currentCol * (qrSize + spacingX);
+                    const y = margin + currentRow * (qrSize + spacingY);
+
+                    const canvas = document.createElement('canvas');
+                    new QRious({ element: canvas, value: url, size: 400, level: 'H' });
+                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', x, y, qrSize, qrSize);
+
+                    pdf.setFontSize(12);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('C' + qrCode, x + qrSize / 2, y + qrSize + 5, { align: 'center' });
+                    pdf.setFontSize(8);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.text('Quai ' + quaiNum, x + qrSize / 2, y + qrSize + 9, { align: 'center' });
+                    pdf.text('Début contrôle', x + qrSize / 2, y + qrSize + 12, { align: 'center' });
+
+                    currentCol++;
+                    if (currentCol >= cols) {
+                        currentCol = 0;
+                        currentRow++;
+                    }
+                }
+
+                const today = new Date().toISOString().split('T')[0];
+                pdf.save('GXO-Moissy-QR-Codes-Debut-Controle-' + today + '.pdf');
+
+                loading.classList.add('hidden');
+                button.disabled = false;
+                button.classList.remove('opacity-50');
+                alert('✅ PDF généré avec succès !');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur lors de la génération du PDF');
+                loading.classList.add('hidden');
+                button.disabled = false;
+                button.classList.remove('opacity-50');
+            }
+        }
+    </script>
+</body>
+</html>`);
+});
+
+// QR Codes Fin de Contrôle
 app.get('/download-qr-fin-controle', (c) => {
-  return c.redirect('/download-qr-fin-controle.html')
-})
+  return c.html(`<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Codes Fin de Contrôle - GXO Moissy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-purple-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-qrcode text-purple-600 mr-3"></i>
+                        QR Codes - Fin de Contrôle
+                    </h1>
+                    <p class="text-gray-600">GXO Moissy - 45 QR codes pour les quais</p>
+                </div>
+                <div class="text-6xl">📝</div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-8 text-center mb-6">
+                <div class="text-white mb-4">
+                    <i class="fas fa-file-pdf text-6xl mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">Générer le PDF</h2>
+                    <p class="text-lg opacity-90">45 QR codes - Format A4 - Haute qualité</p>
+                </div>
+                <button 
+                    id="generatePDF"
+                    onclick="generatePDF()"
+                    class="inline-block bg-white text-purple-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+                >
+                    <i class="fas fa-file-pdf mr-2"></i>
+                    Générer et Télécharger le PDF
+                </button>
+                <div id="loading" class="hidden mt-4 text-white">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                    Génération en cours...
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-purple-50 rounded-xl p-6">
+                    <h3 class="font-bold text-purple-900 mb-3">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Contenu du PDF
+                    </h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><i class="fas fa-check text-purple-600 mr-2"></i>45 QR codes (FC001-FC103)</li>
+                        <li><i class="fas fa-check text-purple-600 mr-2"></i>Organisés par zones (A-F)</li>
+                        <li><i class="fas fa-check text-purple-600 mr-2"></i>Format A4 portrait</li>
+                    </ul>
+                </div>
+
+                <div class="bg-blue-50 rounded-xl p-6">
+                    <h3 class="font-bold text-blue-900 mb-3">
+                        <i class="fas fa-clipboard-check mr-2"></i>
+                        Fonctionnalité
+                    </h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><i class="fas fa-check text-purple-600 mr-2"></i>Arrête le timer de contrôle</li>
+                        <li><i class="fas fa-check text-purple-600 mr-2"></i>Statut "Fin de contrôle"</li>
+                        <li><i class="fas fa-check text-purple-600 mr-2"></i>Timer figé</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="/accueil-chauffeur" class="inline-block bg-white text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all shadow-md">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Retour à la gestion des quais
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <script>
+        const quaisGXO = [1,2,3,4,5,6,7,8,9,10,32,33,34,35,36,37,38,45,46,47,48,49,60,61,62,67,68,69,75,76,77,78,79,81,82,83,84,85,86,87,99,100,101,102,103];
+
+        async function generatePDF() {
+            const button = document.getElementById('generatePDF');
+            const loading = document.getElementById('loading');
+            
+            button.disabled = true;
+            button.classList.add('opacity-50');
+            loading.classList.remove('hidden');
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const margin = 10;
+                const qrSize = 50;
+                const cols = 3;
+                const rows = 5;
+                const spacingX = (pageWidth - 2 * margin - cols * qrSize) / (cols - 1);
+                const spacingY = (pageHeight - 2 * margin - rows * qrSize) / (rows - 1);
+
+                let currentRow = 0;
+                let currentCol = 0;
+
+                for (let i = 0; i < quaisGXO.length; i++) {
+                    const quaiNum = quaisGXO[i];
+                    const qrCode = String(quaiNum).padStart(3, '0');
+                    const url = window.location.origin + '/scan-fin-controle?quai=' + quaiNum;
+
+                    if (i > 0 && i % (cols * rows) === 0) {
+                        pdf.addPage();
+                        currentRow = 0;
+                        currentCol = 0;
+                    }
+
+                    const x = margin + currentCol * (qrSize + spacingX);
+                    const y = margin + currentRow * (qrSize + spacingY);
+
+                    const canvas = document.createElement('canvas');
+                    new QRious({ element: canvas, value: url, size: 400, level: 'H' });
+                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', x, y, qrSize, qrSize);
+
+                    pdf.setFontSize(12);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('FC' + qrCode, x + qrSize / 2, y + qrSize + 5, { align: 'center' });
+                    pdf.setFontSize(8);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.text('Quai ' + quaiNum, x + qrSize / 2, y + qrSize + 9, { align: 'center' });
+                    pdf.text('Fin contrôle', x + qrSize / 2, y + qrSize + 12, { align: 'center' });
+
+                    currentCol++;
+                    if (currentCol >= cols) {
+                        currentCol = 0;
+                        currentRow++;
+                    }
+                }
+
+                const today = new Date().toISOString().split('T')[0];
+                pdf.save('GXO-Moissy-QR-Codes-Fin-Controle-' + today + '.pdf');
+
+                loading.classList.add('hidden');
+                button.disabled = false;
+                button.classList.remove('opacity-50');
+                alert('✅ PDF généré avec succès !');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur lors de la génération du PDF');
+                loading.classList.add('hidden');
+                button.disabled = false;
+                button.classList.remove('opacity-50');
+            }
+        }
+    </script>
+</body>
+</html>`);
+});
 
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
