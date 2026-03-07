@@ -982,6 +982,17 @@ app.get('/scan-fin-controle', async (c) => {
   }
 })
 
+// ===== PAGES DE TÉLÉCHARGEMENT QR CODES =====
+// Routes pour servir les pages HTML de génération de QR codes
+
+app.get('/download-qr-controle', (c) => {
+  return c.redirect('/download-qr-controle.html')
+})
+
+app.get('/download-qr-fin-controle', (c) => {
+  return c.redirect('/download-qr-fin-controle.html')
+})
+
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
 // Page consignes - Redirection vers fichiers HTML statiques (Cloudflare Pages sert automatiquement public/)
