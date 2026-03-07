@@ -757,6 +757,231 @@ app.get('/scan-fin-dechargement', (c) => {
   `)
 })
 
+// ===== PAGES SCAN CONTRÔLE =====
+
+// URL Format: https://gxomoissyprocedures.com/scan-controle?quai=75
+// Démarrage du contrôle par l'agent de contrôle
+app.get('/scan-controle', async (c) => {
+  const quaiNumero = c.req.query('quai')
+  
+  if (!quaiNumero) {
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erreur - Scanner GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
+          <div class="text-6xl mb-4">❌</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-4">Code-barres invalide</h1>
+          <p class="text-gray-600 mb-6">Le QR Code scanné ne contient pas de numéro de quai valide.</p>
+          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
+            Retour à l'accueil
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  }
+  
+  try {
+    // Mettre à jour le statut du quai à "en_controle"
+    await c.env.DB.prepare(`
+      UPDATE quai_status 
+      SET statut = 'en_controle',
+          timer_controle_start = datetime('now'),
+          timer_controle_duration = NULL,
+          updated_at = datetime('now')
+      WHERE quai_numero = ?
+    `).bind(quaiNumero).run()
+    
+    console.log(`✅ Quai ${quaiNumero} passé en contrôle - Timer contrôle démarré`)
+    
+    // Page de succès
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contrôle Démarré - GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+      </head>
+      <body class="bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md text-center transform hover:scale-105 transition-transform">
+          <div class="text-7xl mb-4 animate-bounce">🔍</div>
+          <h1 class="text-3xl font-bold text-orange-600 mb-4">Contrôle Démarré</h1>
+          <p class="text-2xl font-bold text-gray-800 mb-6">Quai n°${quaiNumero}</p>
+          <div class="bg-orange-50 border-l-4 border-orange-500 p-4 mb-6">
+            <p class="text-orange-800 font-semibold">
+              <i class="fas fa-clock mr-2"></i>
+              Le timer de contrôle est maintenant actif
+            </p>
+          </div>
+          <a href="/accueil-chauffeur" class="bg-orange-500 text-white px-8 py-4 rounded-xl inline-block hover:bg-orange-600 transition-colors font-bold text-lg shadow-lg">
+            <i class="fas fa-warehouse mr-2"></i>
+            Retour à la gestion des quais
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  } catch (error) {
+    console.error(`❌ Erreur scan contrôle quai ${quaiNumero}:`, error)
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erreur - GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
+          <div class="text-6xl mb-4">⚠️</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-4">Erreur de traitement</h1>
+          <p class="text-gray-600 mb-6">${error.message}</p>
+          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
+            Retour à l'accueil
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  }
+})
+
+// URL Format: https://gxomoissyprocedures.com/scan-fin-controle?quai=75
+// Fin du contrôle par l'agent de contrôle
+app.get('/scan-fin-controle', async (c) => {
+  const quaiNumero = c.req.query('quai')
+  
+  if (!quaiNumero) {
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erreur - Scanner GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
+          <div class="text-6xl mb-4">❌</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-4">Code-barres invalide</h1>
+          <p class="text-gray-600 mb-6">Le QR Code scanné ne contient pas de numéro de quai valide.</p>
+          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
+            Retour à l'accueil
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  }
+  
+  try {
+    // Récupérer le timer_controle_start pour calculer la durée
+    const quaiData = await c.env.DB.prepare(`
+      SELECT timer_controle_start FROM quai_status WHERE quai_numero = ?
+    `).bind(quaiNumero).first()
+    
+    let timerControleDuration = null
+    if (quaiData?.timer_controle_start) {
+      // Calculer la durée en secondes
+      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T') + 'Z').getTime()
+      const endTime = Date.now()
+      timerControleDuration = Math.floor((endTime - startTime) / 1000)
+      console.log(`⏱️ Durée contrôle calculée: ${timerControleDuration}s`)
+    }
+    
+    // Mettre à jour le statut du quai à "fin_controle"
+    await c.env.DB.prepare(`
+      UPDATE quai_status 
+      SET statut = 'fin_controle',
+          timer_controle_start = NULL,
+          timer_controle_duration = ?,
+          updated_at = datetime('now')
+      WHERE quai_numero = ?
+    `).bind(timerControleDuration, quaiNumero).run()
+    
+    console.log(`✅ Quai ${quaiNumero} passé en fin de contrôle - Timer figé à ${timerControleDuration}s`)
+    
+    // Formater la durée pour l'affichage
+    const hours = Math.floor(timerControleDuration / 3600)
+    const minutes = Math.floor((timerControleDuration % 3600) / 60)
+    const seconds = timerControleDuration % 60
+    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+    
+    // Page de succès
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contrôle Terminé - GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+      </head>
+      <body class="bg-gradient-to-br from-purple-50 to-purple-100 min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md text-center transform hover:scale-105 transition-transform">
+          <div class="text-7xl mb-4 animate-bounce">📝</div>
+          <h1 class="text-3xl font-bold text-purple-600 mb-4">Contrôle Terminé</h1>
+          <p class="text-2xl font-bold text-gray-800 mb-4">Quai n°${quaiNumero}</p>
+          <div class="bg-purple-50 border-l-4 border-purple-500 p-4 mb-6">
+            <p class="text-purple-800 font-semibold mb-2">
+              <i class="fas fa-stopwatch mr-2"></i>
+              Durée du contrôle
+            </p>
+            <p class="text-3xl font-mono font-bold text-purple-900">${formattedTime}</p>
+          </div>
+          <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+            <p class="text-green-800 font-semibold">
+              <i class="fas fa-check-circle mr-2"></i>
+              Le timer de contrôle est maintenant figé
+            </p>
+          </div>
+          <a href="/accueil-chauffeur" class="bg-purple-500 text-white px-8 py-4 rounded-xl inline-block hover:bg-purple-600 transition-colors font-bold text-lg shadow-lg">
+            <i class="fas fa-warehouse mr-2"></i>
+            Retour à la gestion des quais
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  } catch (error) {
+    console.error(`❌ Erreur scan fin contrôle quai ${quaiNumero}:`, error)
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erreur - GXO Moissy</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
+          <div class="text-6xl mb-4">⚠️</div>
+          <h1 class="text-2xl font-bold text-red-600 mb-4">Erreur de traitement</h1>
+          <p class="text-gray-600 mb-6">${error.message}</p>
+          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
+            Retour à l'accueil
+          </a>
+        </div>
+      </body>
+      </html>
+    `)
+  }
+})
+
 // ===== PAGES CHAUFFEUR PUBLIC (Sans authentification) =====
 
 // Page consignes - Redirection vers fichiers HTML statiques (Cloudflare Pages sert automatiquement public/)
