@@ -5,18 +5,24 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.2.2  
+**Version actuelle** : 3.4.0  
 **Dernière mise à jour** : 2026-03-07  
-**Backup** : https://www.genspark.ai/api/files/s/Coc73Jii  
+**Backup** : https://www.genspark.ai/api/files/s/U78T1uZE  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU : Système de Contrôle Qualité**
-- **Statut "En contrôle"** : Timer actif pour le contrôle qualité  
-- **Statut "Fin de contrôle"** : Timer figé + conservation des données de déchargement  
+### 🆕 **NOUVEAU : Traçabilité Complète des Opérations**
+- **Formulaire contrôleur** : Saisie obligatoire du nom de l'agent de contrôle avec auto-complétion  
+- **Rubrique "Déchargement terminé"** : Affichage permanent de la durée de déchargement  
+- **Rubrique "Contrôle terminé"** : Affichage complet avec :
+  - ⏱️ Durée du contrôle (HH:MM:SS)
+  - 👤 Nom du contrôleur
+  - 🚚 Fournisseur
+  - 🆔 ID Chauffeur (ex: 1820048)
+  - 🕐 Date/heure de début du contrôle (format: 07/03/2026 à 20h35)
+- **Conservation permanente** : Les deux rubriques restent affichées jusqu'au reset manuel
 - **QR Codes dédiés** : 
   - 📥 [Télécharger QR Début de contrôle](https://gxomoissyprocedures.com/download-qr-controle) (C001-C103)
   - 📥 [Télécharger QR Fin de contrôle](https://gxomoissyprocedures.com/download-qr-fin-controle) (FC001-FC103)
-- **Légende améliorée** : Icônes uniformes pour tous les statuts (✅⏱️📋🔍📝🚫)
 
 ---
 
@@ -522,6 +528,36 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 
 ## 🔄 Changelog
 
+### v3.4.0 (2026-03-07) - TRAÇABILITÉ COMPLÈTE DES OPÉRATIONS 🆕
+- 🆕 **Formulaire contrôleur fonctionnel** : Saisie obligatoire du nom de l'agent de contrôle
+- ✅ **Fix Promise error** : Correction route `/scan-fin-controle-success` (non-async)
+- 📋 **Rubrique "Déchargement terminé"** : 
+  - Affichage permanent dans 3 statuts (Fin de déchargement, En contrôle, Fin de contrôle)
+  - Durée du déchargement au format HH:MM:SS
+- 📝 **Rubrique "Contrôle terminé"** (statut Fin de contrôle) :
+  - ⏱️ Durée du contrôle (HH:MM:SS)
+  - 👤 Nom du contrôleur (ex: Marie Dubois)
+  - 🚚 Fournisseur (ex: Transport Express)
+  - 🆔 ID Chauffeur (ex: 1820048)
+  - 🕐 Date/heure début contrôle (format: 07/03/2026 à 20h35)
+- 🔒 **Conservation permanente** : Les deux rubriques restent affichées jusqu'au reset manuel
+- 🗄️ **Nouvelles colonnes BDD** :
+  - `controleur_nom` : Nom de l'agent de contrôle
+  - `controle_debut_timestamp` : Date/heure début du contrôle
+  - `controle_fournisseur` : Fournisseur (récupéré depuis déchargement)
+  - `controle_id_chauffeur` : ID chauffeur (récupéré depuis déchargement)
+- 📦 **Migrations SQL** : `0014_add_controleur_nom.sql` + `0015_add_controle_details.sql`
+- ✅ **Tests validés** : Workflow complet avec toutes les infos (Déchargement 5s → Contrôle 3s)
+- 🎯 **Auto-complétion** : Sauvegarde des 10 derniers noms de contrôleurs dans localStorage
+
+### v3.3.0 (2026-03-07) - FORMULAIRE CONTRÔLEUR 📝
+- 🆕 **Page formulaire** : `/scan-fin-controle` avec saisie nom contrôleur
+- 💾 **Sauvegarde localStorage** : 10 derniers noms pour auto-complétion
+- 📋 **Affichage infos** : Durée déchargement visible dans statuts en_controle et fin_controle
+- 📝 **Affichage contrôle** : Durée + nom contrôleur dans statut fin_controle
+- 🗄️ **Colonne BDD** : `controleur_nom` (TEXT)
+- 📦 **Migration SQL** : `0014_add_controleur_nom.sql`
+
 ### v3.2.2 (2026-03-07) - FIX BOUCLE DE REDIRECTION ✅
 - 🔧 **Correction critique** : Boucle de redirection sur les pages QR codes
 - ✅ **Solution** : HTML intégré directement dans les routes backend avec `c.html()`
@@ -628,5 +664,5 @@ Pour toute question ou problème :
 ---
 
 **Dernière mise à jour** : 2026-03-07  
-**Version** : 3.2.2  
-**Statut** : ✅ Production stable - Système de contrôle qualité + QR codes téléchargeables
+**Version** : 3.4.0  
+**Statut** : ✅ Production stable - Traçabilité complète des opérations avec formulaire contrôleur
