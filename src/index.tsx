@@ -789,17 +789,41 @@ app.get('/scan-controle', async (c) => {
   }
   
   try {
-    // Mettre à jour le statut du quai à "en_controle"
+    // Récupérer les informations du déchargement (fournisseur, ID chauffeur)
+    const quaiData = await c.env.DB.prepare(`
+      SELECT commentaire FROM quai_status WHERE quai_numero = ?
+    `).bind(quaiNumero).first()
+    
+    // Extraire fournisseur et ID du commentaire (format: "Déchargement terminé - Agent - Fournisseur - ID:123456")
+    let fournisseur = null
+    let idChauffeur = null
+    if (quaiData?.commentaire) {
+      const parts = quaiData.commentaire.split(' - ')
+      if (parts.length >= 3) {
+        fournisseur = parts[2] // Fournisseur
+      }
+      if (parts.length >= 4) {
+        const idMatch = parts[3].match(/ID:(\d+)/)
+        if (idMatch) {
+          idChauffeur = idMatch[1]
+        }
+      }
+    }
+    
+    // Mettre à jour le statut du quai à "en_controle" et sauvegarder les infos
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'en_controle',
           timer_controle_start = datetime('now'),
           timer_controle_duration = NULL,
+          controle_debut_timestamp = datetime('now'),
+          controle_fournisseur = ?,
+          controle_id_chauffeur = ?,
           updated_at = datetime('now')
       WHERE quai_numero = ?
-    `).bind(quaiNumero).run()
+    `).bind(fournisseur, idChauffeur, quaiNumero).run()
     
-    console.log(`✅ Quai ${quaiNumero} passé en contrôle - Timer contrôle démarré`)
+    console.log(`✅ Quai ${quaiNumero} passé en contrôle - Timer contrôle démarré - Fournisseur: ${fournisseur}, ID: ${idChauffeur}`)
     
     // Page de succès
     return c.html(`
@@ -997,8 +1021,16 @@ app.get('/scan-fin-controle', async (c) => {
               localStorage.setItem('gxo_controleurs', JSON.stringify(savedControleurs));
             }
 
-            // Rediriger vers la page de succès
-            window.location.href = '/scan-fin-controle-success?quai=${quaiNumero}&duree=' + result.dureeControle + '&nom=' + encodeURIComponent(controleurNom);
+            // Rediriger vers la page de succès avec toutes les infos
+            const params = new URLSearchParams({
+              quai: '${quaiNumero}',
+              duree: result.dureeControle,
+              nom: controleurNom,
+              fournisseur: result.fournisseur || '',
+              id: result.idChauffeur || '',
+              debut: result.debutTimestamp || ''
+            });
+            window.location.href = '/scan-fin-controle-success?' + params.toString();
           } catch (error) {
             console.error('Erreur:', error);
             errorDiv.textContent = 'Erreur lors de l\\'enregistrement. Veuillez réessayer.';
@@ -1023,9 +1055,15 @@ app.post('/api/fin-controle', async (c) => {
       return c.json({ error: 'Données manquantes' }, 400)
     }
 
-    // Récupérer le timer_controle_start pour calculer la durée
+    // Récupérer les informations du quai (timer + infos contrôle)
     const quaiData = await c.env.DB.prepare(`
-      SELECT timer_controle_start FROM quai_status WHERE quai_numero = ?
+      SELECT 
+        timer_controle_start,
+        controle_fournisseur,
+        controle_id_chauffeur,
+        controle_debut_timestamp
+      FROM quai_status 
+      WHERE quai_numero = ?
     `).bind(quai).first()
     
     let timerControleDuration = null
@@ -1054,7 +1092,10 @@ app.post('/api/fin-controle', async (c) => {
       success: true, 
       quai: quai,
       dureeControle: timerControleDuration,
-      controleurNom: controleurNom
+      controleurNom: controleurNom,
+      fournisseur: quaiData?.controle_fournisseur || '',
+      idChauffeur: quaiData?.controle_id_chauffeur || '',
+      debutTimestamp: quaiData?.controle_debut_timestamp || ''
     })
   } catch (error) {
     console.error('❌ Erreur fin contrôle:', error)
@@ -1062,17 +1103,36 @@ app.post('/api/fin-controle', async (c) => {
   }
 })
 
-// Page de succès après fin de contrôle
-app.get('/scan-fin-controle-success', async (c) => {
+// Page de succès après fin de contrôle - NON ASYNC pour éviter Promise error
+app.get('/scan-fin-controle-success', (c) => {
   const quaiNumero = c.req.query('quai')
   const dureeControle = parseInt(c.req.query('duree') || '0')
   const controleurNom = c.req.query('nom') || ''
+  const fournisseur = c.req.query('fournisseur') || ''
+  const idChauffeur = c.req.query('id') || ''
+  const debutTimestamp = c.req.query('debut') || ''
   
-  // Formater la durée pour l'affichage
+  // Formater la durée du contrôle pour l'affichage
   const hours = Math.floor(dureeControle / 3600)
   const minutes = Math.floor((dureeControle % 3600) / 60)
   const seconds = dureeControle % 60
   const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+  
+  // Formater la date et l'heure de début (format: 2026-03-07 20:35:00 -> 07/03/2026 à 20h35)
+  let formattedDebut = ''
+  if (debutTimestamp) {
+    try {
+      const date = new Date(debutTimestamp.replace(' ', 'T') + 'Z')
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = date.getFullYear()
+      const hour = String(date.getHours()).padStart(2, '0')
+      const minute = String(date.getMinutes()).padStart(2, '0')
+      formattedDebut = `${day}/${month}/${year} à ${hour}h${minute}`
+    } catch (e) {
+      formattedDebut = debutTimestamp
+    }
+  }
   
   // Page de succès
   return c.html(`
@@ -1099,13 +1159,43 @@ app.get('/scan-fin-controle-success', async (c) => {
           <p class="text-3xl font-mono font-bold text-purple-900">${formattedTime}</p>
         </div>
 
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
           <p class="text-blue-800 font-semibold mb-2">
             <i class="fas fa-user mr-2"></i>
             Contrôleur
           </p>
           <p class="text-xl font-bold text-blue-900">${controleurNom}</p>
         </div>
+
+        ${fournisseur ? `
+          <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4">
+            <p class="text-indigo-800 font-semibold mb-2">
+              <i class="fas fa-truck mr-2"></i>
+              Fournisseur
+            </p>
+            <p class="text-lg font-bold text-indigo-900">${fournisseur}</p>
+          </div>
+        ` : ''}
+
+        ${idChauffeur ? `
+          <div class="bg-teal-50 border-l-4 border-teal-500 p-4 mb-4">
+            <p class="text-teal-800 font-semibold mb-2">
+              <i class="fas fa-id-card mr-2"></i>
+              ID Chauffeur
+            </p>
+            <p class="text-lg font-bold text-teal-900">${idChauffeur}</p>
+          </div>
+        ` : ''}
+
+        ${formattedDebut ? `
+          <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-4">
+            <p class="text-amber-800 font-semibold mb-2">
+              <i class="fas fa-clock mr-2"></i>
+              Début du contrôle
+            </p>
+            <p class="text-lg font-bold text-amber-900">${formattedDebut}</p>
+          </div>
+        ` : ''}
         
         <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
           <p class="text-green-800 font-semibold">
