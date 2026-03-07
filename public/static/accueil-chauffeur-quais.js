@@ -82,8 +82,19 @@ function renderQuaiCard(quai) {
     })
   }
   
-  // Gestion des timers selon le statut
+  // Gestion des timers et informations selon le statut
   let timerDisplay = ''
+  let dechargementInfo = ''
+  let controleInfo = ''
+  
+  // Fonction helper pour formater les durées
+  const formatDuration = (seconds) => {
+    if (!seconds || seconds <= 0) return null
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+  }
   
   // DÉCHARGEMENT : Statut "en_cours"
   if (quai.statut === 'en_cours' && quai.timer_start) {
@@ -91,43 +102,70 @@ function renderQuaiCard(quai) {
   } 
   // DÉCHARGEMENT : Statut "fin_dechargement"
   else if (quai.statut === 'fin_dechargement') {
-    if (quai.timer_duration && quai.timer_duration > 0) {
-      const hours = Math.floor(quai.timer_duration / 3600)
-      const minutes = Math.floor((quai.timer_duration % 3600) / 60)
-      const seconds = quai.timer_duration % 60
-      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-      
-      timerDisplay = `
-        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
-        <div class="timer-frozen text-base font-mono font-bold text-blue-700 mt-1 bg-blue-50 rounded-lg px-3 py-2 border-2 border-blue-300">${formattedTime}</div>
+    const formattedTime = formatDuration(quai.timer_duration)
+    if (formattedTime) {
+      dechargementInfo = `
+        <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
+          <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
+          <div class="timer-frozen text-sm font-mono font-bold text-blue-900">${formattedTime}</div>
+        </div>
       `
     } else {
-      timerDisplay = `
-        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du déchargement:</div>
-        <div class="timer-frozen text-base font-mono font-bold text-gray-500 mt-1 bg-gray-50 rounded-lg px-3 py-2 border-2 border-gray-300">Non disponible</div>
+      dechargementInfo = `
+        <div class="mt-2 bg-gray-50 rounded-lg p-2 border border-gray-200">
+          <div class="text-xs text-gray-700 font-semibold mb-1">📋 Déchargement terminé</div>
+          <div class="timer-frozen text-sm font-mono text-gray-500">Non disponible</div>
+        </div>
       `
     }
   }
   // CONTRÔLE : Statut "en_controle"
-  else if (quai.statut === 'en_controle' && quai.timer_controle_start) {
-    timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_controle_start}">00:00:00</div>`
+  else if (quai.statut === 'en_controle') {
+    // Afficher le timer actif du contrôle
+    if (quai.timer_controle_start) {
+      timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_controle_start}">00:00:00</div>`
+    }
+    
+    // Afficher les infos du déchargement terminé
+    const formattedDechargement = formatDuration(quai.timer_duration)
+    if (formattedDechargement) {
+      dechargementInfo = `
+        <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
+          <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
+          <div class="text-sm font-mono font-bold text-blue-900">${formattedDechargement}</div>
+        </div>
+      `
+    }
   }
   // CONTRÔLE : Statut "fin_controle"
   else if (quai.statut === 'fin_controle') {
-    if (quai.timer_controle_duration && quai.timer_controle_duration > 0) {
-      const hours = Math.floor(quai.timer_controle_duration / 3600)
-      const minutes = Math.floor((quai.timer_controle_duration % 3600) / 60)
-      const seconds = quai.timer_controle_duration % 60
-      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-      
-      timerDisplay = `
-        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du contrôle:</div>
-        <div class="timer-frozen text-base font-mono font-bold text-purple-700 mt-1 bg-purple-50 rounded-lg px-3 py-2 border-2 border-purple-300">${formattedTime}</div>
+    // Afficher les infos du déchargement terminé
+    const formattedDechargement = formatDuration(quai.timer_duration)
+    if (formattedDechargement) {
+      dechargementInfo = `
+        <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
+          <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
+          <div class="text-sm font-mono font-bold text-blue-900">${formattedDechargement}</div>
+        </div>
+      `
+    }
+    
+    // Afficher les infos du contrôle terminé
+    const formattedControle = formatDuration(quai.timer_controle_duration)
+    if (formattedControle) {
+      controleInfo = `
+        <div class="mt-2 bg-purple-50 rounded-lg p-2 border border-purple-200">
+          <div class="text-xs text-purple-800 font-semibold mb-1">📝 Contrôle terminé</div>
+          <div class="text-sm font-mono font-bold text-purple-900">${formattedControle}</div>
+          ${quai.controleur_nom ? `<div class="text-xs text-purple-700 mt-1"><i class="fas fa-user mr-1"></i>${quai.controleur_nom}</div>` : ''}
+        </div>
       `
     } else {
-      timerDisplay = `
-        <div class="text-xs text-gray-700 mt-1 font-semibold">⏱️ Durée du contrôle:</div>
-        <div class="timer-frozen text-base font-mono font-bold text-gray-500 mt-1 bg-gray-50 rounded-lg px-3 py-2 border-2 border-gray-300">Non disponible</div>
+      controleInfo = `
+        <div class="mt-2 bg-gray-50 rounded-lg p-2 border border-gray-200">
+          <div class="text-xs text-gray-700 font-semibold mb-1">📝 Contrôle terminé</div>
+          <div class="text-sm font-mono text-gray-500">Non disponible</div>
+        </div>
       `
     }
   }
@@ -154,8 +192,14 @@ function renderQuaiCard(quai) {
           ${getStatusLabel(quai.statut)}
         </div>
         
-        <!-- Timer -->
+        <!-- Timer actif (pour en_cours et en_controle) -->
         ${timerDisplay}
+        
+        <!-- Informations déchargement terminé (pour fin_dechargement, en_controle, fin_controle) -->
+        ${dechargementInfo}
+        
+        <!-- Informations contrôle terminé (pour fin_controle uniquement) -->
+        ${controleInfo}
         
         <!-- Commentaire -->
         ${quai.commentaire ? `

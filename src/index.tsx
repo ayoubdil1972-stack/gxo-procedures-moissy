@@ -858,7 +858,7 @@ app.get('/scan-controle', async (c) => {
 })
 
 // URL Format: https://gxomoissyprocedures.com/scan-fin-controle?quai=75
-// Fin du contrôle par l'agent de contrôle
+// Fin du contrôle par l'agent de contrôle - AFFICHE FORMULAIRE
 app.get('/scan-fin-controle', async (c) => {
   const quaiNumero = c.req.query('quai')
   
@@ -886,11 +886,147 @@ app.get('/scan-fin-controle', async (c) => {
     `)
   }
   
+  // Afficher le formulaire pour saisir le nom du contrôleur
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Fin de Contrôle - GXO Moissy</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gradient-to-br from-purple-50 to-purple-100 min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+        <div class="text-center mb-6">
+          <div class="text-7xl mb-4">📝</div>
+          <h1 class="text-3xl font-bold text-purple-600 mb-2">Fin de Contrôle</h1>
+          <p class="text-2xl font-bold text-gray-800">Quai n°${quaiNumero}</p>
+        </div>
+
+        <form id="finControleForm" class="space-y-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fas fa-user mr-2 text-purple-600"></i>
+              Nom du contrôleur <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="controleurNom"
+              name="controleurNom"
+              list="savedControleurs"
+              required
+              placeholder="Ex: Jean Dupont"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+            >
+            <datalist id="savedControleurs"></datalist>
+            <p class="text-xs text-gray-500 mt-1">Votre nom sera enregistré pour un remplissage rapide</p>
+          </div>
+
+          <div id="errorMessage" class="hidden bg-red-50 border-l-4 border-red-500 p-4 text-red-700"></div>
+          
+          <button 
+            type="submit"
+            class="w-full bg-purple-500 text-white px-8 py-4 rounded-xl hover:bg-purple-600 transition-colors font-bold text-lg shadow-lg flex items-center justify-center"
+          >
+            <i class="fas fa-check-circle mr-2"></i>
+            Terminer le contrôle
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <a href="/accueil-chauffeur" class="text-gray-500 hover:text-gray-700 text-sm">
+            <i class="fas fa-arrow-left mr-1"></i>
+            Retour
+          </a>
+        </div>
+      </div>
+
+      <script>
+        // Charger les noms sauvegardés depuis localStorage
+        const savedControleurs = JSON.parse(localStorage.getItem('gxo_controleurs') || '[]');
+        const datalist = document.getElementById('savedControleurs');
+        savedControleurs.forEach(nom => {
+          const option = document.createElement('option');
+          option.value = nom;
+          datalist.appendChild(option);
+        });
+
+        // Gestion du formulaire
+        document.getElementById('finControleForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const controleurNom = document.getElementById('controleurNom').value.trim();
+          const errorDiv = document.getElementById('errorMessage');
+          const submitBtn = e.target.querySelector('button[type="submit"]');
+          
+          if (!controleurNom) {
+            errorDiv.textContent = 'Veuillez saisir votre nom';
+            errorDiv.classList.remove('hidden');
+            return;
+          }
+
+          // Désactiver le bouton pendant la soumission
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Enregistrement...';
+          errorDiv.classList.add('hidden');
+
+          try {
+            // Envoyer les données au backend
+            const response = await fetch('/api/fin-controle', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                quai: ${quaiNumero},
+                controleurNom: controleurNom
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error('Erreur lors de l\\'enregistrement');
+            }
+
+            const result = await response.json();
+
+            // Sauvegarder le nom dans localStorage
+            if (!savedControleurs.includes(controleurNom)) {
+              savedControleurs.push(controleurNom);
+              // Garder seulement les 10 derniers noms
+              if (savedControleurs.length > 10) savedControleurs.shift();
+              localStorage.setItem('gxo_controleurs', JSON.stringify(savedControleurs));
+            }
+
+            // Rediriger vers la page de succès
+            window.location.href = '/scan-fin-controle-success?quai=${quaiNumero}&duree=' + result.dureeControle + '&nom=' + encodeURIComponent(controleurNom);
+          } catch (error) {
+            console.error('Erreur:', error);
+            errorDiv.textContent = 'Erreur lors de l\\'enregistrement. Veuillez réessayer.';
+            errorDiv.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Terminer le contrôle';
+          }
+        });
+      </script>
+    </body>
+    </html>
+  `)
+})
+
+// API: Enregistrer la fin de contrôle avec nom du contrôleur
+app.post('/api/fin-controle', async (c) => {
   try {
+    const data = await c.req.json()
+    const { quai, controleurNom } = data
+
+    if (!quai || !controleurNom) {
+      return c.json({ error: 'Données manquantes' }, 400)
+    }
+
     // Récupérer le timer_controle_start pour calculer la durée
     const quaiData = await c.env.DB.prepare(`
       SELECT timer_controle_start FROM quai_status WHERE quai_numero = ?
-    `).bind(quaiNumero).first()
+    `).bind(quai).first()
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
@@ -901,85 +1037,90 @@ app.get('/scan-fin-controle', async (c) => {
       console.log(`⏱️ Durée contrôle calculée: ${timerControleDuration}s`)
     }
     
-    // Mettre à jour le statut du quai à "fin_controle"
+    // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'fin_controle',
           timer_controle_start = NULL,
           timer_controle_duration = ?,
+          controleur_nom = ?,
           updated_at = datetime('now')
       WHERE quai_numero = ?
-    `).bind(timerControleDuration, quaiNumero).run()
+    `).bind(timerControleDuration, controleurNom, quai).run()
     
-    console.log(`✅ Quai ${quaiNumero} passé en fin de contrôle - Timer figé à ${timerControleDuration}s`)
+    console.log(`✅ Quai ${quai} passé en fin de contrôle - Timer figé à ${timerControleDuration}s - Contrôleur: ${controleurNom}`)
     
-    // Formater la durée pour l'affichage
-    const hours = Math.floor(timerControleDuration / 3600)
-    const minutes = Math.floor((timerControleDuration % 3600) / 60)
-    const seconds = timerControleDuration % 60
-    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-    
-    // Page de succès
-    return c.html(`
-      <!DOCTYPE html>
-      <html lang="fr">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Contrôle Terminé - GXO Moissy</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
-      </head>
-      <body class="bg-gradient-to-br from-purple-50 to-purple-100 min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md text-center transform hover:scale-105 transition-transform">
-          <div class="text-7xl mb-4 animate-bounce">📝</div>
-          <h1 class="text-3xl font-bold text-purple-600 mb-4">Contrôle Terminé</h1>
-          <p class="text-2xl font-bold text-gray-800 mb-4">Quai n°${quaiNumero}</p>
-          <div class="bg-purple-50 border-l-4 border-purple-500 p-4 mb-6">
-            <p class="text-purple-800 font-semibold mb-2">
-              <i class="fas fa-stopwatch mr-2"></i>
-              Durée du contrôle
-            </p>
-            <p class="text-3xl font-mono font-bold text-purple-900">${formattedTime}</p>
-          </div>
-          <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-            <p class="text-green-800 font-semibold">
-              <i class="fas fa-check-circle mr-2"></i>
-              Le timer de contrôle est maintenant figé
-            </p>
-          </div>
-          <a href="/accueil-chauffeur" class="bg-purple-500 text-white px-8 py-4 rounded-xl inline-block hover:bg-purple-600 transition-colors font-bold text-lg shadow-lg">
-            <i class="fas fa-warehouse mr-2"></i>
-            Retour à la gestion des quais
-          </a>
-        </div>
-      </body>
-      </html>
-    `)
+    return c.json({ 
+      success: true, 
+      quai: quai,
+      dureeControle: timerControleDuration,
+      controleurNom: controleurNom
+    })
   } catch (error) {
-    console.error(`❌ Erreur scan fin contrôle quai ${quaiNumero}:`, error)
-    return c.html(`
-      <!DOCTYPE html>
-      <html lang="fr">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Erreur - GXO Moissy</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-      </head>
-      <body class="bg-red-50 flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md text-center">
-          <div class="text-6xl mb-4">⚠️</div>
-          <h1 class="text-2xl font-bold text-red-600 mb-4">Erreur de traitement</h1>
-          <p class="text-gray-600 mb-6">${error.message}</p>
-          <a href="/accueil-chauffeur" class="bg-blue-500 text-white px-6 py-3 rounded-lg inline-block hover:bg-blue-600">
-            Retour à l'accueil
-          </a>
-        </div>
-      </body>
-      </html>
-    `)
+    console.error('❌ Erreur fin contrôle:', error)
+    return c.json({ error: 'Erreur serveur' }, 500)
   }
+})
+
+// Page de succès après fin de contrôle
+app.get('/scan-fin-controle-success', async (c) => {
+  const quaiNumero = c.req.query('quai')
+  const dureeControle = parseInt(c.req.query('duree') || '0')
+  const controleurNom = c.req.query('nom') || ''
+  
+  // Formater la durée pour l'affichage
+  const hours = Math.floor(dureeControle / 3600)
+  const minutes = Math.floor((dureeControle % 3600) / 60)
+  const seconds = dureeControle % 60
+  const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+  
+  // Page de succès
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Contrôle Terminé - GXO Moissy</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gradient-to-br from-purple-50 to-purple-100 min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md text-center transform hover:scale-105 transition-transform">
+        <div class="text-7xl mb-4 animate-bounce">📝</div>
+        <h1 class="text-3xl font-bold text-purple-600 mb-4">Contrôle Terminé</h1>
+        <p class="text-2xl font-bold text-gray-800 mb-4">Quai n°${quaiNumero}</p>
+        
+        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 mb-4">
+          <p class="text-purple-800 font-semibold mb-2">
+            <i class="fas fa-stopwatch mr-2"></i>
+            Durée du contrôle
+          </p>
+          <p class="text-3xl font-mono font-bold text-purple-900">${formattedTime}</p>
+        </div>
+
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+          <p class="text-blue-800 font-semibold mb-2">
+            <i class="fas fa-user mr-2"></i>
+            Contrôleur
+          </p>
+          <p class="text-xl font-bold text-blue-900">${controleurNom}</p>
+        </div>
+        
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+          <p class="text-green-800 font-semibold">
+            <i class="fas fa-check-circle mr-2"></i>
+            Le timer de contrôle est maintenant figé
+          </p>
+        </div>
+        <a href="/accueil-chauffeur" class="bg-purple-500 text-white px-8 py-4 rounded-xl inline-block hover:bg-purple-600 transition-colors font-bold text-lg shadow-lg">
+          <i class="fas fa-warehouse mr-2"></i>
+          Retour à la gestion des quais
+        </a>
+      </div>
+    </body>
+    </html>
+  `)
 })
 
 // ===== PAGES DE TÉLÉCHARGEMENT QR CODES =====
