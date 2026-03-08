@@ -5,14 +5,19 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.5.13  
-**Dernière mise à jour** : 2026-03-08 17:30 UTC  
-**Backup** : https://www.genspark.ai/api/files/s/J671Q1y3 (URLs fixes + PDF corrigé)  
+**Version actuelle** : 3.5.13 FINAL  
+**Dernière mise à jour** : 2026-03-08 19:22 UTC  
+**Backup** : https://www.genspark.ai/api/files/s/IobBkTvl (v3.5.13 FINAL - Heures fixes + PDF corrigé)  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU v3.5.13 : PDFs QR Codes Format Corrigé** ✅
+### 🆕 **NOUVEAU v3.5.13 FINAL : Fix Heures + PDFs QR Codes** ✅
 
-#### **1. Fix URLs Téléchargement (Erreur 1101 résolue)** 🔧
+#### **1. Fix Heures d'Affichage** 🕐
+- **Heure Commentaire** : Affiche maintenant l'heure de FIN du déchargement (timer_fin_timestamp)
+- **Heure Contrôle Terminé** : Affiche maintenant l'heure de FIN du contrôle (controle_fin_timestamp)
+- **Exemple** : Fin déchargement 12h15 → Commentaire affiche 12h15 ✅ | Fin contrôle 12h30 → Contrôle terminé affiche 12h30 ✅
+
+#### **2. Fix URLs Téléchargement (Erreur 1101 résolue)** 🔧
 - **Problème résolu** : URLs `/download-qr-pdf` et `/download-qr-fin-dechargement` retournaient erreur 1101
 - **Solution appliquée** : Exclusion de ces routes du worker dans `public/_routes.json`
 - **URLs fonctionnelles** :
