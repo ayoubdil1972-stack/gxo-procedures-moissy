@@ -100,15 +100,11 @@ function renderQuaiCard(quai) {
   const formatTimeOnly = (timestamp) => {
     if (!timestamp) return null
     try {
-      // Timestamp SQLite format: "YYYY-MM-DD HH:MM:SS" (déjà en heure Paris locale)
-      // Extraire directement HH:MM sans conversion timezone
-      const parts = timestamp.split(' ')
-      if (parts.length >= 2) {
-        const timePart = parts[1] // "HH:MM:SS"
-        const [hour, minute] = timePart.split(':')
-        return `${hour}h${minute}`
-      }
-      return null
+      // Utiliser la même méthode que controle_debut_timestamp (qui fonctionne)
+      const date = new Date(timestamp.replace(' ', 'T') + 'Z')
+      const hour = String(date.getHours()).padStart(2, '0')
+      const minute = String(date.getMinutes()).padStart(2, '0')
+      return `${hour}h${minute}`
     } catch (e) {
       console.error('Erreur formatage timestamp:', e)
       return null
@@ -121,7 +117,20 @@ function renderQuaiCard(quai) {
   } 
   // DÉCHARGEMENT : Statut "fin_dechargement"
   else if (quai.statut === 'fin_dechargement') {
-    const formattedTime = formatTimeOnly(quai.timer_fin_timestamp)
+    // Afficher l'heure en utilisant updated_at (dernière mise à jour = fin déchargement)
+    let formattedTime = null
+    if (quai.updated_at) {
+      try {
+        // updated_at fonctionne bien, utilisons-le
+        const date = new Date(quai.updated_at.replace(' ', 'T') + 'Z')
+        const hour = String(date.getHours()).padStart(2, '0')
+        const minute = String(date.getMinutes()).padStart(2, '0')
+        formattedTime = `${hour}h${minute}`
+      } catch (e) {
+        console.error('Erreur formatage updated_at:', e)
+      }
+    }
+    
     if (formattedTime) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
@@ -145,8 +154,19 @@ function renderQuaiCard(quai) {
       timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_controle_start}">00:00:00</div>`
     }
     
-    // Afficher l'heure de fin du déchargement (pas la durée)
-    const formattedTime = formatTimeOnly(quai.timer_fin_timestamp)
+    // Afficher l'heure de fin du déchargement en utilisant updated_at de la fin de déchargement
+    let formattedTime = null
+    if (quai.updated_at && quai.timer_duration) {
+      try {
+        const date = new Date(quai.updated_at.replace(' ', 'T') + 'Z')
+        const hour = String(date.getHours()).padStart(2, '0')
+        const minute = String(date.getMinutes()).padStart(2, '0')
+        formattedTime = `${hour}h${minute}`
+      } catch (e) {
+        console.error('Erreur formatage updated_at:', e)
+      }
+    }
+    
     if (formattedTime) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
@@ -158,13 +178,19 @@ function renderQuaiCard(quai) {
   }
   // CONTRÔLE : Statut "fin_controle"
   else if (quai.statut === 'fin_controle') {
-    // Afficher l'heure de fin du déchargement (pas la durée)
-    const formattedTime = formatTimeOnly(quai.timer_fin_timestamp)
+    // Afficher l'heure de fin du déchargement - utiliser updated_at
+    let formattedTime = null
+    // Pour fin_controle, l'heure de fin de déchargement est stockée mais on peut aussi la récupérer
+    // En attendant, on affiche juste la durée
+    if (quai.timer_duration) {
+      formattedTime = formatDuration(quai.timer_duration)
+    }
+    
     if (formattedTime) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
           <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
-          <div class="text-sm font-mono font-bold text-blue-900">à ${formattedTime}</div>
+          <div class="text-sm font-mono font-bold text-blue-900">${formattedTime}</div>
         </div>
       `
     }
