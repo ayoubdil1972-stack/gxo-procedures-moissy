@@ -5,12 +5,22 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.5.9  
+**Version actuelle** : 3.5.10  
 **Dernière mise à jour** : 2026-03-08  
-**Backup** : https://www.genspark.ai/api/files/s/jOCwQfbN  
+**Backup** : https://www.genspark.ai/api/files/s/gDaEc6V8  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU v3.5.9 : Correction Synchronisation Horaire Finale** ✅
+### 🆕 **NOUVEAU v3.5.10 : FIX CRITIQUE Timer Contrôle** ✅
+- **Problème résolu** : Timer contrôle affichait **+1 heure** (ex: 01:00:45 au lieu de 00:00:45)
+- **Cause identifiée** : Conversion timezone incorrecte (timestamp traité comme UTC au lieu de local)
+- **Solution appliquée** : Retrait du `+Z` dans calcul `timer_controle_duration` (ligne 1506)
+- **Résultat** : Durée contrôle maintenant **exacte** (45 secondes → 00:00:45)
+- **Tests confirmés** : 
+  - Timer contrôle en cours : ✅ Fonctionne
+  - Timer contrôle terminé : ✅ Durée exacte
+  - Plus de décalage horaire
+
+### **v3.5.9 : Correction Synchronisation Horaire** ✅
 - **Timers remis en ordre** : Affichage DURÉE (HH:MM:SS) restauré comme avant
 - **Heure commentaire corrigée** : Rubrique blanche sous nom agent affiche l'heure correcte
 - **Fix timezone** : Ajout `+Z` dans fonction `formatDate()` pour conversion Europe/Paris
