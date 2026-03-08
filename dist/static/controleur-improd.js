@@ -292,7 +292,330 @@ function formatDate(dateString) {
 
 // ===== GESTION DES ALERTES ÉCART/NON-CONFORMITÉ =====
 
-// Charger les alertes
+// État du système d'archives
+let archivesState = {
+  currentView: 'today', // 'today', 'week', 'archives'
+  expandedDays: {} // Pour stocker les jours dépliés
+}
+
+// Basculer vers une vue d'archives
+function switchArchiveView(view) {
+  archivesState.currentView = view
+  
+  // Mettre à jour les boutons
+  const btnToday = document.getElementById('btn-archives-today')
+  const btnWeek = document.getElementById('btn-archives-week')
+  const btnArchives = document.getElementById('btn-archives-all')
+  
+  // Reset styles
+  ;[btnToday, btnWeek, btnArchives].forEach(btn => {
+    btn.classList.remove('bg-blue-500', 'text-white')
+    btn.classList.add('bg-white', 'text-gray-700')
+  })
+  
+  // Activer le bouton sélectionné
+  if (view === 'today') {
+    btnToday.classList.remove('bg-white', 'text-gray-700')
+    btnToday.classList.add('bg-blue-500', 'text-white')
+  } else if (view === 'week') {
+    btnWeek.classList.remove('bg-white', 'text-gray-700')
+    btnWeek.classList.add('bg-blue-500', 'text-white')
+  } else {
+    btnArchives.classList.remove('bg-white', 'text-gray-700')
+    btnArchives.classList.add('bg-blue-500', 'text-white')
+  }
+  
+  // Charger les alertes pour la vue sélectionnée
+  loadAlertes('traitee')
+}
+
+// Toggle accordéon jour
+function toggleDayAccordion(day) {
+  archivesState.expandedDays[day] = !archivesState.expandedDays[day]
+  
+  const content = document.getElementById(`day-${day}-content`)
+  const icon = document.getElementById(`day-${day}-icon`)
+  
+  if (archivesState.expandedDays[day]) {
+    content.classList.remove('hidden')
+    icon.classList.remove('fa-chevron-down')
+    icon.classList.add('fa-chevron-up')
+  } else {
+    content.classList.add('hidden')
+    icon.classList.remove('fa-chevron-up')
+    icon.classList.add('fa-chevron-down')
+  }
+}
+
+// Fonction pour grouper les alertes par jour
+function groupAlertesByDay(alertes) {
+  const groups = {
+    today: [],
+    thisWeek: { lundi: [], mardi: [], mercredi: [], jeudi: [], vendredi: [] },
+    older: []
+  }
+  
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  
+  // Début de la semaine (lundi)
+  const dayOfWeek = now.getDay()
+  const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek // Adjust when today is Sunday
+  const monday = new Date(today)
+  monday.setDate(today.getDate() + diff)
+  
+  alertes.forEach(alerte => {
+    const alerteDate = new Date(alerte.traite_le || alerte.created_at)
+    const alerteDayStart = new Date(alerteDate.getFullYear(), alerteDate.getMonth(), alerteDate.getDate())
+    
+    // Vérifier si c'est aujourd'hui
+    if (alerteDayStart.getTime() === today.getTime()) {
+      groups.today.push(alerte)
+    }
+    // Vérifier si c'est cette semaine
+    else if (alerteDayStart >= monday && alerteDayStart < today) {
+      const dayName = alerteDate.toLocaleDateString('fr-FR', { weekday: 'long' })
+      if (dayName === 'lundi') groups.thisWeek.lundi.push(alerte)
+      else if (dayName === 'mardi') groups.thisWeek.mardi.push(alerte)
+      else if (dayName === 'mercredi') groups.thisWeek.mercredi.push(alerte)
+      else if (dayName === 'jeudi') groups.thisWeek.jeudi.push(alerte)
+      else if (dayName === 'vendredi') groups.thisWeek.vendredi.push(alerte)
+    }
+    // Plus ancien
+    else {
+      groups.older.push(alerte)
+    }
+  })
+  
+  return groups
+}
+
+// Générer le HTML d'une carte d'alerte
+function generateAlerteCard(alerte) {
+  const nonConformites = JSON.parse(alerte.non_conformites || '[]')
+  const ecart = alerte.ecart_palettes_attendues !== alerte.ecart_palettes_recues
+  
+  return `
+    <div class="border-l-4 border-green-500 bg-green-50 p-6 rounded-lg shadow mb-4">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex-1">
+          <div class="flex items-center space-x-3 mb-2">
+            <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+              Quai ${alerte.quai_numero}
+            </span>
+            <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+              <i class="fas fa-check mr-1"></i>TRAITÉE
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 text-sm mb-3">
+            <div>
+              <span class="font-semibold text-gray-700">ID:</span>
+              <span class="text-gray-600">${alerte.numero_id}</span>
+            </div>
+            <div>
+              <span class="font-semibold text-gray-700">Fournisseur:</span>
+              <span class="text-gray-600">${alerte.fournisseur}</span>
+            </div>
+            <div>
+              <span class="font-semibold text-gray-700">Premier scan:</span>
+              <span class="text-gray-600">${formatDate(alerte.heure_premier_scan)}</span>
+            </div>
+            <div>
+              <span class="font-semibold text-gray-700">Fin déchargement:</span>
+              <span class="text-gray-600">${formatDate(alerte.heure_fin_dechargement)}</span>
+            </div>
+          </div>
+
+          ${ecart ? `
+            <div class="bg-red-100 border border-red-300 rounded p-3 mb-3">
+              <div class="font-semibold text-red-800 mb-1">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                Écart de palettes
+              </div>
+              <div class="text-sm text-red-700">
+                Attendues: <strong>${alerte.ecart_palettes_attendues}</strong> | 
+                Reçues: <strong>${alerte.ecart_palettes_recues}</strong>
+              </div>
+            </div>
+          ` : ''}
+
+          ${nonConformites.length > 0 ? `
+            <div class="bg-orange-100 border border-orange-300 rounded p-3 mb-3">
+              <div class="font-semibold text-orange-800 mb-2">
+                <i class="fas fa-list mr-2"></i>
+                Non-conformités (${nonConformites.length})
+              </div>
+              <ul class="text-sm text-orange-700 space-y-1">
+                ${nonConformites.map(pb => `<li><i class="fas fa-chevron-right mr-2"></i>${pb}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          ${alerte.consignes ? `
+            <div class="bg-green-100 border border-green-300 rounded p-3">
+              <div class="font-semibold text-green-800 mb-1">
+                <i class="fas fa-clipboard-check mr-2"></i>
+                Consignes - ${alerte.traite_par}
+              </div>
+              <div class="text-sm text-green-700">${alerte.consignes}</div>
+              <div class="text-xs text-green-600 mt-1">Traité le ${formatDate(alerte.traite_le)}</div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    </div>
+  `
+}
+
+// Afficher les archives avec accordéon par jour
+function renderArchives(alertes) {
+  const container = document.getElementById('alertes-container')
+  const groups = groupAlertesByDay(alertes)
+  
+  let html = `
+    <!-- Boutons de navigation archives -->
+    <div class="mb-6 flex space-x-4 bg-white p-4 rounded-lg shadow">
+      <button 
+        id="btn-archives-today"
+        class="px-6 py-2 rounded-lg font-semibold transition-all ${archivesState.currentView === 'today' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}"
+        onclick="switchArchiveView('today')"
+      >
+        <i class="fas fa-calendar-day mr-2"></i>
+        Aujourd'hui (${groups.today.length})
+      </button>
+      <button 
+        id="btn-archives-week"
+        class="px-6 py-2 rounded-lg font-semibold transition-all ${archivesState.currentView === 'week' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}"
+        onclick="switchArchiveView('week')"
+      >
+        <i class="fas fa-calendar-week mr-2"></i>
+        Cette semaine
+      </button>
+      <button 
+        id="btn-archives-all"
+        class="px-6 py-2 rounded-lg font-semibold transition-all ${archivesState.currentView === 'archives' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}"
+        onclick="switchArchiveView('archives')"
+      >
+        <i class="fas fa-archive mr-2"></i>
+        Archives (${groups.older.length})
+      </button>
+    </div>
+  `
+  
+  // Vue Aujourd'hui
+  if (archivesState.currentView === 'today') {
+    if (groups.today.length === 0) {
+      html += `
+        <div class="text-center text-gray-500 py-12">
+          <i class="fas fa-calendar-day text-5xl mb-3"></i>
+          <p class="text-lg">Aucune alerte traitée aujourd'hui</p>
+        </div>
+      `
+    } else {
+      html += `
+        <div class="space-y-4">
+          <h3 class="text-xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-calendar-day mr-2 text-blue-500"></i>
+            Alertes traitées aujourd'hui (${groups.today.length})
+          </h3>
+          ${groups.today.map(a => generateAlerteCard(a)).join('')}
+        </div>
+      `
+    }
+  }
+  
+  // Vue Cette semaine (Accordéon par jour)
+  else if (archivesState.currentView === 'week') {
+    const jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi']
+    const jourLabels = {
+      lundi: 'Lundi',
+      mardi: 'Mardi',
+      mercredi: 'Mercredi',
+      jeudi: 'Jeudi',
+      vendredi: 'Vendredi'
+    }
+    const jourIcons = {
+      lundi: 'fa-calendar',
+      mardi: 'fa-calendar',
+      mercredi: 'fa-calendar',
+      jeudi: 'fa-calendar',
+      vendredi: 'fa-calendar'
+    }
+    
+    const totalSemaine = jours.reduce((sum, jour) => sum + groups.thisWeek[jour].length, 0)
+    
+    if (totalSemaine === 0) {
+      html += `
+        <div class="text-center text-gray-500 py-12">
+          <i class="fas fa-calendar-week text-5xl mb-3"></i>
+          <p class="text-lg">Aucune alerte traitée cette semaine</p>
+        </div>
+      `
+    } else {
+      html += `<div class="space-y-3">`
+      
+      jours.forEach(jour => {
+        const alertesJour = groups.thisWeek[jour]
+        if (alertesJour.length > 0) {
+          const isExpanded = archivesState.expandedDays[jour] || false
+          
+          html += `
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+              <!-- En-tête accordéon -->
+              <button 
+                class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                onclick="toggleDayAccordion('${jour}')"
+              >
+                <div class="flex items-center space-x-3">
+                  <i class="fas ${jourIcons[jour]} text-blue-500"></i>
+                  <span class="font-bold text-gray-800 text-lg">${jourLabels[jour]}</span>
+                  <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    ${alertesJour.length} alerte${alertesJour.length > 1 ? 's' : ''}
+                  </span>
+                </div>
+                <i id="day-${jour}-icon" class="fas fa-chevron-${isExpanded ? 'up' : 'down'} text-gray-500"></i>
+              </button>
+              
+              <!-- Contenu accordéon -->
+              <div id="day-${jour}-content" class="${isExpanded ? '' : 'hidden'} p-4 bg-gray-50 space-y-4">
+                ${alertesJour.map(a => generateAlerteCard(a)).join('')}
+              </div>
+            </div>
+          `
+        }
+      })
+      
+      html += `</div>`
+    }
+  }
+  
+  // Vue Archives (plus ancien)
+  else {
+    if (groups.older.length === 0) {
+      html += `
+        <div class="text-center text-gray-500 py-12">
+          <i class="fas fa-archive text-5xl mb-3"></i>
+          <p class="text-lg">Aucune archive disponible</p>
+        </div>
+      `
+    } else {
+      html += `
+        <div class="space-y-4">
+          <h3 class="text-xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-archive mr-2 text-gray-600"></i>
+            Archives (${groups.older.length})
+          </h3>
+          ${groups.older.map(a => generateAlerteCard(a)).join('')}
+        </div>
+      `
+    }
+  }
+  
+  container.innerHTML = html
+}
+
+// Charger les alertes avec système d'archives
 async function loadAlertes(statut = 'en_attente') {
   try {
     alertesState.currentFilter = statut
@@ -304,8 +627,11 @@ async function loadAlertes(statut = 'en_attente') {
       const container = document.getElementById('alertes-container')
       const alertes = result.alertes || []
       
-      // Mettre à jour les statistiques (simulation)
-      document.getElementById('stat-en-attente').textContent = alertes.length
+      // Mettre à jour les statistiques
+      const alertesEnAttente = alertes.filter(a => a.statut === 'en_attente')
+      const alertesTraitees = alertes.filter(a => a.statut === 'traitee')
+      
+      document.getElementById('stat-en-attente').textContent = alertesEnAttente.length
       
       if (alertes.length === 0) {
         container.innerHTML = `
@@ -314,6 +640,12 @@ async function loadAlertes(statut = 'en_attente') {
             <p class="text-lg">Aucune alerte ${statut === 'en_attente' ? 'en attente' : 'traitée'}</p>
           </div>
         `
+        return
+      }
+      
+      // Si on affiche les alertes traitées, utiliser le système d'archives
+      if (statut === 'traitee') {
+        renderArchives(alertes)
         return
       }
 
