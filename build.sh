@@ -1,6 +1,10 @@
 #!/bin/bash
 # Script de build pour Cloudflare Pages
 
+echo "🔧 Building with Vite..."
+npm run build:real
+
+echo ""
 echo "🔄 Copying static HTML files from public/ to dist/"
 
 # Copier les fichiers HTML statiques
