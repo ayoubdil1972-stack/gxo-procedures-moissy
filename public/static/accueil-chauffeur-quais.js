@@ -117,25 +117,13 @@ function renderQuaiCard(quai) {
   } 
   // DÉCHARGEMENT : Statut "fin_dechargement"
   else if (quai.statut === 'fin_dechargement') {
-    // Afficher l'heure en utilisant updated_at (dernière mise à jour = fin déchargement)
-    let formattedTime = null
-    if (quai.updated_at) {
-      try {
-        // updated_at fonctionne bien, utilisons-le
-        const date = new Date(quai.updated_at.replace(' ', 'T') + 'Z')
-        const hour = String(date.getHours()).padStart(2, '0')
-        const minute = String(date.getMinutes()).padStart(2, '0')
-        formattedTime = `${hour}h${minute}`
-      } catch (e) {
-        console.error('Erreur formatage updated_at:', e)
-      }
-    }
-    
+    // REMETTRE LA DURÉE (timer figé) comme avant
+    const formattedTime = formatDuration(quai.timer_duration)
     if (formattedTime) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
           <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
-          <div class="timer-frozen text-sm font-mono font-bold text-blue-900">à ${formattedTime}</div>
+          <div class="timer-frozen text-sm font-mono font-bold text-blue-900">${formattedTime}</div>
         </div>
       `
     } else {
@@ -154,43 +142,26 @@ function renderQuaiCard(quai) {
       timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_controle_start}">00:00:00</div>`
     }
     
-    // Afficher l'heure de fin du déchargement en utilisant updated_at de la fin de déchargement
-    let formattedTime = null
-    if (quai.updated_at && quai.timer_duration) {
-      try {
-        const date = new Date(quai.updated_at.replace(' ', 'T') + 'Z')
-        const hour = String(date.getHours()).padStart(2, '0')
-        const minute = String(date.getMinutes()).padStart(2, '0')
-        formattedTime = `${hour}h${minute}`
-      } catch (e) {
-        console.error('Erreur formatage updated_at:', e)
-      }
-    }
-    
-    if (formattedTime) {
+    // REMETTRE LA DURÉE du déchargement terminé (comme avant)
+    const formattedDechargement = formatDuration(quai.timer_duration)
+    if (formattedDechargement) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
           <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
-          <div class="text-sm font-mono font-bold text-blue-900">à ${formattedTime}</div>
+          <div class="text-sm font-mono font-bold text-blue-900">${formattedDechargement}</div>
         </div>
       `
     }
   }
   // CONTRÔLE : Statut "fin_controle"
   else if (quai.statut === 'fin_controle') {
-    // Afficher l'heure de fin du déchargement - utiliser updated_at
-    let formattedTime = null
-    // Pour fin_controle, l'heure de fin de déchargement est stockée mais on peut aussi la récupérer
-    // En attendant, on affiche juste la durée
-    if (quai.timer_duration) {
-      formattedTime = formatDuration(quai.timer_duration)
-    }
-    
-    if (formattedTime) {
+    // REMETTRE LA DURÉE du déchargement terminé (comme avant)
+    const formattedDechargement = formatDuration(quai.timer_duration)
+    if (formattedDechargement) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
           <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
-          <div class="text-sm font-mono font-bold text-blue-900">${formattedTime}</div>
+          <div class="text-sm font-mono font-bold text-blue-900">${formattedDechargement}</div>
         </div>
       `
     }
@@ -349,7 +320,8 @@ function getStatusLabel(statut) {
 
 function formatDate(dateString) {
   if (!dateString) return ''
-  const date = new Date(dateString)
+  // Ajouter 'Z' pour que JavaScript interprète comme UTC, puis convertir en Europe/Paris
+  const date = new Date(dateString.replace(' ', 'T') + 'Z')
   return date.toLocaleString('fr-FR', { 
     timeZone: 'Europe/Paris',
     day: '2-digit', 
