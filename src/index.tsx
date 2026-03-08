@@ -978,37 +978,67 @@ app.get('/scan-fin-dechargement', (c) => {
         
         // ===== GESTION SECTIONS REPLIABLES =====
         
+        console.log('🔧 Initialisation des toggles...');
+        
         // Toggle section vérification
-        document.getElementById('verification-header').addEventListener('click', function() {
-          const content = document.getElementById('verification-content');
-          const icon = document.getElementById('verification-icon');
-          
-          if (content.classList.contains('hidden')) {
-            content.classList.remove('hidden');
-            icon.classList.remove('fa-chevron-down');
-            icon.classList.add('fa-chevron-up');
+        try {
+          const verificationHeader = document.getElementById('verification-header');
+          if (verificationHeader) {
+            console.log('✅ verification-header trouvé');
+            verificationHeader.addEventListener('click', function() {
+              console.log('🔵 Toggle Vérification cliqué');
+              const content = document.getElementById('verification-content');
+              const icon = document.getElementById('verification-icon');
+              
+              if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                console.log('↑ Section Vérification ouverte');
+              } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                console.log('↓ Section Vérification fermée');
+              }
+            });
           } else {
-            content.classList.add('hidden');
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
+            console.error('❌ verification-header NON trouvé');
           }
-        });
+        } catch (error) {
+          console.error('❌ Erreur toggle vérification:', error);
+        }
         
         // Toggle section problématiques
-        document.getElementById('problematiques-header').addEventListener('click', function() {
-          const content = document.getElementById('problematiques-content');
-          const icon = document.getElementById('problematiques-icon');
-          
-          if (content.classList.contains('hidden')) {
-            content.classList.remove('hidden');
-            icon.classList.remove('fa-chevron-down');
-            icon.classList.add('fa-chevron-up');
+        try {
+          const problematiquesHeader = document.getElementById('problematiques-header');
+          if (problematiquesHeader) {
+            console.log('✅ problematiques-header trouvé');
+            problematiquesHeader.addEventListener('click', function() {
+              console.log('🟡 Toggle Problématiques cliqué');
+              const content = document.getElementById('problematiques-content');
+              const icon = document.getElementById('problematiques-icon');
+              
+              if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                console.log('↑ Section Problématiques ouverte');
+              } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                console.log('↓ Section Problématiques fermée');
+              }
+            });
           } else {
-            content.classList.add('hidden');
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
+            console.error('❌ problematiques-header NON trouvé');
           }
-        });
+        } catch (error) {
+          console.error('❌ Erreur toggle problématiques:', error);
+        }
+        
+        console.log('✅ Toggles initialisés');
 
         // ===== GESTION DU FORMULAIRE =====
         
