@@ -2657,9 +2657,7 @@ var Ur=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Vr=(t,r,s)=>r in
           }
           
           if (missingPoints.length > 0) {
-            alert('⚠️ Veuillez remplir tous les points de contrôle obligatoires.
-
-Points manquants : ' + missingPoints.join(', '));
+            alert('⚠️ Veuillez remplir tous les points de contrôle obligatoires.\\n\\nPoints manquants : ' + missingPoints.join(', '));
             // Déplier la section si elle est repliée
             const verificationContent = document.getElementById('verification-content');
             const verificationIcon = document.getElementById('verification-icon');

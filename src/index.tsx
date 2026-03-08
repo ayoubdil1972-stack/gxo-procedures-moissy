@@ -1075,7 +1075,7 @@ app.get('/scan-fin-dechargement', (c) => {
           }
           
           if (missingPoints.length > 0) {
-            alert('⚠️ Veuillez remplir tous les points de contrôle obligatoires.\n\nPoints manquants : ' + missingPoints.join(', '));
+            alert('⚠️ Veuillez remplir tous les points de contrôle obligatoires.\\n\\nPoints manquants : ' + missingPoints.join(', '));
             // Déplier la section si elle est repliée
             const verificationContent = document.getElementById('verification-content');
             const verificationIcon = document.getElementById('verification-icon');
