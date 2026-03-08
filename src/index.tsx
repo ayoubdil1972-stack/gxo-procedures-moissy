@@ -2377,22 +2377,6 @@ app.use('*', async (c, next) => {
 // Use renderer middleware pour les pages protégées
 app.use(renderer)
 
-// Route pour le générateur de QR codes (redirection vers fichier HTML)
-app.get('/generate-qr-codes', (c) => {
-  return c.html(`<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/generate-qr-codes.html">
-    <title>Redirection...</title>
-</head>
-<body>
-    <p>Redirection vers le générateur...</p>
-    <p><a href="/generate-qr-codes.html">Cliquez ici si la redirection ne fonctionne pas</a></p>
-</body>
-</html>`)
-})
-
 // Routes protégées
 app.get('/', (c) => c.render(<HomePage />))
 app.get('/reception', (c) => c.render(<ReceptionPage />))
