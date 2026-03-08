@@ -6,8 +6,8 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 
 **Production** : https://gxomoissyprocedures.com  
 **Version actuelle** : 3.5.13  
-**Dernière mise à jour** : 2026-03-08  
-**Backup** : https://www.genspark.ai/api/files/s/cxSCmTL0  
+**Dernière mise à jour** : 2026-03-08 17:30 UTC  
+**Backup** : https://www.genspark.ai/api/files/s/J671Q1y3 (URLs fixes + PDF corrigé)  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
 ### 🆕 **NOUVEAU v3.5.13 : PDFs QR Codes Format Corrigé** ✅
