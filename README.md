@@ -5,20 +5,24 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.5.10  
+**Version actuelle** : 3.5.11  
 **Dernière mise à jour** : 2026-03-08  
-**Backup** : https://www.genspark.ai/api/files/s/gDaEc6V8  
+**Backup** : https://www.genspark.ai/api/files/s/[EN_COURS]  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU v3.5.10 : FIX CRITIQUE Timer Contrôle** ✅
-- **Problème résolu** : Timer contrôle affichait **+1 heure** (ex: 01:00:45 au lieu de 00:00:45)
-- **Cause identifiée** : Conversion timezone incorrecte (timestamp traité comme UTC au lieu de local)
-- **Solution appliquée** : Retrait du `+Z` dans calcul `timer_controle_duration` (ligne 1506)
-- **Résultat** : Durée contrôle maintenant **exacte** (45 secondes → 00:00:45)
-- **Tests confirmés** : 
-  - Timer contrôle en cours : ✅ Fonctionne
-  - Timer contrôle terminé : ✅ Durée exacte
-  - Plus de décalage horaire
+### 🆕 **NOUVEAU v3.5.11 : FIX COMPLET Timers +1h (DÉFINITIF)** ✅
+- **Problème résolu COMPLÈTEMENT** : 
+  - ❌ Timer déchargement terminé affichait **01:00:54** au lieu de **00:00:54**
+  - ❌ Timer contrôle terminé affichait **01:00:54** au lieu de **00:00:54**
+- **Cause identifiée** : **DEUX** occurrences du bug `+Z` (lignes 2690 ET 1506)
+- **Solutions appliquées** : 
+  - ✅ Retrait `+Z` ligne 2690 → calcul `timer_duration` (déchargement)
+  - ✅ Retrait `+Z` ligne 1506 → calcul `timer_controle_duration` (contrôle)
+- **Résultat FINAL** : 
+  - ✅ Timer déchargement terminé : **00:00:54** (exact)
+  - ✅ Timer contrôle terminé : **00:00:54** (exact)
+  - ✅ Timers en cours : continuent de fonctionner
+  - ✅ **Plus AUCUN décalage +1h**
 
 ### **v3.5.9 : Correction Synchronisation Horaire** ✅
 - **Timers remis en ordre** : Affichage DURÉE (HH:MM:SS) restauré comme avant
