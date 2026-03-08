@@ -2377,9 +2377,6 @@ app.use('*', async (c, next) => {
 // Use renderer middleware pour les pages protégées
 app.use(renderer)
 
-// Route pour le générateur de QR codes (fichier HTML statique)
-app.get('/generate-qr-codes', serveStatic({ path: './generate-qr-codes.html' }))
-
 // Routes protégées
 app.get('/', (c) => c.render(<HomePage />))
 app.get('/reception', (c) => c.render(<ReceptionPage />))
