@@ -96,18 +96,33 @@ function renderQuaiCard(quai) {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
   }
   
+  // Fonction helper pour formater les timestamps (heure seulement)
+  const formatTimeOnly = (timestamp) => {
+    if (!timestamp) return null
+    try {
+      // Timestamp SQLite format: "YYYY-MM-DD HH:MM:SS" (déjà en heure Paris)
+      const date = new Date(timestamp.replace(' ', 'T'))
+      const hour = String(date.getHours()).padStart(2, '0')
+      const minute = String(date.getMinutes()).padStart(2, '0')
+      return `${hour}h${minute}`
+    } catch (e) {
+      console.error('Erreur formatage timestamp:', e)
+      return null
+    }
+  }
+  
   // DÉCHARGEMENT : Statut "en_cours"
   if (quai.statut === 'en_cours' && quai.timer_start) {
     timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_start}">00:00:00</div>`
   } 
   // DÉCHARGEMENT : Statut "fin_dechargement"
   else if (quai.statut === 'fin_dechargement') {
-    const formattedTime = formatDuration(quai.timer_duration)
+    const formattedTime = formatTimeOnly(quai.timer_fin_timestamp)
     if (formattedTime) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
           <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
-          <div class="timer-frozen text-sm font-mono font-bold text-blue-900">${formattedTime}</div>
+          <div class="timer-frozen text-sm font-mono font-bold text-blue-900">à ${formattedTime}</div>
         </div>
       `
     } else {
@@ -126,31 +141,31 @@ function renderQuaiCard(quai) {
       timerDisplay = `<div class="timer-display timer-active text-base font-mono font-bold text-gray-800 mt-1 bg-white/80 rounded-lg px-3 py-1" data-start="${quai.timer_controle_start}">00:00:00</div>`
     }
     
-    // Afficher les infos du déchargement terminé
-    const formattedDechargement = formatDuration(quai.timer_duration)
-    if (formattedDechargement) {
+    // Afficher l'heure de fin du déchargement (pas la durée)
+    const formattedTime = formatTimeOnly(quai.timer_fin_timestamp)
+    if (formattedTime) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
           <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
-          <div class="text-sm font-mono font-bold text-blue-900">${formattedDechargement}</div>
+          <div class="text-sm font-mono font-bold text-blue-900">à ${formattedTime}</div>
         </div>
       `
     }
   }
   // CONTRÔLE : Statut "fin_controle"
   else if (quai.statut === 'fin_controle') {
-    // Afficher les infos du déchargement terminé
-    const formattedDechargement = formatDuration(quai.timer_duration)
-    if (formattedDechargement) {
+    // Afficher l'heure de fin du déchargement (pas la durée)
+    const formattedTime = formatTimeOnly(quai.timer_fin_timestamp)
+    if (formattedTime) {
       dechargementInfo = `
         <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
           <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
-          <div class="text-sm font-mono font-bold text-blue-900">${formattedDechargement}</div>
+          <div class="text-sm font-mono font-bold text-blue-900">à ${formattedTime}</div>
         </div>
       `
     }
     
-    // Afficher les infos du contrôle terminé
+    // Afficher les infos du contrôle terminé (UNIQUEMENT la durée du contrôle)
     const formattedControle = formatDuration(quai.timer_controle_duration)
     if (formattedControle) {
       // Formater la date de début du contrôle
