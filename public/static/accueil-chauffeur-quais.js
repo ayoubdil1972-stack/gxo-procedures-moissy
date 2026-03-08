@@ -249,7 +249,7 @@ function renderQuaiCard(quai) {
             </div>
             <div class="text-gray-500 flex items-center space-x-1 mt-1">
               <i class="fas fa-clock text-xs"></i>
-              <span>${formatDate(quai.updated_at)}</span>
+              <span>${formatDate(quai.timer_fin_timestamp || quai.updated_at)}</span>
             </div>
           </div>
         ` : ''}
