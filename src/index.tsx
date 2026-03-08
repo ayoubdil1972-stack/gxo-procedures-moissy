@@ -2687,7 +2687,8 @@ app.post('/api/fin-dechargement', async (c) => {
       if (quaiData?.timer_start) {
         // Calculer la durée en secondes (en utilisant l'heure de Paris)
         // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
-        const startTime = new Date(quaiData.timer_start.replace(' ', 'T') + 'Z').getTime()
+        // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
+        const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
         const endTime = new Date(getParisTime()).getTime()
         timerDuration = Math.floor((endTime - startTime) / 1000)
         console.log(`⏱️ Durée calculée: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)

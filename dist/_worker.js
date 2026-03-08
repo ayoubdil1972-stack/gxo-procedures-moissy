@@ -3502,7 +3502,7 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Hr=(t,r,s)=>r in
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
     `).bind(r.quai_numero,r.nom_agent,r.palettes_attendues,r.palettes_recues,r.palettes_a_rendre,a,r.autres_commentaire||null,i).run();console.log("✅ Fin de déchargement enregistrée - ID:",n.meta.last_row_id);try{const l=await t.env.DB.prepare(`
         SELECT timer_start FROM quai_status WHERE quai_numero = ?
-      `).bind(r.quai_numero).first();console.log("📊 Quai data:",l);let o=null;if(l!=null&&l.timer_start){const c=new Date(l.timer_start.replace(" ","T")+"Z").getTime(),d=new Date(zr()).getTime();o=Math.floor((d-c)/1e3),console.log(`⏱️ Durée calculée: ${o}s (${Math.floor(o/3600)}h ${Math.floor(o%3600/60)}m ${o%60}s)`)}console.log("💾 UPDATE avec:",{timerDuration:o,commentaire:`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,commentaire_auteur:r.nom_agent,quai_numero:r.quai_numero}),await t.env.DB.prepare(`
+      `).bind(r.quai_numero).first();console.log("📊 Quai data:",l);let o=null;if(l!=null&&l.timer_start){const c=new Date(l.timer_start.replace(" ","T")).getTime(),d=new Date(zr()).getTime();o=Math.floor((d-c)/1e3),console.log(`⏱️ Durée calculée: ${o}s (${Math.floor(o/3600)}h ${Math.floor(o%3600/60)}m ${o%60}s)`)}console.log("💾 UPDATE avec:",{timerDuration:o,commentaire:`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,commentaire_auteur:r.nom_agent,quai_numero:r.quai_numero}),await t.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = 'fin_dechargement',
             timer_start = NULL,
