@@ -31,6 +31,31 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
+// ===== FONCTION UTILITAIRE : HEURE DE PARIS =====
+// Cette fonction génère un timestamp au format ISO 8601 avec le fuseau horaire de Paris
+// Utilisée pour garantir la cohérence des horodatages dans toute l'application
+function getParisTime(): string {
+  const now = new Date()
+  // Convertir en heure de Paris (Europe/Paris)
+  const parisTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }))
+  // Retourner au format ISO 8601
+  return parisTime.toISOString()
+}
+
+// Fonction pour formater l'affichage d'une date en français (Paris)
+function formatParisDate(dateString: string): string {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleString('fr-FR', { 
+    timeZone: 'Europe/Paris',
+    day: '2-digit', 
+    month: '2-digit', 
+    year: 'numeric',
+    hour: '2-digit', 
+    minute: '2-digit' 
+  })
+}
+
 // Serve static files - Pour Cloudflare Workers, les fichiers sont dans dist/
 app.use('/static/*', serveStatic({ 
   root: './',
@@ -199,7 +224,7 @@ app.get('/scan', (c) => {
                   barcode: 'D' + String(quaiNumero).padStart(3, '0'),
                   quai: quaiNumero,
                   action: 'start_timer',
-                  timestamp: new Date().toISOString()
+                  timestamp: getParisTime()
                 })
               });
               
@@ -1117,7 +1142,7 @@ app.get('/scan-fin-dechargement', (c) => {
             problemes: formData.getAll('probleme[]'),
             autres_commentaire: formData.get('autres_commentaire'),
             remarques: formData.get('remarques'),
-            timestamp: new Date().toISOString()
+            timestamp: getParisTime()
           };
 
           console.log('📦 Données du formulaire:', data);
@@ -1211,15 +1236,16 @@ app.get('/scan-controle', async (c) => {
     }
     
     // Mettre à jour le statut du quai à "en_controle" et sauvegarder les infos
+    // Note: datetime('now', 'localtime') utilise le fuseau horaire du serveur
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'en_controle',
-          timer_controle_start = datetime('now'),
+          timer_controle_start = datetime('now', 'localtime'),
           timer_controle_duration = NULL,
-          controle_debut_timestamp = datetime('now'),
+          controle_debut_timestamp = datetime('now', 'localtime'),
           controle_fournisseur = ?,
           controle_id_chauffeur = ?,
-          updated_at = datetime('now')
+          updated_at = datetime('now', 'localtime')
       WHERE quai_numero = ?
     `).bind(fournisseur, idChauffeur, quaiNumero).run()
     
@@ -1468,9 +1494,9 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // Calculer la durée en secondes
+      // Calculer la durée en secondes (en utilisant l'heure de Paris)
       const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T') + 'Z').getTime()
-      const endTime = Date.now()
+      const endTime = new Date(getParisTime()).getTime()
       timerControleDuration = Math.floor((endTime - startTime) / 1000)
       console.log(`⏱️ Durée contrôle calculée: ${timerControleDuration}s`)
     }
@@ -1482,7 +1508,7 @@ app.post('/api/fin-controle', async (c) => {
           timer_controle_start = NULL,
           timer_controle_duration = ?,
           controleur_nom = ?,
-          updated_at = datetime('now')
+          updated_at = datetime('now', 'localtime')
       WHERE quai_numero = ?
     `).bind(timerControleDuration, controleurNom, quai).run()
     
@@ -2024,7 +2050,7 @@ app.post('/api/chauffeur/valider-tache', async (c) => {
     
     await c.env.DB.prepare(`
       UPDATE chauffeur_arrivals 
-      SET ${colonne} = 1, ${colonneTime} = datetime('now')
+      SET ${colonne} = 1, ${colonneTime} = datetime('now', 'localtime')
       WHERE id = ?
     `).bind(chauffeur_id).run()
     
@@ -2233,10 +2259,10 @@ app.post('/api/chat/heartbeat', async (c) => {
     try {
       await c.env.DB.prepare(`
         INSERT INTO chauffeur_sessions (chauffeur_id, last_heartbeat, is_online, page_url)
-        VALUES (?, datetime('now'), 1, ?)
+        VALUES (?, datetime('now', 'localtime'), 1, ?)
         ON CONFLICT(chauffeur_id) 
         DO UPDATE SET 
-          last_heartbeat = datetime('now'),
+          last_heartbeat = datetime('now', 'localtime'),
           is_online = 1,
           page_url = excluded.page_url
       `).bind(chauffeur_id, page_url || '').run()
@@ -2432,7 +2458,7 @@ app.post('/api/chauffeur/chat/mark-read', async (c) => {
     // Mettre à jour à la fois le booléen et le timestamp read_at
     await c.env.DB.prepare(`
       UPDATE chat_messages 
-      SET ${column} = 1, read_at = datetime('now')
+      SET ${column} = 1, read_at = datetime('now', 'localtime')
       WHERE chauffeur_id = ? AND ${column} = 0
     `).bind(chauffeur_id).run()
     
@@ -2453,7 +2479,7 @@ app.post('/api/admin/cloturer-chauffeur', async (c) => {
       UPDATE chauffeur_arrivals 
       SET status = 'completed', 
           completed = 1,
-          completion_time = datetime('now')
+          completion_time = datetime('now', 'localtime')
       WHERE id = ?
     `).bind(chauffeur_id).run()
     
@@ -2503,7 +2529,7 @@ app.post('/api/admin/cloturer-chauffeur', async (c) => {
     await c.env.DB.prepare(`
       UPDATE chauffeur_arrivals 
       SET status = 'completed', 
-          departure_time = datetime('now')
+          departure_time = datetime('now', 'localtime')
       WHERE id = ?
     `).bind(chauffeur_id).run()
     
@@ -2623,7 +2649,7 @@ app.post('/api/fin-dechargement', async (c) => {
       INSERT INTO fin_dechargement (
         quai_numero, nom_agent, palettes_attendues, palettes_recues,
         palettes_a_rendre, problemes, autres_commentaire, remarques, timestamp
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
     `).bind(
       data.quai_numero,
       data.nom_agent,
@@ -2649,10 +2675,10 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // Calculer la durée en secondes
+        // Calculer la durée en secondes (en utilisant l'heure de Paris)
         // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
         const startTime = new Date(quaiData.timer_start.replace(' ', 'T') + 'Z').getTime()
-        const endTime = Date.now()
+        const endTime = new Date(getParisTime()).getTime()
         timerDuration = Math.floor((endTime - startTime) / 1000)
         console.log(`⏱️ Durée calculée: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
       }
@@ -2671,7 +2697,7 @@ app.post('/api/fin-dechargement', async (c) => {
             timer_duration = ?,
             commentaire = ?,
             commentaire_auteur = ?,
-            updated_at = datetime('now')
+            updated_at = datetime('now', 'localtime')
         WHERE quai_numero = ?
       `).bind(
         timerDuration,
@@ -2691,7 +2717,7 @@ app.post('/api/fin-dechargement', async (c) => {
             timer_start = timer_start,
             commentaire = ?,
             commentaire_auteur = ?,
-            updated_at = datetime('now')
+            updated_at = datetime('now', 'localtime')
         WHERE quai_numero = ?
       `).bind(
         `✅ Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id} - Timer: voir historique`,
@@ -2792,14 +2818,14 @@ app.post('/api/quais/:numero', async (c) => {
     
     // Mettre à jour le quai avec gestion du timer
     if (statut === 'en_cours') {
-      // Démarrer le timer avec datetime SQLite
+      // Démarrer le timer avec datetime SQLite (heure locale)
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
-            timer_start = datetime('now'),
+            timer_start = datetime('now', 'localtime'),
             commentaire = NULL,
             commentaire_auteur = NULL,
-            updated_at = datetime('now')
+            updated_at = datetime('now', 'localtime')
         WHERE quai_numero = ?
       `).bind(statut, numero).run()
     } else if (statut === 'disponible') {
@@ -2810,7 +2836,7 @@ app.post('/api/quais/:numero', async (c) => {
             timer_start = NULL,
             commentaire = NULL,
             commentaire_auteur = NULL,
-            updated_at = datetime('now')
+            updated_at = datetime('now', 'localtime')
         WHERE quai_numero = ?
       `).bind(statut, numero).run()
     } else {
@@ -2821,7 +2847,7 @@ app.post('/api/quais/:numero', async (c) => {
             timer_start = NULL,
             commentaire = ?, 
             commentaire_auteur = ?,
-            updated_at = datetime('now')
+            updated_at = datetime('now', 'localtime')
         WHERE quai_numero = ?
       `).bind(
         statut,

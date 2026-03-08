@@ -523,7 +523,7 @@ function addToScanHistory(barcode, quaiNumero) {
     barcode: barcode,
     quai: quaiNumero,
     timestamp: new Date().toISOString(),
-    timestampFormatted: new Date().toLocaleString('fr-FR')
+    timestampFormatted: new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })
   }
   
   scannerState.scanHistory.unshift(scan)
@@ -623,7 +623,7 @@ async function loadScanHistoryFromAPI() {
         barcode: scan.barcode,
         quai: scan.quai_numero,
         timestamp: scan.scan_timestamp,
-        timestampFormatted: new Date(scan.scan_timestamp).toLocaleString('fr-FR')
+        timestampFormatted: new Date(scan.scan_timestamp).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })
       }))
       
       updateScanHistoryDisplay()
