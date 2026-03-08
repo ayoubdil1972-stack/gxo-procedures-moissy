@@ -1,5 +1,5 @@
-// GXO Moissy - Contrôleur Improductivité
-// Gestion des notifications d'improductivité
+// GXO Moissy - Contrôleur Improductivité & Alertes
+// Gestion des notifications d'improductivité et des alertes écart/non-conformité
 
 let improdState = {
   active: false,
@@ -9,15 +9,24 @@ let improdState = {
   controleurNom: ''
 }
 
+let alertesState = {
+  currentFilter: 'en_attente',
+  currentAlerteId: null
+}
+
 // Charger le nom sauvegardé
 document.addEventListener('DOMContentLoaded', () => {
   const savedName = localStorage.getItem('controleur_nom_improd')
   if (savedName) {
     document.getElementById('controleur-nom-improd').value = savedName
+    document.getElementById('modal-controleur-nom').value = savedName
   }
   
-  // Charger l'historique
+  // Charger l'historique improductivités
   loadImprodHistorique()
+  
+  // Charger les alertes
+  loadAlertes('en_attente')
 })
 
 // Switcher entre les onglets
@@ -279,4 +288,264 @@ function formatDate(dateString) {
     hour: '2-digit', 
     minute: '2-digit' 
   })
+}
+
+// ===== GESTION DES ALERTES ÉCART/NON-CONFORMITÉ =====
+
+// Charger les alertes
+async function loadAlertes(statut = 'en_attente') {
+  try {
+    alertesState.currentFilter = statut
+    
+    const response = await fetch(`/api/controleur/alertes?statut=${statut}`)
+    const result = await response.json()
+
+    if (result.success) {
+      const container = document.getElementById('alertes-container')
+      const alertes = result.alertes || []
+      
+      // Mettre à jour les statistiques (simulation)
+      document.getElementById('stat-en-attente').textContent = alertes.length
+      
+      if (alertes.length === 0) {
+        container.innerHTML = `
+          <div class="text-center text-gray-500 py-12">
+            <i class="fas fa-inbox text-5xl mb-3"></i>
+            <p class="text-lg">Aucune alerte ${statut === 'en_attente' ? 'en attente' : 'traitée'}</p>
+          </div>
+        `
+        return
+      }
+
+      container.innerHTML = alertes.map(alerte => {
+        const nonConformites = JSON.parse(alerte.non_conformites || '[]')
+        const ecart = alerte.ecart_palettes_attendues !== alerte.ecart_palettes_recues
+        
+        return `
+          <div class="border-l-4 ${statut === 'en_attente' ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50'} p-6 rounded-lg shadow">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex-1">
+                <div class="flex items-center space-x-3 mb-2">
+                  <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                    Quai ${alerte.quai_numero}
+                  </span>
+                  ${statut === 'en_attente' ? 
+                    '<span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-exclamation-triangle mr-1"></i>EN ATTENTE</span>' :
+                    '<span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>TRAITÉE</span>'
+                  }
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 text-sm mb-3">
+                  <div>
+                    <span class="font-semibold text-gray-700">ID:</span>
+                    <span class="text-gray-600">${alerte.numero_id}</span>
+                  </div>
+                  <div>
+                    <span class="font-semibold text-gray-700">Fournisseur:</span>
+                    <span class="text-gray-600">${alerte.fournisseur}</span>
+                  </div>
+                  <div>
+                    <span class="font-semibold text-gray-700">Premier scan:</span>
+                    <span class="text-gray-600">${formatDate(alerte.heure_premier_scan)}</span>
+                  </div>
+                  <div>
+                    <span class="font-semibold text-gray-700">Fin déchargement:</span>
+                    <span class="text-gray-600">${formatDate(alerte.heure_fin_dechargement)}</span>
+                  </div>
+                </div>
+
+                ${ecart ? `
+                  <div class="bg-red-100 border border-red-300 rounded p-3 mb-3">
+                    <div class="font-semibold text-red-800 mb-1">
+                      <i class="fas fa-exclamation-circle mr-2"></i>
+                      Écart de palettes
+                    </div>
+                    <div class="text-sm text-red-700">
+                      Attendues: <strong>${alerte.ecart_palettes_attendues}</strong> | 
+                      Reçues: <strong>${alerte.ecart_palettes_recues}</strong>
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${nonConformites.length > 0 ? `
+                  <div class="bg-orange-100 border border-orange-300 rounded p-3 mb-3">
+                    <div class="font-semibold text-orange-800 mb-2">
+                      <i class="fas fa-list mr-2"></i>
+                      Non-conformités (${nonConformites.length})
+                    </div>
+                    <ul class="text-sm text-orange-700 space-y-1">
+                      ${nonConformites.map(pb => `<li><i class="fas fa-chevron-right mr-2"></i>${pb}</li>`).join('')}
+                    </ul>
+                  </div>
+                ` : ''}
+
+                ${statut === 'traitee' && alerte.consignes ? `
+                  <div class="bg-green-100 border border-green-300 rounded p-3">
+                    <div class="font-semibold text-green-800 mb-1">
+                      <i class="fas fa-clipboard-check mr-2"></i>
+                      Consignes - ${alerte.traite_par}
+                    </div>
+                    <div class="text-sm text-green-700">${alerte.consignes}</div>
+                    <div class="text-xs text-green-600 mt-1">Traité le ${formatDate(alerte.traite_le)}</div>
+                  </div>
+                ` : ''}
+              </div>
+
+              ${statut === 'en_attente' ? `
+                <button 
+                  class="ml-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg font-semibold"
+                  onclick="ouvrirModalTraitement(${alerte.id})"
+                >
+                  <i class="fas fa-edit mr-2"></i>
+                  Traiter
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `
+      }).join('')
+    }
+  } catch (error) {
+    console.error('Erreur chargement alertes:', error)
+  }
+}
+
+// Filtrer les alertes
+function filtrerAlertes(statut) {
+  // Mettre à jour les boutons
+  const btnAttente = document.getElementById('btn-filtre-attente')
+  const btnTraitees = document.getElementById('btn-filtre-traitees')
+  
+  if (statut === 'en_attente') {
+    btnAttente.classList.add('bg-orange-500', 'text-white')
+    btnAttente.classList.remove('bg-gray-200', 'text-gray-700')
+    btnTraitees.classList.remove('bg-orange-500', 'text-white')
+    btnTraitees.classList.add('bg-gray-200', 'text-gray-700')
+  } else {
+    btnTraitees.classList.add('bg-orange-500', 'text-white')
+    btnTraitees.classList.remove('bg-gray-200', 'text-gray-700')
+    btnAttente.classList.remove('bg-orange-500', 'text-white')
+    btnAttente.classList.add('bg-gray-200', 'text-gray-700')
+  }
+  
+  loadAlertes(statut)
+}
+
+// Ouvrir modal de traitement
+async function ouvrirModalTraitement(alerteId) {
+  try {
+    // Charger les détails de l'alerte
+    const response = await fetch(`/api/controleur/alertes?statut=en_attente`)
+    const result = await response.json()
+    
+    if (result.success) {
+      const alerte = result.alertes.find(a => a.id === alerteId)
+      if (!alerte) {
+        alert('❌ Alerte introuvable')
+        return
+      }
+      
+      alertesState.currentAlerteId = alerteId
+      
+      // Remplir le modal
+      document.getElementById('modal-alerte-titre').textContent = `Quai ${alerte.quai_numero} - ${alerte.fournisseur}`
+      
+      const nonConformites = JSON.parse(alerte.non_conformites || '[]')
+      const ecart = alerte.ecart_palettes_attendues !== alerte.ecart_palettes_recues
+      
+      const detailsHtml = `
+        <div class="bg-gray-50 border border-gray-200 rounded p-4 space-y-2">
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><strong>Quai:</strong> ${alerte.quai_numero}</div>
+            <div><strong>ID:</strong> ${alerte.numero_id}</div>
+            <div><strong>Fournisseur:</strong> ${alerte.fournisseur}</div>
+            <div><strong>Premier scan:</strong> ${formatDate(alerte.heure_premier_scan)}</div>
+            <div><strong>Fin déchargement:</strong> ${formatDate(alerte.heure_fin_dechargement)}</div>
+          </div>
+          
+          ${ecart ? `
+            <div class="bg-red-50 border border-red-200 rounded p-3 mt-3">
+              <div class="font-semibold text-red-800 text-sm mb-1">Écart de palettes</div>
+              <div class="text-sm text-red-700">
+                Attendues: <strong>${alerte.ecart_palettes_attendues}</strong> | 
+                Reçues: <strong>${alerte.ecart_palettes_recues}</strong>
+              </div>
+            </div>
+          ` : ''}
+          
+          ${nonConformites.length > 0 ? `
+            <div class="bg-orange-50 border border-orange-200 rounded p-3 mt-3">
+              <div class="font-semibold text-orange-800 text-sm mb-2">Non-conformités (${nonConformites.length})</div>
+              <ul class="text-sm text-orange-700 space-y-1">
+                ${nonConformites.map(pb => `<li>• ${pb}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        </div>
+      `
+      
+      document.getElementById('modal-alerte-details').innerHTML = detailsHtml
+      document.getElementById('modal-consignes').value = ''
+      
+      // Afficher le modal
+      document.getElementById('modal-traiter-alerte').classList.remove('hidden')
+    }
+  } catch (error) {
+    console.error('Erreur ouverture modal:', error)
+    alert('❌ Erreur lors du chargement de l\'alerte')
+  }
+}
+
+// Fermer modal
+function fermerModalAlerte() {
+  document.getElementById('modal-traiter-alerte').classList.add('hidden')
+  alertesState.currentAlerteId = null
+}
+
+// Valider traitement alerte
+async function validerTraitementAlerte() {
+  const nom = document.getElementById('modal-controleur-nom').value.trim()
+  const consignes = document.getElementById('modal-consignes').value.trim()
+  
+  if (!nom) {
+    alert('⚠️ Veuillez entrer votre nom')
+    return
+  }
+  
+  if (!consignes) {
+    alert('⚠️ Veuillez saisir les consignes')
+    return
+  }
+  
+  if (!alertesState.currentAlerteId) {
+    alert('❌ Erreur: Aucune alerte sélectionnée')
+    return
+  }
+  
+  try {
+    // Sauvegarder le nom pour la prochaine fois
+    localStorage.setItem('controleur_nom_improd', nom)
+    
+    const response = await fetch(`/api/controleur/alertes/${alertesState.currentAlerteId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        traite_par: nom,
+        consignes: consignes
+      })
+    })
+    
+    const result = await response.json()
+    
+    if (result.success) {
+      alert('✅ Alerte traitée avec succès')
+      fermerModalAlerte()
+      loadAlertes(alertesState.currentFilter)
+    } else {
+      alert('❌ Erreur: ' + (result.error || 'Erreur inconnue'))
+    }
+  } catch (error) {
+    console.error('Erreur traitement alerte:', error)
+    alert('❌ Erreur de connexion au serveur')
+  }
 }

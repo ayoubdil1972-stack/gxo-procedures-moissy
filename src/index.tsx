@@ -2655,6 +2655,70 @@ app.get('/api/controleur/improd/historique', async (c) => {
   }
 })
 
+// GET /api/controleur/alertes - Récupérer les alertes en attente
+app.get('/api/controleur/alertes', async (c) => {
+  try {
+    const statut = c.req.query('statut') || 'en_attente'
+    
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM controleur_alertes 
+      WHERE statut = ?
+      ORDER BY created_at DESC
+      LIMIT 100
+    `).bind(statut).all()
+
+    return c.json({ 
+      success: true, 
+      alertes: results || []
+    })
+
+  } catch (error) {
+    console.error('❌ Erreur récupération alertes:', error)
+    // Retourner un tableau vide si la table n'existe pas encore
+    return c.json({ success: true, alertes: [] })
+  }
+})
+
+// PUT /api/controleur/alertes/:id - Traiter une alerte
+app.put('/api/controleur/alertes/:id', async (c) => {
+  try {
+    const id = c.req.param('id')
+    const data = await c.req.json()
+    
+    console.log('📝 Traitement alerte:', id, data)
+
+    // Validation
+    if (!data.traite_par || !data.consignes) {
+      return c.json({ success: false, error: 'Contrôleur et consignes requis' }, 400)
+    }
+
+    // Mettre à jour l'alerte
+    await c.env.DB.prepare(`
+      UPDATE controleur_alertes 
+      SET statut = 'traitee',
+          consignes = ?,
+          traite_par = ?,
+          traite_le = datetime('now', 'localtime')
+      WHERE id = ?
+    `).bind(
+      data.consignes,
+      data.traite_par,
+      id
+    ).run()
+
+    console.log('✅ Alerte', id, 'traitée par', data.traite_par)
+
+    return c.json({ 
+      success: true,
+      message: 'Alerte traitée avec succès'
+    })
+
+  } catch (error) {
+    console.error('❌ Erreur traitement alerte:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 // ===== GESTION DES QUAIS - API ROUTES =====
 
 // GET /api/quais - Récupérer l'état de tous les quais
@@ -2799,10 +2863,82 @@ app.post('/api/fin-dechargement', async (c) => {
       console.log('✅ Quai', data.quai_numero, 'marqué comme disponible (fallback) - Timer conservé dans commentaire')
     }
 
+    // ===== CRÉATION ALERTE AUTOMATIQUE SI ÉCART OU NON-CONFORMITÉ =====
+    let alerteCreee = false
+    try {
+      // Vérifier s'il y a un écart de palettes
+      const ecartPalettes = parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues)
+      
+      // Vérifier s'il y a des non-conformités dans les problèmes
+      const problemes = data.problemes || []
+      const aDesNonConformites = problemes.length > 0
+      
+      if (ecartPalettes || aDesNonConformites) {
+        console.log('🚨 Écart ou non-conformité détecté - Création alerte contrôleur')
+        
+        // Récupérer les données du quai pour avoir timer_start (heure premier scan)
+        const quaiData = await c.env.DB.prepare(`
+          SELECT timer_start, timer_fin_timestamp FROM quai_status WHERE quai_numero = ?
+        `).bind(data.quai_numero).first()
+        
+        // Créer la table alertes si elle n'existe pas
+        await c.env.DB.prepare(`
+          CREATE TABLE IF NOT EXISTS controleur_alertes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            quai_numero INTEGER NOT NULL,
+            numero_id TEXT NOT NULL,
+            fournisseur TEXT NOT NULL,
+            heure_premier_scan TEXT,
+            heure_fin_dechargement TEXT,
+            ecart_palettes_attendues INTEGER,
+            ecart_palettes_recues INTEGER,
+            non_conformites TEXT,
+            consignes TEXT,
+            statut TEXT DEFAULT 'en_attente',
+            traite_par TEXT,
+            traite_le TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+          )
+        `).run()
+        
+        // Préparer les détails de l'écart
+        let detailsEcart = ''
+        if (ecartPalettes) {
+          detailsEcart = `Écart palettes: Attendues ${data.palettes_attendues}, Reçues ${data.palettes_recues}`
+        }
+        
+        // Préparer les non-conformités (JSON)
+        const nonConformitesJson = JSON.stringify(problemes)
+        
+        // Insérer l'alerte
+        const alerteResult = await c.env.DB.prepare(`
+          INSERT INTO controleur_alertes (
+            quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement,
+            ecart_palettes_attendues, ecart_palettes_recues, non_conformites
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          data.quai_numero,
+          data.numero_id,
+          data.fournisseur,
+          quaiData?.timer_start || null,
+          quaiData?.timer_fin_timestamp || null,
+          parseInt(data.palettes_attendues),
+          parseInt(data.palettes_recues),
+          nonConformitesJson
+        ).run()
+        
+        alerteCreee = true
+        console.log('✅ Alerte contrôleur créée - ID:', alerteResult.meta.last_row_id)
+      }
+    } catch (error) {
+      console.error('⚠️ Erreur création alerte (non bloquant):', error)
+    }
+
     return c.json({ 
       success: true, 
       id: result.meta.last_row_id,
-      message: 'Déchargement enregistré avec succès'
+      message: 'Déchargement enregistré avec succès',
+      alerte_creee: alerteCreee
     })
   } catch (error) {
     console.error('❌ Erreur enregistrement fin déchargement:', error)

@@ -251,10 +251,147 @@ export function ControleurPage() {
             Écart et Non-conformité repérés au déchargement
           </h2>
           
-          <div class="bg-orange-50 border-l-4 border-orange-500 p-6 text-center">
-            <i class="fas fa-hard-hat text-4xl text-orange-500 mb-3"></i>
-            <p class="text-lg font-semibold text-gray-800">Section en construction</p>
-            <p class="text-sm text-gray-600 mt-2">Cette fonctionnalité sera implémentée prochainement</p>
+          {/* Statistiques */}
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-red-600 font-semibold">En attente</p>
+                  <p id="stat-en-attente" class="text-3xl font-bold text-red-700">0</p>
+                </div>
+                <i class="fas fa-exclamation-circle text-4xl text-red-300"></i>
+              </div>
+            </div>
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-green-600 font-semibold">Traitées aujourd'hui</p>
+                  <p id="stat-traitees" class="text-3xl font-bold text-green-700">0</p>
+                </div>
+                <i class="fas fa-check-circle text-4xl text-green-300"></i>
+              </div>
+            </div>
+            <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-orange-600 font-semibold">Total cette semaine</p>
+                  <p id="stat-semaine" class="text-3xl font-bold text-orange-700">0</p>
+                </div>
+                <i class="fas fa-chart-line text-4xl text-orange-300"></i>
+              </div>
+            </div>
+          </div>
+
+          {/* Filtres */}
+          <div class="flex space-x-2 mb-6">
+            <button 
+              class="px-4 py-2 rounded-lg font-semibold transition-colors bg-orange-500 text-white"
+              id="btn-filtre-attente"
+              onclick="filtrerAlertes('en_attente')"
+            >
+              <i class="fas fa-clock mr-2"></i>
+              En attente
+            </button>
+            <button 
+              class="px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300"
+              id="btn-filtre-traitees"
+              onclick="filtrerAlertes('traitee')"
+            >
+              <i class="fas fa-check mr-2"></i>
+              Traitées
+            </button>
+          </div>
+
+          {/* Liste des alertes */}
+          <div id="alertes-container" class="space-y-4">
+            <div class="text-center text-gray-500 py-12">
+              <i class="fas fa-inbox text-5xl mb-3"></i>
+              <p class="text-lg">Aucune alerte en attente</p>
+              <p class="text-sm mt-2">Les alertes apparaîtront automatiquement ici</p>
+            </div>
+          </div>
+
+          {/* Modal Traiter Alerte */}
+          <div id="modal-traiter-alerte" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-2xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              {/* Header */}
+              <div class="bg-orange-500 text-white p-6 rounded-t-lg">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="text-2xl font-bold">Traiter l'alerte</h3>
+                    <p class="text-sm opacity-90 mt-1" id="modal-alerte-titre">Quai X</p>
+                  </div>
+                  <button onclick="fermerModalAlerte()" class="text-white hover:text-orange-200 transition-colors text-2xl">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div class="p-6">
+                {/* Informations alerte */}
+                <div id="modal-alerte-details" class="mb-6 space-y-3">
+                  {/* Rempli dynamiquement par JS */}
+                </div>
+
+                {/* Formulaire consignes */}
+                <div class="border-t pt-6">
+                  <h4 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-clipboard-list mr-2 text-orange-500"></i>
+                    Consignes du contrôleur
+                  </h4>
+
+                  {/* Nom contrôleur */}
+                  <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                      <i class="fas fa-user mr-2 text-orange-500"></i>
+                      Votre nom
+                    </label>
+                    <input 
+                      type="text" 
+                      id="modal-controleur-nom"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      placeholder="Nom du contrôleur"
+                    />
+                  </div>
+
+                  {/* Consignes */}
+                  <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                      <i class="fas fa-comment-dots mr-2 text-orange-500"></i>
+                      Consignes et actions entreprises
+                    </label>
+                    <textarea 
+                      id="modal-consignes"
+                      rows="6"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      placeholder="Décrivez les consignes données, les actions prises, les vérifications effectuées..."
+                    ></textarea>
+                    <p class="text-xs text-gray-500 mt-1">
+                      Ces consignes seront enregistrées et pourront être consultées plus tard
+                    </p>
+                  </div>
+
+                  {/* Boutons */}
+                  <div class="flex space-x-3">
+                    <button 
+                      id="btn-valider-traitement"
+                      class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-lg"
+                      onclick="validerTraitementAlerte()"
+                    >
+                      <i class="fas fa-check-circle mr-2"></i>
+                      Valider le traitement
+                    </button>
+                    <button 
+                      class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                      onclick="fermerModalAlerte()"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
