@@ -929,17 +929,7 @@ app.get('/scan-fin-dechargement', (c) => {
         <div id="success-message" class="hidden mt-6 bg-green-100 border-2 border-green-500 rounded-xl p-6 text-center">
           <div class="text-5xl mb-4">✅</div>
           <h2 class="text-2xl font-bold text-green-800 mb-2">Déchargement Validé !</h2>
-          <p class="text-green-700 mb-4">Les informations ont été enregistrées avec succès.</p>
-          <div class="flex gap-4 justify-center">
-            <a href="/accueil-chauffeur" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-all">
-              <i class="fas fa-home mr-2"></i>
-              Retour à l'accueil
-            </a>
-            <button onclick="window.location.reload()" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-all">
-              <i class="fas fa-redo mr-2"></i>
-              Nouveau formulaire
-            </button>
-          </div>
+          <p class="text-green-700">Les informations ont été enregistrées avec succès.</p>
         </div>
 
         <div id="error-message" class="hidden mt-6 bg-red-100 border-2 border-red-500 rounded-xl p-6 text-center">
@@ -1588,14 +1578,6 @@ app.get('/scan-fin-controle-success', (c) => {
         <h1 class="text-3xl font-bold text-purple-600 mb-4">Contrôle Terminé</h1>
         <p class="text-2xl font-bold text-gray-800 mb-4">Quai n°${quaiNumero}</p>
         
-        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 mb-4">
-          <p class="text-purple-800 font-semibold mb-2">
-            <i class="fas fa-stopwatch mr-2"></i>
-            Durée du contrôle
-          </p>
-          <p class="text-3xl font-mono font-bold text-purple-900">${formattedTime}</p>
-        </div>
-
         <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
           <p class="text-blue-800 font-semibold mb-2">
             <i class="fas fa-user mr-2"></i>
@@ -1625,7 +1607,7 @@ app.get('/scan-fin-controle-success', (c) => {
         ` : ''}
 
         ${formattedDebut ? `
-          <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-4">
+          <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6">
             <p class="text-amber-800 font-semibold mb-2">
               <i class="fas fa-clock mr-2"></i>
               Début du contrôle
@@ -1633,13 +1615,6 @@ app.get('/scan-fin-controle-success', (c) => {
             <p class="text-lg font-bold text-amber-900">${formattedDebut}</p>
           </div>
         ` : ''}
-        
-        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-          <p class="text-green-800 font-semibold">
-            <i class="fas fa-check-circle mr-2"></i>
-            Le timer de contrôle est maintenant figé
-          </p>
-        </div>
         <a href="/accueil-chauffeur" class="bg-purple-500 text-white px-8 py-4 rounded-xl inline-block hover:bg-purple-600 transition-colors font-bold text-lg shadow-lg">
           <i class="fas fa-warehouse mr-2"></i>
           Retour à la gestion des quais
