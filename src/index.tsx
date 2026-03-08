@@ -2689,42 +2689,42 @@ app.get('/api/controleur/alertes', async (c) => {
 app.get('/api/controleur/alertes/stats', async (c) => {
   try {
     // Alertes en attente
-    const { results: enAttente } = await c.env.DB.prepare(`
+    const enAttente = await c.env.DB.prepare(`
       SELECT COUNT(*) as count 
       FROM controleur_alertes 
       WHERE statut = 'en_attente'
-    `).all()
+    `).first()
     
     // Alertes traitées aujourd'hui (date = date actuelle)
-    const { results: traiteesAujourdhui } = await c.env.DB.prepare(`
+    const traiteesAujourdhui = await c.env.DB.prepare(`
       SELECT COUNT(*) as count 
       FROM controleur_alertes 
       WHERE statut = 'traitee' 
       AND DATE(traite_le) = DATE('now', 'localtime')
-    `).all()
+    `).first()
     
-    // Alertes traitées cette semaine (depuis lundi)
-    // Pour SQLite : calculer le lundi de la semaine en cours
-    const { results: traiteesSemaine } = await c.env.DB.prepare(`
+    // Alertes traitées cette semaine (depuis lundi jusqu'à aujourd'hui)
+    // Calcul du lundi : jour de la semaine actuel - (jour - 1) où lundi = 1
+    const traiteesSemaine = await c.env.DB.prepare(`
       SELECT COUNT(*) as count 
       FROM controleur_alertes 
       WHERE statut = 'traitee' 
-      AND DATE(traite_le) >= DATE('now', 'localtime', 'weekday 1', '-7 days')
+      AND DATE(traite_le) >= DATE('now', 'localtime', '-' || (CAST(strftime('%w', 'now', 'localtime') AS INTEGER) + 6) % 7 || ' days')
       AND DATE(traite_le) <= DATE('now', 'localtime')
-    `).all()
+    `).first()
 
     console.log('📊 Stats alertes:', {
-      enAttente: enAttente[0]?.count || 0,
-      traiteesAujourdhui: traiteesAujourdhui[0]?.count || 0,
-      traiteesSemaine: traiteesSemaine[0]?.count || 0
+      enAttente: enAttente?.count || 0,
+      traiteesAujourdhui: traiteesAujourdhui?.count || 0,
+      traiteesSemaine: traiteesSemaine?.count || 0
     })
 
     return c.json({ 
       success: true, 
       stats: {
-        en_attente: enAttente[0]?.count || 0,
-        traitees_aujourd_hui: traiteesAujourdhui[0]?.count || 0,
-        traitees_semaine: traiteesSemaine[0]?.count || 0
+        en_attente: enAttente?.count || 0,
+        traitees_aujourd_hui: traiteesAujourdhui?.count || 0,
+        traitees_semaine: traiteesSemaine?.count || 0
       }
     })
 

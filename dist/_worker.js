@@ -3485,22 +3485,22 @@ var Vr=Object.defineProperty;var Nt=t=>{throw TypeError(t)};var Hr=(t,r,s)=>r in
       WHERE statut = ?
       ORDER BY created_at DESC
       LIMIT 100
-    `).bind(r).all();return t.json({success:!0,alertes:s||[]})}catch(r){return console.error("❌ Erreur récupération alertes:",r),t.json({success:!0,alertes:[]})}});p.get("/api/controleur/alertes/stats",async t=>{var r,s,i,a,n,l;try{const{results:o}=await t.env.DB.prepare(`
+    `).bind(r).all();return t.json({success:!0,alertes:s||[]})}catch(r){return console.error("❌ Erreur récupération alertes:",r),t.json({success:!0,alertes:[]})}});p.get("/api/controleur/alertes/stats",async t=>{try{const r=await t.env.DB.prepare(`
       SELECT COUNT(*) as count 
       FROM controleur_alertes 
       WHERE statut = 'en_attente'
-    `).all(),{results:c}=await t.env.DB.prepare(`
+    `).first(),s=await t.env.DB.prepare(`
       SELECT COUNT(*) as count 
       FROM controleur_alertes 
       WHERE statut = 'traitee' 
       AND DATE(traite_le) = DATE('now', 'localtime')
-    `).all(),{results:d}=await t.env.DB.prepare(`
+    `).first(),i=await t.env.DB.prepare(`
       SELECT COUNT(*) as count 
       FROM controleur_alertes 
       WHERE statut = 'traitee' 
-      AND DATE(traite_le) >= DATE('now', 'localtime', 'weekday 1', '-7 days')
+      AND DATE(traite_le) >= DATE('now', 'localtime', '-' || (CAST(strftime('%w', 'now', 'localtime') AS INTEGER) + 6) % 7 || ' days')
       AND DATE(traite_le) <= DATE('now', 'localtime')
-    `).all();return console.log("📊 Stats alertes:",{enAttente:((r=o[0])==null?void 0:r.count)||0,traiteesAujourdhui:((s=c[0])==null?void 0:s.count)||0,traiteesSemaine:((i=d[0])==null?void 0:i.count)||0}),t.json({success:!0,stats:{en_attente:((a=o[0])==null?void 0:a.count)||0,traitees_aujourd_hui:((n=c[0])==null?void 0:n.count)||0,traitees_semaine:((l=d[0])==null?void 0:l.count)||0}})}catch(o){return console.error("❌ Erreur récupération stats alertes:",o),t.json({success:!0,stats:{en_attente:0,traitees_aujourd_hui:0,traitees_semaine:0}})}});p.put("/api/controleur/alertes/:id",async t=>{try{const r=t.req.param("id"),s=await t.req.json();return console.log("📝 Traitement alerte:",r,s),!s.traite_par||!s.consignes?t.json({success:!1,error:"Contrôleur et consignes requis"},400):(await t.env.DB.prepare(`
+    `).first();return console.log("📊 Stats alertes:",{enAttente:(r==null?void 0:r.count)||0,traiteesAujourdhui:(s==null?void 0:s.count)||0,traiteesSemaine:(i==null?void 0:i.count)||0}),t.json({success:!0,stats:{en_attente:(r==null?void 0:r.count)||0,traitees_aujourd_hui:(s==null?void 0:s.count)||0,traitees_semaine:(i==null?void 0:i.count)||0}})}catch(r){return console.error("❌ Erreur récupération stats alertes:",r),t.json({success:!0,stats:{en_attente:0,traitees_aujourd_hui:0,traitees_semaine:0}})}});p.put("/api/controleur/alertes/:id",async t=>{try{const r=t.req.param("id"),s=await t.req.json();return console.log("📝 Traitement alerte:",r,s),!s.traite_par||!s.consignes?t.json({success:!1,error:"Contrôleur et consignes requis"},400):(await t.env.DB.prepare(`
       UPDATE controleur_alertes 
       SET statut = 'traitee',
           consignes = ?,
