@@ -5,12 +5,19 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.5.3  
+**Version actuelle** : 3.5.9  
 **Dernière mise à jour** : 2026-03-08  
-**Backup** : https://www.genspark.ai/api/files/s/3OzkBV0q  
+**Backup** : https://www.genspark.ai/api/files/s/jOCwQfbN  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU v3.5.3 : Vérifications des 7 Points de Contrôle**
+### 🆕 **NOUVEAU v3.5.9 : Correction Synchronisation Horaire Finale** ✅
+- **Timers remis en ordre** : Affichage DURÉE (HH:MM:SS) restauré comme avant
+- **Heure commentaire corrigée** : Rubrique blanche sous nom agent affiche l'heure correcte
+- **Fix timezone** : Ajout `+Z` dans fonction `formatDate()` pour conversion Europe/Paris
+- **Exemple** : Début 12h00, Fin 15min après → Commentaire affiche **12h15** (pas 11h15)
+- **Conservation fonctionnalités** : Tous les timers et affichages fonctionnent correctement
+
+### 🆕 **v3.5.3 : Vérifications des 7 Points de Contrôle**
 - **7 Points de contrôle obligatoires** : Formulaire complet de vérification qualité du camion
   1. ✅ Extérieur / Essieux (vérification plombage)
   2. ✅ Côtés gauche et droit (déchirures, etc.)
@@ -459,6 +466,33 @@ curl http://localhost:3000/api/quais | jq '.quais[] | select(.quai_numero == 75)
 curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 ```
 
+### Test synchronisation horaire (v3.5.9)
+
+**Vérifier que l'heure du commentaire est correcte :**
+
+1. Scanner "Début déchargement" quai 75 à **12h00**
+2. Attendre 15 minutes
+3. Scanner "Fin déchargement" quai 75 à **12h15**
+4. Remplir et valider le formulaire
+5. Aller dans "Gestion des Quais"
+6. Vérifier la carte quai 75 :
+   - **Rubrique bleue** : `📋 Déchargement terminé` → `00:15:XX` (durée) ✅
+   - **Rubrique blanche** : `🕐 08/03/2026, 12h15` (heure exacte) ✅
+
+**Résultat attendu** :
+```
+┌─────────────────────────────────────────┐
+│ Quai 75 - Fin de déchargement          │
+│                                         │
+│ 📋 Déchargement terminé                 │
+│ 00:15:30  ← DURÉE (timer figé)          │
+│                                         │
+│ ⚠️ Déchargement terminé - Jean - FNAC   │
+│ 👤 Jean                                  │
+│ 🕐 08/03/2026, 12h15  ← HEURE CORRECTE  │
+└─────────────────────────────────────────┘
+```
+
 ---
 
 ## 📊 API Routes
@@ -524,6 +558,21 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 ---
 
 ## 🔄 Changelog
+
+### v3.5.9 (2026-03-08) - FIX SYNCHRONISATION HORAIRE FINALE ✅
+- 🔧 **Timers restaurés** : Affichage DURÉE (00:15:30) remis comme avant
+  - fin_dechargement : Affiche DURÉE du déchargement ✅
+  - en_controle : Affiche DURÉE du déchargement ✅
+  - fin_controle : Affiche DURÉE du déchargement ✅
+- 🕐 **Heure commentaire corrigée** : 
+  - Rubrique blanche sous nom agent affiche heure correcte
+  - Ajout `+Z` dans `formatDate()` pour interprétation UTC → Europe/Paris
+  - Exemple : Début 12h00, Fin 12h15 → Commentaire "08/03/2026, **12h15**" ✅
+- 🎯 **Résultat** : 
+  - **Timers** : Format durée HH:MM:SS (rubriques colorées)
+  - **Commentaire** : Heure exacte sans décalage (rubrique blanche)
+- 📦 **Commit** : [773f943](https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/commit/773f943)
+- 💾 **Backup** : https://www.genspark.ai/api/files/s/jOCwQfbN
 
 ### v3.5.3 (2026-03-08) - FIX CRITIQUE SYNTAXERROR ✅
 - 🔧 **Fix critique** : Correction erreur JavaScript SyntaxError ligne 801
@@ -628,5 +677,5 @@ Pour toute question ou problème :
 ---
 
 **Dernière mise à jour** : 2026-03-08  
-**Version** : 3.5.3  
-**Statut** : ✅ Production stable - 7 Points de Contrôle + Traçabilité Complète
+**Version** : 3.5.9  
+**Statut** : ✅ Production stable - Timers + Synchronisation horaire + 7 Points de Contrôle + Traçabilité Complète
