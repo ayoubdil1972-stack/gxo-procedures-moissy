@@ -169,19 +169,19 @@ function renderQuaiCard(quai) {
     // Afficher les infos du contrôle terminé (UNIQUEMENT la durée du contrôle)
     const formattedControle = formatDuration(quai.timer_controle_duration)
     if (formattedControle) {
-      // Formater la date de début du contrôle
-      let debutControleFormatted = ''
-      if (quai.controle_debut_timestamp) {
+      // Formater la date de FIN du contrôle (pas début)
+      let finControleFormatted = ''
+      if (quai.controle_fin_timestamp) {
         try {
-          const date = new Date(quai.controle_debut_timestamp.replace(' ', 'T') + 'Z')
+          const date = new Date(quai.controle_fin_timestamp.replace(' ', 'T') + 'Z')
           const day = String(date.getDate()).padStart(2, '0')
           const month = String(date.getMonth() + 1).padStart(2, '0')
           const year = date.getFullYear()
           const hour = String(date.getHours()).padStart(2, '0')
           const minute = String(date.getMinutes()).padStart(2, '0')
-          debutControleFormatted = `${day}/${month}/${year} à ${hour}h${minute}`
+          finControleFormatted = `${day}/${month}/${year} à ${hour}h${minute}`
         } catch (e) {
-          debutControleFormatted = quai.controle_debut_timestamp
+          finControleFormatted = quai.controle_fin_timestamp
         }
       }
       
@@ -192,7 +192,7 @@ function renderQuaiCard(quai) {
           ${quai.controleur_nom ? `<div class="text-xs text-purple-700 mt-1"><i class="fas fa-user mr-1"></i>${quai.controleur_nom}</div>` : ''}
           ${quai.controle_fournisseur ? `<div class="text-xs text-purple-700 mt-0.5"><i class="fas fa-truck mr-1"></i>${quai.controle_fournisseur}</div>` : ''}
           ${quai.controle_id_chauffeur ? `<div class="text-xs text-purple-700 mt-0.5"><i class="fas fa-id-card mr-1"></i>ID: ${quai.controle_id_chauffeur}</div>` : ''}
-          ${debutControleFormatted ? `<div class="text-xs text-purple-700 mt-0.5"><i class="fas fa-clock mr-1"></i>${debutControleFormatted}</div>` : ''}
+          ${finControleFormatted ? `<div class="text-xs text-purple-700 mt-0.5"><i class="fas fa-clock mr-1"></i>${finControleFormatted}</div>` : ''}
         </div>
       `
     } else {
