@@ -4,6 +4,8 @@
   "exclude": [
     "/*.html",
     "/consignes/*",
-    "/static/*"
+    "/static/*",
+    "/download-qr-pdf",
+    "/download-qr-fin-dechargement"
   ]
 }
