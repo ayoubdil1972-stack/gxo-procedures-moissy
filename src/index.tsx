@@ -466,12 +466,307 @@ app.get('/scan-fin-dechargement', (c) => {
             </div>
           </div>
 
+
+          <!-- Vérifications des 7 points de contrôle -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between cursor-pointer mb-4" id="verification-header">
+              <label class="text-sm font-semibold text-gray-700 flex items-center">
+                <i class="fas fa-clipboard-list text-blue-600 mr-2"></i>
+                Vérifications des 7 points de contrôle <span class="text-red-500 ml-1">*</span>
+              </label>
+              <i id="verification-icon" class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+            </div>
+            
+            <div id="verification-content">
+              <!-- Points obligatoires (1-7) -->
+              <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 mb-4">
+                <h3 class="text-sm font-bold text-blue-800 mb-3">Points obligatoires <span class="text-red-500">*</span></h3>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">1. Extérieur / Essieux (vérifier le plombage du camion) <span class="text-red-500">*</span></p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_1" value="conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_1" value="non_conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_1" value="non_applicable" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">2. Côtés gauche et droit (ex : déchirures, ...) <span class="text-red-500">*</span></p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_2" value="conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_2" value="non_conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_2" value="non_applicable" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">3. Paroi avant (ex : double fond, ...) <span class="text-red-500">*</span></p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_3" value="conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_3" value="non_conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_3" value="non_applicable" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">4. Plancher (ex : trappes, plancher amovible, ...) <span class="text-red-500">*</span></p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_4" value="conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_4" value="non_conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_4" value="non_applicable" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">5. Plafond / Toit (ex : déchirures, usures, ...) <span class="text-red-500">*</span></p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_5" value="conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_5" value="non_conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_5" value="non_applicable" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">6. Portes intérieures / extérieures (herméticité, ...) <span class="text-red-500">*</span></p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_6" value="conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_6" value="non_conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_6" value="non_applicable" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <p class="text-sm font-medium text-gray-700 mb-2">7. Cales roues bien positionnées <span class="text-red-500">*</span></p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_7" value="conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_7" value="non_conforme" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_7" value="non_applicable" required class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Points optionnels (8-11) -->
+              <div class="border-2 border-orange-200 rounded-lg p-4 bg-orange-50">
+                <h3 class="text-sm font-bold text-orange-800 mb-2">Points optionnels (marchandises alimentaires)</h3>
+                <p class="text-xs text-orange-700 mb-3">À remplir uniquement en cas de réception de marchandises alimentaires</p>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">8. Nuisibles</p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_8" value="conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_8" value="non_conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_8" value="non_applicable" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">9. Corps étranger</p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_9" value="conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_9" value="non_conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_9" value="non_applicable" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3 pb-3 border-b border-gray-200">
+                  <p class="text-sm font-medium text-gray-700 mb-2">10. Propreté</p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_10" value="conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_10" value="non_conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_10" value="non_applicable" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <p class="text-sm font-medium text-gray-700 mb-2">11. Odeur</p>
+                  <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_11" value="conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:font-semibold transition-all hover:border-green-300 text-xs sm:text-sm">
+                        ✅ Conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_11" value="non_conforme" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:font-semibold transition-all hover:border-red-300 text-xs sm:text-sm">
+                        ❌ Non conforme
+                      </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                      <input type="radio" name="point_11" value="non_applicable" class="peer hidden"/>
+                      <div class="p-2 text-center border-2 border-gray-300 rounded-lg peer-checked:border-gray-500 peer-checked:bg-gray-50 peer-checked:font-semibold transition-all hover:border-gray-400 text-xs sm:text-sm">
+                        ⚪ N/A
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
           <!-- Problématiques -->
           <div class="bg-white rounded-xl shadow-lg p-6">
-            <label class="block text-sm font-semibold text-gray-700 mb-3">
-              <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
-              Problématiques rencontrées (cocher si applicable)
-            </label>
+            <div class="flex items-center justify-between cursor-pointer mb-3" id="problematiques-header">
+              <label class="text-sm font-semibold text-gray-700 flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                Problématiques rencontrées (cocher si applicable)
+              </label>
+              <i id="problematiques-icon" class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+            </div>
+            <div id="problematiques-content" class="hidden">
             <div class="space-y-2">
               <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
                 <input 
@@ -558,6 +853,7 @@ app.get('/scan-fin-dechargement', (c) => {
                 placeholder="Décrivez la problématique..."
                 class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"
               ></textarea>
+            </div>
             </div>
           </div>
 
@@ -678,6 +974,42 @@ app.get('/scan-fin-dechargement', (c) => {
         // Charger au démarrage
         loadStoredData();
         
+
+        
+        // ===== GESTION SECTIONS REPLIABLES =====
+        
+        // Toggle section vérification
+        document.getElementById('verification-header').addEventListener('click', function() {
+          const content = document.getElementById('verification-content');
+          const icon = document.getElementById('verification-icon');
+          
+          if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+          } else {
+            content.classList.add('hidden');
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+          }
+        });
+        
+        // Toggle section problématiques
+        document.getElementById('problematiques-header').addEventListener('click', function() {
+          const content = document.getElementById('problematiques-content');
+          const icon = document.getElementById('problematiques-icon');
+          
+          if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+          } else {
+            content.classList.add('hidden');
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+          }
+        });
+
         // ===== GESTION DU FORMULAIRE =====
         
         // Afficher le champ "Autres" si coché
@@ -697,6 +1029,41 @@ app.get('/scan-fin-dechargement', (c) => {
         document.getElementById('fin-dechargement-form').addEventListener('submit', async function(e) {
           e.preventDefault();
           
+          // ===== VALIDATION DES 7 POINTS OBLIGATOIRES =====
+          const requiredPoints = [1, 2, 3, 4, 5, 6, 7];
+          const missingPoints = [];
+          
+          for (const pointNum of requiredPoints) {
+            const pointName = 'point_' + pointNum;
+            const checkedRadio = document.querySelector('input[name="' + pointName + '"]:checked');
+            if (!checkedRadio) {
+              missingPoints.push(pointNum);
+            }
+          }
+          
+          if (missingPoints.length > 0) {
+            alert('⚠️ Veuillez remplir tous les points de contrôle obligatoires.\n\nPoints manquants : ' + missingPoints.join(', '));
+            // Déplier la section si elle est repliée
+            const verificationContent = document.getElementById('verification-content');
+            const verificationIcon = document.getElementById('verification-icon');
+            verificationContent.classList.remove('hidden');
+            verificationIcon.classList.remove('fa-chevron-down');
+            verificationIcon.classList.add('fa-chevron-up');
+            // Scroll vers la section
+            document.getElementById('verification-header').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+          }
+          
+          // Récupérer les points de contrôle
+          const verificationPoints = {};
+          for (let i = 1; i <= 11; i++) {
+            const pointValue = formData.get('point_' + i);
+            if (pointValue) {
+              verificationPoints['point_' + i] = pointValue;
+            }
+          }
+
+          
           const formData = new FormData(this);
           const nomAgent = formData.get('nom_agent');
           const numeroId = formData.get('numero_id');
@@ -714,6 +1081,7 @@ app.get('/scan-fin-dechargement', (c) => {
             palettes_attendues: parseInt(formData.get('palettes_attendues')),
             palettes_recues: parseInt(formData.get('palettes_recues')),
             palettes_a_rendre: formData.get('palettes_a_rendre'),
+            verification_points: verificationPoints,
             problemes: formData.getAll('probleme[]'),
             autres_commentaire: formData.get('autres_commentaire'),
             remarques: formData.get('remarques'),
