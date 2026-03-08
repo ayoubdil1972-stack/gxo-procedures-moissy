@@ -5,10 +5,25 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.5.11  
+**Version actuelle** : 3.5.13  
 **Dernière mise à jour** : 2026-03-08  
 **Backup** : https://www.genspark.ai/api/files/s/ZvFNB7eF  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+
+### 🆕 **NOUVEAU v3.5.13 : Générateur QR Codes Format Corrigé** ✅
+- **Problème résolu** : QR codes coupés en impression dans le PDF `GXO-Moissy-QR-Codes-2026-03-05.pdf`
+- **Solution** : Nouveau générateur HTML avec format identique au PDF "Fin Déchargement" (qui fonctionne)
+- **Améliorations** :
+  - ✅ QR codes : **60×60mm (6×6cm)** au lieu de tailles variables
+  - ✅ Marges : **15mm** de chaque côté (évite coupure impression)
+  - ✅ Disposition : **2 colonnes × 4 lignes** par page
+  - ✅ Espacement vertical : **20mm** entre lignes
+  - ✅ Qualité : **400×400px** par QR code (haute résolution)
+  - ✅ Correction erreur : **Level H** (robuste aux dommages)
+  - ✅ Couleurs par zone : A-F (Rouge, Turquoise, Bleu, Orange, Vert, Jaune)
+- **Accès** : https://gxomoissyprocedures.com/generate-qr-codes.html
+- **Usage** : Cliquer "Générer le PDF" → Téléchargement automatique → Imprimer à 100% (échelle)
+- **Résultat** : PDF avec QR codes **COMPLETS**, sans coupure en impression
 
 ### 🆕 **NOUVEAU v3.5.11 : FIX COMPLET Timers +1h (DÉFINITIF)** ✅
 - **Problème résolu COMPLÈTEMENT** : 
