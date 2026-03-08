@@ -41,12 +41,28 @@ export function HomePage() {
       processes: 6
     },
     {
+      id: 'chef-equipe',
+      title: 'Chef d\'équipe / Responsable d\'exploitation',
+      icon: 'fa-users-cog',
+      color: 'bg-indigo-500',
+      description: 'Gestion d\'équipe et supervision des opérations',
+      processes: 0
+    },
+    {
       id: 'nouveau',
       title: 'Nouvel Arrivant',
       icon: 'fa-graduation-cap',
       color: 'bg-pink-500',
       description: 'Parcours d\'intégration et formations de base',
       processes: 6
+    },
+    {
+      id: 'archives',
+      title: 'Archives',
+      icon: 'fa-archive',
+      color: 'bg-gray-500',
+      description: 'Historique et documentation archivée',
+      processes: 0
     },
     {
       id: 'anomalies',

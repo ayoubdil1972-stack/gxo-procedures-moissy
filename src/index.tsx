@@ -14,6 +14,8 @@ import { NouveauPage } from './pages/nouveau'
 import { AnomaliesPage } from './pages/anomalies'
 import { BibliothequePage } from './pages/bibliotheque'
 import { ContactsPage } from './pages/contacts'
+import { ChefEquipePage } from './pages/chef-equipe'
+import { ArchivesPage } from './pages/archives'
 import { LoginPage } from './pages/login'
 import { QRCodeChauffeurPage } from './pages/qrcode-chauffeur'
 import { ChauffeurLanguePage } from './pages/chauffeur-langue'
@@ -2384,7 +2386,9 @@ app.get('/accueil-chauffeur', (c) => c.render(<AccueilChauffeurPage />))
 app.get('/administrateur', (c) => c.render(<AdministrateurPage />))
 app.get('/controleur', (c) => c.render(<ControleurPage />))
 app.get('/agent-quai', (c) => c.render(<AgentQuaiPage />))
+app.get('/chef-equipe', (c) => c.render(<ChefEquipePage />))
 app.get('/nouveau', (c) => c.render(<NouveauPage />))
+app.get('/archives', (c) => c.render(<ArchivesPage />))
 app.get('/anomalies', (c) => c.render(<AnomaliesPage />))
 app.get('/bibliotheque', (c) => c.render(<BibliothequePage />))
 app.get('/contacts', (c) => c.render(<ContactsPage />))
