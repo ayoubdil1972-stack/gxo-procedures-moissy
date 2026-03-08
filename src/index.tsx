@@ -1627,10 +1627,6 @@ app.get('/scan-fin-controle-success', (c) => {
 
 // ===== PAGES DE TÉLÉCHARGEMENT QR CODES =====
 
-// Redirections pour les pages de téléchargement (fichiers HTML statiques)
-app.get('/download-qr-pdf', (c) => c.redirect('/download-qr-pdf.html', 301))
-app.get('/download-qr-fin-dechargement', (c) => c.redirect('/download-qr-fin-dechargement.html', 301))
-
 // QR Codes Début de Contrôle
 app.get('/download-qr-controle', (c) => {
   return c.html(`<!DOCTYPE html>

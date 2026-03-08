@@ -3034,7 +3034,7 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Hr=(t,r,s)=>r in
       </div>
     </body>
     </html>
-  `)});p.get("/download-qr-pdf",t=>t.redirect("/download-qr-pdf.html",301));p.get("/download-qr-fin-dechargement",t=>t.redirect("/download-qr-fin-dechargement.html",301));p.get("/download-qr-controle",t=>t.html(`<!DOCTYPE html>
+  `)});p.get("/download-qr-controle",t=>t.html(`<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
