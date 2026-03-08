@@ -2576,6 +2576,85 @@ app.get('/api/admin/chauffeurs-actifs', workflowAPI.getChauffeursActifs);
 // POST /api/admin/taches/assigner - Assigner nouvelle tâche
 app.post('/api/admin/taches/assigner', workflowAPI.assignerTache);
 
+// ===== CONTRÔLEUR IMPRODUCTIVITÉ - API ROUTES =====
+
+// POST /api/controleur/improd - Enregistrer une improductivité
+app.post('/api/controleur/improd', async (c) => {
+  try {
+    const data = await c.req.json()
+    console.log('📋 Improductivité reçue:', data)
+
+    // Validation
+    if (!data.controleur_nom || !data.raison || !data.duree) {
+      return c.json({ success: false, error: 'Données manquantes' }, 400)
+    }
+
+    // Créer la table si elle n'existe pas
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS controleur_improd (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        controleur_nom TEXT NOT NULL,
+        raison TEXT NOT NULL,
+        duree TEXT NOT NULL,
+        commentaire TEXT,
+        date_debut TEXT NOT NULL,
+        date_fin TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
+
+    // Insérer l'improductivité
+    const result = await c.env.DB.prepare(`
+      INSERT INTO controleur_improd (
+        controleur_nom, raison, duree, commentaire, date_debut, date_fin
+      ) VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(
+      data.controleur_nom,
+      data.raison,
+      data.duree,
+      data.commentaire || '',
+      data.date_debut,
+      data.date_fin
+    ).run()
+
+    console.log('✅ Improductivité enregistrée:', result.meta.last_row_id)
+
+    return c.json({ 
+      success: true, 
+      id: result.meta.last_row_id 
+    })
+
+  } catch (error) {
+    console.error('❌ Erreur enregistrement improductivité:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// GET /api/controleur/improd/historique - Récupérer l'historique des improductivités
+app.get('/api/controleur/improd/historique', async (c) => {
+  try {
+    // Récupérer les improductivités du jour
+    const today = new Date().toISOString().split('T')[0]
+    
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM controleur_improd 
+      WHERE DATE(created_at) = DATE('now', 'localtime')
+      ORDER BY created_at DESC
+      LIMIT 50
+    `).all()
+
+    return c.json({ 
+      success: true, 
+      improds: results || []
+    })
+
+  } catch (error) {
+    console.error('❌ Erreur récupération historique:', error)
+    // Retourner un tableau vide si la table n'existe pas encore
+    return c.json({ success: true, improds: [] })
+  }
+})
+
 // ===== GESTION DES QUAIS - API ROUTES =====
 
 // GET /api/quais - Récupérer l'état de tous les quais

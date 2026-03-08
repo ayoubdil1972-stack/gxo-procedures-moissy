@@ -63,6 +63,202 @@ export function ControleurPage() {
         </div>
       </div>
 
+      {/* Double Interface - Onglets */}
+      <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
+        {/* Tabs Header */}
+        <div class="flex border-b border-gray-200">
+          <button 
+            class="flex-1 px-6 py-4 text-center font-semibold transition-colors border-b-2 bg-green-50 border-green-500 text-green-700"
+            id="tab-improd-btn"
+            onclick="switchTabControleur('improd')"
+          >
+            <i class="fas fa-stopwatch mr-2"></i>
+            Notifier une improductivité
+          </button>
+          <button 
+            class="flex-1 px-6 py-4 text-center font-semibold transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            id="tab-ecart-btn"
+            onclick="switchTabControleur('ecart')"
+          >
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            Écart et Non-conformité
+          </button>
+        </div>
+
+        {/* Tab Content - Improductivité */}
+        <div id="tab-improd-content" class="p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-stopwatch mr-2 text-green-500"></i>
+            Notifier une improductivité
+          </h2>
+
+          {/* Formulaire Improductivité */}
+          <div class="space-y-6">
+            {/* Nom du contrôleur */}
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-user mr-2 text-green-500"></i>
+                Nom du contrôleur
+              </label>
+              <input 
+                type="text" 
+                id="controleur-nom-improd"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Entrez votre nom"
+              />
+            </div>
+
+            {/* Raisons d'improductivité */}
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">
+                <i class="fas fa-list mr-2 text-green-500"></i>
+                Raison de l'improductivité
+              </label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Option 1 */}
+                <button 
+                  class="improd-option p-4 border-2 border-gray-300 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all text-left"
+                  data-raison="etiquette"
+                  onclick="selectImprodRaison('etiquette')"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                      <i class="fas fa-tag text-red-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold text-gray-800">Erreur étiquette palette</div>
+                      <div class="text-xs text-gray-500">Timer démarre automatiquement</div>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Option 2 */}
+                <button 
+                  class="improd-option p-4 border-2 border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all text-left"
+                  data-raison="reseau"
+                  onclick="selectImprodRaison('reseau')"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
+                      <i class="fas fa-wifi text-orange-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold text-gray-800">Problème de réseau</div>
+                      <div class="text-xs text-gray-500">Timer démarre automatiquement</div>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Option 3 */}
+                <button 
+                  class="improd-option p-4 border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+                  data-raison="formation"
+                  onclick="selectImprodRaison('formation')"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <i class="fas fa-graduation-cap text-blue-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold text-gray-800">Formation</div>
+                      <div class="text-xs text-gray-500">Durée fixe : 07:00:00</div>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Option 4 */}
+                <button 
+                  class="improd-option p-4 border-2 border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all text-left"
+                  data-raison="accident"
+                  onclick="selectImprodRaison('accident')"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                      <i class="fas fa-exclamation-triangle text-purple-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold text-gray-800">Accident sur palette</div>
+                      <div class="text-xs text-gray-500">Cassée, penchée, dangereuse</div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Timer Display (caché au départ) */}
+            <div id="improd-timer-section" class="hidden">
+              <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-6 text-center">
+                <div class="text-sm font-semibold mb-2">Improductivité en cours</div>
+                <div id="improd-timer-display" class="text-5xl font-bold mb-2">00:00:00</div>
+                <div id="improd-raison-display" class="text-sm opacity-90">-</div>
+              </div>
+
+              {/* Commentaire */}
+              <div class="mt-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-comment mr-2 text-green-500"></i>
+                  Commentaire (optionnel)
+                </label>
+                <textarea 
+                  id="improd-commentaire"
+                  rows="3"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Détails supplémentaires..."
+                ></textarea>
+              </div>
+
+              {/* Bouton Clôturer */}
+              <button 
+                id="btn-cloturer-improd"
+                class="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-lg hover:shadow-xl font-semibold text-lg mt-4"
+                onclick="cloturerImprod()"
+              >
+                <i class="fas fa-stop-circle mr-2"></i>
+                Fermer l'improductivité
+              </button>
+            </div>
+
+            {/* Bouton Démarrer (visible au départ) */}
+            <button 
+              id="btn-demarrer-improd"
+              class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl font-semibold text-lg"
+              onclick="demarrerImprod()"
+            >
+              <i class="fas fa-play-circle mr-2"></i>
+              Démarrer la notification
+            </button>
+          </div>
+
+          {/* Historique (à implémenter plus tard) */}
+          <div class="mt-8 border-t pt-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">
+              <i class="fas fa-history mr-2 text-green-500"></i>
+              Historique des improductivités
+            </h3>
+            <div id="improd-historique" class="space-y-3">
+              <div class="text-center text-gray-500 py-8">
+                <i class="fas fa-inbox text-4xl mb-2"></i>
+                <p>Aucune improductivité enregistrée aujourd'hui</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Content - Écart et Non-conformité */}
+        <div id="tab-ecart-content" class="p-6 hidden">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-exclamation-triangle mr-2 text-orange-500"></i>
+            Écart et Non-conformité repérés au déchargement
+          </h2>
+          
+          <div class="bg-orange-50 border-l-4 border-orange-500 p-6 text-center">
+            <i class="fas fa-hard-hat text-4xl text-orange-500 mb-3"></i>
+            <p class="text-lg font-semibold text-gray-800">Section en construction</p>
+            <p class="text-sm text-gray-600 mt-2">Cette fonctionnalité sera implémentée prochainement</p>
+          </div>
+        </div>
+      </div>
+
       {/* Processes Grid */}
       <div class="grid grid-cols-1 gap-6">
         {processes.map((process) => (
@@ -120,6 +316,8 @@ export function ControleurPage() {
         ))}
       </div>
 
+      {/* Script pour la gestion des improductivités */}
+      <script src="/static/controleur-improd.js"></script>
 
     </div>
   )
