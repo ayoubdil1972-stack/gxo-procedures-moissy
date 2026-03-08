@@ -126,6 +126,24 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 #### Page de saisie
 **URL** : https://gxomoissyprocedures.com/scan-fin-dechargement?quai=XX
 
+**✅ DISPONIBLE POUR TOUS LES 45 QUAIS**
+
+Tous les quais (1, 2, 3, ... 75, ... 103) bénéficient exactement des **mêmes fonctionnalités** :
+- ✅ Formulaire de fin de déchargement complet
+- ✅ 7 points de contrôle obligatoires
+- ✅ 4 points optionnels (marchandises alimentaires)
+- ✅ Section "Problématiques rencontrées" repliable
+- ✅ Validation automatique des points obligatoires
+- ✅ Conservation des cases cochées lors repli/dépli
+- ✅ Stockage JSON en base de données
+
+**Exemples d'URLs :**
+- Quai 1 : https://gxomoissyprocedures.com/scan-fin-dechargement?quai=1
+- Quai 10 : https://gxomoissyprocedures.com/scan-fin-dechargement?quai=10
+- Quai 45 : https://gxomoissyprocedures.com/scan-fin-dechargement?quai=45
+- Quai 75 : https://gxomoissyprocedures.com/scan-fin-dechargement?quai=75
+- Quai 103 : https://gxomoissyprocedures.com/scan-fin-dechargement?quai=103
+
 #### Points obligatoires (7)
 
 | # | Point de contrôle | Exemples de vérification |
@@ -147,13 +165,21 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 | 10 | Propreté générale du camion | État de propreté |
 | 11 | Odeur anormale | Odeurs suspectes ou inhabituelles |
 
-#### Interface utilisateur
+#### Interface utilisateur (identique pour tous les 45 quais)
 
 **Sections repliables** :
 - 📋 "Vérifications des 7 points de contrôle" (chevron ▼/▲)
 - ⚠️ "Problématiques rencontrées" (chevron ▼/▲)
+  - 6 problèmes standards :
+    1. ☑️ Palettes chargées en largeur
+    2. ☑️ Palettes instables / chargées de manière incorrecte
+    3. ☑️ Palettes mal déchargées
+    4. ☑️ Marchandises dangereuses non chargées à l'arrière
+    5. ☑️ Palettes mal filmées
+    6. ☑️ Mauvais formulaire TU entrant
+  - ✏️ Autres (zone de texte libre)
 
-**Choix par point** :
+**Choix par point de contrôle** :
 - ✅ **Conforme** (vert)
 - ❌ **Non conforme** (rouge)
 - ⚪ **Non applicable** (gris)
@@ -165,9 +191,9 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 - Liste des points manquants affichée
 
 **Conservation des données** :
-- Cases cochées conservées lors repli/dépli
-- Stockage JSON en base : `{point_1: "conforme", point_2: "non_conforme", ...}`
-- Traçabilité complète avec timestamp
+- ✅ Cases cochées conservées lors repli/dépli (fonctionnalité testée et validée)
+- ✅ Stockage JSON en base : `{point_1: "conforme", point_2: "non_conforme", ...}`
+- ✅ Traçabilité complète avec timestamp
 
 ---
 
@@ -378,6 +404,38 @@ gxo-procedures-moissy/
 
 ## 🧪 Tests
 
+### Test manuel de la rubrique "Problématiques rencontrées" (tous les quais)
+
+**Test n°1 : Quai 75**
+```bash
+# Ouvrir dans le navigateur
+https://gxomoissyprocedures.com/scan-fin-dechargement?quai=75
+
+# Actions :
+1. Cliquer sur "Problématiques rencontrées" (flèche ▼)
+2. Vérifier que la section s'ouvre ✅
+3. Cocher 2-3 cases (ex: "Palettes mal filmées", "Autres")
+4. Cliquer sur la flèche ▲ (replier la section)
+5. Re-cliquer sur la flèche ▼ (déplier à nouveau)
+6. Vérifier que les cases restent cochées ✅
+```
+
+**Test n°2 : Quai 1**
+```bash
+https://gxomoissyprocedures.com/scan-fin-dechargement?quai=1
+
+# Mêmes actions que Test n°1
+# Résultat attendu : Identique au quai 75 ✅
+```
+
+**Test n°3 : Quai 103**
+```bash
+https://gxomoissyprocedures.com/scan-fin-dechargement?quai=103
+
+# Mêmes actions que Test n°1
+# Résultat attendu : Identique au quai 75 ✅
+```
+
 ### Test local du workflow complet
 
 ```bash
@@ -472,9 +530,10 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 - 🐛 **Problème** : alert() avec `\n` non échappé cassait TOUT le script
 - ✅ **Solution** : Double échappement `\\n\\n` dans le message d'alerte
 - 🔍 **Debug ajouté** : Try-catch + console.log pour diagnostics
-- ✅ **Impact** : Toggle "Problématiques" et "Vérifications" fonctionnent maintenant
-- 📦 **Commit** : 03bd8bc
+- ✅ **Impact** : Toggle "Problématiques" et "Vérifications" fonctionnent maintenant sur **TOUS les 45 quais**
+- 📦 **Commit** : [03bd8bc](https://github.com/ayoubdil1972-stack/gxo-procedures-moissy/commit/03bd8bc)
 - 💾 **Backup** : https://www.genspark.ai/api/files/s/3OzkBV0q
+- ✅ **Généralisation** : Fonctionnalité identique sur quais 1, 2, 3 ... 75 ... 103
 
 ### v3.5.2 (2026-03-08) - VERSION DEBUG 🔍
 - 🔍 **Debug tools** : Console.log complets pour identifier erreurs
