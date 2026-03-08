@@ -1503,7 +1503,8 @@ app.post('/api/fin-controle', async (c) => {
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
       // Calculer la durée en secondes (en utilisant l'heure de Paris)
-      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T') + 'Z').getTime()
+      // ⚠️ NE PAS AJOUTER 'Z' car timer_controle_start est déjà en heure locale
+      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
       const endTime = new Date(getParisTime()).getTime()
       timerControleDuration = Math.floor((endTime - startTime) / 1000)
       console.log(`⏱️ Durée contrôle calculée: ${timerControleDuration}s`)
