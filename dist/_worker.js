@@ -1680,7 +1680,7 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Hr=(t,r,s)=>r in
     `).all();return t.json({chauffeurs:r.results||[]})}catch(r){return console.error("Erreur récupération chauffeurs actifs:",r),t.json({error:"Erreur serveur"},500)}}async function Yi(t){try{const{chauffeur_id:r,type:s,quai:i,porte:a}=await t.req.json();if(!r||!s||!i)return t.json({error:"Données manquantes"},400);const n=await t.env.DB.prepare(`
       INSERT INTO taches_v2 (chauffeur_id, type, quai, porte, statut, heure_debut)
       VALUES (?, ?, ?, ?, 'en_cours', CURRENT_TIMESTAMP)
-    `).bind(r,s,i,a||null).run();return t.json({success:!0,id:n.meta.last_row_id,message:"Tâche assignée"})}catch(r){return console.error("Erreur assignation tâche:",r),t.json({error:"Erreur serveur"},500)}}const p=new _r;function zr(){const t=new Date;return new Date(t.toLocaleString("en-US",{timeZone:"Europe/Paris"})).toISOString()}p.use("/static/*",Zs({root:"./",onNotFound:(t,r)=>(console.log("Fichier non trouvé:",t),r.notFound())}));p.get("/login",Ve,t=>t.render(e(Ni,{})));p.get("/qrcode-chauffeur",Ve,t=>t.render(e(Pi,{})));p.get("/chauffeur/langue",Ve,t=>t.render(e(ji,{})));p.get("/gestion-quais",Ve,t=>t.render(e(zi,{})));p.get("/pdf-barcodes",t=>t.html(Bi()));p.get("/qrcode-generator",t=>t.html($i()));p.get("/scan",t=>{const r=t.req.query("quai"),s=t.req.query("action")||"start";return r?t.html(`
+    `).bind(r,s,i,a||null).run();return t.json({success:!0,id:n.meta.last_row_id,message:"Tâche assignée"})}catch(r){return console.error("Erreur assignation tâche:",r),t.json({error:"Erreur serveur"},500)}}const p=new _r;function zr(){const t=new Date;return new Date(t.toLocaleString("en-US",{timeZone:"Europe/Paris"})).toISOString()}p.use("/static/*",Zs({root:"./",onNotFound:(t,r)=>(console.log("Fichier non trouvé:",t),r.notFound())}));p.get("/login",Ve,t=>t.render(e(Ni,{})));p.get("/qrcode-chauffeur",Ve,t=>t.render(e(Pi,{})));p.get("/chauffeur/langue",Ve,t=>t.render(e(ji,{})));p.get("/gestion-quais",Ve,t=>t.render(e(zi,{})));p.get("/pdf-barcodes",t=>t.html(Bi()));p.get("/qrcode-generator",t=>t.html($i()));p.get("/scan-dechargement",t=>{const r=t.req.query("quai");return t.redirect(`/scan?quai=${r}`)});p.get("/scan",t=>{const r=t.req.query("quai"),s=t.req.query("action")||"start";return r?t.html(`
     <!DOCTYPE html>
     <html lang="fr">
     <head>
@@ -1782,7 +1782,7 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Hr=(t,r,s)=>r in
                   barcode: 'D' + String(quaiNumero).padStart(3, '0'),
                   quai: quaiNumero,
                   action: 'start_timer',
-                  timestamp: getParisTime()
+                  timestamp: new Date().toISOString()
                 })
               });
               
@@ -2699,7 +2699,7 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Hr=(t,r,s)=>r in
             problemes: formData.getAll('probleme[]'),
             autres_commentaire: formData.get('autres_commentaire'),
             remarques: formData.get('remarques'),
-            timestamp: getParisTime()
+            timestamp: new Date().toISOString()
           };
 
           console.log('📦 Données du formulaire:', data);

@@ -90,6 +90,14 @@ app.get('/qrcode-generator', (c) => {
 })
 
 // ===== ROUTE DE SCAN AUTOMATIQUE QR CODE =====
+// ===== ROUTE DE SCAN DÉBUT DE DÉCHARGEMENT =====
+// Alias pour /scan (compatibilité)
+app.get('/scan-dechargement', (c) => {
+  const quaiNumero = c.req.query('quai')
+  // Rediriger vers /scan avec le paramètre quai
+  return c.redirect(`/scan?quai=${quaiNumero}`)
+})
+
 // Cette route est appelée automatiquement quand on scanne un QR Code
 // URL Format: https://gxomoissyprocedures.com/scan?quai=75
 app.get('/scan', (c) => {
@@ -224,7 +232,7 @@ app.get('/scan', (c) => {
                   barcode: 'D' + String(quaiNumero).padStart(3, '0'),
                   quai: quaiNumero,
                   action: 'start_timer',
-                  timestamp: getParisTime()
+                  timestamp: new Date().toISOString()
                 })
               });
               
@@ -1142,7 +1150,7 @@ app.get('/scan-fin-dechargement', (c) => {
             problemes: formData.getAll('probleme[]'),
             autres_commentaire: formData.get('autres_commentaire'),
             remarques: formData.get('remarques'),
-            timestamp: getParisTime()
+            timestamp: new Date().toISOString()
           };
 
           console.log('📦 Données du formulaire:', data);
