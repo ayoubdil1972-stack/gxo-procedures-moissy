@@ -1,3 +1,4 @@
+// GXO Moissy v3.5.11 - FIX TIMER +1H - BUILD: 2026-03-08 14:24
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
