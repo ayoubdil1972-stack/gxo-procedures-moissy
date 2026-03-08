@@ -6,18 +6,37 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 
 **Production** : https://gxomoissyprocedures.com  
 **Version actuelle** : 3.5.13 FINAL  
-**Dernière mise à jour** : 2026-03-08 19:22 UTC  
-**Backup** : https://www.genspark.ai/api/files/s/IobBkTvl (v3.5.13 FINAL - Heures fixes + PDF corrigé)  
+**Dernière mise à jour** : 2026-03-08 19:42 UTC  
+**Backup** : https://www.genspark.ai/api/files/s/rqumbhgG (v3.5.13 - Nouvelles rubriques + Build fix)  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU v3.5.13 FINAL : Fix Heures + PDFs QR Codes** ✅
+### 🆕 **NOUVEAU v3.5.13 FINAL : Nouvelles Rubriques + Fix Build** ✅
 
-#### **1. Fix Heures d'Affichage** 🕐
+#### **1. Nouvelles Rubriques Créées** 🏗️
+- **Chef d'équipe / Responsable d'exploitation** (Indigo)
+  - 📍 URL : https://gxomoissyprocedures.com/chef-equipe
+  - 🎨 Icône : fa-users-cog
+  - 📝 Description : Gestion d'équipe et supervision des opérations
+  - ⚙️ Statut : En construction (page "Coming Soon")
+  
+- **Archives** (Gris)
+  - 📍 URL : https://gxomoissyprocedures.com/archives
+  - 🎨 Icône : fa-archive
+  - 📝 Description : Historique et documentation archivée
+  - ⚙️ Statut : En construction (page "Coming Soon")
+
+#### **2. Corrections Heures d'Affichage** 🕐
 - **Heure Commentaire** : Affiche maintenant l'heure de FIN du déchargement (timer_fin_timestamp)
 - **Heure Contrôle Terminé** : Affiche maintenant l'heure de FIN du contrôle (controle_fin_timestamp)
 - **Exemple** : Fin déchargement 12h15 → Commentaire affiche 12h15 ✅ | Fin contrôle 12h30 → Contrôle terminé affiche 12h30 ✅
 
-#### **2. Fix URLs Téléchargement (Erreur 1101 résolue)** 🔧
+#### **3. Fix Build Script** 🔧
+- **Problème résolu** : Le script `build.sh` ne compilait pas le TypeScript avec Vite
+- **Solution** : Ajout de `npm run build:real` (vite build) avant la copie des fichiers statiques
+- **Résultat** : Build complet TypeScript → JavaScript → dist/ (388KB _worker.js)
+- **Impact** : Les nouvelles routes fonctionnent maintenant correctement sur Cloudflare Pages
+
+#### **4. Fix URLs Téléchargement (Erreur 1101 résolue)** 🔧
 - **Problème résolu** : URLs `/download-qr-pdf` et `/download-qr-fin-dechargement` retournaient erreur 1101
 - **Solution appliquée** : Exclusion de ces routes du worker dans `public/_routes.json`
 - **URLs fonctionnelles** :
@@ -25,7 +44,7 @@ Application web complète pour la gestion en temps réel des quais de déchargem
   - ✅ **Fin Déchargement** : https://gxomoissyprocedures.com/download-qr-fin-dechargement
 - **Résultat** : Pages accessibles avec HTTP 200, téléchargement immédiat des PDFs
 
-#### **2. PDF QR Début Déchargement (Format corrigé)** 📄
+#### **5. PDF QR Début Déchargement (Format corrigé)** 📄
 - **Fichier** : `GXO-Moissy-QR-Codes-Debut-Dechargement-2026-03-08.pdf`
 - **Taille** : 12 MB (optimisé depuis 21 MB)
 - **Pages** : 3 pages (optimisé depuis 6 pages)
