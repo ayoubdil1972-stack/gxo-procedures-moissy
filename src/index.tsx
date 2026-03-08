@@ -2685,6 +2685,62 @@ app.get('/api/controleur/alertes', async (c) => {
   }
 })
 
+// GET /api/controleur/alertes/stats - Statistiques des alertes
+app.get('/api/controleur/alertes/stats', async (c) => {
+  try {
+    // Alertes en attente
+    const { results: enAttente } = await c.env.DB.prepare(`
+      SELECT COUNT(*) as count 
+      FROM controleur_alertes 
+      WHERE statut = 'en_attente'
+    `).all()
+    
+    // Alertes traitées aujourd'hui (date = date actuelle)
+    const { results: traiteesAujourdhui } = await c.env.DB.prepare(`
+      SELECT COUNT(*) as count 
+      FROM controleur_alertes 
+      WHERE statut = 'traitee' 
+      AND DATE(traite_le) = DATE('now', 'localtime')
+    `).all()
+    
+    // Alertes traitées cette semaine (depuis lundi)
+    // Pour SQLite : calculer le lundi de la semaine en cours
+    const { results: traiteesSemaine } = await c.env.DB.prepare(`
+      SELECT COUNT(*) as count 
+      FROM controleur_alertes 
+      WHERE statut = 'traitee' 
+      AND DATE(traite_le) >= DATE('now', 'localtime', 'weekday 1', '-7 days')
+      AND DATE(traite_le) <= DATE('now', 'localtime')
+    `).all()
+
+    console.log('📊 Stats alertes:', {
+      enAttente: enAttente[0]?.count || 0,
+      traiteesAujourdhui: traiteesAujourdhui[0]?.count || 0,
+      traiteesSemaine: traiteesSemaine[0]?.count || 0
+    })
+
+    return c.json({ 
+      success: true, 
+      stats: {
+        en_attente: enAttente[0]?.count || 0,
+        traitees_aujourd_hui: traiteesAujourdhui[0]?.count || 0,
+        traitees_semaine: traiteesSemaine[0]?.count || 0
+      }
+    })
+
+  } catch (error) {
+    console.error('❌ Erreur récupération stats alertes:', error)
+    return c.json({ 
+      success: true, 
+      stats: {
+        en_attente: 0,
+        traitees_aujourd_hui: 0,
+        traitees_semaine: 0
+      }
+    })
+  }
+})
+
 // PUT /api/controleur/alertes/:id - Traiter une alerte
 app.put('/api/controleur/alertes/:id', async (c) => {
   try {

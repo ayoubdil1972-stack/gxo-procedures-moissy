@@ -25,8 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Charger l'historique improductivités
   loadImprodHistorique()
   
-  // Charger les alertes
+  // Charger les alertes et statistiques
   loadAlertes('en_attente')
+  loadAlertesStats()
 })
 
 // Switcher entre les onglets
@@ -615,6 +616,24 @@ function renderArchives(alertes) {
   container.innerHTML = html
 }
 
+// Charger les statistiques des alertes
+async function loadAlertesStats() {
+  try {
+    const response = await fetch('/api/controleur/alertes/stats')
+    const result = await response.json()
+    
+    if (result.success && result.stats) {
+      document.getElementById('stat-en-attente').textContent = result.stats.en_attente
+      document.getElementById('stat-traitees').textContent = result.stats.traitees_aujourd_hui
+      document.getElementById('stat-semaine').textContent = result.stats.traitees_semaine
+      
+      console.log('📊 Statistiques chargées:', result.stats)
+    }
+  } catch (error) {
+    console.error('❌ Erreur chargement statistiques:', error)
+  }
+}
+
 // Charger les alertes avec système d'archives
 async function loadAlertes(statut = 'en_attente') {
   try {
@@ -627,11 +646,8 @@ async function loadAlertes(statut = 'en_attente') {
       const container = document.getElementById('alertes-container')
       const alertes = result.alertes || []
       
-      // Mettre à jour les statistiques
-      const alertesEnAttente = alertes.filter(a => a.statut === 'en_attente')
-      const alertesTraitees = alertes.filter(a => a.statut === 'traitee')
-      
-      document.getElementById('stat-en-attente').textContent = alertesEnAttente.length
+      // Recharger les statistiques depuis l'API
+      loadAlertesStats()
       
       if (alertes.length === 0) {
         container.innerHTML = `
@@ -873,6 +889,7 @@ async function validerTraitementAlerte() {
       alert('✅ Alerte traitée avec succès')
       fermerModalAlerte()
       loadAlertes(alertesState.currentFilter)
+      loadAlertesStats() // Recharger les statistiques
     } else {
       alert('❌ Erreur: ' + (result.error || 'Erreur inconnue'))
     }
