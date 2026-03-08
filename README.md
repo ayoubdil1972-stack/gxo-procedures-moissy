@@ -10,7 +10,29 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 **Backup** : https://www.genspark.ai/api/files/s/cxSCmTL0  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU v3.5.13 : Générateur QR Codes Format Corrigé** ✅
+### 🆕 **NOUVEAU v3.5.13 : PDFs QR Codes Format Corrigé** ✅
+
+#### **1. Fix URLs Téléchargement (Erreur 1101 résolue)** 🔧
+- **Problème résolu** : URLs `/download-qr-pdf` et `/download-qr-fin-dechargement` retournaient erreur 1101
+- **Solution appliquée** : Exclusion de ces routes du worker dans `public/_routes.json`
+- **URLs fonctionnelles** :
+  - ✅ **Début Déchargement** : https://gxomoissyprocedures.com/download-qr-pdf
+  - ✅ **Fin Déchargement** : https://gxomoissyprocedures.com/download-qr-fin-dechargement
+- **Résultat** : Pages accessibles avec HTTP 200, téléchargement immédiat des PDFs
+
+#### **2. PDF QR Début Déchargement (Format corrigé)** 📄
+- **Fichier** : `GXO-Moissy-QR-Codes-Debut-Dechargement-2026-03-08.pdf`
+- **Taille** : 12 MB (optimisé depuis 21 MB)
+- **Pages** : 3 pages (optimisé depuis 6 pages)
+- **Format identique à Fin Déchargement** :
+  - ✅ QR codes : **50×50mm** (au lieu de 60mm variables)
+  - ✅ Disposition : **3 colonnes × 5 lignes** par page
+  - ✅ Bandeau coloré par zone (A-F)
+  - ✅ Bordure grise fine autour du QR
+  - ✅ Texte : "Quai X – Début de Déchargement"
+- **Résultat** : QR codes **COMPLETS**, sans coupure en impression
+
+### 🆕 **v3.5.13 : Générateur QR Codes Format Corrigé** ✅
 - **Problème résolu** : QR codes coupés en impression dans le PDF `GXO-Moissy-QR-Codes-2026-03-05.pdf`
 - **Solution** : Nouveau générateur HTML avec format identique au PDF "Fin Déchargement" (qui fonctionne)
 - **Améliorations** :
