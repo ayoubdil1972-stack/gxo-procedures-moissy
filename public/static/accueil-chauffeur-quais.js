@@ -100,11 +100,15 @@ function renderQuaiCard(quai) {
   const formatTimeOnly = (timestamp) => {
     if (!timestamp) return null
     try {
-      // Timestamp SQLite format: "YYYY-MM-DD HH:MM:SS" (déjà en heure Paris)
-      const date = new Date(timestamp.replace(' ', 'T'))
-      const hour = String(date.getHours()).padStart(2, '0')
-      const minute = String(date.getMinutes()).padStart(2, '0')
-      return `${hour}h${minute}`
+      // Timestamp SQLite format: "YYYY-MM-DD HH:MM:SS" (déjà en heure Paris locale)
+      // Extraire directement HH:MM sans conversion timezone
+      const parts = timestamp.split(' ')
+      if (parts.length >= 2) {
+        const timePart = parts[1] // "HH:MM:SS"
+        const [hour, minute] = timePart.split(':')
+        return `${hour}h${minute}`
+      }
+      return null
     } catch (e) {
       console.error('Erreur formatage timestamp:', e)
       return null
