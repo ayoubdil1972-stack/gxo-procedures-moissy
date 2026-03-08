@@ -1,10 +1,19 @@
 #!/bin/bash
-# Script de build vide pour Cloudflare Pages
-# dist/ est déjà commité sur GitHub, pas besoin de rebuild
+# Script de build pour Cloudflare Pages
 
-echo "✅ Skipping build - dist/ is already committed to GitHub"
+echo "🔄 Copying static HTML files from public/ to dist/"
+
+# Copier les fichiers HTML statiques
+cp -v public/*.html dist/ 2>/dev/null || true
+
+# Copier les dossiers static, chauffeur, consignes
+cp -rv public/static/* dist/static/ 2>/dev/null || true
+cp -rv public/chauffeur/* dist/chauffeur/ 2>/dev/null || true
+cp -rv public/consignes/* dist/consignes/ 2>/dev/null || true
+
+echo ""
 echo "✅ Files ready for deployment:"
 ls -lh dist/ | head -10
 echo ""
-echo "✅ Build completed successfully (no-op)"
+echo "✅ Build completed successfully"
 exit 0
