@@ -5,12 +5,36 @@
 Application web complète pour la gestion en temps réel des quais de déchargement et le suivi des chauffeurs sur le site GXO Logistics à Moissy-Cramayel.
 
 **Production** : https://gxomoissyprocedures.com  
-**Version actuelle** : 3.4.0  
-**Dernière mise à jour** : 2026-03-07  
-**Backup** : https://www.genspark.ai/api/files/s/U78T1uZE  
+**Version actuelle** : 3.5.3  
+**Dernière mise à jour** : 2026-03-08  
+**Backup** : https://www.genspark.ai/api/files/s/3OzkBV0q  
 **GitHub** : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
 
-### 🆕 **NOUVEAU : Traçabilité Complète des Opérations**
+### 🆕 **NOUVEAU v3.5.3 : Vérifications des 7 Points de Contrôle**
+- **7 Points de contrôle obligatoires** : Formulaire complet de vérification qualité du camion
+  1. ✅ Extérieur / Essieux (vérification plombage)
+  2. ✅ Côtés gauche et droit (déchirures, etc.)
+  3. ✅ Paroi avant (double fond, etc.)
+  4. ✅ Plancher (trappes, plancher amovible, etc.)
+  5. ✅ Plafond / Toit (déchirures, usures, etc.)
+  6. ✅ Portes intérieures / extérieures (herméticité, etc.)
+  7. ✅ Cales roues bien positionnées
+- **4 Points optionnels (marchandises alimentaires)** :
+  - Présence de nuisibles
+  - Présence de corps étrangers
+  - Propreté générale du camion
+  - Odeur anormale
+- **Interface utilisateur améliorée** :
+  - Sections repliables/dépliables (7 points + Problématiques)
+  - 3 choix par point : ✅ Conforme / ❌ Non conforme / ⚪ N/A
+  - Validation automatique avec alerte points manquants
+  - Scroll automatique vers erreurs
+- **Conservation des données** : 
+  - Cases cochées conservées lors du repli/dépli
+  - Stockage JSON des vérifications en base de données
+  - Historique complet traçable
+
+### 🔄 **v3.5 : Traçabilité Complète des Opérations**
 - **Formulaire contrôleur** : Saisie obligatoire du nom de l'agent de contrôle avec auto-complétion  
 - **Rubrique "Déchargement terminé"** : Affichage permanent de la durée de déchargement  
 - **Rubrique "Contrôle terminé"** : Affichage complet avec :
@@ -23,6 +47,7 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 - **QR Codes dédiés** : 
   - 📥 [Télécharger QR Début de contrôle](https://gxomoissyprocedures.com/download-qr-controle) (C001-C103)
   - 📥 [Télécharger QR Fin de contrôle](https://gxomoissyprocedures.com/download-qr-fin-controle) (FC001-FC103)
+  - 📥 [Télécharger QR Fin de déchargement](https://gxomoissyprocedures.com/download-qr-fin-dechargement) (F001-F103)
 
 ---
 
@@ -43,8 +68,8 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 | **Disponible** | 🟢 Vert | ✅ | Prêt pour chargement | Aucun |
 | **En cours** | 🟡 Jaune | ⏱️ | Déchargement actif | ⏱️ Défile en temps réel |
 | **Fin de déchargement** | 🔵 Bleu | 📋 | Opération terminée | ⏱️ **FIGÉ** sur durée exacte |
-| **🆕 En contrôle** | 🟠 Orange | 🔍 | Contrôle qualité en cours | ⏱️ Défile en temps réel |
-| **🆕 Fin de contrôle** | 🟣 Violet clair | 📝 | Contrôle terminé | ⏱️ **FIGÉ** sur durée exacte |
+| **En contrôle** | 🟠 Orange | 🔍 | Contrôle qualité en cours | ⏱️ Défile en temps réel |
+| **Fin de contrôle** | 🟣 Violet clair | 📝 | Contrôle terminé | ⏱️ **FIGÉ** sur durée exacte |
 | **Indisponible** | 🔴 Rouge | 🚫 | Problème signalé | Aucun |
 
 #### Workflow complet
@@ -62,24 +87,28 @@ Application web complète pour la gestion en temps réel des quais de déchargem
     - Numéro ID fournisseur
     - Fournisseur
     - Palettes (attendues/reçues/à rendre)
-    - Problèmes éventuels
+    - 🆕 Vérifications des 7 points de contrôle (obligatoire)
+    - Problématiques rencontrées (optionnel)
     - Commentaires
     ↓
     Statut: En cours → Fin de déchargement
     Timer déchargement: FIGÉ sur durée exacte (ex: 01:23:45)
     Commentaire: "Déchargement terminé - Jean Dupont - Transport Express - ID:TEST123"
+    Vérifications: JSON {point_1: "conforme", point_2: "non_conforme", ...}
     
-3️⃣  🆕 SCAN QR START CONTRÔLE (ex: "C075")
+3️⃣  SCAN QR START CONTRÔLE (ex: "C075")
     ↓
     Statut: Fin de déchargement → En contrôle
     Timer contrôle: Démarrage automatique (00:00:00 → 00:00:01 → ...)
-    ✅ Conservation : Durée déchargement + Commentaire
+    ✅ Conservation : Durée déchargement + Commentaire + Vérifications
     
-4️⃣  🆕 SCAN QR FIN CONTRÔLE (ex: "FC075")
+4️⃣  SCAN QR FIN CONTRÔLE (ex: "FC075")
+    ↓
+    Formulaire contrôleur : Saisie nom agent de contrôle
     ↓
     Statut: En contrôle → Fin de contrôle
     Timer contrôle: FIGÉ sur durée exacte (ex: 00:15:32)
-    ✅ Conservation : Tout l'historique (déchargement + contrôle)
+    ✅ Conservation : Tout l'historique (déchargement + vérifications + contrôle)
     
 5️⃣  ACTION MANUELLE (clic sur carte violette)
     ↓
@@ -87,82 +116,62 @@ Application web complète pour la gestion en temps réel des quais de déchargem
     ↓
     Statut: Fin de contrôle → Disponible
     Timers: Disparaissent
-```
-
-#### Timer figé - Caractéristiques
-
-**GARANTI 100% STATIQUE :**
-- ✅ Calculé côté backend : `timer_duration = temps_fin - temps_début`
-- ✅ Affiché en HTML pur (pas de JavaScript qui tourne)
-- ✅ Ne change **JAMAIS**, même après rafraîchissement
-- ✅ Format : `HH:MM:SS` (ex: `01:23:45`)
-- ✅ Fond bleu clair avec bordure bleue
-- ✅ Label : "⏱️ Durée du déchargement:"
-
-**Exemple visuel :**
-```
-┌────────────────────────────────┐
-│         📋 Fin de              │
-│       déchargement             │
-│                                │
-│  ⏱️ Durée du déchargement:     │
-│  ┌─────────────────────────┐  │
-│  │      01:23:45           │  │  ← FIGÉ
-│  └─────────────────────────┘  │
-│                                │
-│  Déchargement terminé -        │
-│  Jean Dupont -                 │
-│  Transport Express -           │
-│  ID:ABC123                     │
-└────────────────────────────────┘
-```
-
-#### 🆕 QR Codes de Contrôle Qualité
-
-**📥 Téléchargement des PDF**
-
-| Type | URL | Contenu | Format |
-|------|-----|---------|--------|
-| **Début de contrôle** | [download-qr-controle.html](https://gxomoissyprocedures.com/download-qr-controle.html) | C001 à C103 (45 QR codes) | PDF A4, Haute qualité |
-| **Fin de contrôle** | [download-qr-fin-controle.html](https://gxomoissyprocedures.com/download-qr-fin-controle.html) | FC001 à FC103 (45 QR codes) | PDF A4, Haute qualité |
-
-**Fonctionnement :**
-- **C075** (Début contrôle) → Démarre le timer de contrôle (orange 🔍)
-- **FC075** (Fin contrôle) → Fige le timer et affiche la durée exacte (violet 📝)
-
-**Caractéristiques :**
-- ✅ Génération PDF instantanée dans le navigateur
-- ✅ Format identique aux QR codes de déchargement
-- ✅ 45 QR codes par fichier (zones A-F)
-- ✅ Impression haute qualité (300 DPI)
-- ✅ Découpe facile pour placement sur site
-
-**Exemple visuel - Fin de contrôle :**
-```
-┌────────────────────────────────┐
-│         📝 Fin de              │
-│          contrôle              │
-│                                │
-│  ⏱️ Durée du contrôle:         │
-│  ┌─────────────────────────┐  │
-│  │      00:15:32           │  │  ← FIGÉ
-│  └─────────────────────────┘  │
-│                                │
-│  ⏱️ Durée du déchargement:     │
-│  ┌─────────────────────────┐  │
-│  │      01:23:45           │  │  ← CONSERVÉ
-│  └─────────────────────────┘  │
-│                                │
-│  Déchargement terminé -        │
-│  Jean Dupont -                 │
-│  Transport Express -           │
-│  ID:ABC123                     │
-└────────────────────────────────┘
+    Historique: Archivé en base de données
 ```
 
 ---
 
-### 2. 🚚 Gestion des Chauffeurs
+### 2. 🛡️ Vérifications des 7 Points de Contrôle
+
+#### Page de saisie
+**URL** : https://gxomoissyprocedures.com/scan-fin-dechargement?quai=XX
+
+#### Points obligatoires (7)
+
+| # | Point de contrôle | Exemples de vérification |
+|---|-------------------|--------------------------|
+| 1 | Extérieur / Essieux | Vérifier le plombage du camion |
+| 2 | Côtés gauche et droit | Déchirures, impacts, etc. |
+| 3 | Paroi avant | Double fond, cloison, etc. |
+| 4 | Plancher | Trappes, plancher amovible, etc. |
+| 5 | Plafond / Toit | Déchirures, usures, etc. |
+| 6 | Portes intérieures/extérieures | Herméticité, serrures, etc. |
+| 7 | Cales roues | Bien positionnées et fonctionnelles |
+
+#### Points optionnels (4 - marchandises alimentaires uniquement)
+
+| # | Point de contrôle | Critère |
+|---|-------------------|---------|
+| 8 | Présence de nuisibles | Insectes, rongeurs, etc. |
+| 9 | Présence de corps étrangers | Débris, objets suspects, etc. |
+| 10 | Propreté générale du camion | État de propreté |
+| 11 | Odeur anormale | Odeurs suspectes ou inhabituelles |
+
+#### Interface utilisateur
+
+**Sections repliables** :
+- 📋 "Vérifications des 7 points de contrôle" (chevron ▼/▲)
+- ⚠️ "Problématiques rencontrées" (chevron ▼/▲)
+
+**Choix par point** :
+- ✅ **Conforme** (vert)
+- ❌ **Non conforme** (rouge)
+- ⚪ **Non applicable** (gris)
+
+**Validation automatique** :
+- Alert si points obligatoires manquants
+- Dépliage automatique section avec erreurs
+- Scroll vers section problématique
+- Liste des points manquants affichée
+
+**Conservation des données** :
+- Cases cochées conservées lors repli/dépli
+- Stockage JSON en base : `{point_1: "conforme", point_2: "non_conforme", ...}`
+- Traçabilité complète avec timestamp
+
+---
+
+### 3. 🚚 Gestion des Chauffeurs
 
 #### Dashboard en temps réel
 - **Suivi actif** : Liste des chauffeurs présents sur site
@@ -179,17 +188,21 @@ Application web complète pour la gestion en temps réel des quais de déchargem
 
 ---
 
-### 3. 📊 Pages de scan QR
+### 4. 📊 Pages de scan QR
 
 #### Génération de codes QR
 - **QR START** : `/generate-barcodes.html` - Génère QR codes de démarrage (D001-D103)
-- **QR FIN** : `/generate-pdf-barcodes.html` - Génère QR codes de fin (F001-F103)
+- **QR FIN DÉCHARGEMENT** : `/download-qr-fin-dechargement` - Génère QR codes de fin (F001-F103)
+- **QR START CONTRÔLE** : `/download-qr-controle` - Génère QR codes début contrôle (C001-C103)
+- **QR FIN CONTRÔLE** : `/download-qr-fin-controle` - Génère QR codes fin contrôle (FC001-FC103)
 - **Téléchargement** : Export PDF avec étiquettes imprimables
 - **Format** : Code128 lisible par douchettes standard
 
 #### Pages de scan
 - **Scan START** : `/scan-dechargement?quai=XX` - Démarre le timer
-- **Scan FIN** : `/scan-fin-dechargement?quai=XX` - Affiche formulaire de fin
+- **Scan FIN** : `/scan-fin-dechargement?quai=XX` - Affiche formulaire de fin avec 7 points de contrôle
+- **Scan CONTRÔLE** : `/scan-controle?quai=XX` - Démarre timer contrôle
+- **Scan FIN CONTRÔLE** : `/scan-fin-controle?quai=XX` - Formulaire contrôleur
 
 ---
 
@@ -218,11 +231,18 @@ CREATE TABLE quai_status (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   quai_numero INTEGER NOT NULL UNIQUE,
   statut TEXT NOT NULL DEFAULT 'disponible' 
-    CHECK(statut IN ('disponible','en_cours','indisponible','fin_dechargement')),
-  timer_start INTEGER,           -- Timestamp de démarrage
-  timer_duration INTEGER,        -- Durée en secondes (pour timer figé)
+    CHECK(statut IN ('disponible','en_cours','indisponible','fin_dechargement','en_controle','fin_controle')),
+  timer_start INTEGER,
+  timer_duration INTEGER,
+  timer_controle_start INTEGER,
+  timer_controle_duration INTEGER,
   commentaire TEXT,
   commentaire_auteur TEXT,
+  controleur_nom TEXT,
+  controle_debut_timestamp TEXT,
+  controle_fournisseur TEXT,
+  controle_id_chauffeur TEXT,
+  verification_points TEXT,        -- 🆕 JSON des 11 points de contrôle
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -242,12 +262,15 @@ CREATE TABLE fin_dechargement (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   quai_numero INTEGER NOT NULL,
   nom_agent TEXT NOT NULL,
+  numero_id TEXT NOT NULL,
+  fournisseur TEXT NOT NULL,
   palettes_attendues INTEGER NOT NULL,
   palettes_recues INTEGER NOT NULL,
   palettes_a_rendre TEXT NOT NULL,
-  problemes TEXT,                -- JSON array
+  verification_points TEXT,        -- 🆕 JSON des vérifications
+  problemes TEXT,                  -- JSON array
   autres_commentaire TEXT,
-  remarques TEXT,                -- JSON: {numero_id, fournisseur, ...}
+  remarques TEXT,
   timestamp TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -284,58 +307,18 @@ pm2 start ecosystem.config.cjs
 curl http://localhost:3000
 ```
 
-### Migration SQL en production
+### Migrations SQL en production
 
-**CRITIQUE** : Cette migration doit être exécutée **UNE SEULE FOIS** avant le premier déploiement du statut "Fin de déchargement".
+**IMPORTANT** : Ces migrations doivent être exécutées dans l'ordre sur la base de données **gxo-chauffeurs-db**.
 
 **Où ?** https://dash.cloudflare.com → Workers & Pages → D1 → **gxo-chauffeurs-db** → **Console**
 
-**⚠️ IMPORTANT** : Copier et exécuter **CHAQUE COMMANDE SÉPARÉMENT** (7 commandes)
-
-#### COMMANDE 1 : Nettoyer
+#### Migration 0016 : Ajouter colonne verification_points (v3.5.0)
 ```sql
-DROP TABLE IF EXISTS quai_status_new;
+ALTER TABLE quai_status ADD COLUMN verification_points TEXT;
 ```
 
-#### COMMANDE 2 : Créer nouvelle table
-```sql
-CREATE TABLE quai_status_new (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  quai_numero INTEGER NOT NULL UNIQUE,
-  statut TEXT NOT NULL DEFAULT 'disponible',
-  timer_start INTEGER,
-  timer_duration INTEGER,
-  commentaire TEXT,
-  commentaire_auteur TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  CHECK(statut IN ('disponible','en_cours','indisponible','fin_dechargement'))
-);
-```
-
-#### COMMANDE 3 : Copier les données
-```sql
-INSERT INTO quai_status_new (id, quai_numero, statut, timer_start, timer_duration, commentaire, commentaire_auteur, created_at, updated_at)
-SELECT id, quai_numero, statut, timer_start, timer_duration, commentaire, commentaire_auteur, created_at, updated_at
-FROM quai_status;
-```
-
-#### COMMANDE 4 : Supprimer ancienne table
-```sql
-DROP TABLE quai_status;
-```
-
-#### COMMANDE 5 : Renommer
-```sql
-ALTER TABLE quai_status_new RENAME TO quai_status;
-```
-
-#### COMMANDE 6 : Recréer l'index
-```sql
-CREATE UNIQUE INDEX idx_quai_numero ON quai_status(quai_numero);
-```
-
-#### COMMANDE 7 : Vérifier (doit afficher 45)
+#### Vérification (doit afficher 45)
 ```sql
 SELECT COUNT(*) AS total_quais FROM quai_status;
 ```
@@ -368,63 +351,27 @@ curl https://gxomoissyprocedures.com/api/quais
 gxo-procedures-moissy/
 ├── src/
 │   ├── index.tsx              # Point d'entrée Hono (backend)
-│   ├── pages/                 # Pages TSX
-│   │   └── accueil-chauffeur.tsx
 │   └── types/                 # Types TypeScript
 ├── public/
 │   └── static/                # Assets statiques
-│       ├── accueil-chauffeur-quais.js     # Gestion quais
-│       ├── accueil-chauffeur-dashboard.js # Dashboard chauffeurs
-│       ├── accueil-chauffeur-tabs.js      # Système d'onglets
-│       ├── barcode-scanner.js             # Scanner QR
-│       └── styles.css                     # Styles personnalisés
-├── dist/                      # Build output (déployé sur Cloudflare)
+│       ├── accueil-chauffeur-quais.js
+│       ├── accueil-chauffeur-dashboard.js
+│       ├── accueil-chauffeur-tabs.js
+│       └── styles.css
+├── dist/                      # Build output (Cloudflare)
 │   ├── _worker.js             # Worker compilé
 │   ├── _routes.json           # Configuration routing
 │   └── static/                # Assets statiques copiés
 ├── migrations/                # Migrations D1
-│   └── 0012_add_fin_dechargement_status.sql
+│   ├── 0014_add_controleur_nom.sql
+│   ├── 0015_add_controle_details.sql
+│   └── 0016_add_verification_points.sql
 ├── wrangler.jsonc             # Configuration Cloudflare
 ├── ecosystem.config.cjs       # Configuration PM2
 ├── package.json
 ├── tsconfig.json
+├── vite.config.ts
 └── README.md
-```
-
----
-
-## 🔧 Configuration
-
-### wrangler.jsonc
-```jsonc
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "gxo-procedures-moissy",
-  "compatibility_date": "2024-01-01",
-  "pages_build_output_dir": "./dist",
-  "compatibility_flags": ["nodejs_compat"],
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "gxo-chauffeurs-db",
-      "database_id": "your-database-id"
-    }
-  ]
-}
-```
-
-### package.json - Scripts utiles
-```json
-{
-  "scripts": {
-    "dev": "wrangler pages dev dist --d1=gxo-chauffeurs-db --local --ip 0.0.0.0 --port 3000",
-    "build": "vite build",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name gxo-procedures-moissy",
-    "db:migrate:local": "wrangler d1 migrations apply gxo-chauffeurs-db --local",
-    "db:migrate:prod": "wrangler d1 migrations apply gxo-chauffeurs-db",
-    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true"
-  }
-}
 ```
 
 ---
@@ -441,6 +388,7 @@ gxo-procedures-moissy/
 # ✅ Quai en statut 'fin_dechargement'
 # ✅ Timer figé : 11 secondes (00:00:11)
 # ✅ Commentaire avec agent/fournisseur/ID
+# ✅ Vérifications : 7 points remplis
 ```
 
 ### Vérification manuelle
@@ -473,158 +421,114 @@ curl http://localhost:3000/api/fin-dechargement?quai=75 | jq '.'
 | `/` | Page d'accueil |
 | `/accueil-chauffeur` | Dashboard chauffeurs + Gestion quais |
 | `/scan-dechargement?quai=XX` | Page scan QR START |
-| `/scan-fin-dechargement?quai=XX` | Page scan QR FIN |
+| `/scan-fin-dechargement?quai=XX` | Page scan QR FIN (avec 7 points de contrôle) |
+| `/scan-controle?quai=XX` | Page scan QR CONTRÔLE START |
+| `/scan-fin-controle?quai=XX` | Page scan QR CONTRÔLE FIN |
 | `/generate-barcodes.html` | Génération QR START |
-| `/download-qr-fin-dechargement.html` | Génération QR FIN |
+| `/download-qr-fin-dechargement` | Génération QR FIN |
+| `/download-qr-controle` | Génération QR CONTRÔLE START |
+| `/download-qr-fin-controle` | Génération QR CONTRÔLE FIN |
 
 ---
 
 ## 🐛 Dépannage
+
+### Le toggle "Problématiques" ne se déplie pas
+
+**Cause** : Erreur JavaScript SyntaxError (ligne 801)
+
+**Solution appliquée (v3.5.3)** :
+- Correction double échappement `\\n` dans alert()
+- Protection try-catch autour des toggles
+- Console.log de debug ajoutés
+
+**Test** :
+1. Ouvrir console F12
+2. Vérifier absence de "SyntaxError"
+3. Chercher messages : "✅ problematiques-header trouvé"
+4. Cliquer → Vérifier message : "🟡 Toggle Problématiques cliqué"
 
 ### Le timer figé continue à défiler
 
 **Cause** : Migration SQL non appliquée en production
 
 **Solution** :
-1. Vérifier que les 7 commandes SQL ont été exécutées
+1. Vérifier que les migrations SQL ont été exécutées
 2. Vider le cache navigateur (Ctrl+Shift+Delete)
 3. Rafraîchir la page (Ctrl+F5)
 
-### Le bouton "Fin de déchargement" ne fonctionne pas
+### Les vérifications ne s'enregistrent pas
 
-**Cause** : Contrainte CHECK manquante dans la base de données
+**Cause** : Colonne `verification_points` manquante
 
-**Erreur console** : `CHECK constraint failed: statut IN ('disponible', 'en_cours', 'indisponible')`
-
-**Solution** : Appliquer la migration SQL (voir section Déploiement)
-
-### Les quais ont disparu (total = 0)
-
-**Cause** : Erreur lors de la migration SQL
-
-**Solution** : Restaurer les 45 quais avec le script SQL fourni
-
-### Timer affiche "Non disponible"
-
-**Cause** : `timer_duration` est null (quai créé avant la mise à jour)
-
-**Solution** : 
-1. Mettre le quai en "disponible"
-2. Passer en "en_cours" pour démarrer un nouveau timer
-3. Scanner QR FIN pour figer le nouveau timer
-
----
-
-## 📈 Statistiques du projet
-
-- **Lignes de code** : ~15 000 lignes (TypeScript + JavaScript)
-- **Fichiers** : ~50 fichiers
-- **Commits** : 100+
-- **Versions** : 3.1.0
-- **Temps de développement** : 4 semaines
-- **Tests automatisés** : 5 scripts de test
+**Solution** : Appliquer la migration 0016 (voir section Déploiement)
 
 ---
 
 ## 🔄 Changelog
 
+### v3.5.3 (2026-03-08) - FIX CRITIQUE SYNTAXERROR ✅
+- 🔧 **Fix critique** : Correction erreur JavaScript SyntaxError ligne 801
+- 🐛 **Problème** : alert() avec `\n` non échappé cassait TOUT le script
+- ✅ **Solution** : Double échappement `\\n\\n` dans le message d'alerte
+- 🔍 **Debug ajouté** : Try-catch + console.log pour diagnostics
+- ✅ **Impact** : Toggle "Problématiques" et "Vérifications" fonctionnent maintenant
+- 📦 **Commit** : 03bd8bc
+- 💾 **Backup** : https://www.genspark.ai/api/files/s/3OzkBV0q
+
+### v3.5.2 (2026-03-08) - VERSION DEBUG 🔍
+- 🔍 **Debug tools** : Console.log complets pour identifier erreurs
+- 🛡️ **Protection** : Try-catch autour toggles Vérifications + Problématiques
+- 📊 **Logs** : 7 messages de traçabilité (init, trouvé, cliqué, ouvert/fermé)
+- 🎯 **Objectif** : Identifier cause exacte du toggle non fonctionnel
+
+### v3.5.1 (2026-03-08) - FIX ORDRE DÉCLARATION FORMDATA 🔧
+- 🐛 **Fix** : Variable `formData` utilisée avant déclaration (ligne 1060 avant 1067)
+- ✅ **Solution** : Déplacement déclaration ligne 1031 (immédiatement après e.preventDefault())
+- 🎯 **Impact** : Résolution erreur JavaScript qui bloquait toggles
+
+### v3.5.0 (2026-03-08) - VÉRIFICATIONS DES 7 POINTS DE CONTRÔLE 🆕
+- 🆕 **Formulaire 7 points** : Vérifications obligatoires qualité camion
+  - Point 1 : Extérieur / Essieux (plombage)
+  - Point 2 : Côtés gauche/droit (déchirures)
+  - Point 3 : Paroi avant (double fond)
+  - Point 4 : Plancher (trappes, amovible)
+  - Point 5 : Plafond / Toit (déchirures, usures)
+  - Point 6 : Portes (herméticité)
+  - Point 7 : Cales roues (positionnement)
+- 🆕 **4 Points optionnels** : Marchandises alimentaires uniquement
+  - Point 8 : Nuisibles
+  - Point 9 : Corps étrangers
+  - Point 10 : Propreté générale
+  - Point 11 : Odeur anormale
+- 🎨 **Interface** : Sections repliables avec chevrons ▼/▲
+- ✅ **Validation** : Automatique avec alerte + scroll vers erreurs
+- 💾 **Stockage** : JSON en base de données (colonne verification_points)
+- 📦 **Migration** : 0016_add_verification_points.sql
+- 🔄 **Conservation** : Cases cochées lors repli/dépli
+- 📊 **Traçabilité** : Historique complet avec timestamp
+
 ### v3.4.0 (2026-03-07) - TRAÇABILITÉ COMPLÈTE DES OPÉRATIONS 🆕
-- 🆕 **Formulaire contrôleur fonctionnel** : Saisie obligatoire du nom de l'agent de contrôle
-- ✅ **Fix Promise error** : Correction route `/scan-fin-controle-success` (non-async)
-- 📋 **Rubrique "Déchargement terminé"** : 
-  - Affichage permanent dans 3 statuts (Fin de déchargement, En contrôle, Fin de contrôle)
-  - Durée du déchargement au format HH:MM:SS
-- 📝 **Rubrique "Contrôle terminé"** (statut Fin de contrôle) :
-  - ⏱️ Durée du contrôle (HH:MM:SS)
-  - 👤 Nom du contrôleur (ex: Marie Dubois)
-  - 🚚 Fournisseur (ex: Transport Express)
-  - 🆔 ID Chauffeur (ex: 1820048)
-  - 🕐 Date/heure début contrôle (format: 07/03/2026 à 20h35)
-- 🔒 **Conservation permanente** : Les deux rubriques restent affichées jusqu'au reset manuel
-- 🗄️ **Nouvelles colonnes BDD** :
-  - `controleur_nom` : Nom de l'agent de contrôle
-  - `controle_debut_timestamp` : Date/heure début du contrôle
-  - `controle_fournisseur` : Fournisseur (récupéré depuis déchargement)
-  - `controle_id_chauffeur` : ID chauffeur (récupéré depuis déchargement)
-- 📦 **Migrations SQL** : `0014_add_controleur_nom.sql` + `0015_add_controle_details.sql`
-- ✅ **Tests validés** : Workflow complet avec toutes les infos (Déchargement 5s → Contrôle 3s)
-- 🎯 **Auto-complétion** : Sauvegarde des 10 derniers noms de contrôleurs dans localStorage
-
-### v3.3.0 (2026-03-07) - FORMULAIRE CONTRÔLEUR 📝
-- 🆕 **Page formulaire** : `/scan-fin-controle` avec saisie nom contrôleur
-- 💾 **Sauvegarde localStorage** : 10 derniers noms pour auto-complétion
-- 📋 **Affichage infos** : Durée déchargement visible dans statuts en_controle et fin_controle
-- 📝 **Affichage contrôle** : Durée + nom contrôleur dans statut fin_controle
-- 🗄️ **Colonne BDD** : `controleur_nom` (TEXT)
-- 📦 **Migration SQL** : `0014_add_controleur_nom.sql`
-
-### v3.2.2 (2026-03-07) - FIX BOUCLE DE REDIRECTION ✅
-- 🔧 **Correction critique** : Boucle de redirection sur les pages QR codes
-- ✅ **Solution** : HTML intégré directement dans les routes backend avec `c.html()`
-- 🌐 **Pages accessibles** :
-  - https://gxomoissyprocedures.com/download-qr-controle (code 200 OK)
-  - https://gxomoissyprocedures.com/download-qr-fin-controle (code 200 OK)
-- 📦 **Format PDF** : 45 QR codes par fichier, disposition 3×5, format A4 portrait
-- 🔗 **Génération QR** : Utilise QRious + jsPDF, génération côté client, téléchargement instantané
-- ✅ **Test validation** : Les deux pages fonctionnent sans redirection infinie
-
-### v3.2.1 (2026-03-07) - CORRECTIONS FINALES 🔧
-- 🔧 **Routes QR codes** : Ajout `/download-qr-controle` et `/download-qr-fin-controle`
-- ✨ **Légende uniformisée** : Icônes ajoutées pour tous les statuts (✅⏱️📋🔍📝🚫)
-- ✅ **Tests finaux** : Workflow 100% validé (Déchargement 5s → Contrôle 3s)
-- 📦 **Fichiers HTML** : Copiés dans dist/ pour accessibilité production
-- 🔗 **URLs fonctionnelles** :
-  - https://gxomoissyprocedures.com/download-qr-controle
-  - https://gxomoissyprocedures.com/download-qr-fin-controle
+- 🆕 **Formulaire contrôleur** : Saisie obligatoire nom agent + auto-complétion
+- 📋 **Rubrique "Déchargement terminé"** : Durée affichée en permanence
+- 📝 **Rubrique "Contrôle terminé"** : Infos complètes (durée, nom, fournisseur, ID, date/heure)
+- 🗄️ **Colonnes BDD** : controleur_nom, controle_debut_timestamp, controle_fournisseur, controle_id_chauffeur
+- 📦 **Migrations** : 0014_add_controleur_nom.sql + 0015_add_controle_details.sql
 
 ### v3.2.0 (2026-03-07) - SYSTÈME DE CONTRÔLE QUALITÉ 🆕
-- 🆕 **Nouveau statut "En contrôle"** : Timer actif (orange 🔍)
-- 🆕 **Nouveau statut "Fin de contrôle"** : Timer figé (violet 📝)
-- 📋 **Conservation des données** : Durée déchargement + commentaire agent + fournisseur
-- 🔄 **Workflow complet** : Déchargement → Contrôle → Fin → Disponible
-- 📦 **Colonnes BDD** : `timer_controle_start` et `timer_controle_duration`
-- 🔐 **Migration SQL** : UPDATE CHECK constraint pour accepter les nouveaux statuts
-- 📥 **QR Codes PDF** :
-  - Début de contrôle : C001-C103 (download-qr-controle.html)
-  - Fin de contrôle : FC001-FC103 (download-qr-fin-controle.html)
-- ✅ **Test workflow** : 100% validé (Déchargement 5s → Contrôle 4s)
-- 🎨 **Légende** : 6 statuts affichés (au lieu de 4)
-- 🚀 **Déploiement** : Production https://gxomoissyprocedures.com
-
-### v3.1.1 (2026-03-07) - CRITIQUE
-- 🔥 **FIX CRITIQUE** : `timer_start = NULL` pour statut "Fin de déchargement"
-- ✅ Timer ne recalcule PLUS en arrière-plan
-- ✅ Timer figé ne change JAMAIS (même après rafraîchissement)
-- ✅ Valeur stockée définitivement dans la base
-- 🧪 Test validé : 2 vérifications espacées → timer_duration inchangé
-- 📦 Backup : https://www.genspark.ai/api/files/s/w907DzIf
-
-### v3.1.0 (2026-03-06)
-- ✅ **Timer figé 100% statique** pour statut "Fin de déchargement"
-- ✅ Classe `.timer-frozen` (HTML pur, pas de JavaScript)
-- ✅ Classe `.timer-active` (défile en temps réel)
-- ✅ Calcul backend de `timer_duration`
-- ✅ Affichage HH:MM:SS avec fond bleu
-- ✅ Fallback "Non disponible" si timer_duration manquant
-- 🧪 Test workflow complet validé
-
-### v3.0.0 (2026-03-05)
-- ✅ Ajout statut "Fin de déchargement" (bleu)
-- ✅ Modal de gestion avec 4 boutons
-- ✅ Légende avec 4 statuts
-- ✅ API `/api/fin-dechargement`
-- ✅ Formulaire de fin avec palettes/problèmes
-
-### v2.5.0 (2026-03-04)
-- ✅ Organisation par zones (A-F)
-- ✅ Scan QR Code automatique
-- ✅ Timer en temps réel pour "En cours"
+- 🆕 **Statut "En contrôle"** : Timer actif (orange 🔍)
+- 🆕 **Statut "Fin de contrôle"** : Timer figé (violet 📝)
+- 📋 **Conservation données** : Durée déchargement + commentaire + vérifications
+- 📥 **QR Codes PDF** : C001-C103 + FC001-FC103
 
 ---
 
 ## 📥 Téléchargement QR Codes
 
 ### Pages de génération PDF
+- **QR Codes Fin de Déchargement** : https://gxomoissyprocedures.com/download-qr-fin-dechargement  
+  Format : F001-F103 (45 codes), disposition 3×5, A4 portrait, haute qualité
+  
 - **QR Codes Début de Contrôle** : https://gxomoissyprocedures.com/download-qr-controle  
   Format : C001-C103 (45 codes), disposition 3×5, A4 portrait, haute qualité
   
@@ -659,10 +563,11 @@ Pour toute question ou problème :
 1. Consulter la section Dépannage
 2. Vérifier les logs : `pm2 logs gxo-procedures-moissy --nostream`
 3. Tester en local : `npm run dev`
-4. Contacter l'équipe technique
+4. Ouvrir console F12 pour erreurs JavaScript
+5. Contacter l'équipe technique
 
 ---
 
-**Dernière mise à jour** : 2026-03-07  
-**Version** : 3.4.0  
-**Statut** : ✅ Production stable - Traçabilité complète des opérations avec formulaire contrôleur
+**Dernière mise à jour** : 2026-03-08  
+**Version** : 3.5.3  
+**Statut** : ✅ Production stable - 7 Points de Contrôle + Traçabilité Complète
