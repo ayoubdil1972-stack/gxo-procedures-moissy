@@ -3421,7 +3421,18 @@ var Vr=Object.defineProperty;var Ft=t=>{throw TypeError(t)};var Hr=(t,r,s)=>r in
         LEFT JOIN chauffeur_sessions cs ON ca.id = cs.chauffeur_id
         WHERE ca.status = 'in_progress' 
         ORDER BY ca.arrival_time DESC
-      `).all();return t.json({success:!0,chauffeurs:s})}catch{console.log("Table chauffeur_sessions not found, using simple query");const{results:i}=await t.env.DB.prepare(r).all();return t.json({success:!0,chauffeurs:i})}}catch(r){return console.error("Erreur liste chauffeurs:",r),t.json({success:!1,error:r.message},500)}});p.use("*",async(t,r)=>{const s=t.req.path;if(["/login","/test-questionnaire","/qrcode-chauffeur","/chauffeur/langue","/chauffeur/video","/chauffeur/inscription","/chauffeur/taches"].includes(s)||s.startsWith("/static/")||s.startsWith("/api/chauffeur/")){await r();return}await r()});p.use(ki);p.get("/",t=>t.render(e(Ei,{})));p.get("/reception",t=>t.render(e(Ci,{})));p.get("/accueil-chauffeur",t=>t.render(e(Ti,{})));p.get("/administrateur",t=>t.render(e(qi,{})));p.get("/controleur",t=>t.render(e(Si,{})));p.get("/agent-quai",t=>t.render(e(_i,{})));p.get("/nouveau",t=>t.render(e(Ai,{})));p.get("/anomalies",t=>t.render(e(Ri,{})));p.get("/bibliotheque",t=>t.render(e(Fi,{})));p.get("/contacts",t=>t.render(e(Di,{})));p.get("/admin/chauffeurs-dashboard",t=>t.render(e(Mi,{})));p.post("/api/admin/chat",async t=>{try{const{chauffeur_id:r,message:s}=await t.req.json();if(!r||!s)return t.json({success:!1,error:"Données manquantes"},400);const i=await t.env.DB.prepare(`
+      `).all();return t.json({success:!0,chauffeurs:s})}catch{console.log("Table chauffeur_sessions not found, using simple query");const{results:i}=await t.env.DB.prepare(r).all();return t.json({success:!0,chauffeurs:i})}}catch(r){return console.error("Erreur liste chauffeurs:",r),t.json({success:!1,error:r.message},500)}});p.use("*",async(t,r)=>{const s=t.req.path;if(["/login","/test-questionnaire","/qrcode-chauffeur","/chauffeur/langue","/chauffeur/video","/chauffeur/inscription","/chauffeur/taches"].includes(s)||s.startsWith("/static/")||s.startsWith("/api/chauffeur/")){await r();return}await r()});p.use(ki);p.get("/generate-qr-codes",t=>t.html(`<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/generate-qr-codes.html">
+    <title>Redirection...</title>
+</head>
+<body>
+    <p>Redirection vers le générateur...</p>
+    <p><a href="/generate-qr-codes.html">Cliquez ici si la redirection ne fonctionne pas</a></p>
+</body>
+</html>`));p.get("/",t=>t.render(e(Ei,{})));p.get("/reception",t=>t.render(e(Ci,{})));p.get("/accueil-chauffeur",t=>t.render(e(Ti,{})));p.get("/administrateur",t=>t.render(e(qi,{})));p.get("/controleur",t=>t.render(e(Si,{})));p.get("/agent-quai",t=>t.render(e(_i,{})));p.get("/nouveau",t=>t.render(e(Ai,{})));p.get("/anomalies",t=>t.render(e(Ri,{})));p.get("/bibliotheque",t=>t.render(e(Fi,{})));p.get("/contacts",t=>t.render(e(Di,{})));p.get("/admin/chauffeurs-dashboard",t=>t.render(e(Mi,{})));p.post("/api/admin/chat",async t=>{try{const{chauffeur_id:r,message:s}=await t.req.json();if(!r||!s)return t.json({success:!1,error:"Données manquantes"},400);const i=await t.env.DB.prepare(`
       SELECT langue FROM chauffeur_arrivals WHERE id = ?
     `).bind(r).first(),a=(i==null?void 0:i.langue)||"fr";let n=s;a!=="fr"&&(n=await Et(s,a,"fr"));try{await t.env.DB.prepare(`
         INSERT INTO chat_messages (chauffeur_id, sender, message, original_lang, translated_fr, translated_chauffeur, read_by_admin, read_by_chauffeur)
