@@ -1161,6 +1161,12 @@ app.get('/scan-fin-dechargement', (c) => {
             console.log('✅ Réponse API:', result);
 
             if (result.success) {
+              // Afficher message d'alerte si créée
+              if (result.alerte_creee) {
+                console.log('🚨 ALERTE CRÉÉE - Visible dans onglet Contrôleur');
+                alert('⚠️ ÉCART OU NON-CONFORMITÉ DÉTECTÉ\\n\\nUne alerte a été créée pour le contrôleur.\\nIl sera notifié de cet écart.');
+              }
+              
               // Cacher le formulaire
               document.getElementById('fin-dechargement-form').classList.add('hidden');
               // Afficher le message de succès
@@ -2866,20 +2872,33 @@ app.post('/api/fin-dechargement', async (c) => {
     // ===== CRÉATION ALERTE AUTOMATIQUE SI ÉCART OU NON-CONFORMITÉ =====
     let alerteCreee = false
     try {
+      console.log('🔍 Vérification alerte - Données reçues:', {
+        palettes_attendues: data.palettes_attendues,
+        palettes_recues: data.palettes_recues,
+        problemes: data.problemes
+      })
+      
       // Vérifier s'il y a un écart de palettes
       const ecartPalettes = parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues)
+      console.log('📊 Écart palettes:', ecartPalettes, `(${data.palettes_attendues} vs ${data.palettes_recues})`)
       
       // Vérifier s'il y a des non-conformités dans les problèmes
       const problemes = data.problemes || []
       const aDesNonConformites = problemes.length > 0
+      console.log('⚠️ Non-conformités:', aDesNonConformites, 'Nombre:', problemes.length)
       
       if (ecartPalettes || aDesNonConformites) {
-        console.log('🚨 Écart ou non-conformité détecté - Création alerte contrôleur')
+        console.log('🚨 DÉCLENCHEMENT ALERTE - Création en cours...')
+        console.log('   Quai:', data.quai_numero)
+        console.log('   ID:', data.numero_id)
+        console.log('   Fournisseur:', data.fournisseur)
         
         // Récupérer les données du quai pour avoir timer_start (heure premier scan)
         const quaiData = await c.env.DB.prepare(`
           SELECT timer_start, timer_fin_timestamp FROM quai_status WHERE quai_numero = ?
         `).bind(data.quai_numero).first()
+        
+        console.log('⏰ Données quai récupérées:', quaiData)
         
         // Créer la table alertes si elle n'existe pas
         await c.env.DB.prepare(`
@@ -2901,6 +2920,8 @@ app.post('/api/fin-dechargement', async (c) => {
           )
         `).run()
         
+        console.log('✅ Table controleur_alertes vérifiée')
+        
         // Préparer les détails de l'écart
         let detailsEcart = ''
         if (ecartPalettes) {
@@ -2909,6 +2930,7 @@ app.post('/api/fin-dechargement', async (c) => {
         
         // Préparer les non-conformités (JSON)
         const nonConformitesJson = JSON.stringify(problemes)
+        console.log('📝 Non-conformités JSON:', nonConformitesJson)
         
         // Insérer l'alerte
         const alerteResult = await c.env.DB.prepare(`
@@ -2928,10 +2950,13 @@ app.post('/api/fin-dechargement', async (c) => {
         ).run()
         
         alerteCreee = true
-        console.log('✅ Alerte contrôleur créée - ID:', alerteResult.meta.last_row_id)
+        console.log('✅✅✅ ALERTE CRÉÉE AVEC SUCCÈS - ID:', alerteResult.meta.last_row_id)
+      } else {
+        console.log('ℹ️ Aucun écart ni non-conformité - Pas d\'alerte créée')
       }
     } catch (error) {
-      console.error('⚠️ Erreur création alerte (non bloquant):', error)
+      console.error('❌ ERREUR création alerte:', error)
+      console.error('❌ Stack:', error.stack)
     }
 
     return c.json({ 
