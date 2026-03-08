@@ -1029,6 +1029,9 @@ app.get('/scan-fin-dechargement', (c) => {
         document.getElementById('fin-dechargement-form').addEventListener('submit', async function(e) {
           e.preventDefault();
           
+          // Récupérer les données du formulaire AVANT tout traitement
+          const formData = new FormData(this);
+          
           // ===== VALIDATION DES 7 POINTS OBLIGATOIRES =====
           const requiredPoints = [1, 2, 3, 4, 5, 6, 7];
           const missingPoints = [];
@@ -1064,7 +1067,6 @@ app.get('/scan-fin-dechargement', (c) => {
           }
 
           
-          const formData = new FormData(this);
           const nomAgent = formData.get('nom_agent');
           const numeroId = formData.get('numero_id');
           const fournisseur = formData.get('fournisseur');
