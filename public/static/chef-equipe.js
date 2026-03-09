@@ -1,6 +1,6 @@
 // ==============================================
 // CHEF D'ÉQUIPE - GESTION IMPRODUCTIVITÉS
-// Version 3.5.37 - KPI Réception Camion
+// Version 3.5.39 - Auto-refresh KPI
 // Date: 2026-03-09
 // ==============================================
 
@@ -535,9 +535,18 @@ function formatHeure(dateStr) {
 }
 
 // Initialiser la date du jour et charger les KPI au changement d'onglet
+let kpiRefreshInterval = null
+
 const originalSwitchTabChef = switchTabChef
 window.switchTabChef = function(tab) {
   originalSwitchTabChef(tab)
+  
+  // Arrêter le rafraîchissement automatique si on quitte l'onglet KPI
+  if (tab !== 'kpi' && kpiRefreshInterval) {
+    clearInterval(kpiRefreshInterval)
+    kpiRefreshInterval = null
+    console.log('⏸️ Auto-refresh KPI désactivé')
+  }
   
   if (tab === 'kpi') {
     // Initialiser la date du jour si pas encore fait
@@ -546,8 +555,17 @@ window.switchTabChef = function(tab) {
       dateInput.value = new Date().toISOString().split('T')[0]
     }
     
-    // Charger les KPI
+    // Charger les KPI immédiatement
     loadKPIReception()
+    
+    // Démarrer le rafraîchissement automatique toutes les 30 secondes
+    if (!kpiRefreshInterval) {
+      kpiRefreshInterval = setInterval(() => {
+        console.log('🔄 Auto-refresh KPI...')
+        loadKPIReception()
+      }, 30000) // 30 secondes
+      console.log('▶️ Auto-refresh KPI activé (30s)')
+    }
   }
 }
 
