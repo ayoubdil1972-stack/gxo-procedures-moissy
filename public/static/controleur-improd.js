@@ -752,35 +752,130 @@ async function loadAlertesStats() {
 async function loadAlertes(statut = 'en_attente') {
   try {
     alertesState.currentFilter = statut
+    const container = document.getElementById('alertes-container')
     
-    const response = await fetch(`/api/controleur/alertes?statut=${statut}`)
-    const result = await response.json()
+    // Recharger les statistiques depuis l'API
+    loadAlertesStats()
+    
+    // Si alertes en attente
+    if (statut === 'en_attente') {
+      const response = await fetch(`/api/controleur/alertes?statut=en_attente`)
+      const result = await response.json()
 
-    if (result.success) {
-      const container = document.getElementById('alertes-container')
-      const alertes = result.alertes || []
-      
-      // Recharger les statistiques depuis l'API
-      loadAlertesStats()
-      
-      if (alertes.length === 0) {
-        container.innerHTML = `
-          <div class="text-center text-gray-500 py-12">
-            <i class="fas fa-inbox text-5xl mb-3"></i>
-            <p class="text-lg">Aucune alerte ${statut === 'en_attente' ? 'en attente' : 'traitée'}</p>
+      if (result.success) {
+        const alertes = result.alertes || []
+        
+        if (alertes.length === 0) {
+          container.innerHTML = `
+            <div class="text-center text-gray-500 py-12">
+              <i class="fas fa-inbox text-5xl mb-3"></i>
+              <p class="text-lg">Aucune alerte en attente</p>
+            </div>
+          `
+          return
+        }
+
+        // Pour les alertes en attente, utiliser generateAlerteCard
+        container.innerHTML = alertes.map(alerte => generateAlerteCard(alerte, 'en_attente')).join('')
+      }
+    }
+    
+    // Si alertes traitées - Afficher "Cette semaine" avec accordéon 7 jours
+    else if (statut === 'traitee') {
+      const response = await fetch(`/api/controleur/alertes/semaine`)
+      const result = await response.json()
+
+      if (result.success) {
+        const alertes = result.alertes || []
+        const semaine = result.semaine || {}
+        
+        // Grouper par jour de la semaine
+        const jourMap = {
+          0: 'dimanche',
+          1: 'lundi',
+          2: 'mardi',
+          3: 'mercredi',
+          4: 'jeudi',
+          5: 'vendredi',
+          6: 'samedi'
+        }
+        
+        const jourLabels = {
+          lundi: 'Lundi',
+          mardi: 'Mardi',
+          mercredi: 'Mercredi',
+          jeudi: 'Jeudi',
+          vendredi: 'Vendredi',
+          samedi: 'Samedi',
+          dimanche: 'Dimanche'
+        }
+        
+        const jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
+        const alertesParJour = {}
+        
+        // Initialiser tous les jours à vide
+        jours.forEach(jour => {
+          alertesParJour[jour] = []
+        })
+        
+        // Grouper les alertes par jour
+        alertes.forEach(alerte => {
+          const jourNom = jourMap[alerte.jour_semaine_numero]
+          if (jourNom) {
+            alertesParJour[jourNom].push(alerte)
+          }
+        })
+        
+        // Afficher titre de la semaine + accordéon
+        let html = `
+          <div class="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+            <div class="flex items-center">
+              <i class="fas fa-calendar-week text-2xl text-blue-500 mr-3"></i>
+              <div>
+                <h3 class="text-xl font-bold text-gray-800">${semaine.titre || 'Cette semaine'}</h3>
+                <p class="text-sm text-gray-600">Alertes traitées cette semaine</p>
+              </div>
+            </div>
           </div>
+          
+          <div class="space-y-3">
         `
-        return
+        
+        // Créer un accordéon pour chaque jour
+        jours.forEach(jour => {
+          const alertesJour = alertesParJour[jour]
+          const count = alertesJour.length
+          const isExpanded = archivesState.expandedDays[jour] || false
+          
+          html += `
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+              <!-- En-tête accordéon -->
+              <button 
+                class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                onclick="toggleDayAccordion('${jour}')"
+              >
+                <div class="flex items-center space-x-3">
+                  <i class="fas fa-calendar text-blue-500"></i>
+                  <span class="font-bold text-gray-800 text-lg">${jourLabels[jour]}</span>
+                  <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    ${count}
+                  </span>
+                </div>
+                <i id="day-${jour}-icon" class="fas fa-chevron-${isExpanded ? 'up' : 'down'} text-gray-500"></i>
+              </button>
+              
+              <!-- Contenu accordéon -->
+              <div id="day-${jour}-content" class="${isExpanded ? '' : 'hidden'} p-4 bg-gray-50 space-y-4">
+                ${count === 0 ? '<p class="text-gray-500 text-center py-4">Aucune alerte ce jour</p>' : alertesJour.map(a => generateAlerteCard(a, 'traitee')).join('')}
+              </div>
+            </div>
+          `
+        })
+        
+        html += `</div>`
+        
+        container.innerHTML = html
       }
-      
-      // Si on affiche les alertes traitées, utiliser le système d'archives
-      if (statut === 'traitee') {
-        renderArchives(alertes)
-        return
-      }
-
-      // Pour les alertes en attente, utiliser generateAlerteCard
-      container.innerHTML = alertes.map(alerte => generateAlerteCard(alerte, 'en_attente')).join('')
     }
   } catch (error) {
     console.error('Erreur chargement alertes:', error)
