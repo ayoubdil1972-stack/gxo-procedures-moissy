@@ -123,70 +123,70 @@ export function AgentQuaiPage() {
                 Raison de l'improductivité
               </label>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Option 1 - Retard camion */}
+                {/* Option 1 */}
                 <button 
                   class="improd-option-quai p-4 border-2 border-gray-300 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all text-left"
-                  data-raison="retard_camion"
-                  onclick="selectImprodRaisonQuai('retard_camion')"
+                  data-raison="etiquette"
+                  onclick="selectImprodRaisonQuai('etiquette')"
                 >
                   <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                      <i class="fas fa-truck text-red-600"></i>
+                      <i class="fas fa-tag text-red-600"></i>
                     </div>
                     <div class="flex-1">
-                      <div class="font-semibold text-gray-800">Retard camion</div>
+                      <div class="font-semibold text-gray-800">Erreur étiquette palette</div>
                       <div class="text-xs text-gray-500">Timer démarre automatiquement</div>
                     </div>
                   </div>
                 </button>
 
-                {/* Option 2 - Attente cariste */}
+                {/* Option 2 */}
                 <button 
                   class="improd-option-quai p-4 border-2 border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all text-left"
-                  data-raison="attente_cariste"
-                  onclick="selectImprodRaisonQuai('attente_cariste')"
+                  data-raison="reseau"
+                  onclick="selectImprodRaisonQuai('reseau')"
                 >
                   <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
-                      <i class="fas fa-forklift text-orange-600"></i>
+                      <i class="fas fa-wifi text-orange-600"></i>
                     </div>
                     <div class="flex-1">
-                      <div class="font-semibold text-gray-800">Attente cariste</div>
-                      <div class="text-xs text-gray-500">Disponibilité cariste</div>
+                      <div class="font-semibold text-gray-800">Problème de réseau</div>
+                      <div class="text-xs text-gray-500">Timer démarre automatiquement</div>
                     </div>
                   </div>
                 </button>
 
-                {/* Option 3 - Problème matériel */}
+                {/* Option 3 */}
                 <button 
                   class="improd-option-quai p-4 border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
-                  data-raison="materiel"
-                  onclick="selectImprodRaisonQuai('materiel')"
+                  data-raison="formation"
+                  onclick="selectImprodRaisonQuai('formation')"
                 >
                   <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                      <i class="fas fa-tools text-blue-600"></i>
+                      <i class="fas fa-graduation-cap text-blue-600"></i>
                     </div>
                     <div class="flex-1">
-                      <div class="font-semibold text-gray-800">Problème matériel</div>
-                      <div class="text-xs text-gray-500">Équipement défectueux</div>
+                      <div class="font-semibold text-gray-800">Formation</div>
+                      <div class="text-xs text-gray-500">Durée fixe : 07:00:00</div>
                     </div>
                   </div>
                 </button>
 
-                {/* Option 4 - Problème documentation */}
+                {/* Option 4 */}
                 <button 
                   class="improd-option-quai p-4 border-2 border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all text-left"
-                  data-raison="documentation"
-                  onclick="selectImprodRaisonQuai('documentation')"
+                  data-raison="accident"
+                  onclick="selectImprodRaisonQuai('accident')"
                 >
                   <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                      <i class="fas fa-file-alt text-purple-600"></i>
+                      <i class="fas fa-exclamation-triangle text-purple-600"></i>
                     </div>
                     <div class="flex-1">
-                      <div class="font-semibold text-gray-800">Problème documentation</div>
-                      <div class="text-xs text-gray-500">BL incomplet ou manquant</div>
+                      <div class="font-semibold text-gray-800">Accident sur palette</div>
+                      <div class="text-xs text-gray-500">Cassée, penchée, dangereuse</div>
                     </div>
                   </div>
                 </button>
@@ -313,7 +313,7 @@ export function AgentQuaiPage() {
       </div>
 
       {/* Script pour la gestion des improductivités agent de quai */}
-      <script src="/static/agent-quai-improd.js?v=3.5.31"></script>
+      <script src="/static/agent-quai-improd.js?v=3.5.33"></script>
     </div>
   )
 }

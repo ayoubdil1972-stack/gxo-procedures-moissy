@@ -62,16 +62,16 @@ function selectImprodRaisonQuai(raison) {
   selectedBtn.classList.remove('border-gray-300')
   
   switch(raison) {
-    case 'retard_camion':
+    case 'etiquette':
       selectedBtn.classList.add('border-red-500', 'bg-red-50')
       break
-    case 'attente_cariste':
+    case 'reseau':
       selectedBtn.classList.add('border-orange-500', 'bg-orange-50')
       break
-    case 'materiel':
+    case 'formation':
       selectedBtn.classList.add('border-blue-500', 'bg-blue-50')
       break
-    case 'documentation':
+    case 'accident':
       selectedBtn.classList.add('border-purple-500', 'bg-purple-50')
       break
   }
@@ -148,10 +148,10 @@ async function cloturerImprodQuai() {
   // Sauvegarder dans l'historique (localStorage pour cette demo)
   const historique = JSON.parse(localStorage.getItem('improd_historique_quai') || '[]')
   const raisons = {
-    retard_camion: 'Retard camion',
-    attente_cariste: 'Attente cariste',
-    materiel: 'Problème matériel',
-    documentation: 'Problème documentation'
+    etiquette: 'Erreur étiquette palette',
+    reseau: 'Problème de réseau',
+    formation: 'Formation',
+    accident: 'Accident sur palette'
   }
   
   historique.push({
@@ -220,10 +220,10 @@ function loadImprodHistoriqueQuai() {
   // Afficher l'historique (plus récent en premier)
   container.innerHTML = aujourdhui.reverse().map(item => {
     const colors = {
-      'Retard camion': 'red',
-      'Attente cariste': 'orange',
-      'Problème matériel': 'blue',
-      'Problème documentation': 'purple'
+      'Erreur étiquette palette': 'red',
+      'Problème de réseau': 'orange',
+      'Formation': 'blue',
+      'Accident sur palette': 'purple'
     }
     const color = colors[item.raison] || 'gray'
     
