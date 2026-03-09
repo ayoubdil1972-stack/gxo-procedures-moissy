@@ -2741,6 +2741,53 @@ app.get('/api/controleur/alertes/stats', async (c) => {
   }
 })
 
+// GET /api/controleur/alertes/semaine - Toutes les alertes de la semaine groupées par jour
+app.get('/api/controleur/alertes/semaine', async (c) => {
+  try {
+    // Récupérer toutes les alertes traitées de la semaine (lundi à aujourd'hui)
+    const alertesSemaine = await c.env.DB.prepare(`
+      SELECT 
+        id,
+        quai_numero,
+        numero_id,
+        fournisseur,
+        heure_premier_scan,
+        heure_fin_dechargement,
+        ecart_palettes_attendues,
+        ecart_palettes_recues,
+        non_conformites,
+        consignes,
+        statut,
+        traite_par,
+        traite_le,
+        created_at,
+        strftime('%w', traite_le) as jour_semaine,
+        DATE(traite_le) as date_traitement
+      FROM controleur_alertes 
+      WHERE statut = 'traitee' 
+      AND DATE(traite_le) >= DATE('now', 'localtime', '-' || (CAST(strftime('%w', 'now', 'localtime') AS INTEGER) + 6) % 7 || ' days')
+      AND DATE(traite_le) <= DATE('now', 'localtime')
+      ORDER BY traite_le DESC
+      LIMIT 1000
+    `).all()
+
+    console.log(`📅 Alertes semaine récupérées: ${alertesSemaine.results?.length || 0}`)
+
+    return c.json({ 
+      success: true, 
+      alertes: alertesSemaine.results || []
+    })
+
+  } catch (error) {
+    console.error('❌ Erreur récupération alertes semaine:', error)
+    return c.json({ 
+      success: false, 
+      error: error.message,
+      alertes: []
+    })
+  }
+})
+
 // PUT /api/controleur/alertes/:id - Traiter une alerte
 app.put('/api/controleur/alertes/:id', async (c) => {
   try {

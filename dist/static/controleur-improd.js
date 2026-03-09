@@ -440,8 +440,8 @@ function groupAlertesByDay(alertes) {
   return groups
 }
 
-// Générer le HTML d'une carte d'alerte
-function generateAlerteCard(alerte) {
+// Générer le HTML d'une carte d'alerte (utilisé pour toutes les alertes)
+function generateAlerteCard(alerte, statut = 'traitee') {
   // Parser les données JSON
   const problemesData = JSON.parse(alerte.non_conformites || '[]')
   const ecart = alerte.ecart_palettes_attendues !== alerte.ecart_palettes_recues
@@ -452,25 +452,26 @@ function generateAlerteCard(alerte) {
   
   problemesData.forEach(item => {
     if (item.startsWith('point_')) {
-      // C'est une non-conformité
+      // C'est une non-conformité (point_1 à point_11)
       nonConformites.push(item)
     } else {
-      // C'est un problème rencontré
+      // C'est un problème rencontré (palettes_largeur, etc.)
       problemes.push(item)
     }
   })
   
   return `
-    <div class="border-l-4 border-green-500 bg-green-50 p-6 rounded-lg shadow mb-4">
+    <div class="border-l-4 ${statut === 'en_attente' ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50'} p-6 rounded-lg shadow mb-4">
       <div class="flex items-start justify-between mb-4">
         <div class="flex-1">
           <div class="flex items-center space-x-3 mb-2">
             <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
               Quai ${alerte.quai_numero}
             </span>
-            <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-              <i class="fas fa-check mr-1"></i>TRAITÉE
-            </span>
+            ${statut === 'en_attente' ? 
+              '<span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-exclamation-triangle mr-1"></i>EN ATTENTE</span>' :
+              '<span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>TRAITÉE</span>'
+            }
           </div>
           
           <div class="grid grid-cols-2 gap-4 text-sm mb-3">
@@ -529,7 +530,7 @@ function generateAlerteCard(alerte) {
             </div>
           ` : ''}
 
-          ${alerte.consignes ? `
+          ${statut === 'traitee' && alerte.consignes ? `
             <div class="bg-green-100 border border-green-300 rounded p-3">
               <div class="font-semibold text-green-800 mb-1">
                 <i class="fas fa-clipboard-check mr-2"></i>
@@ -540,6 +541,16 @@ function generateAlerteCard(alerte) {
             </div>
           ` : ''}
         </div>
+
+        ${statut === 'en_attente' ? `
+          <button 
+            class="ml-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg font-semibold"
+            onclick="ouvrirModalTraitement(${alerte.id})"
+          >
+            <i class="fas fa-edit mr-2"></i>
+            Traiter
+          </button>
+        ` : ''}
       </div>
     </div>
   `
@@ -745,93 +756,8 @@ async function loadAlertes(statut = 'en_attente') {
         return
       }
 
-      container.innerHTML = alertes.map(alerte => {
-        const nonConformites = JSON.parse(alerte.non_conformites || '[]')
-        const ecart = alerte.ecart_palettes_attendues !== alerte.ecart_palettes_recues
-        
-        return `
-          <div class="border-l-4 ${statut === 'en_attente' ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50'} p-6 rounded-lg shadow">
-            <div class="flex items-start justify-between mb-4">
-              <div class="flex-1">
-                <div class="flex items-center space-x-3 mb-2">
-                  <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    Quai ${alerte.quai_numero}
-                  </span>
-                  ${statut === 'en_attente' ? 
-                    '<span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-exclamation-triangle mr-1"></i>EN ATTENTE</span>' :
-                    '<span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>TRAITÉE</span>'
-                  }
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4 text-sm mb-3">
-                  <div>
-                    <span class="font-semibold text-gray-700">ID:</span>
-                    <span class="text-gray-600">${alerte.numero_id}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold text-gray-700">Fournisseur:</span>
-                    <span class="text-gray-600">${alerte.fournisseur}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold text-gray-700">Premier scan:</span>
-                    <span class="text-gray-600">${formatDate(alerte.heure_premier_scan)}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold text-gray-700">Fin déchargement:</span>
-                    <span class="text-gray-600">${formatDate(alerte.heure_fin_dechargement)}</span>
-                  </div>
-                </div>
-
-                ${ecart ? `
-                  <div class="bg-red-100 border border-red-300 rounded p-3 mb-3">
-                    <div class="font-semibold text-red-800 mb-1">
-                      <i class="fas fa-exclamation-circle mr-2"></i>
-                      Écart de palettes
-                    </div>
-                    <div class="text-sm text-red-700">
-                      Attendues: <strong>${alerte.ecart_palettes_attendues}</strong> | 
-                      Reçues: <strong>${alerte.ecart_palettes_recues}</strong>
-                    </div>
-                  </div>
-                ` : ''}
-
-                ${nonConformites.length > 0 ? `
-                  <div class="bg-orange-100 border border-orange-300 rounded p-3 mb-3">
-                    <div class="font-semibold text-orange-800 mb-2">
-                      <i class="fas fa-list mr-2"></i>
-                      Non-conformités (${nonConformites.length})
-                    </div>
-                    <ul class="text-sm text-orange-700 space-y-1">
-                      ${nonConformites.map(pb => `<li><i class="fas fa-chevron-right mr-2"></i>${pb}</li>`).join('')}
-                    </ul>
-                  </div>
-                ` : ''}
-
-                ${statut === 'traitee' && alerte.consignes ? `
-                  <div class="bg-green-100 border border-green-300 rounded p-3">
-                    <div class="font-semibold text-green-800 mb-1">
-                      <i class="fas fa-clipboard-check mr-2"></i>
-                      Consignes - ${alerte.traite_par}
-                    </div>
-                    <div class="text-sm text-green-700">${alerte.consignes}</div>
-                    <div class="text-xs text-green-600 mt-1">Traité le ${formatDate(alerte.traite_le)}</div>
-                  </div>
-                ` : ''}
-              </div>
-
-              ${statut === 'en_attente' ? `
-                <button 
-                  class="ml-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg font-semibold"
-                  onclick="ouvrirModalTraitement(${alerte.id})"
-                >
-                  <i class="fas fa-edit mr-2"></i>
-                  Traiter
-                </button>
-              ` : ''}
-            </div>
-          </div>
-        `
-      }).join('')
+      // Pour les alertes en attente, utiliser generateAlerteCard
+      container.innerHTML = alertes.map(alerte => generateAlerteCard(alerte, 'en_attente')).join('')
     }
   } catch (error) {
     console.error('Erreur chargement alertes:', error)
