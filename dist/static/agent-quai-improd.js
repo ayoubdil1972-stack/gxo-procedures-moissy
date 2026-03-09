@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Charger l'historique improductivités
   loadImprodHistoriqueQuai()
+  
+  // Rafraîchir l'historique toutes les 30 secondes
+  setInterval(() => {
+    loadImprodHistoriqueQuai()
+  }, 30000)
 })
 
 // Switcher entre les onglets
@@ -234,53 +239,95 @@ function resetImprodFormQuai() {
   improdStateQuai.startTime = null
 }
 
-// Charger l'historique
-function loadImprodHistoriqueQuai() {
+// Charger l'historique depuis l'API
+async function loadImprodHistoriqueQuai() {
   const container = document.getElementById('improd-historique-quai')
-  const historique = JSON.parse(localStorage.getItem('improd_historique_quai') || '[]')
+  const nom = localStorage.getItem('agent_quai_nom_improd')
   
-  // Filtrer pour aujourd'hui seulement
-  const today = new Date().toLocaleDateString('fr-FR')
-  const aujourdhui = historique.filter(h => h.date === today)
-  
-  if (aujourdhui.length === 0) {
+  if (!nom) {
     container.innerHTML = `
-      <div class="text-center text-gray-500 py-12">
-        <i class="fas fa-inbox text-4xl mb-2"></i>
-        <p>Aucune improductivité enregistrée aujourd'hui</p>
+      <div class="text-center text-gray-500 py-8">
+        <i class="fas fa-info-circle text-3xl mb-2"></i>
+        <p>Saisissez votre nom pour voir votre historique</p>
       </div>
     `
     return
   }
   
-  // Afficher l'historique (plus récent en premier)
-  container.innerHTML = aujourdhui.reverse().map(item => {
-    const colors = {
-      'Erreur étiquette palette': 'red',
-      'Problème de réseau': 'orange',
-      'Formation': 'blue',
-      'Accident sur palette': 'purple'
-    }
-    const color = colors[item.raison] || 'gray'
-    
-    return `
-      <div class="bg-white border-l-4 border-${color}-500 rounded-lg p-4 shadow">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-2 mb-2">
-              <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-${color}-100 text-${color}-800">
-                ${item.raison}
-              </span>
-              <span class="text-gray-500 text-sm">${item.heure}</span>
+  try {
+    const response = await fetch(`/api/improductivites/utilisateur/${encodeURIComponent(nom)}`)
+    const result = await response.json()
+
+    if (result.success && result.improductivites && result.improductivites.length > 0) {
+      container.innerHTML = result.improductivites.map(improd => {
+        const raisonLabel = {
+          'etiquette': '❌ Erreur étiquette',
+          'reseau': '📶 Problème réseau',
+          'formation': '📚 Formation',
+          'accident': '⚠️ Accident palette'
+        }[improd.raison] || improd.raison
+
+        const raisonColor = {
+          'etiquette': 'border-red-500 bg-red-50',
+          'reseau': 'border-orange-500 bg-orange-50',
+          'formation': 'border-blue-500 bg-blue-50',
+          'accident': 'border-purple-500 bg-purple-50'
+        }[improd.raison] || 'border-gray-500 bg-gray-50'
+
+        // Badge statut
+        const statutBadge = improd.statut === 'validee' 
+          ? '<span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check-circle mr-1"></i>Validée et transmise</span>'
+          : '<span class="inline-block bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-clock mr-1"></i>En cours de transmission</span>'
+
+        // Formater la date
+        const dateCreated = new Date(improd.created_at)
+        const dateFormatted = dateCreated.toLocaleString('fr-FR', { 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric',
+          hour: '2-digit', 
+          minute: '2-digit' 
+        })
+
+        return `
+          <div class="border-l-4 ${raisonColor} p-4 rounded shadow-sm">
+            <div class="flex items-start justify-between mb-2">
+              <div>
+                <div class="font-semibold text-gray-800 mb-1">${raisonLabel}</div>
+                ${statutBadge}
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-bold text-gray-800">${improd.duree}</div>
+                <div class="text-xs text-gray-500">durée</div>
+              </div>
             </div>
-            <div class="text-sm text-gray-600">
-              <i class="fas fa-user mr-2"></i>
-              <span class="font-semibold">${item.agent}</span>
+            <div class="text-sm text-gray-600 mt-3 space-y-1">
+              <div><i class="fas fa-user mr-2 text-gray-400"></i>${improd.utilisateur_nom}</div>
+              <div><i class="fas fa-calendar mr-2 text-gray-400"></i>${dateFormatted}</div>
+              ${improd.commentaire ? `<div class="mt-2 p-2 bg-blue-50 rounded text-xs"><i class="fas fa-comment mr-1 text-blue-500"></i><span class="font-semibold">Votre commentaire:</span> ${improd.commentaire}</div>` : ''}
+              ${improd.validation_commentaire ? `<div class="mt-2 p-2 bg-green-50 rounded text-xs"><i class="fas fa-comment-dots mr-1 text-green-600"></i><span class="font-semibold">Chef d'équipe:</span> ${improd.validation_commentaire}</div>` : ''}
             </div>
           </div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-${color}-600">${item.duree}</div>
-            <div class="text-xs text-gray-500">durée</div>
+        `
+      }).join('')
+    } else {
+      container.innerHTML = `
+        <div class="text-center text-gray-500 py-8">
+          <i class="fas fa-inbox text-4xl mb-2"></i>
+          <p>Aucune improductivité enregistrée</p>
+        </div>
+      `
+    }
+  } catch (error) {
+    console.error('Erreur chargement historique:', error)
+    container.innerHTML = `
+      <div class="text-center text-red-500 py-8">
+        <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
+        <p>Erreur de chargement</p>
+      </div>
+    `
+  }
+}
           </div>
         </div>
       </div>

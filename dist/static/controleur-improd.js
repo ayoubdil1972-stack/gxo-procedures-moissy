@@ -72,6 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Charger l'historique improductivités
   loadImprodHistorique()
   
+  // Rafraîchir l'historique toutes les 30 secondes
+  setInterval(() => {
+    loadImprodHistorique()
+  }, 30000)
+  
   // Charger les alertes et statistiques
   loadAlertes('en_attente')
   loadAlertesStats()
@@ -283,15 +288,27 @@ function resetImprodForm() {
 }
 
 // Charger l'historique des improductivités
+// Charger l'historique des improductivités depuis l'API
 async function loadImprodHistorique() {
+  const container = document.getElementById('improd-historique')
+  const nom = localStorage.getItem('controleur_nom_improd')
+  
+  if (!nom) {
+    container.innerHTML = `
+      <div class="text-center text-gray-500 py-8">
+        <i class="fas fa-info-circle text-3xl mb-2"></i>
+        <p>Saisissez votre nom pour voir votre historique</p>
+      </div>
+    `
+    return
+  }
+  
   try {
-    const response = await fetch('/api/controleur/improd/historique')
+    const response = await fetch(`/api/improductivites/utilisateur/${encodeURIComponent(nom)}`)
     const result = await response.json()
 
-    if (result.success && result.improds && result.improds.length > 0) {
-      const container = document.getElementById('improd-historique')
-      
-      container.innerHTML = result.improds.map(improd => {
+    if (result.success && result.improductivites && result.improductivites.length > 0) {
+      container.innerHTML = result.improductivites.map(improd => {
         const raisonLabel = {
           'etiquette': '❌ Erreur étiquette',
           'reseau': '📶 Problème réseau',
@@ -306,23 +323,48 @@ async function loadImprodHistorique() {
           'accident': 'border-purple-500 bg-purple-50'
         }[improd.raison] || 'border-gray-500 bg-gray-50'
 
+        // Badge statut
+        const statutBadge = improd.statut === 'validee' 
+          ? '<span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check-circle mr-1"></i>Validée et transmise</span>'
+          : '<span class="inline-block bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-clock mr-1"></i>En cours de transmission</span>'
+
         return `
-          <div class="border-l-4 ${raisonColor} p-4 rounded">
-            <div class="flex items-center justify-between mb-2">
-              <div class="font-semibold text-gray-800">${raisonLabel}</div>
-              <div class="text-2xl font-bold text-gray-800">${improd.duree}</div>
+          <div class="border-l-4 ${raisonColor} p-4 rounded shadow-sm">
+            <div class="flex items-start justify-between mb-2">
+              <div>
+                <div class="font-semibold text-gray-800 mb-1">${raisonLabel}</div>
+                ${statutBadge}
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-bold text-gray-800">${improd.duree}</div>
+                <div class="text-xs text-gray-500">durée</div>
+              </div>
             </div>
-            <div class="text-sm text-gray-600">
-              <div><i class="fas fa-user mr-2"></i>${improd.controleur_nom}</div>
-              <div><i class="fas fa-clock mr-2"></i>${formatDate(improd.created_at)}</div>
-              ${improd.commentaire ? `<div class="mt-2 italic"><i class="fas fa-comment mr-2"></i>${improd.commentaire}</div>` : ''}
+            <div class="text-sm text-gray-600 mt-3 space-y-1">
+              <div><i class="fas fa-user mr-2 text-gray-400"></i>${improd.utilisateur_nom}</div>
+              <div><i class="fas fa-calendar mr-2 text-gray-400"></i>${formatDate(improd.created_at)}</div>
+              ${improd.commentaire ? `<div class="mt-2 p-2 bg-blue-50 rounded text-xs"><i class="fas fa-comment mr-1 text-blue-500"></i><span class="font-semibold">Votre commentaire:</span> ${improd.commentaire}</div>` : ''}
+              ${improd.validation_commentaire ? `<div class="mt-2 p-2 bg-green-50 rounded text-xs"><i class="fas fa-comment-dots mr-1 text-green-600"></i><span class="font-semibold">Chef d'équipe:</span> ${improd.validation_commentaire}</div>` : ''}
             </div>
           </div>
         `
       }).join('')
+    } else {
+      container.innerHTML = `
+        <div class="text-center text-gray-500 py-8">
+          <i class="fas fa-inbox text-4xl mb-2"></i>
+          <p>Aucune improductivité enregistrée</p>
+        </div>
+      `
     }
   } catch (error) {
     console.error('Erreur chargement historique:', error)
+    container.innerHTML = `
+      <div class="text-center text-red-500 py-8">
+        <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
+        <p>Erreur de chargement</p>
+      </div>
+    `
   }
 }
 

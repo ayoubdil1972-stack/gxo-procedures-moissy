@@ -313,7 +313,7 @@ export function AgentQuaiPage() {
       </div>
 
       {/* Script pour la gestion des improductivités agent de quai */}
-      <script src="/static/agent-quai-improd.js?v=3.5.33"></script>
+      <script src="/static/agent-quai-improd.js?v=3.5.35"></script>
     </div>
   )
 }

@@ -3545,4 +3545,32 @@ app.put('/api/chef-equipe/improductivites/:id/valider', async (c) => {
   }
 })
 
+// GET /api/improductivites/utilisateur/:nom - Récupérer les improductivités d'un utilisateur
+app.get('/api/improductivites/utilisateur/:nom', async (c) => {
+  try {
+    const nom = c.req.param('nom')
+    
+    if (!nom) {
+      return c.json({ success: false, error: 'Nom requis' }, 400)
+    }
+    
+    // Récupérer les improductivités de l'utilisateur
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM improductivites
+      WHERE utilisateur_nom = ?
+      ORDER BY created_at DESC
+      LIMIT 100
+    `).bind(nom).all()
+    
+    return c.json({ 
+      success: true, 
+      improductivites: results
+    })
+  } catch (error) {
+    console.error('❌ Erreur récupération improductivités utilisateur:', error)
+    // Si la table n'existe pas, retourner liste vide
+    return c.json({ success: true, improductivites: [] })
+  }
+})
+
 export default app
