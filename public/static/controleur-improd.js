@@ -1,6 +1,53 @@
 // GXO Moissy - Contrôleur Improductivité & Alertes
 // Gestion des notifications d'improductivité et des alertes écart/non-conformité
 
+// ===== TRADUCTIONS =====
+const NON_CONFORMITES = {
+  point_1: "1. Extérieur / Essieux (plombage camion)",
+  point_2: "2. Côtés gauche et droit (déchirures, ...)",
+  point_3: "3. Paroi avant (double fond, ...)",
+  point_4: "4. Plancher (trappes, plancher amovible, ...)",
+  point_5: "5. Plafond / Toit (déchirures, usures, ...)",
+  point_6: "6. Portes intérieures / extérieures (herméticité, ...)",
+  point_7: "7. Cales roues bien positionnées",
+  point_8: "8. Nuisibles",
+  point_9: "9. Corps étranger",
+  point_10: "10. Propreté",
+  point_11: "11. Odeur"
+}
+
+const PROBLEMES_RENCONTRES = {
+  palettes_largeur: "Palettes chargées en largeur",
+  palettes_instables: "Palettes instables / mal chargées",
+  palettes_mal_dechargees: "Palettes mal déchargées",
+  marchandises_dangereuses: "Marchandises dangereuses non chargées en fond de camion",
+  palettes_mal_filmees: "Palettes mal filmées",
+  mauvais_formulaire_tu: "Mauvais formulaire TU entrant",
+  autres: "Autres"
+}
+
+const JOURS_SEMAINE = {
+  lundi: "Lundi",
+  mardi: "Mardi",
+  mercredi: "Mercredi",
+  jeudi: "Jeudi",
+  vendredi: "Vendredi",
+  samedi: "Samedi",
+  dimanche: "Dimanche"
+}
+
+function traduireNonConformite(point) {
+  return NON_CONFORMITES[point] || point
+}
+
+function traduireProbleme(probleme) {
+  return PROBLEMES_RENCONTRES[probleme] || probleme
+}
+
+function traduireJour(jour) {
+  return JOURS_SEMAINE[jour] || jour
+}
+
 let improdState = {
   active: false,
   raison: null,
@@ -352,7 +399,7 @@ function toggleDayAccordion(day) {
 function groupAlertesByDay(alertes) {
   const groups = {
     today: [],
-    thisWeek: { lundi: [], mardi: [], mercredi: [], jeudi: [], vendredi: [] },
+    thisWeek: { lundi: [], mardi: [], mercredi: [], jeudi: [], vendredi: [], samedi: [], dimanche: [] },
     older: []
   }
   
@@ -381,6 +428,8 @@ function groupAlertesByDay(alertes) {
       else if (dayName === 'mercredi') groups.thisWeek.mercredi.push(alerte)
       else if (dayName === 'jeudi') groups.thisWeek.jeudi.push(alerte)
       else if (dayName === 'vendredi') groups.thisWeek.vendredi.push(alerte)
+      else if (dayName === 'samedi') groups.thisWeek.samedi.push(alerte)
+      else if (dayName === 'dimanche') groups.thisWeek.dimanche.push(alerte)
     }
     // Plus ancien
     else {
@@ -393,8 +442,23 @@ function groupAlertesByDay(alertes) {
 
 // Générer le HTML d'une carte d'alerte
 function generateAlerteCard(alerte) {
-  const nonConformites = JSON.parse(alerte.non_conformites || '[]')
+  // Parser les données JSON
+  const problemesData = JSON.parse(alerte.non_conformites || '[]')
   const ecart = alerte.ecart_palettes_attendues !== alerte.ecart_palettes_recues
+  
+  // Séparer les problèmes et les non-conformités
+  const problemes = []
+  const nonConformites = []
+  
+  problemesData.forEach(item => {
+    if (item.startsWith('point_')) {
+      // C'est une non-conformité
+      nonConformites.push(item)
+    } else {
+      // C'est un problème rencontré
+      problemes.push(item)
+    }
+  })
   
   return `
     <div class="border-l-4 border-green-500 bg-green-50 p-6 rounded-lg shadow mb-4">
@@ -441,14 +505,26 @@ function generateAlerteCard(alerte) {
             </div>
           ` : ''}
 
+          ${problemes.length > 0 ? `
+            <div class="bg-yellow-100 border border-yellow-400 rounded p-3 mb-3">
+              <div class="font-semibold text-yellow-900 mb-2">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Problèmes rencontrés (${problemes.length})
+              </div>
+              <ul class="text-sm text-yellow-800 space-y-1">
+                ${problemes.map(pb => `<li><i class="fas fa-chevron-right mr-2"></i>${traduireProbleme(pb)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
           ${nonConformites.length > 0 ? `
             <div class="bg-orange-100 border border-orange-300 rounded p-3 mb-3">
               <div class="font-semibold text-orange-800 mb-2">
-                <i class="fas fa-list mr-2"></i>
-                Non-conformités (${nonConformites.length})
+                <i class="fas fa-times-circle mr-2"></i>
+                Non-conformités détectées (${nonConformites.length})
               </div>
               <ul class="text-sm text-orange-700 space-y-1">
-                ${nonConformites.map(pb => `<li><i class="fas fa-chevron-right mr-2"></i>${pb}</li>`).join('')}
+                ${nonConformites.map(nc => `<li><i class="fas fa-ban mr-2"></i>${traduireNonConformite(nc)}</li>`).join('')}
               </ul>
             </div>
           ` : ''}
@@ -528,20 +604,24 @@ function renderArchives(alertes) {
   
   // Vue Cette semaine (Accordéon par jour)
   else if (archivesState.currentView === 'week') {
-    const jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi']
+    const jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
     const jourLabels = {
       lundi: 'Lundi',
       mardi: 'Mardi',
       mercredi: 'Mercredi',
       jeudi: 'Jeudi',
-      vendredi: 'Vendredi'
+      vendredi: 'Vendredi',
+      samedi: 'Samedi',
+      dimanche: 'Dimanche'
     }
     const jourIcons = {
       lundi: 'fa-calendar',
       mardi: 'fa-calendar',
       mercredi: 'fa-calendar',
       jeudi: 'fa-calendar',
-      vendredi: 'fa-calendar'
+      vendredi: 'fa-calendar',
+      samedi: 'fa-calendar',
+      dimanche: 'fa-calendar'
     }
     
     const totalSemaine = jours.reduce((sum, jour) => sum + groups.thisWeek[jour].length, 0)
