@@ -2747,6 +2747,27 @@ app.get('/api/controleur/alertes/stats', async (c) => {
 // GET /api/controleur/alertes/semaine - Toutes les alertes de la semaine groupées par jour
 app.get('/api/controleur/alertes/semaine', async (c) => {
   try {
+    // Calculer les dates de début et fin de semaine
+    const datesResult = await c.env.DB.prepare(`
+      SELECT 
+        DATE('now', 'localtime', 'weekday 1', '-7 days') as lundi,
+        DATE('now', 'localtime', 'weekday 5') as vendredi,
+        'Lundi ' || strftime('%d', DATE('now', 'localtime', 'weekday 1', '-7 days')) || ' ' ||
+        CASE CAST(strftime('%m', DATE('now', 'localtime', 'weekday 1', '-7 days')) AS INTEGER)
+          WHEN 1 THEN 'Janvier' WHEN 2 THEN 'Février' WHEN 3 THEN 'Mars'
+          WHEN 4 THEN 'Avril' WHEN 5 THEN 'Mai' WHEN 6 THEN 'Juin'
+          WHEN 7 THEN 'Juillet' WHEN 8 THEN 'Août' WHEN 9 THEN 'Septembre'
+          WHEN 10 THEN 'Octobre' WHEN 11 THEN 'Novembre' WHEN 12 THEN 'Décembre'
+        END || ' ' || strftime('%Y', DATE('now', 'localtime', 'weekday 1', '-7 days')) as lundi_formate,
+        'Vendredi ' || strftime('%d', DATE('now', 'localtime', 'weekday 5')) || ' ' ||
+        CASE CAST(strftime('%m', DATE('now', 'localtime', 'weekday 5')) AS INTEGER)
+          WHEN 1 THEN 'Janvier' WHEN 2 THEN 'Février' WHEN 3 THEN 'Mars'
+          WHEN 4 THEN 'Avril' WHEN 5 THEN 'Mai' WHEN 6 THEN 'Juin'
+          WHEN 7 THEN 'Juillet' WHEN 8 THEN 'Août' WHEN 9 THEN 'Septembre'
+          WHEN 10 THEN 'Octobre' WHEN 11 THEN 'Novembre' WHEN 12 THEN 'Décembre'
+        END || ' ' || strftime('%Y', DATE('now', 'localtime', 'weekday 5')) as vendredi_formate
+    `).first()
+    
     // Récupérer toutes les alertes traitées de la semaine (depuis lundi jusqu'à aujourd'hui)
     const alertesSemaine = await c.env.DB.prepare(`
       SELECT 
@@ -2759,12 +2780,18 @@ app.get('/api/controleur/alertes/semaine', async (c) => {
         ecart_palettes_attendues,
         ecart_palettes_recues,
         non_conformites,
+        verification_points,
         consignes,
         statut,
         traite_par,
         traite_le,
         created_at,
-        strftime('%w', traite_le) as jour_semaine,
+        CAST(strftime('%w', traite_le) AS INTEGER) as jour_semaine_numero,
+        CASE CAST(strftime('%w', traite_le) AS INTEGER)
+          WHEN 0 THEN 'Dimanche' WHEN 1 THEN 'Lundi' WHEN 2 THEN 'Mardi'
+          WHEN 3 THEN 'Mercredi' WHEN 4 THEN 'Jeudi' WHEN 5 THEN 'Vendredi'
+          WHEN 6 THEN 'Samedi'
+        END as jour_nom,
         DATE(traite_le) as date_traitement
       FROM controleur_alertes 
       WHERE statut = 'traitee' 
@@ -2777,7 +2804,14 @@ app.get('/api/controleur/alertes/semaine', async (c) => {
     console.log(`📅 Alertes semaine récupérées: ${alertesSemaine.results?.length || 0}`)
 
     return c.json({ 
-      success: true, 
+      success: true,
+      semaine: {
+        lundi: datesResult?.lundi,
+        vendredi: datesResult?.vendredi,
+        lundi_formate: datesResult?.lundi_formate,
+        vendredi_formate: datesResult?.vendredi_formate,
+        titre: `${datesResult?.lundi_formate} à ${datesResult?.vendredi_formate}`
+      },
       alertes: alertesSemaine.results || []
     })
 
