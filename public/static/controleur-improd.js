@@ -221,9 +221,10 @@ async function cloturerImprod() {
 
   const commentaire = document.getElementById('improd-commentaire').value.trim()
 
-  // Préparer les données
+  // Préparer les données pour l'API improductivités
   const data = {
-    controleur_nom: improdState.controleurNom,
+    utilisateur_nom: improdState.controleurNom,
+    role: 'controleur',
     raison: improdState.raison,
     duree: duree,
     commentaire: commentaire,
@@ -232,8 +233,8 @@ async function cloturerImprod() {
   }
 
   try {
-    // Envoyer au serveur
-    const response = await fetch('/api/controleur/improd', {
+    // Envoyer au serveur (nouvelle API improductivités)
+    const response = await fetch('/api/improductivites', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -242,7 +243,7 @@ async function cloturerImprod() {
     const result = await response.json()
 
     if (result.success) {
-      alert('✅ Improductivité enregistrée avec succès')
+      alert('✅ Improductivité enregistrée et transmise au chef d\'équipe')
       
       // Réinitialiser le formulaire
       resetImprodForm()

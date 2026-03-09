@@ -135,44 +135,80 @@ function updateImprodTimerQuai() {
 async function cloturerImprodQuai() {
   if (!improdStateQuai.active) return
   
-  const duree = Math.floor((Date.now() - improdStateQuai.startTime) / 1000)
-  const hours = Math.floor(duree / 3600)
-  const minutes = Math.floor((duree % 3600) / 60)
-  const seconds = duree % 60
-  const dureeFormatee = `${hours}h ${minutes}min ${seconds}s`
-  
   // Arrêter le timer
   clearInterval(improdStateQuai.timerInterval)
-  improdStateQuai.active = false
   
-  // Sauvegarder dans l'historique (localStorage pour cette demo)
-  const historique = JSON.parse(localStorage.getItem('improd_historique_quai') || '[]')
-  const raisons = {
-    etiquette: 'Erreur étiquette palette',
-    reseau: 'Problème de réseau',
-    formation: 'Formation',
-    accident: 'Accident sur palette'
+  const endTime = new Date()
+  let duree = ''
+  
+  if (improdStateQuai.raison === 'formation') {
+    duree = '07:00:00'
+  } else {
+    const elapsed = Math.floor((Date.now() - improdStateQuai.startTime) / 1000)
+    const hours = Math.floor(elapsed / 3600)
+    const minutes = Math.floor((elapsed % 3600) / 60)
+    const seconds = elapsed % 60
+    duree = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
   }
   
-  historique.push({
-    agent: improdStateQuai.agentNom,
-    raison: raisons[improdStateQuai.raison],
-    duree: dureeFormatee,
-    timestamp: new Date().toISOString(),
-    date: new Date().toLocaleDateString('fr-FR'),
-    heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-  })
+  // Préparer les données pour l'API improductivités
+  const data = {
+    utilisateur_nom: improdStateQuai.agentNom,
+    role: 'agent_quai',
+    raison: improdStateQuai.raison,
+    duree: duree,
+    commentaire: '',
+    date_debut: new Date(improdStateQuai.startTime).toISOString(),
+    date_fin: endTime.toISOString()
+  }
   
-  localStorage.setItem('improd_historique_quai', JSON.stringify(historique))
+  try {
+    // Envoyer au serveur (nouvelle API improductivités)
+    const response = await fetch('/api/improductivites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    
+    const result = await response.json()
+    
+    if (result.success) {
+      alert('✅ Improductivité enregistrée et transmise au chef d\'équipe')
+      
+      // Sauvegarder aussi dans localStorage pour l'historique local
+      const historique = JSON.parse(localStorage.getItem('improd_historique_quai') || '[]')
+      const raisons = {
+        etiquette: 'Erreur étiquette palette',
+        reseau: 'Problème de réseau',
+        formation: 'Formation',
+        accident: 'Accident sur palette'
+      }
+      
+      historique.push({
+        agent: improdStateQuai.agentNom,
+        raison: raisons[improdStateQuai.raison],
+        duree: duree,
+        timestamp: endTime.toISOString(),
+        date: new Date().toLocaleDateString('fr-FR'),
+        heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      })
+      
+      localStorage.setItem('improd_historique_quai', JSON.stringify(historique))
+      
+      // Reset du formulaire
+      resetImprodFormQuai()
+      
+      // Recharger l'historique
+      loadImprodHistoriqueQuai()
+    } else {
+      alert('❌ Erreur lors de l\'enregistrement : ' + (result.error || 'Erreur inconnue'))
+    }
+  } catch (error) {
+    console.error('Erreur:', error)
+    alert('❌ Erreur de connexion au serveur')
+  }
   
-  // Message de confirmation
-  alert(`✅ Improductivité clôturée\n\nAgent: ${improdStateQuai.agentNom}\nRaison: ${raisons[improdStateQuai.raison]}\nDurée: ${dureeFormatee}`)
-  
-  // Reset du formulaire
-  resetImprodFormQuai()
-  
-  // Recharger l'historique
-  loadImprodHistoriqueQuai()
+  improdStateQuai.active = false
 }
 
 // Reset du formulaire

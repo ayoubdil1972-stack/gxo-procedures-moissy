@@ -3414,4 +3414,135 @@ app.get('/api/quai/scans', async (c) => {
   }
 })
 
+// ==============================================
+// APIS CHEF D'ÉQUIPE - IMPRODUCTIVITÉS
+// ==============================================
+
+// POST /api/improductivites - Créer une improductivité (appelé par Contrôleur et Agent de Quai)
+app.post('/api/improductivites', async (c) => {
+  try {
+    const data = await c.req.json()
+    const { utilisateur_nom, role, raison, duree, commentaire, date_debut, date_fin } = data
+    
+    // Validation
+    if (!utilisateur_nom || !role || !raison || !duree || !date_debut || !date_fin) {
+      return c.json({ success: false, error: 'Données manquantes' }, 400)
+    }
+    
+    if (!['controleur', 'agent_quai'].includes(role)) {
+      return c.json({ success: false, error: 'Rôle invalide' }, 400)
+    }
+    
+    // Créer la table si elle n'existe pas
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS improductivites (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        utilisateur_nom TEXT NOT NULL,
+        role TEXT NOT NULL,
+        raison TEXT NOT NULL,
+        duree TEXT NOT NULL,
+        commentaire TEXT,
+        statut TEXT DEFAULT 'en_transmission',
+        validation_commentaire TEXT,
+        date_debut TEXT NOT NULL,
+        date_fin TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
+    
+    // Insérer l'improductivité
+    const result = await c.env.DB.prepare(`
+      INSERT INTO improductivites (
+        utilisateur_nom, role, raison, duree, commentaire, date_debut, date_fin
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      utilisateur_nom,
+      role,
+      raison,
+      duree,
+      commentaire || null,
+      date_debut,
+      date_fin
+    ).run()
+    
+    console.log('✅ Improductivité créée:', result.meta.last_row_id)
+    
+    return c.json({ 
+      success: true, 
+      id: result.meta.last_row_id,
+      message: 'Improductivité enregistrée et transmise au chef d\'équipe'
+    })
+  } catch (error) {
+    console.error('❌ Erreur création improductivité:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// GET /api/chef-equipe/improductivites - Récupérer toutes les improductivités
+app.get('/api/chef-equipe/improductivites', async (c) => {
+  try {
+    // Créer la table si elle n'existe pas
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS improductivites (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        utilisateur_nom TEXT NOT NULL,
+        role TEXT NOT NULL,
+        raison TEXT NOT NULL,
+        duree TEXT NOT NULL,
+        commentaire TEXT,
+        statut TEXT DEFAULT 'en_transmission',
+        validation_commentaire TEXT,
+        date_debut TEXT NOT NULL,
+        date_fin TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
+    
+    // Récupérer toutes les improductivités
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM improductivites
+      ORDER BY created_at DESC
+      LIMIT 1000
+    `).all()
+    
+    return c.json({ 
+      success: true, 
+      improductivites: results
+    })
+  } catch (error) {
+    console.error('❌ Erreur récupération improductivités:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// PUT /api/chef-equipe/improductivites/:id/valider - Valider une improductivité
+app.put('/api/chef-equipe/improductivites/:id/valider', async (c) => {
+  try {
+    const id = parseInt(c.req.param('id'))
+    const data = await c.req.json()
+    const { validation_commentaire } = data
+    
+    // Mettre à jour le statut
+    await c.env.DB.prepare(`
+      UPDATE improductivites 
+      SET statut = 'validee',
+          validation_commentaire = ?
+      WHERE id = ?
+    `).bind(
+      validation_commentaire || null,
+      id
+    ).run()
+    
+    console.log(`✅ Improductivité ${id} validée`)
+    
+    return c.json({ 
+      success: true, 
+      message: 'Improductivité validée et transmise'
+    })
+  } catch (error) {
+    console.error('❌ Erreur validation improductivité:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 export default app

@@ -14,69 +14,227 @@ export function ChefEquipePage() {
             </div>
           </div>
           <div class="text-right">
-            <div class="text-5xl font-bold">0</div>
-            <div class="text-sm opacity-75">Procédures</div>
+            <div class="text-5xl font-bold" id="total-improd-count">0</div>
+            <div class="text-sm opacity-75">Demandes en attente</div>
           </div>
         </div>
       </div>
 
-      {/* Coming Soon Card */}
-      <div class="bg-white rounded-lg shadow-lg p-12 text-center">
-        <div class="mb-6">
-          <i class="fas fa-hard-hat text-6xl text-indigo-500"></i>
+      {/* Triple Interface - Onglets */}
+      <div class="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
+        {/* Tabs Header */}
+        <div class="flex border-b border-gray-200">
+          <button 
+            class="flex-1 px-6 py-4 text-center font-semibold transition-colors border-b-2 bg-indigo-50 border-indigo-500 text-indigo-700"
+            id="tab-improd-chef-btn"
+            onclick="switchTabChef('improd')"
+          >
+            <i class="fas fa-stopwatch mr-2"></i>
+            Suivi Improductivités
+            <span id="badge-improd-count" class="ml-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs">0</span>
+          </button>
+          <button 
+            class="flex-1 px-6 py-4 text-center font-semibold transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            id="tab-kpi-chef-btn"
+            onclick="switchTabChef('kpi')"
+          >
+            <i class="fas fa-chart-line mr-2"></i>
+            Suivi des KPI
+          </button>
+          <button 
+            class="flex-1 px-6 py-4 text-center font-semibold transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            id="tab-procedures-chef-btn"
+            onclick="switchTabChef('procedures')"
+          >
+            <i class="fas fa-clipboard-list mr-2"></i>
+            Procédures
+          </button>
         </div>
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">
-          Section en construction
-        </h2>
-        <p class="text-gray-600 text-lg mb-6">
-          Les procédures pour les Chefs d'équipe et Responsables d'exploitation seront bientôt disponibles.
-        </p>
-        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 text-left max-w-2xl mx-auto">
-          <h3 class="text-lg font-bold text-indigo-800 mb-3">
-            <i class="fas fa-info-circle mr-2"></i>
-            Contenu à venir
-          </h3>
-          <ul class="text-gray-700 space-y-2">
-            <li><i class="fas fa-check text-indigo-500 mr-2"></i>Gestion des équipes et planification</li>
-            <li><i class="fas fa-check text-indigo-500 mr-2"></i>Supervision des opérations quotidiennes</li>
-            <li><i class="fas fa-check text-indigo-500 mr-2"></i>Reporting et indicateurs de performance</li>
-            <li><i class="fas fa-check text-indigo-500 mr-2"></i>Gestion des incidents et escalades</li>
-            <li><i class="fas fa-check text-indigo-500 mr-2"></i>Coordination inter-services</li>
-            <li><i class="fas fa-check text-indigo-500 mr-2"></i>Formation et développement des équipes</li>
-          </ul>
+
+        {/* Tab Content - Suivi Improductivités */}
+        <div id="tab-improd-chef-content" class="p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-stopwatch mr-2 text-indigo-500"></i>
+            Suivi des demandes d'improductivité
+          </h2>
+
+          {/* Statistiques rapides */}
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-red-600 font-semibold">En transmission</p>
+                  <p id="stat-en-transmission" class="text-3xl font-bold text-red-700">0</p>
+                </div>
+                <i class="fas fa-clock text-4xl text-red-300"></i>
+              </div>
+            </div>
+            
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-green-600 font-semibold">Validées</p>
+                  <p id="stat-validees" class="text-3xl font-bold text-green-700">0</p>
+                </div>
+                <i class="fas fa-check-circle text-4xl text-green-300"></i>
+              </div>
+            </div>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-blue-600 font-semibold">Contrôleurs</p>
+                  <p id="stat-controleurs" class="text-3xl font-bold text-blue-700">0</p>
+                </div>
+                <i class="fas fa-user-check text-4xl text-blue-300"></i>
+              </div>
+            </div>
+            
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-yellow-600 font-semibold">Agents de quai</p>
+                  <p id="stat-agents" class="text-3xl font-bold text-yellow-700">0</p>
+                </div>
+                <i class="fas fa-hard-hat text-4xl text-yellow-300"></i>
+              </div>
+            </div>
+          </div>
+
+          {/* Filtres */}
+          <div class="mb-6 flex space-x-4">
+            <button 
+              id="btn-filtre-transmission"
+              class="px-6 py-3 rounded-lg font-semibold transition-all bg-red-500 text-white"
+              onclick="filtrerImprodChef('en_transmission')"
+            >
+              <i class="fas fa-clock mr-2"></i>
+              En transmission
+            </button>
+            <button 
+              id="btn-filtre-validees"
+              class="px-6 py-3 rounded-lg font-semibold transition-all bg-gray-200 text-gray-700"
+              onclick="filtrerImprodChef('validee')"
+            >
+              <i class="fas fa-check-circle mr-2"></i>
+              Validées et transmises
+            </button>
+          </div>
+
+          {/* Liste des demandes */}
+          <div id="improd-liste-chef" class="space-y-4">
+            <div class="text-center text-gray-500 py-12">
+              <i class="fas fa-inbox text-5xl mb-3"></i>
+              <p class="text-lg">Chargement des demandes...</p>
+            </div>
+          </div>
         </div>
-        <div class="mt-8">
-          <a href="/" class="inline-block bg-indigo-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-600 transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>
-            Retour à l'accueil
-          </a>
+
+        {/* Tab Content - KPI */}
+        <div id="tab-kpi-chef-content" class="p-6 hidden">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-chart-line mr-2 text-indigo-500"></i>
+            Suivi des indicateurs de performance (KPI)
+          </h2>
+
+          <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
+            <div class="flex items-center mb-4">
+              <i class="fas fa-info-circle text-3xl text-blue-500 mr-4"></i>
+              <div>
+                <h3 class="text-xl font-bold text-blue-800">Section KPI</h3>
+                <p class="text-blue-600">Cette section sera détaillée ultérieurement</p>
+              </div>
+            </div>
+            <p class="text-gray-700">
+              Les indicateurs de performance clés (KPI) permettront de suivre :
+            </p>
+            <ul class="mt-4 space-y-2 text-gray-700">
+              <li><i class="fas fa-check text-blue-500 mr-2"></i>Productivité des équipes</li>
+              <li><i class="fas fa-check text-blue-500 mr-2"></i>Temps d'improductivité moyen</li>
+              <li><i class="fas fa-check text-blue-500 mr-2"></i>Taux de conformité</li>
+              <li><i class="fas fa-check text-blue-500 mr-2"></i>Performance par agent/contrôleur</li>
+              <li><i class="fas fa-check text-blue-500 mr-2"></i>Évolution temporelle des indicateurs</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Tab Content - Procédures */}
+        <div id="tab-procedures-chef-content" class="p-6 hidden">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-clipboard-list mr-2 text-indigo-500"></i>
+            Procédures du Chef d'équipe
+          </h2>
+
+          <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-lg">
+            <h3 class="text-lg font-bold text-indigo-800 mb-3">
+              <i class="fas fa-info-circle mr-2"></i>
+              Contenu à venir
+            </h3>
+            <ul class="text-gray-700 space-y-2">
+              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Gestion des équipes et planification</li>
+              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Supervision des opérations quotidiennes</li>
+              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Reporting et indicateurs de performance</li>
+              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Gestion des incidents et escalades</li>
+              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Coordination inter-services</li>
+              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Formation et développement des équipes</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      {/* Quick Access Section */}
-      <div class="mt-8 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          <i class="fas fa-bolt mr-3 text-yellow-500"></i>
-          Accès rapide aux autres sections
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a href="/gestion-quais" class="flex items-center p-4 bg-white rounded-lg hover:bg-gray-50 transition-colors shadow">
-            <i class="fas fa-truck-loading text-orange-500 text-2xl mr-3"></i>
-            <span class="font-semibold text-gray-800">Gestion des Quais</span>
-          </a>
-          
-          <a href="/administrateur" class="flex items-center p-4 bg-white rounded-lg hover:bg-gray-50 transition-colors shadow">
-            <i class="fas fa-user-tie text-purple-500 text-2xl mr-3"></i>
-            <span class="font-semibold text-gray-800">Administrateur</span>
-          </a>
-          
-          <a href="/anomalies" class="flex items-center p-4 bg-white rounded-lg hover:bg-gray-50 transition-colors shadow">
-            <i class="fas fa-exclamation-circle text-red-500 text-2xl mr-3"></i>
-            <span class="font-semibold text-gray-800">Anomalies / FAQ</span>
-          </a>
+      {/* Modal de validation */}
+      <div id="modal-validation" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div class="bg-indigo-600 text-white p-6 flex items-center justify-between">
+            <h3 class="text-2xl font-bold">
+              <i class="fas fa-check-circle mr-2"></i>
+              Validation de la demande
+            </h3>
+            <button onclick="fermerModalValidation()" class="text-white hover:text-indigo-200 transition-colors text-2xl">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="p-6">
+            <div id="modal-validation-details" class="space-y-4">
+              {/* Détails chargés dynamiquement */}
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-gray-200">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-comment mr-2 text-indigo-500"></i>
+                Commentaire du chef d'équipe (optionnel)
+              </label>
+              <textarea 
+                id="validation-commentaire"
+                rows="3"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Ajoutez un commentaire si nécessaire..."
+              ></textarea>
+            </div>
+
+            <div class="mt-6 flex space-x-4">
+              <button 
+                onclick="validerImprod()"
+                class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-bold hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl"
+              >
+                <i class="fas fa-check mr-2"></i>
+                Valider et transmettre
+              </button>
+              <button 
+                onclick="fermerModalValidation()"
+                class="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all"
+              >
+                <i class="fas fa-times mr-2"></i>
+                Annuler
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Script pour la gestion chef d'équipe */}
+      <script src="/static/chef-equipe.js?v=3.5.34"></script>
     </div>
   )
 }
