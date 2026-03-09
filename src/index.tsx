@@ -3610,7 +3610,7 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         AND heure_premier_scan IS NOT NULL
         AND heure_fin_dechargement IS NOT NULL
         AND traite_le IS NOT NULL
-      ORDER BY created_at DESC
+      ORDER BY heure_premier_scan ASC
       LIMIT 100
     `).bind(dateFilter).all()
     
