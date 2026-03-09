@@ -11,7 +11,7 @@ let improdStateQuai = {
 
 // Charger le nom sauvegardé
 document.addEventListener('DOMContentLoaded', () => {
-  const savedName = localStorage.getItem('agent_nom_improd')
+  const savedName = localStorage.getItem('agent_quai_nom_improd')
   if (savedName) {
     document.getElementById('agent-nom-improd').value = savedName
   }
@@ -101,7 +101,7 @@ function demarrerImprodQuai() {
   }
 
   // Sauvegarder le nom pour la prochaine fois
-  localStorage.setItem('agent_nom_improd', nom)
+  localStorage.setItem('agent_quai_nom_improd', nom)
   
   // Démarrer le timer
   improdStateQuai.active = true
@@ -327,12 +327,6 @@ async function loadImprodHistoriqueQuai() {
       </div>
     `
   }
-}
-          </div>
-        </div>
-      </div>
-    `
-  }).join('')
 }
 
 // Exposer les fonctions au contexte global
