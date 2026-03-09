@@ -454,7 +454,7 @@ export function ControleurPage() {
       </div>
 
       {/* Script pour la gestion des improductivités */}
-      <script src="/static/controleur-improd.js?v=3.5.22"></script>
+      <script src="/static/controleur-improd.js?v=3.5.23"></script>
 
     </div>
   )

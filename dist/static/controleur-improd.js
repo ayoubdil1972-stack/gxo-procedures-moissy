@@ -452,11 +452,22 @@ function generateAlerteCard(alerte, statut = 'traitee') {
   
   problemesData.forEach(item => {
     if (item.startsWith('point_')) {
-      // C'est une non-conformité (point_1 à point_11)
+      // C'est une non-conformité (point_1 à point_11) - LEGACY
       nonConformites.push(item)
     } else {
       // C'est un problème rencontré (palettes_largeur, etc.)
       problemes.push(item)
+    }
+  })
+  
+  // Parser les points de vérification (nouveau champ)
+  const verificationPoints = JSON.parse(alerte.verification_points || '{}')
+  const pointsNonConformes = []
+  
+  // Extraire les points marqués comme "non_conforme"
+  Object.keys(verificationPoints).forEach(pointKey => {
+    if (verificationPoints[pointKey] === 'non_conforme') {
+      pointsNonConformes.push(pointKey)
     }
   })
   
@@ -514,6 +525,18 @@ function generateAlerteCard(alerte, statut = 'traitee') {
               </div>
               <ul class="text-sm text-yellow-800 space-y-1">
                 ${problemes.map(pb => `<li><i class="fas fa-chevron-right mr-2"></i>${traduireProbleme(pb)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          ${pointsNonConformes.length > 0 ? `
+            <div class="bg-red-100 border border-red-400 rounded p-3 mb-3">
+              <div class="font-semibold text-red-900 mb-2">
+                <i class="fas fa-times-circle mr-2"></i>
+                Points de contrôle non-conformes (${pointsNonConformes.length})
+              </div>
+              <ul class="text-sm text-red-800 space-y-1">
+                ${pointsNonConformes.map(point => `<li><i class="fas fa-times text-red-600 mr-2"></i>${traduireNonConformite(point)}</li>`).join('')}
               </ul>
             </div>
           ` : ''}

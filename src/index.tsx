@@ -3018,6 +3018,7 @@ app.post('/api/fin-dechargement', async (c) => {
             ecart_palettes_attendues INTEGER,
             ecart_palettes_recues INTEGER,
             non_conformites TEXT,
+            verification_points TEXT,
             consignes TEXT,
             statut TEXT DEFAULT 'en_attente',
             traite_par TEXT,
@@ -3034,16 +3035,20 @@ app.post('/api/fin-dechargement', async (c) => {
           detailsEcart = `Écart palettes: Attendues ${data.palettes_attendues}, Reçues ${data.palettes_recues}`
         }
         
-        // Préparer les non-conformités (JSON)
+        // Préparer les non-conformités (problèmes checkboxes)
         const nonConformitesJson = JSON.stringify(problemes)
-        console.log('📝 Non-conformités JSON:', nonConformitesJson)
+        console.log('📝 Non-conformités (problèmes):', nonConformitesJson)
         
-        // Insérer l'alerte
+        // Préparer les points de vérification (point_1 à point_11)
+        const verificationPointsJson = JSON.stringify(data.verification_points || {})
+        console.log('📝 Points de vérification:', verificationPointsJson)
+        
+        // Insérer l'alerte avec tous les champs
         const alerteResult = await c.env.DB.prepare(`
           INSERT INTO controleur_alertes (
             quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement,
-            ecart_palettes_attendues, ecart_palettes_recues, non_conformites
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ecart_palettes_attendues, ecart_palettes_recues, non_conformites, verification_points
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           data.quai_numero,
           data.numero_id,
@@ -3052,7 +3057,8 @@ app.post('/api/fin-dechargement', async (c) => {
           quaiData?.timer_fin_timestamp || null,
           parseInt(data.palettes_attendues),
           parseInt(data.palettes_recues),
-          nonConformitesJson
+          nonConformitesJson,
+          verificationPointsJson
         ).run()
         
         alerteCreee = true
