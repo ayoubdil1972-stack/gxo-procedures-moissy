@@ -927,3 +927,15 @@ async function validerTraitementAlerte() {
     alert('❌ Erreur de connexion au serveur')
   }
 }
+
+// ===== EXPOSER LES FONCTIONS AU CONTEXTE GLOBAL POUR onclick =====
+window.switchTabControleur = switchTabControleur
+window.selectImprodRaison = selectImprodRaison
+window.demarrerImprod = demarrerImprod
+window.cloturerImprod = cloturerImprod
+window.filtrerAlertes = filtrerAlertes
+window.ouvrirModalTraitement = ouvrirModalTraitement
+window.fermerModalAlerte = fermerModalAlerte
+window.validerTraitementAlerte = validerTraitementAlerte
+window.switchArchiveView = switchArchiveView
+window.toggleDayAccordion = toggleDayAccordion
