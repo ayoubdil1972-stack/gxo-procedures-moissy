@@ -2825,6 +2825,67 @@ app.get('/api/controleur/alertes/semaine', async (c) => {
   }
 })
 
+// GET /api/controleur/alertes/archives - Toutes les alertes traitées (hiérarchie Mois → Semaine → Jour)
+app.get('/api/controleur/alertes/archives', async (c) => {
+  try {
+    const archives = await c.env.DB.prepare(`
+      SELECT 
+        id,
+        quai_numero,
+        fournisseur,
+        created_at,
+        traite_le,
+        traite_par,
+        consignes,
+        ecart_palettes_attendues,
+        ecart_palettes_recues,
+        non_conformites,
+        verification_points,
+        statut,
+        strftime('%Y', created_at) as annee,
+        strftime('%m', created_at) as mois_numero,
+        strftime('%W', created_at) as semaine_numero,
+        strftime('%w', created_at) as jour_semaine_numero,
+        CASE strftime('%m', created_at)
+          WHEN '01' THEN 'Janvier' WHEN '02' THEN 'Février' WHEN '03' THEN 'Mars'
+          WHEN '04' THEN 'Avril' WHEN '05' THEN 'Mai' WHEN '06' THEN 'Juin'
+          WHEN '07' THEN 'Juillet' WHEN '08' THEN 'Août' WHEN '09' THEN 'Septembre'
+          WHEN '10' THEN 'Octobre' WHEN '11' THEN 'Novembre' WHEN '12' THEN 'Décembre'
+        END || ' ' || strftime('%Y', created_at) as mois_nom,
+        CASE strftime('%w', created_at)
+          WHEN '0' THEN 'Dimanche' WHEN '1' THEN 'Lundi' WHEN '2' THEN 'Mardi'
+          WHEN '3' THEN 'Mercredi' WHEN '4' THEN 'Jeudi' WHEN '5' THEN 'Vendredi'
+          WHEN '6' THEN 'Samedi'
+        END || ' ' || strftime('%d', created_at) as jour_nom,
+        strftime('%d/%m/%Y', date(created_at, 'weekday 0', '-6 days')) || 
+        ' au ' || 
+        strftime('%d/%m/%Y', date(created_at, 'weekday 0')) as semaine_dates,
+        strftime('%Y', created_at) || '-S' || strftime('%W', created_at) as annee_semaine
+      FROM controleur_alertes
+      WHERE statut = 'traitee'
+      ORDER BY created_at DESC
+      LIMIT 5000
+    `).all()
+
+    console.log(`📚 Archives récupérées: ${archives.results?.length || 0}`)
+
+    return c.json({ 
+      success: true,
+      count: archives.results?.length || 0,
+      alertes: archives.results || []
+    })
+
+  } catch (error) {
+    console.error('❌ Erreur récupération archives:', error)
+    return c.json({ 
+      success: false, 
+      error: error.message,
+      count: null,
+      alertes: []
+    })
+  }
+})
+
 // PUT /api/controleur/alertes/:id - Traiter une alerte
 app.put('/api/controleur/alertes/:id', async (c) => {
   try {
