@@ -3007,11 +3007,15 @@ app.post('/api/fin-dechargement', async (c) => {
     // IMPORTANT: Essayer d'abord avec 'fin_dechargement', si échec utiliser 'disponible'
     try {
       // Récupérer le timer_start pour calculer la durée
+      // ✨ RÉCUPÉRER timer_start ET timer_fin_timestamp AVANT l'UPDATE (car ils seront modifiés)
       const quaiData = await c.env.DB.prepare(`
-        SELECT timer_start FROM quai_status WHERE quai_numero = ?
+        SELECT timer_start, timer_fin_timestamp FROM quai_status WHERE quai_numero = ?
       `).bind(data.quai_numero).first()
 
-      console.log('📊 Quai data:', quaiData)
+      console.log('📊 Quai data AVANT UPDATE:', quaiData)
+      
+      // 💾 SAUVEGARDER timer_start pour l'alerte KPI (car il sera mis à NULL dans l'UPDATE)
+      const timerStartSauvegarde = quaiData?.timer_start
 
       let timerDuration = null
       if (quaiData?.timer_start) {
@@ -3097,12 +3101,11 @@ app.post('/api/fin-dechargement', async (c) => {
       
       if (true) {  // Toujours vrai pour créer l'alerte systématiquement
         
-        // Récupérer les données du quai pour avoir timer_start (heure premier scan)
-        const quaiData = await c.env.DB.prepare(`
-          SELECT timer_start, timer_fin_timestamp FROM quai_status WHERE quai_numero = ?
-        `).bind(data.quai_numero).first()
-        
-        console.log('⏰ Données quai récupérées:', quaiData)
+        // ✅ UTILISER timer_start sauvegardé AVANT l'UPDATE (au lieu de re-requêter)
+        // ✅ timer_fin_timestamp = NOW (car UPDATE vient juste d'être fait)
+        const timerFinTimestamp = new Date().toISOString().slice(0, 19).replace('T', ' ')
+        console.log('⏰ Utilisation timer_start sauvegardé:', timerStartSauvegarde)
+        console.log('⏰ timer_fin_timestamp (NOW):', timerFinTimestamp)
         
         // Créer la table alertes si elle n'existe pas
         await c.env.DB.prepare(`
@@ -3156,8 +3159,8 @@ app.post('/api/fin-dechargement', async (c) => {
           data.quai_numero,
           data.numero_id,
           data.fournisseur,
-          quaiData?.timer_start || null,
-          quaiData?.timer_fin_timestamp || null,
+          timerStartSauvegarde || null,  // ✅ Utiliser la sauvegarde du timer_start
+          timerFinTimestamp || null,     // ✅ Utiliser NOW comme heure_fin_dechargement
           parseInt(data.palettes_attendues),
           parseInt(data.palettes_recues),
           nonConformitesJson,
