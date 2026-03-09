@@ -1,7 +1,8 @@
 // ==============================================
 // CHEF D'ÉQUIPE - GESTION IMPRODUCTIVITÉS
-// Version 3.5.40 - KPI Tous Camions + Temps Réel
+// Version 3.5.43 - CORRÉLATION RÉELLE QUAIS → KPI
 // Date: 2026-03-09
+// Affiche les vraies données depuis quai_status et controleur_alertes
 // ==============================================
 
 // État global
@@ -432,15 +433,15 @@ async function loadKPIReception() {
 
 // Mettre à jour les cartes de moyennes
 function updateKPIMoyennes(moyennes) {
-  document.getElementById('kpi-nb-camions').textContent = moyennes.nombre_camions || 0
+  document.getElementById('kpi-nb-camions').textContent = moyennes.total_camions || 0
   
-  const dechargement = moyennes.temps_dechargement_moyen || 0
+  const dechargement = moyennes.dechargement_minutes || 0
   document.getElementById('kpi-moy-dechargement').textContent = `${dechargement} min`
   
-  const controle = moyennes.temps_controle_moyen || 0
+  const controle = moyennes.controle_minutes || 0
   document.getElementById('kpi-moy-controle').textContent = `${controle} min`
   
-  const total = moyennes.temps_total_moyen || 0
+  const total = moyennes.total_minutes || 0
   const heures = Math.floor(total / 60)
   const minutes = total % 60
   document.getElementById('kpi-moy-total').textContent = heures > 0 
@@ -465,9 +466,9 @@ function updateKPITableau(kpiData) {
   }
   
   tbody.innerHTML = kpiData.map(kpi => {
-    const statutDechargement = getStatutBadge(kpi.temps_dechargement_minutes, kpi.temps_dechargement_statut)
-    const statutControle = getStatutBadge(kpi.temps_controle_minutes, kpi.temps_controle_statut)
-    const statutTotal = getStatutBadge(kpi.temps_total_minutes, kpi.temps_total_statut)
+    const statutDechargement = getStatutBadge(kpi.duree_dechargement, kpi.duree_dechargement_status)
+    const statutControle = getStatutBadge(kpi.duree_controle, kpi.duree_controle_status)
+    const statutTotal = getStatutBadge(kpi.duree_totale, kpi.duree_totale_status)
     
     return `
       <tr class="hover:bg-gray-50 transition-colors">
@@ -479,9 +480,9 @@ function updateKPITableau(kpiData) {
         </td>
         <td class="px-6 py-4 font-medium text-gray-900">${kpi.numero_camion}</td>
         <td class="px-6 py-4 text-gray-600">${kpi.fournisseur || '-'}</td>
-        <td class="px-6 py-4 text-sm text-gray-600">${formatHeure(kpi.heure_debut_dechargement)}</td>
-        <td class="px-6 py-4 text-sm text-gray-600">${formatHeure(kpi.heure_fin_dechargement)}</td>
-        <td class="px-6 py-4 text-sm text-gray-600">${formatHeure(kpi.heure_validation_controle)}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">${kpi.heure_debut}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">${kpi.heure_fin}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">${kpi.heure_validation}</td>
         <td class="px-6 py-4 text-center">${statutDechargement}</td>
         <td class="px-6 py-4 text-center">${statutControle}</td>
         <td class="px-6 py-4 text-center">${statutTotal}</td>
@@ -491,21 +492,21 @@ function updateKPITableau(kpiData) {
 }
 
 // Obtenir le badge de statut
-function getStatutBadge(minutes, statut) {
-  if (minutes === null || statut === null) {
-    return '<span class="text-gray-400 text-xs">N/A</span>'
+function getStatutBadge(dureeFormatee, statut) {
+  if (!dureeFormatee || dureeFormatee === '—' || !statut || statut === 'grey') {
+    return '<span class="text-gray-400 text-xs">En attente</span>'
   }
   
   const couleurs = {
-    'vert': 'bg-green-100 text-green-800 border-green-300',
+    'green': 'bg-green-100 text-green-800 border-green-300',
     'orange': 'bg-orange-100 text-orange-800 border-orange-300',
-    'rouge': 'bg-red-100 text-red-800 border-red-300'
+    'red': 'bg-red-100 text-red-800 border-red-300'
   }
   
   const icones = {
-    'vert': 'fa-check-circle',
+    'green': 'fa-check-circle',
     'orange': 'fa-exclamation-circle',
-    'rouge': 'fa-times-circle'
+    'red': 'fa-times-circle'
   }
   
   const classe = couleurs[statut] || 'bg-gray-100 text-gray-800'
@@ -514,7 +515,7 @@ function getStatutBadge(minutes, statut) {
   return `
     <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold border ${classe}">
       <i class="fas ${icone} mr-1.5"></i>
-      ${minutes} min
+      ${dureeFormatee}
     </span>
   `
 }

@@ -349,7 +349,7 @@ export function ChefEquipePage() {
       </div>
 
       {/* Script pour la gestion chef d'équipe */}
-      <script src="/static/chef-equipe.js?v=3.5.40"></script>
+      <script src="/static/chef-equipe.js?v=3.5.43"></script>
     </div>
   )
 }
