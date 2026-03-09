@@ -132,29 +132,144 @@ export function ChefEquipePage() {
 
         {/* Tab Content - KPI */}
         <div id="tab-kpi-chef-content" class="p-6 hidden">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">
-            <i class="fas fa-chart-line mr-2 text-indigo-500"></i>
-            Suivi des indicateurs de performance (KPI)
-          </h2>
+          <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-800">
+              <i class="fas fa-truck-loading mr-2 text-indigo-500"></i>
+              KPI Réception Camion
+            </h2>
+            
+            {/* Sélection de date */}
+            <div class="flex items-center gap-4">
+              <input 
+                type="date" 
+                id="kpi-date-select" 
+                class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onchange="loadKPIReception()"
+              />
+              <button 
+                onclick="loadKPIReception()" 
+                class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"
+              >
+                <i class="fas fa-sync-alt"></i>
+                Actualiser
+              </button>
+            </div>
+          </div>
 
-          <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
-            <div class="flex items-center mb-4">
-              <i class="fas fa-info-circle text-3xl text-blue-500 mr-4"></i>
-              <div>
-                <h3 class="text-xl font-bold text-blue-800">Section KPI</h3>
-                <p class="text-blue-600">Cette section sera détaillée ultérieurement</p>
+          {/* Cartes de moyennes */}
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
+              <div class="flex items-center justify-between mb-3">
+                <i class="fas fa-truck text-3xl opacity-80"></i>
+                <span class="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">Aujourd'hui</span>
+              </div>
+              <div class="text-3xl font-bold mb-1" id="kpi-nb-camions">-</div>
+              <div class="text-blue-100 text-sm">Camions traités</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg">
+              <div class="flex items-center justify-between mb-3">
+                <i class="fas fa-clock text-3xl opacity-80"></i>
+                <span class="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Objectif ≤20min</span>
+              </div>
+              <div class="text-3xl font-bold mb-1" id="kpi-moy-dechargement">-</div>
+              <div class="text-green-100 text-sm">Temps déchargement moyen</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg">
+              <div class="flex items-center justify-between mb-3">
+                <i class="fas fa-clipboard-check text-3xl opacity-80"></i>
+                <span class="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Objectif ≤30min</span>
+              </div>
+              <div class="text-3xl font-bold mb-1" id="kpi-moy-controle">-</div>
+              <div class="text-purple-100 text-sm">Temps contrôle moyen</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl shadow-lg">
+              <div class="flex items-center justify-between mb-3">
+                <i class="fas fa-hourglass-half text-3xl opacity-80"></i>
+                <span class="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Objectif ≤1h</span>
+              </div>
+              <div class="text-3xl font-bold mb-1" id="kpi-moy-total">-</div>
+              <div class="text-orange-100 text-sm">Temps total moyen</div>
+            </div>
+          </div>
+
+          {/* Tableau détaillé */}
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-table text-indigo-500"></i>
+                Détail par camion
+              </h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr class="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th class="px-6 py-4">Quai</th>
+                    <th class="px-6 py-4">Camion</th>
+                    <th class="px-6 py-4">Fournisseur</th>
+                    <th class="px-6 py-4">Début déchargement</th>
+                    <th class="px-6 py-4">Fin déchargement</th>
+                    <th class="px-6 py-4">Validation contrôle</th>
+                    <th class="px-6 py-4 text-center">
+                      <div class="flex items-center justify-center gap-1">
+                        <i class="fas fa-truck-loading text-green-500"></i>
+                        <span>Déchargement</span>
+                      </div>
+                    </th>
+                    <th class="px-6 py-4 text-center">
+                      <div class="flex items-center justify-center gap-1">
+                        <i class="fas fa-clipboard-check text-purple-500"></i>
+                        <span>Contrôle</span>
+                      </div>
+                    </th>
+                    <th class="px-6 py-4 text-center">
+                      <div class="flex items-center justify-center gap-1">
+                        <i class="fas fa-hourglass-half text-orange-500"></i>
+                        <span>Total</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="kpi-tableau-body" class="divide-y divide-gray-200">
+                  <tr>
+                    <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+                      <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                      <p>Chargement des données KPI...</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Légende */}
+          <div class="mt-6 bg-gray-50 rounded-lg p-4">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+              <i class="fas fa-info-circle text-gray-500"></i>
+              Légende des seuils de performance
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="flex items-center gap-3">
+                <div class="flex gap-2">
+                  <span class="px-2 py-1 rounded bg-green-100 text-green-800 font-medium">Vert</span>
+                  <span class="px-2 py-1 rounded bg-orange-100 text-orange-800 font-medium">Orange</span>
+                  <span class="px-2 py-1 rounded bg-red-100 text-red-800 font-medium">Rouge</span>
+                </div>
+              </div>
+              <div class="text-gray-600">
+                <strong>Déchargement:</strong> ≤20min / 21-25min / &gt;25min
+              </div>
+              <div class="text-gray-600">
+                <strong>Contrôle:</strong> ≤30min / 31-40min / &gt;40min
+              </div>
+              <div class="text-gray-600 md:col-span-3">
+                <strong>Temps total:</strong> ≤1h / 1h-1h10 / &gt;1h10
               </div>
             </div>
-            <p class="text-gray-700">
-              Les indicateurs de performance clés (KPI) permettront de suivre :
-            </p>
-            <ul class="mt-4 space-y-2 text-gray-700">
-              <li><i class="fas fa-check text-blue-500 mr-2"></i>Productivité des équipes</li>
-              <li><i class="fas fa-check text-blue-500 mr-2"></i>Temps d'improductivité moyen</li>
-              <li><i class="fas fa-check text-blue-500 mr-2"></i>Taux de conformité</li>
-              <li><i class="fas fa-check text-blue-500 mr-2"></i>Performance par agent/contrôleur</li>
-              <li><i class="fas fa-check text-blue-500 mr-2"></i>Évolution temporelle des indicateurs</li>
-            </ul>
           </div>
         </div>
 
@@ -234,7 +349,7 @@ export function ChefEquipePage() {
       </div>
 
       {/* Script pour la gestion chef d'équipe */}
-      <script src="/static/chef-equipe.js?v=3.5.34"></script>
+      <script src="/static/chef-equipe.js?v=3.5.37"></script>
     </div>
   )
 }

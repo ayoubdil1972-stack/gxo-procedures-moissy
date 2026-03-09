@@ -1,6 +1,6 @@
 // ==============================================
 // CHEF D'ÉQUIPE - GESTION IMPRODUCTIVITÉS
-// Version 3.5.34
+// Version 3.5.37 - KPI Réception Camion
 // Date: 2026-03-09
 // ==============================================
 
@@ -385,6 +385,173 @@ async function validerImprod() {
 }
 
 // ==============================================
+// KPI RÉCEPTION CAMION
+// ==============================================
+
+// Charger les KPI de réception
+async function loadKPIReception() {
+  try {
+    // Récupérer la date sélectionnée
+    const dateInput = document.getElementById('kpi-date-select')
+    const dateParam = dateInput.value ? `?date=${dateInput.value}` : ''
+    
+    console.log('🔄 Chargement KPI réception...', dateParam)
+    
+    const response = await fetch(`/api/chef-equipe/kpi/reception-camion${dateParam}`)
+    
+    if (!response.ok) {
+      throw new Error(`Erreur API: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    
+    if (!data.success) {
+      throw new Error(data.error || 'Erreur lors du chargement')
+    }
+    
+    console.log('✅ KPI reçus:', data)
+    
+    // Mettre à jour les cartes de moyennes
+    updateKPIMoyennes(data.moyennes)
+    
+    // Mettre à jour le tableau
+    updateKPITableau(data.kpi)
+    
+  } catch (error) {
+    console.error('❌ Erreur chargement KPI:', error)
+    document.getElementById('kpi-tableau-body').innerHTML = `
+      <tr>
+        <td colspan="9" class="px-6 py-12 text-center text-red-500">
+          <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+          <p>Erreur de chargement: ${error.message}</p>
+        </td>
+      </tr>
+    `
+  }
+}
+
+// Mettre à jour les cartes de moyennes
+function updateKPIMoyennes(moyennes) {
+  document.getElementById('kpi-nb-camions').textContent = moyennes.nombre_camions || 0
+  
+  const dechargement = moyennes.temps_dechargement_moyen || 0
+  document.getElementById('kpi-moy-dechargement').textContent = `${dechargement} min`
+  
+  const controle = moyennes.temps_controle_moyen || 0
+  document.getElementById('kpi-moy-controle').textContent = `${controle} min`
+  
+  const total = moyennes.temps_total_moyen || 0
+  const heures = Math.floor(total / 60)
+  const minutes = total % 60
+  document.getElementById('kpi-moy-total').textContent = heures > 0 
+    ? `${heures}h${minutes.toString().padStart(2, '0')}` 
+    : `${minutes} min`
+}
+
+// Mettre à jour le tableau détaillé
+function updateKPITableau(kpiData) {
+  const tbody = document.getElementById('kpi-tableau-body')
+  
+  if (!kpiData || kpiData.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+          <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+          <p class="text-lg">Aucun camion traité pour cette date</p>
+        </td>
+      </tr>
+    `
+    return
+  }
+  
+  tbody.innerHTML = kpiData.map(kpi => {
+    const statutDechargement = getStatutBadge(kpi.temps_dechargement_minutes, kpi.temps_dechargement_statut)
+    const statutControle = getStatutBadge(kpi.temps_controle_minutes, kpi.temps_controle_statut)
+    const statutTotal = getStatutBadge(kpi.temps_total_minutes, kpi.temps_total_statut)
+    
+    return `
+      <tr class="hover:bg-gray-50 transition-colors">
+        <td class="px-6 py-4">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
+            <i class="fas fa-warehouse mr-1"></i>
+            Quai ${kpi.quai_numero}
+          </span>
+        </td>
+        <td class="px-6 py-4 font-medium text-gray-900">${kpi.numero_camion}</td>
+        <td class="px-6 py-4 text-gray-600">${kpi.fournisseur || '-'}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">${formatHeure(kpi.heure_debut_dechargement)}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">${formatHeure(kpi.heure_fin_dechargement)}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">${formatHeure(kpi.heure_validation_controle)}</td>
+        <td class="px-6 py-4 text-center">${statutDechargement}</td>
+        <td class="px-6 py-4 text-center">${statutControle}</td>
+        <td class="px-6 py-4 text-center">${statutTotal}</td>
+      </tr>
+    `
+  }).join('')
+}
+
+// Obtenir le badge de statut
+function getStatutBadge(minutes, statut) {
+  if (minutes === null || statut === null) {
+    return '<span class="text-gray-400 text-xs">N/A</span>'
+  }
+  
+  const couleurs = {
+    'vert': 'bg-green-100 text-green-800 border-green-300',
+    'orange': 'bg-orange-100 text-orange-800 border-orange-300',
+    'rouge': 'bg-red-100 text-red-800 border-red-300'
+  }
+  
+  const icones = {
+    'vert': 'fa-check-circle',
+    'orange': 'fa-exclamation-circle',
+    'rouge': 'fa-times-circle'
+  }
+  
+  const classe = couleurs[statut] || 'bg-gray-100 text-gray-800'
+  const icone = icones[statut] || 'fa-circle'
+  
+  return `
+    <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold border ${classe}">
+      <i class="fas ${icone} mr-1.5"></i>
+      ${minutes} min
+    </span>
+  `
+}
+
+// Formater une heure
+function formatHeure(dateStr) {
+  if (!dateStr) return '-'
+  
+  try {
+    const date = new Date(dateStr)
+    return date.toLocaleTimeString('fr-FR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+  } catch {
+    return dateStr
+  }
+}
+
+// Initialiser la date du jour et charger les KPI au changement d'onglet
+const originalSwitchTabChef = switchTabChef
+window.switchTabChef = function(tab) {
+  originalSwitchTabChef(tab)
+  
+  if (tab === 'kpi') {
+    // Initialiser la date du jour si pas encore fait
+    const dateInput = document.getElementById('kpi-date-select')
+    if (!dateInput.value) {
+      dateInput.value = new Date().toISOString().split('T')[0]
+    }
+    
+    // Charger les KPI
+    loadKPIReception()
+  }
+}
+
+// ==============================================
 // EXPOSITION GLOBALE DES FONCTIONS
 // ==============================================
 window.switchTabChef = switchTabChef
@@ -392,5 +559,6 @@ window.filtrerImprodChef = filtrerImprodChef
 window.ouvrirModalValidation = ouvrirModalValidation
 window.fermerModalValidation = fermerModalValidation
 window.validerImprod = validerImprod
+window.loadKPIReception = loadKPIReception
 
 console.log('✅ Chef d\'équipe - Script chargé et fonctions exposées')
