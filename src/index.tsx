@@ -3142,8 +3142,9 @@ app.post('/api/fin-dechargement', async (c) => {
         const alerteResult = await c.env.DB.prepare(`
           INSERT INTO controleur_alertes (
             quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement,
-            ecart_palettes_attendues, ecart_palettes_recues, non_conformites, verification_points
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ecart_palettes_attendues, ecart_palettes_recues, non_conformites, verification_points,
+            traite_le
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
         `).bind(
           data.quai_numero,
           data.numero_id,
@@ -3598,6 +3599,7 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
       WHERE DATE(created_at) = ?
         AND heure_premier_scan IS NOT NULL
         AND heure_fin_dechargement IS NOT NULL
+        AND traite_le IS NOT NULL
       ORDER BY created_at DESC
       LIMIT 100
     `).bind(dateFilter).all()
