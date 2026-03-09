@@ -3088,11 +3088,14 @@ app.post('/api/fin-dechargement', async (c) => {
       const aDesNonConformites = problemes.length > 0
       console.log('⚠️ Non-conformités:', aDesNonConformites, 'Nombre:', problemes.length)
       
-      if (ecartPalettes || aDesNonConformites) {
-        console.log('🚨 DÉCLENCHEMENT ALERTE - Création en cours...')
-        console.log('   Quai:', data.quai_numero)
-        console.log('   ID:', data.numero_id)
-        console.log('   Fournisseur:', data.fournisseur)
+      // ✨ CRÉER SYSTÉMATIQUEMENT UNE ALERTE KPI POUR CHAQUE CAMION (même sans problème)
+      // Cela permet de capturer tous les temps pour les KPI de la page Chef d'équipe
+      console.log('📊 CRÉATION ALERTE KPI - Tous les camions sont enregistrés')
+      console.log('   Quai:', data.quai_numero)
+      console.log('   ID:', data.numero_id)
+      console.log('   Fournisseur:', data.fournisseur)
+      
+      if (true) {  // Toujours vrai pour créer l'alerte systématiquement
         
         // Récupérer les données du quai pour avoir timer_start (heure premier scan)
         const quaiData = await c.env.DB.prepare(`
@@ -3138,13 +3141,17 @@ app.post('/api/fin-dechargement', async (c) => {
         const verificationPointsJson = JSON.stringify(data.verification_points || {})
         console.log('📝 Points de vérification:', verificationPointsJson)
         
+        // Définir le statut de l'alerte : 'traitee' si tout est OK, 'en_attente' si problème
+        const statutAlerte = (ecartPalettes || aDesNonConformites) ? 'en_attente' : 'traitee'
+        console.log('📊 Statut alerte:', statutAlerte, '(Problèmes:', ecartPalettes || aDesNonConformites, ')')
+        
         // Insérer l'alerte avec tous les champs
         const alerteResult = await c.env.DB.prepare(`
           INSERT INTO controleur_alertes (
             quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement,
             ecart_palettes_attendues, ecart_palettes_recues, non_conformites, verification_points,
-            traite_le
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
+            traite_le, statut
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?)
         `).bind(
           data.quai_numero,
           data.numero_id,
@@ -3154,13 +3161,13 @@ app.post('/api/fin-dechargement', async (c) => {
           parseInt(data.palettes_attendues),
           parseInt(data.palettes_recues),
           nonConformitesJson,
-          verificationPointsJson
+          verificationPointsJson,
+          statutAlerte
         ).run()
         
         alerteCreee = true
-        console.log('✅✅✅ ALERTE CRÉÉE AVEC SUCCÈS - ID:', alerteResult.meta.last_row_id)
-      } else {
-        console.log('ℹ️ Aucun écart ni non-conformité - Pas d\'alerte créée')
+        const typeAlerte = (ecartPalettes || aDesNonConformites) ? '🚨 AVEC PROBLÈMES' : '✅ SANS PROBLÈME'
+        console.log(`✅✅✅ ALERTE KPI CRÉÉE ${typeAlerte} - ID:`, alerteResult.meta.last_row_id)
       }
     } catch (error) {
       console.error('❌ ERREUR création alerte:', error)
