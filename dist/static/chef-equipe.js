@@ -1,6 +1,6 @@
 // ==============================================
 // CHEF D'ÉQUIPE - GESTION IMPRODUCTIVITÉS
-// Version 3.5.39 - Auto-refresh KPI
+// Version 3.5.40 - KPI Tous Camions + Temps Réel
 // Date: 2026-03-09
 // ==============================================
 
