@@ -2703,13 +2703,16 @@ app.get('/api/controleur/alertes/stats', async (c) => {
       AND DATE(traite_le) = DATE('now', 'localtime')
     `).first()
     
-    // Alertes traitées cette semaine (depuis lundi jusqu'à aujourd'hui)
-    // Calcul du lundi : jour de la semaine actuel - (jour - 1) où lundi = 1
+    // Alertes traitées cette semaine (depuis lundi jusqu'à aujourd'hui inclus)
+    // Pour dimanche (0), on remonte à 6 jours (lundi précédent)
+    // Pour lundi (1), on est déjà au début de la semaine (0 jours)
+    // Pour mardi (2), on remonte à 1 jour (lundi)
+    // etc.
     const traiteesSemaine = await c.env.DB.prepare(`
       SELECT COUNT(*) as count 
       FROM controleur_alertes 
       WHERE statut = 'traitee' 
-      AND DATE(traite_le) >= DATE('now', 'localtime', '-' || (CAST(strftime('%w', 'now', 'localtime') AS INTEGER) + 6) % 7 || ' days')
+      AND DATE(traite_le) >= DATE('now', 'localtime', 'weekday 1', '-7 days')
       AND DATE(traite_le) <= DATE('now', 'localtime')
     `).first()
 
@@ -2744,7 +2747,7 @@ app.get('/api/controleur/alertes/stats', async (c) => {
 // GET /api/controleur/alertes/semaine - Toutes les alertes de la semaine groupées par jour
 app.get('/api/controleur/alertes/semaine', async (c) => {
   try {
-    // Récupérer toutes les alertes traitées de la semaine (lundi à aujourd'hui)
+    // Récupérer toutes les alertes traitées de la semaine (depuis lundi jusqu'à aujourd'hui)
     const alertesSemaine = await c.env.DB.prepare(`
       SELECT 
         id,
@@ -2765,7 +2768,7 @@ app.get('/api/controleur/alertes/semaine', async (c) => {
         DATE(traite_le) as date_traitement
       FROM controleur_alertes 
       WHERE statut = 'traitee' 
-      AND DATE(traite_le) >= DATE('now', 'localtime', '-' || (CAST(strftime('%w', 'now', 'localtime') AS INTEGER) + 6) % 7 || ' days')
+      AND DATE(traite_le) >= DATE('now', 'localtime', 'weekday 1', '-7 days')
       AND DATE(traite_le) <= DATE('now', 'localtime')
       ORDER BY traite_le DESC
       LIMIT 1000
