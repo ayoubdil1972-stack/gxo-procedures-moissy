@@ -2899,21 +2899,48 @@ app.put('/api/controleur/alertes/:id', async (c) => {
       return c.json({ success: false, error: 'Contrôleur et consignes requis' }, 400)
     }
 
-    // Mettre à jour l'alerte
+    // ✅ RÉCUPÉRER LE QUAI ET SON TIMER_CONTROLE_DURATION
+    const alerte = await c.env.DB.prepare(`
+      SELECT quai_numero FROM controleur_alertes WHERE id = ?
+    `).bind(id).first()
+    
+    let timerControleDuration = null
+    if (alerte?.quai_numero) {
+      const quaiData = await c.env.DB.prepare(`
+        SELECT timer_controle_duration FROM quai_status WHERE quai_numero = ?
+      `).bind(alerte.quai_numero).first()
+      
+      timerControleDuration = quaiData?.timer_controle_duration
+      console.log(`⏱️ Durée contrôle récupérée pour quai ${alerte.quai_numero}:`, timerControleDuration, 'secondes')
+    }
+
+    // ✅ CRÉER COLONNE duree_controle_secondes SI N'EXISTE PAS
+    try {
+      await c.env.DB.prepare(`
+        ALTER TABLE controleur_alertes ADD COLUMN duree_controle_secondes INTEGER
+      `).run()
+      console.log('✅ Colonne duree_controle_secondes ajoutée')
+    } catch (e) {
+      // Colonne existe déjà, ignorer l'erreur
+    }
+
+    // Mettre à jour l'alerte AVEC la durée de contrôle
     await c.env.DB.prepare(`
       UPDATE controleur_alertes 
       SET statut = 'traitee',
           consignes = ?,
           traite_par = ?,
-          traite_le = datetime('now', 'localtime')
+          traite_le = datetime('now', 'localtime'),
+          duree_controle_secondes = ?
       WHERE id = ?
     `).bind(
       data.consignes,
       data.traite_par,
+      timerControleDuration,
       id
     ).run()
 
-    console.log('✅ Alerte', id, 'traitée par', data.traite_par)
+    console.log('✅ Alerte', id, 'traitée par', data.traite_par, 'avec durée contrôle:', timerControleDuration, 's')
 
     return c.json({ 
       success: true,
@@ -3116,6 +3143,8 @@ app.post('/api/fin-dechargement', async (c) => {
             fournisseur TEXT NOT NULL,
             heure_premier_scan TEXT,
             heure_fin_dechargement TEXT,
+            duree_dechargement_secondes INTEGER,
+            duree_controle_secondes INTEGER,
             ecart_palettes_attendues INTEGER,
             ecart_palettes_recues INTEGER,
             non_conformites TEXT,
@@ -3148,19 +3177,23 @@ app.post('/api/fin-dechargement', async (c) => {
         const statutAlerte = (ecartPalettes || aDesNonConformites) ? 'en_attente' : 'traitee'
         console.log('📊 Statut alerte:', statutAlerte, '(Problèmes:', ecartPalettes || aDesNonConformites, ')')
         
-        // Insérer l'alerte avec tous les champs
+        // ✅ AJOUTER LA DURÉE DE DÉCHARGEMENT EN SECONDES
+        console.log('⏱️ Durée déchargement:', timerDuration, 'secondes')
+        
+        // Insérer l'alerte avec tous les champs + durée déchargement
         const alerteResult = await c.env.DB.prepare(`
           INSERT INTO controleur_alertes (
-            quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement,
+            quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement, duree_dechargement_secondes,
             ecart_palettes_attendues, ecart_palettes_recues, non_conformites, verification_points,
             traite_le, statut
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?)
         `).bind(
           data.quai_numero,
           data.numero_id,
           data.fournisseur,
           timerStartSauvegarde || null,  // ✅ Utiliser la sauvegarde du timer_start
           timerFinTimestamp || null,     // ✅ Utiliser NOW comme heure_fin_dechargement
+          timerDuration || null,         // ✅ Durée de déchargement en secondes
           parseInt(data.palettes_attendues),
           parseInt(data.palettes_recues),
           nonConformitesJson,
