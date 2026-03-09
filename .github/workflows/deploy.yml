@@ -52,10 +52,10 @@ jobs:
           fi
           
           # Déployer
-          npx wrangler pages deploy dist --project-name=gxo-procedures-moissy
+          npx wrangler pages deploy dist --project-name=gxomoissyprocedures
 
       - name: Deployment summary
         run: |
           echo "🎉 Deployment completed!"
-          echo "🌐 Production URL: https://gxo-procedures-moissy.pages.dev"
-          echo "📱 Test vidéo NL: https://gxo-procedures-moissy.pages.dev/chauffeur/video?lang=nl"
+          echo "🌐 Production URL: https://gxomoissyprocedures.pages.dev"
+          echo "📊 Chef d'Équipe KPI: https://gxomoissyprocedures.com/chef-equipe?v=2"
