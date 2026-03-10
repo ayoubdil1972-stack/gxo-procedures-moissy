@@ -3720,34 +3720,51 @@ app.get('/api/improductivites/utilisateur/:nom', async (c) => {
 // ==============================================
 
 // GET /api/chef-equipe/kpi/reception-camion - KPI réception camion
+// 🎯 MODÈLE BASÉ SUR /api/chef-equipe/improductivites (qui fonctionne parfaitement)
 app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   try {
     const date = c.req.query('date') // Format: YYYY-MM-DD
-    const dateFilter = date || new Date().toISOString().split('T')[0]
     
-    console.log('📊 Récupération KPI pour date:', dateFilter)
+    // Créer la table si elle n'existe pas (comme improductivités)
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS controleur_alertes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        quai_numero INTEGER NOT NULL,
+        numero_id TEXT NOT NULL,
+        fournisseur TEXT NOT NULL,
+        heure_premier_scan TEXT,
+        heure_fin_dechargement TEXT,
+        duree_dechargement_secondes INTEGER,
+        duree_controle_secondes INTEGER,
+        ecart_palettes_attendues INTEGER,
+        ecart_palettes_recues INTEGER,
+        non_conformites TEXT,
+        verification_points TEXT,
+        consignes TEXT,
+        statut TEXT DEFAULT 'en_attente',
+        traite_par TEXT,
+        traite_le TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
     
-    // Récupérer TOUTES les alertes avec les données réelles depuis controleur_alertes
-    // ✅ CORRECTION: Filtrer sur created_at au lieu de heure_premier_scan (qui peut être NULL)
-    const { results } = await c.env.DB.prepare(`
-      SELECT 
-        ca.id,
-        ca.quai_numero,
-        ca.numero_id,
-        ca.fournisseur,
-        ca.heure_premier_scan,
-        ca.heure_fin_dechargement,
-        ca.traite_le,
-        ca.duree_dechargement_secondes,
-        ca.duree_controle_secondes,
-        ca.created_at
-      FROM controleur_alertes ca
-      WHERE DATE(ca.created_at) = ?
-      ORDER BY ca.created_at ASC
-      LIMIT 100
-    `).bind(dateFilter).all()
+    // ✅ SIMPLE: Récupérer TOUTES les alertes (comme improductivités)
+    // Si date fournie, filtrer, sinon prendre toutes celles d'aujourd'hui
+    let query = 'SELECT * FROM controleur_alertes'
+    let params = []
     
-    console.log(`📊 ${results.length} camions trouvés pour ${dateFilter}`)
+    if (date) {
+      query += ' WHERE DATE(created_at) = ?'
+      params.push(date)
+    } else {
+      query += ' WHERE DATE(created_at) = DATE("now")'
+    }
+    
+    query += ' ORDER BY created_at DESC LIMIT 200'
+    
+    const { results } = await c.env.DB.prepare(query).bind(...params).all()
+    
+    console.log(`📊✅ ${results.length} camions trouvés (date: ${date || 'aujourd\'hui'})`)
     
     // Calculer les KPI pour chaque camion
     const kpiData = results.map(row => {
