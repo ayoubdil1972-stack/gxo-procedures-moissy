@@ -358,17 +358,12 @@ export function AccueilChauffeurPage() {
                       <span class="text-2xl mr-3">✅</span>
                       Disponible - Prêt pour chargement
                     </button>
-                    <button onclick="setQuaiStatus('en_cours')" 
-                            class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-yellow-500 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
-                      <span class="text-2xl mr-3">⏱️</span>
-                      En cours d'utilisation - Timer actif
+                    <button onclick="toggleCommentaire('mise_a_quai_non_decharge')" 
+                            class="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-amber-700 hover:to-amber-800 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
+                      <span class="text-2xl mr-3">📦</span>
+                      Mise à quai non déchargé
                     </button>
-                    <button onclick="setQuaiStatus('fin_dechargement')" 
-                            class="w-full bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-3 rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
-                      <span class="text-2xl mr-3">📋</span>
-                      Fin de déchargement - Timer figé
-                    </button>
-                    <button onclick="toggleCommentaire()" 
+                    <button onclick="toggleCommentaire('indisponible')" 
                             class="w-full bg-gradient-to-r from-red-400 to-red-500 text-white px-6 py-3 rounded-xl hover:from-red-500 hover:to-red-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
                       <span class="text-2xl mr-3">🚫</span>
                       Indisponible - Problème signalé
@@ -378,19 +373,19 @@ export function AccueilChauffeurPage() {
 
                 <div id="commentaire-section" class="hidden mb-6">
                   <label class="block text-sm font-bold text-gray-700 mb-2">
-                    <i class="fas fa-comment-alt mr-2 text-red-500"></i>
-                    Commentaire obligatoire
+                    <i class="fas fa-comment-alt mr-2"></i>
+                    <span id="commentaire-label">Commentaire obligatoire</span>
                   </label>
                   <textarea 
                     id="quai-commentaire" 
                     rows="3" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all resize-none"
-                    placeholder="Décrivez le problème (obligatoire pour marquer indisponible)..."
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all resize-none"
+                    placeholder="Décrivez la situation (obligatoire)..."
                   ></textarea>
-                  <button onclick="setQuaiStatus('indisponible')" 
-                          class="w-full mt-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg font-semibold">
+                  <button id="confirm-status-btn" onclick="confirmQuaiStatus()" 
+                          class="w-full mt-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-amber-700 hover:to-amber-800 transition-all shadow-md hover:shadow-lg font-semibold">
                     <i class="fas fa-check mr-2"></i>
-                    Confirmer l'indisponibilité
+                    <span id="confirm-btn-text">Confirmer</span>
                   </button>
                 </div>
 
@@ -436,6 +431,11 @@ export function AccueilChauffeurPage() {
                 <div class="w-4 h-4 bg-purple-400 rounded-full flex-shrink-0"></div>
                 <span class="text-lg mr-1">📝</span>
                 <span class="text-xs font-semibold text-gray-700">Fin de contrôle</span>
+              </div>
+              <div class="flex items-center space-x-2 p-3 bg-amber-50 rounded-lg">
+                <div class="w-4 h-4 bg-amber-700 rounded-full flex-shrink-0"></div>
+                <span class="text-lg mr-1">📦</span>
+                <span class="text-xs font-semibold text-gray-700">Mise à quai non déchargé</span>
               </div>
               <div class="flex items-center space-x-2 p-3 bg-red-50 rounded-lg">
                 <div class="w-4 h-4 bg-red-500 rounded-full flex-shrink-0"></div>
