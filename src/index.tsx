@@ -3108,76 +3108,54 @@ app.post('/api/fin-dechargement', async (c) => {
 
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
-    // Mettre à jour le statut du quai à "fin_dechargement" (timer reste figé)
-    // IMPORTANT: Essayer d'abord avec 'fin_dechargement', si échec utiliser 'disponible'
-    try {
-      // Récupérer le timer_start pour calculer la durée
-      // ✨ RÉCUPÉRER timer_start ET timer_fin_timestamp AVANT l'UPDATE (car ils seront modifiés)
-      const quaiData = await c.env.DB.prepare(`
-        SELECT timer_start, timer_fin_timestamp FROM quai_status WHERE quai_numero = ?
-      `).bind(data.quai_numero).first()
+    // Mettre à jour le statut du quai à "fin_dechargement" (timer figé)
+    // Récupérer le timer_start pour calculer la durée
+    const quaiData = await c.env.DB.prepare(`
+      SELECT timer_start, timer_fin_timestamp FROM quai_status WHERE quai_numero = ?
+    `).bind(data.quai_numero).first()
 
-      console.log('📊 Quai data AVANT UPDATE:', quaiData)
-      
-      // 💾 SAUVEGARDER timer_start pour l'alerte KPI (car il sera mis à NULL dans l'UPDATE)
-      const timerStartSauvegarde = quaiData?.timer_start
+    console.log('📊 Quai data AVANT UPDATE:', quaiData)
+    
+    // 💾 SAUVEGARDER timer_start pour l'alerte KPI (car il sera mis à NULL dans l'UPDATE)
+    const timerStartSauvegarde = quaiData?.timer_start
 
-      let timerDuration = null
-      if (quaiData?.timer_start) {
-        // Calculer la durée en secondes (en utilisant l'heure de Paris)
-        // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
-        // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
-        const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
-        const endTime = new Date(getParisTime()).getTime()
-        timerDuration = Math.floor((endTime - startTime) / 1000)
-        console.log(`⏱️ Durée calculée: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
-      }
-
-      console.log('💾 UPDATE avec:', {
-        timerDuration,
-        commentaire: `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
-        commentaire_auteur: data.nom_agent,
-        quai_numero: data.quai_numero
-      })
-
-      await c.env.DB.prepare(`
-        UPDATE quai_status 
-        SET statut = 'fin_dechargement',
-            timer_start = NULL,
-            timer_duration = ?,
-            timer_fin_timestamp = datetime('now', 'localtime'),
-            commentaire = ?,
-            commentaire_auteur = ?,
-            updated_at = datetime('now', 'localtime')
-        WHERE quai_numero = ?
-      `).bind(
-        timerDuration,
-        `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
-        data.nom_agent,
-        data.quai_numero
-      ).run()
-
-      console.log('✅ Quai', data.quai_numero, 'marqué comme fin de déchargement - Timer figé à', timerDuration, 'secondes (timer_start supprimé)')
-    } catch (error) {
-      // Si échec (contrainte CHECK), utiliser 'disponible' comme fallback
-      console.warn('⚠️ Contrainte CHECK - Fallback vers disponible:', error.message)
-      
-      await c.env.DB.prepare(`
-        UPDATE quai_status 
-        SET statut = 'disponible',
-            timer_start = timer_start,
-            commentaire = ?,
-            commentaire_auteur = ?,
-            updated_at = datetime('now', 'localtime')
-        WHERE quai_numero = ?
-      `).bind(
-        `✅ Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id} - Timer: voir historique`,
-        data.nom_agent,
-        data.quai_numero
-      ).run()
-
-      console.log('✅ Quai', data.quai_numero, 'marqué comme disponible (fallback) - Timer conservé dans commentaire')
+    let timerDuration = null
+    if (quaiData?.timer_start) {
+      // Calculer la durée en secondes (en utilisant l'heure de Paris)
+      // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
+      // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
+      const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
+      const endTime = new Date(getParisTime()).getTime()
+      timerDuration = Math.floor((endTime - startTime) / 1000)
+      console.log(`⏱️ Durée calculée: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
     }
+
+    console.log('💾 UPDATE avec:', {
+      timerDuration,
+      commentaire: `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
+      commentaire_auteur: data.nom_agent,
+      quai_numero: data.quai_numero
+    })
+
+    // Mettre le quai en fin_dechargement avec timer figé
+    await c.env.DB.prepare(`
+      UPDATE quai_status 
+      SET statut = 'fin_dechargement',
+          timer_start = NULL,
+          timer_duration = ?,
+          timer_fin_timestamp = datetime('now', 'localtime'),
+          commentaire = ?,
+          commentaire_auteur = ?,
+          updated_at = datetime('now', 'localtime')
+      WHERE quai_numero = ?
+    `).bind(
+      timerDuration,
+      `Déchargement terminé - ${data.nom_agent} - ${data.fournisseur} - ID:${data.numero_id}`,
+      data.nom_agent,
+      data.quai_numero
+    ).run()
+
+    console.log('✅ Quai', data.quai_numero, 'marqué comme fin_dechargement - Timer figé à', timerDuration, 'secondes')
 
     // ===== CRÉATION ALERTE AUTOMATIQUE SI ÉCART OU NON-CONFORMITÉ =====
     let alerteCreee = false
