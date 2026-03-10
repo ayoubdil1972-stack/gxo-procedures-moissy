@@ -1488,21 +1488,26 @@ app.post('/api/fin-controle', async (c) => {
       return c.json({ error: 'Données manquantes' }, 400)
     }
 
-    // Récupérer les informations du quai ET calculer la durée avec SQLite (utiliser 'localtime' car timer_controle_start est en local)
+    // Récupérer les informations du quai (timer + infos contrôle)
     const quaiData = await c.env.DB.prepare(`
       SELECT 
         timer_controle_start,
         controle_fournisseur,
         controle_id_chauffeur,
-        controle_debut_timestamp,
-        CAST((julianday('now', 'localtime') - julianday(timer_controle_start)) * 86400 AS INTEGER) AS duration_seconds
+        controle_debut_timestamp
       FROM quai_status 
       WHERE quai_numero = ?
     `).bind(quai).first()
     
-    const timerControleDuration = quaiData?.duration_seconds || 0
-    console.log(`⏱️ Durée contrôle calculée (SQLite): ${timerControleDuration}s`)
-    console.log('📊 Timer contrôle start:', quaiData?.timer_controle_start)
+    let timerControleDuration = null
+    if (quaiData?.timer_controle_start) {
+      // Calculer la durée en secondes avec JavaScript (méthode v3.7.3)
+      // ⚠️ NE PAS AJOUTER 'Z' car timer_controle_start est déjà en heure locale
+      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
+      const endTime = new Date(getParisTime()).getTime()
+      timerControleDuration = Math.floor((endTime - startTime) / 1000)
+      console.log(`⏱️ Durée contrôle calculée (JavaScript): ${timerControleDuration}s`)
+    }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
     await c.env.DB.prepare(`
@@ -3104,18 +3109,27 @@ app.post('/api/fin-dechargement', async (c) => {
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
     // Mettre à jour le statut du quai à "fin_dechargement" (timer figé)
-    // Calculer la durée DIRECTEMENT avec SQLite (utiliser 'localtime' car timer_start est en local)
-    const durationResult = await c.env.DB.prepare(`
-      SELECT 
-        timer_start,
-        CAST((julianday('now', 'localtime') - julianday(timer_start)) * 86400 AS INTEGER) AS duration_seconds
-      FROM quai_status 
-      WHERE quai_numero = ?
+    // Récupérer timer_start pour calculer la durée avec JavaScript (comme v3.7.3)
+    const quaiData = await c.env.DB.prepare(`
+      SELECT timer_start FROM quai_status WHERE quai_numero = ?
     `).bind(data.quai_numero).first()
 
-    const timerDuration = durationResult?.duration_seconds || 0
-    console.log(`⏱️ Durée calculée (SQLite): ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
-    console.log('📊 Timer start:', durationResult?.timer_start)
+    console.log('📊 Quai data AVANT UPDATE:', quaiData)
+    
+    // Sauvegarder timer_start pour l'alerte KPI (car il sera mis à NULL dans l'UPDATE)
+    const timerStartSauvegarde = quaiData?.timer_start
+
+    let timerDuration = null
+    if (quaiData?.timer_start) {
+      // Calculer la durée en secondes avec JavaScript (méthode v3.7.3)
+      // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
+      // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
+      const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
+      const endTime = new Date(getParisTime()).getTime()
+      timerDuration = Math.floor((endTime - startTime) / 1000)
+      console.log(`⏱️ Durée calculée (JavaScript): ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
+    }
+    console.log('📊 Timer start:', quaiData?.timer_start)
 
     console.log('💾 UPDATE avec:', {
       timerDuration,
@@ -3130,6 +3144,7 @@ app.post('/api/fin-dechargement', async (c) => {
       SET statut = 'fin_dechargement',
           timer_start = NULL,
           timer_duration = ?,
+          timer_fin_timestamp = datetime('now', 'localtime'),
           commentaire = ?,
           commentaire_auteur = ?,
           updated_at = datetime('now', 'localtime')
