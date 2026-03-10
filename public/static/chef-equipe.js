@@ -431,7 +431,7 @@ async function loadKPIReception() {
   }
 }
 
-// Mettre à jour les cartes de moyennes
+// Mettre à jour les cartes de moyennes (SANS Total)
 function updateKPIMoyennes(moyennes) {
   document.getElementById('kpi-nb-camions').textContent = moyennes.total_camions || 0
   
@@ -441,22 +441,21 @@ function updateKPIMoyennes(moyennes) {
   const controle = moyennes.controle_minutes || 0
   document.getElementById('kpi-moy-controle').textContent = `${controle} min`
   
-  const total = moyennes.total_minutes || 0
-  const heures = Math.floor(total / 60)
-  const minutes = total % 60
-  document.getElementById('kpi-moy-total').textContent = heures > 0 
-    ? `${heures}h${minutes.toString().padStart(2, '0')}` 
-    : `${minutes} min`
+  // Supprimer la carte Total si elle existe
+  const totalCard = document.getElementById('kpi-moy-total')
+  if (totalCard) {
+    totalCard.closest('.bg-white')?.remove()
+  }
 }
 
-// Mettre à jour le tableau détaillé
+// Mettre à jour le tableau détaillé (SANS colonnes heures et SANS Total)
 function updateKPITableau(kpiData) {
   const tbody = document.getElementById('kpi-tableau-body')
   
   if (!kpiData || kpiData.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
           <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
           <p class="text-lg">Aucun camion traité pour cette date</p>
         </td>
@@ -468,7 +467,6 @@ function updateKPITableau(kpiData) {
   tbody.innerHTML = kpiData.map(kpi => {
     const statutDechargement = getStatutBadge(kpi.duree_dechargement, kpi.duree_dechargement_status)
     const statutControle = getStatutBadge(kpi.duree_controle, kpi.duree_controle_status)
-    const statutTotal = getStatutBadge(kpi.duree_totale, kpi.duree_totale_status)
     
     return `
       <tr class="hover:bg-gray-50 transition-colors">
@@ -480,12 +478,9 @@ function updateKPITableau(kpiData) {
         </td>
         <td class="px-6 py-4 font-medium text-gray-900">${kpi.numero_camion}</td>
         <td class="px-6 py-4 text-gray-600">${kpi.fournisseur || '-'}</td>
-        <td class="px-6 py-4 text-sm text-gray-600">${kpi.heure_debut}</td>
-        <td class="px-6 py-4 text-sm text-gray-600">${kpi.heure_fin}</td>
-        <td class="px-6 py-4 text-sm text-gray-600">${kpi.heure_validation}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">${kpi.controleur_nom}</td>
         <td class="px-6 py-4 text-center">${statutDechargement}</td>
         <td class="px-6 py-4 text-center">${statutControle}</td>
-        <td class="px-6 py-4 text-center">${statutTotal}</td>
       </tr>
     `
   }).join('')

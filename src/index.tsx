@@ -1523,105 +1523,82 @@ app.post('/api/fin-controle', async (c) => {
     
     console.log(`✅ Quai ${quai} passé en fin de contrôle - Timer figé à ${timerControleDuration}s - Contrôleur: ${controleurNom}`)
     
-    // 🔄 SYNCHRONISATION AUTOMATIQUE : CRÉATION SYSTÉMATIQUE de l'alerte KPI
+    // 📊 ARCHIVE KPI SIMPLE : Copier directement les infos du quai
     try {
-      console.log(`🔄 Début synchronisation KPI pour Quai ${quai}`)
+      console.log(`📊 Archivage KPI pour Quai ${quai}`)
       
-      // Récupérer TOUTES les données du quai depuis quai_status
+      // Récupérer les données du quai
       const quaiStatusData = await c.env.DB.prepare(`
         SELECT *
         FROM quai_status
         WHERE quai_numero = ?
       `).bind(quai).first()
       
-      console.log(`📊 Données quai_status:`, JSON.stringify(quaiStatusData))
+      if (!quaiStatusData) {
+        console.error(`❌ Pas de données quai_status pour Quai ${quai}`)
+        return c.json({ 
+          success: true, 
+          quai: quai,
+          dureeControle: timerControleDuration,
+          controleurNom: controleurNom,
+          warning: 'Pas de données quai pour archivage KPI'
+        })
+      }
       
-      // Utiliser les données du contrôle (déjà extraites plus haut)
+      // Extraire infos depuis commentaire
       let numeroId = quaiData?.controle_id_chauffeur || 'INCONNU'
       let fournisseur = quaiData?.controle_fournisseur || 'INCONNU'
       
-      // Si commentaire existe, extraire le vrai fournisseur
-      if (quaiStatusData?.commentaire && quaiStatusData.commentaire.includes('ID:')) {
+      if (quaiStatusData.commentaire && quaiStatusData.commentaire.includes('ID:')) {
         const parts = quaiStatusData.commentaire.split(' - ')
-        console.log(`📝 Commentaire parts:`, parts)
         if (parts.length >= 3) {
           fournisseur = parts[2].trim()
-          console.log(`✅ Fournisseur extrait: ${fournisseur}`)
         }
-        const idMatch = quaiStatusData.commentaire.match(/ID:(\w+)/)
+        const idMatch = quaiStatusData.commentaire.match(/ID:(\S+)/)
         if (idMatch) {
           numeroId = idMatch[1]
-          console.log(`✅ Numero ID extrait: ${numeroId}`)
         }
       }
       
-      // Calculer heure_premier_scan
-      let heurePremierScan = null
-      if (quaiStatusData?.timer_fin_timestamp && quaiStatusData?.timer_duration) {
-        const calcResult = await c.env.DB.prepare(`
-          SELECT datetime(?, '-' || ? || ' seconds') as result
-        `).bind(quaiStatusData.timer_fin_timestamp, quaiStatusData.timer_duration).first()
-        heurePremierScan = calcResult?.result
-        console.log(`⏱️ Heure premier scan calculée: ${heurePremierScan}`)
-      }
+      const dechargementSec = quaiStatusData.timer_duration || 0
+      const controleSec = timerControleDuration || 0
       
-      // Vérifier si alerte existe pour ce quai ET ce camion (celui en cours de contrôle)
-      // PRIORITÉ: Chercher alerte sans durée de contrôle (= contrôle en cours)
-      const alerteExistante = await c.env.DB.prepare(`
-        SELECT id, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement, duree_dechargement_secondes
-        FROM controleur_alertes
-        WHERE quai_numero = ?
-          AND (duree_controle_secondes IS NULL OR duree_controle_secondes = 0)
-          AND DATE(created_at) = DATE('now')
-        ORDER BY created_at DESC
-        LIMIT 1
-      `).bind(quai).first()
+      console.log(`📊 Archive: Quai ${quai}, ${numeroId}, ${fournisseur}, Déch: ${dechargementSec}s, Ctrl: ${controleSec}s`)
       
-      if (alerteExistante) {
-        // UPDATE alerte existante avec la durée de contrôle RÉELLE
-        await c.env.DB.prepare(`
-          UPDATE controleur_alertes
-          SET duree_controle_secondes = ?,
-              traite_le = datetime('now', 'localtime'),
-              traite_par = ?,
-              statut = 'traitee'
-          WHERE id = ?
-        `).bind(timerControleDuration, controleurNom, alerteExistante.id).run()
-        
-        console.log(`✅✅✅ ALERTE #${alerteExistante.id} MISE À JOUR - Quai ${quai} - Contrôle: ${timerControleDuration}s`)
-        console.log(`📊 Détails: ${alerteExistante.fournisseur} (${alerteExistante.numero_id}) - Déch: ${alerteExistante.duree_dechargement_secondes}s + Ctrl: ${timerControleDuration}s`)
-      } else {
-        // CREATE nouvelle alerte
-        console.log(`🆕 Création nouvelle alerte - Quai: ${quai}, ID: ${numeroId}, Fournisseur: ${fournisseur}`)
-        
-        const insertResult = await c.env.DB.prepare(`
-          INSERT INTO controleur_alertes (
-            quai_numero, numero_id, fournisseur,
-            heure_premier_scan, heure_fin_dechargement,
-            duree_dechargement_secondes, duree_controle_secondes,
-            traite_le, traite_par,
-            ecart_palettes_attendues, ecart_palettes_recues,
-            non_conformites, verification_points,
-            statut, created_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?, 100, 100, '[]', '{}', 'traitee', datetime('now', 'localtime'))
-        `).bind(
-          quai,
-          numeroId,
-          fournisseur,
-          heurePremierScan,
-          quaiStatusData?.timer_fin_timestamp,
-          quaiStatusData?.timer_duration || 0,
-          timerControleDuration,
-          controleurNom
-        ).run()
-        
-        console.log(`✅✅✅ NOUVELLE ALERTE KPI CRÉÉE - ID: ${insertResult.meta.last_row_id}`)
-        console.log(`📊 Détails: Quai ${quai}, ${fournisseur}, Déch: ${quaiStatusData?.timer_duration}s, Ctrl: ${timerControleDuration}s`)
-      }
-    } catch (syncError) {
-      console.error('❌❌❌ ERREUR SYNC KPI:', syncError)
-      console.error('❌ Message:', syncError.message)
-      console.error('❌ Stack:', syncError.stack)
+      // Créer la table d'archives si elle n'existe pas
+      await c.env.DB.prepare(`
+        CREATE TABLE IF NOT EXISTS kpi_archives (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          quai_numero INTEGER NOT NULL,
+          numero_camion TEXT NOT NULL,
+          fournisseur TEXT NOT NULL,
+          duree_dechargement_secondes INTEGER NOT NULL,
+          duree_controle_secondes INTEGER NOT NULL,
+          controleur_nom TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `).run()
+      
+      // Insérer l'archive KPI
+      const insertResult = await c.env.DB.prepare(`
+        INSERT INTO kpi_archives (
+          quai_numero, numero_camion, fournisseur,
+          duree_dechargement_secondes, duree_controle_secondes,
+          controleur_nom
+        ) VALUES (?, ?, ?, ?, ?, ?)
+      `).bind(
+        quai,
+        numeroId,
+        fournisseur,
+        dechargementSec,
+        controleSec,
+        controleurNom
+      ).run()
+      
+      console.log(`✅✅✅ KPI ARCHIVÉ - ID: ${insertResult.meta.last_row_id} - Quai ${quai} - ${numeroId}`)
+    } catch (archiveError) {
+      console.error('❌ ERREUR ARCHIVAGE KPI:', archiveError)
+      console.error('❌ Message:', archiveError.message)
     }
     
     return c.json({ 
@@ -3723,36 +3700,27 @@ app.get('/api/improductivites/utilisateur/:nom', async (c) => {
 // ==============================================
 
 // GET /api/chef-equipe/kpi/reception-camion - KPI réception camion
-// 🎯 MODÈLE BASÉ SUR /api/chef-equipe/improductivites (qui fonctionne parfaitement)
+// 🎯 ARCHIVES DIRECTES (kpi_archives) - Comme improductivités
 app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   try {
     const date = c.req.query('date') // Format: YYYY-MM-DD
     
-    // Créer la table si elle n'existe pas (comme improductivités)
+    // Créer la table kpi_archives si elle n'existe pas
     await c.env.DB.prepare(`
-      CREATE TABLE IF NOT EXISTS controleur_alertes (
+      CREATE TABLE IF NOT EXISTS kpi_archives (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         quai_numero INTEGER NOT NULL,
-        numero_id TEXT NOT NULL,
+        numero_camion TEXT NOT NULL,
         fournisseur TEXT NOT NULL,
-        heure_premier_scan TEXT,
-        heure_fin_dechargement TEXT,
-        duree_dechargement_secondes INTEGER,
-        duree_controle_secondes INTEGER,
-        ecart_palettes_attendues INTEGER,
-        ecart_palettes_recues INTEGER,
-        non_conformites TEXT,
-        verification_points TEXT,
-        consignes TEXT,
-        statut TEXT DEFAULT 'en_attente',
-        traite_par TEXT,
-        traite_le TEXT,
+        duree_dechargement_secondes INTEGER NOT NULL,
+        duree_controle_secondes INTEGER NOT NULL,
+        controleur_nom TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `).run()
     
-    // ✅ SIMPLE: Récupérer TOUTES les alertes (comme improductivités)
-    let query = 'SELECT * FROM controleur_alertes'
+    // ✅ SIMPLE: Récupérer TOUTES les archives (comme improductivités)
+    let query = 'SELECT * FROM kpi_archives'
     let params = []
     
     if (date) {
@@ -3766,9 +3734,9 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
     
     const { results } = await c.env.DB.prepare(query).bind(...params).all()
     
-    console.log(`📊✅ KPI: ${results.length} alertes trouvées pour ${date || "aujourd\'hui"}`)
+    console.log(`📊✅ KPI: ${results.length} quais archivés pour ${date || "aujourd\'hui"}`)
     
-    // ✅ TRAITEMENT SIMPLE (comme improductivités - pas de calculs complexes)
+    // ✅ TRAITEMENT SIMPLE (comme improductivités)
     const kpiData = results.map(row => {
       // Helper functions
       const formatDuree = (sec) => {
@@ -3777,14 +3745,6 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         const m = Math.floor((sec % 3600) / 60)
         const s = sec % 60
         return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-      }
-      
-      const formatHeure = (dateStr) => {
-        if (!dateStr) return '—'
-        try {
-          const d = new Date(dateStr.replace(' ', 'T'))
-          return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-        } catch { return '—' }
       }
       
       const getStatut = (sec, vert_min, orange_min) => {
@@ -3797,45 +3757,34 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
       
       const dechSec = row.duree_dechargement_secondes || 0
       const ctrlSec = row.duree_controle_secondes || 0
-      const totalSec = dechSec + ctrlSec
       
       return {
         id: row.id,
         quai_numero: row.quai_numero,
-        numero_camion: row.numero_id || `C${String(row.id).padStart(3, '0')}`,
-        fournisseur: row.fournisseur || '—',
-        heure_debut: formatHeure(row.heure_premier_scan),
-        heure_fin: formatHeure(row.heure_fin_dechargement),
-        heure_validation: formatHeure(row.traite_le),
+        numero_camion: row.numero_camion,
+        fournisseur: row.fournisseur,
         duree_dechargement: formatDuree(dechSec),
         duree_dechargement_minutes: Math.round(dechSec / 60),
         duree_dechargement_status: getStatut(dechSec, 20, 25),
         duree_controle: formatDuree(ctrlSec),
         duree_controle_minutes: Math.round(ctrlSec / 60),
         duree_controle_status: getStatut(ctrlSec, 30, 40),
-        duree_totale: formatDuree(totalSec),
-        duree_totale_minutes: Math.round(totalSec / 60),
-        duree_totale_status: getStatut(totalSec, 60, 70),
-        statut: row.statut || 'en_attente',
-        traite_par: row.traite_par || '—',
+        controleur_nom: row.controleur_nom || '—',
         created_at: row.created_at
       }
     })
     
-    // Moyennes (seulement pour contrôle terminé)
-    const kpiComplets = kpiData.filter(k => k.duree_controle_minutes > 0)
+    // Moyennes SEULEMENT déchargement et contrôle (PAS de total)
+    const totalCamions = kpiData.length
     const moyennes = {
-      total_camions: kpiData.length,
-      camions_complets: kpiComplets.length,
-      dechargement_minutes: kpiComplets.length > 0 
-        ? Math.round(kpiComplets.reduce((sum, k) => sum + k.duree_dechargement_minutes, 0) / kpiComplets.length) : 0,
-      controle_minutes: kpiComplets.length > 0
-        ? Math.round(kpiComplets.reduce((sum, k) => sum + k.duree_controle_minutes, 0) / kpiComplets.length) : 0,
-      total_minutes: kpiComplets.length > 0
-        ? Math.round(kpiComplets.reduce((sum, k) => sum + k.duree_totale_minutes, 0) / kpiComplets.length) : 0
+      total_camions: totalCamions,
+      dechargement_minutes: totalCamions > 0 
+        ? Math.round(kpiData.reduce((sum, k) => sum + k.duree_dechargement_minutes, 0) / totalCamions) : 0,
+      controle_minutes: totalCamions > 0
+        ? Math.round(kpiData.reduce((sum, k) => sum + k.duree_controle_minutes, 0) / totalCamions) : 0
     }
     
-    console.log('📊✅ Moyennes calculées:', moyennes)
+    console.log('📊✅ Moyennes:', moyennes)
     
     // ✅ RETOUR SIMPLE (comme improductivités)
     return c.json({

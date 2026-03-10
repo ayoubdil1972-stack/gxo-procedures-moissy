@@ -184,15 +184,6 @@ export function ChefEquipePage() {
               <div class="text-3xl font-bold mb-1" id="kpi-moy-controle">-</div>
               <div class="text-purple-100 text-sm">Temps contrôle moyen</div>
             </div>
-
-            <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl shadow-lg">
-              <div class="flex items-center justify-between mb-3">
-                <i class="fas fa-hourglass-half text-3xl opacity-80"></i>
-                <span class="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Objectif ≤1h</span>
-              </div>
-              <div class="text-3xl font-bold mb-1" id="kpi-moy-total">-</div>
-              <div class="text-orange-100 text-sm">Temps total moyen</div>
-            </div>
           </div>
 
           {/* Tableau détaillé */}
@@ -211,9 +202,7 @@ export function ChefEquipePage() {
                     <th class="px-6 py-4">Quai</th>
                     <th class="px-6 py-4">Camion</th>
                     <th class="px-6 py-4">Fournisseur</th>
-                    <th class="px-6 py-4">Début déchargement</th>
-                    <th class="px-6 py-4">Fin déchargement</th>
-                    <th class="px-6 py-4">Validation contrôle</th>
+                    <th class="px-6 py-4">Contrôleur</th>
                     <th class="px-6 py-4 text-center">
                       <div class="flex items-center justify-center gap-1">
                         <i class="fas fa-truck-loading text-green-500"></i>
@@ -226,17 +215,11 @@ export function ChefEquipePage() {
                         <span>Contrôle</span>
                       </div>
                     </th>
-                    <th class="px-6 py-4 text-center">
-                      <div class="flex items-center justify-center gap-1">
-                        <i class="fas fa-hourglass-half text-orange-500"></i>
-                        <span>Total</span>
-                      </div>
-                    </th>
                   </tr>
                 </thead>
                 <tbody id="kpi-tableau-body" class="divide-y divide-gray-200">
                   <tr>
-                    <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+                    <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                       <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
                       <p>Chargement des données KPI...</p>
                     </td>
