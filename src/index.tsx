@@ -3767,7 +3767,7 @@ app.get('/api/improductivites/utilisateur/:nom', async (c) => {
 // ==============================================
 
 // GET /api/chef-equipe/kpi/reception-camion - KPI réception camion
-// 🎯 CARTES QUAIS TERMINÉS (historique complet depuis quai_historique)
+// 🎯 CARTES QUAIS TERMINÉS (quai_status + quai_historique)
 app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   try {
     const date = c.req.query('date') // Format: YYYY-MM-DD
@@ -3794,34 +3794,91 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
       )
     `).run()
     
-    // Récupérer TOUS les quais archivés pour la date
-    let query = `
-      SELECT * FROM quai_historique
+    // 1️⃣ Récupérer les quais ACTUELLEMENT en fin_controle (quai_status)
+    let queryActuels = `
+      SELECT 
+        NULL as id,
+        quai_numero,
+        statut,
+        timer_start,
+        timer_duration,
+        timer_controle_start,
+        timer_controle_duration,
+        controle_debut_timestamp,
+        controle_fin_timestamp,
+        controle_fournisseur,
+        controle_id_chauffeur,
+        controleur_nom,
+        commentaire,
+        commentaire_auteur,
+        updated_at as created_at,
+        updated_at as archived_at,
+        'actuel' as source
+      FROM quai_status
       WHERE statut = 'fin_controle'
     `
-    let params = []
     
+    const paramsActuels = []
     if (date) {
-      query += ' AND DATE(archived_at) = ?'
-      params.push(date)
+      queryActuels += ' AND DATE(updated_at) = ?'
+      paramsActuels.push(date)
     } else {
-      query += ' AND DATE(archived_at) = DATE("now")'
+      queryActuels += ' AND DATE(updated_at) = DATE("now")'
     }
     
-    query += ' ORDER BY archived_at DESC LIMIT 200'
+    const resultatsActuels = await c.env.DB.prepare(queryActuels).bind(...paramsActuels).all()
     
-    const { results } = await c.env.DB.prepare(query).bind(...params).all()
+    // 2️⃣ Récupérer les quais déjà archivés (quai_historique)
+    let queryArchives = `
+      SELECT 
+        id,
+        quai_numero,
+        statut,
+        timer_start,
+        timer_duration,
+        timer_controle_start,
+        timer_controle_duration,
+        controle_debut_timestamp,
+        controle_fin_timestamp,
+        controle_fournisseur,
+        controle_id_chauffeur,
+        controleur_nom,
+        commentaire,
+        commentaire_auteur,
+        created_at,
+        archived_at,
+        'archive' as source
+      FROM quai_historique
+      WHERE statut = 'fin_controle'
+    `
     
-    console.log(`📊✅ KPI: ${results.length} quais archivés pour ${date || "aujourd\'hui"}`)
+    const paramsArchives = []
+    if (date) {
+      queryArchives += ' AND DATE(archived_at) = ?'
+      paramsArchives.push(date)
+    } else {
+      queryArchives += ' AND DATE(archived_at) = DATE("now")'
+    }
+    
+    queryArchives += ' ORDER BY archived_at DESC LIMIT 200'
+    
+    const resultatsArchives = await c.env.DB.prepare(queryArchives).bind(...paramsArchives).all()
+    
+    // 3️⃣ Fusionner les résultats (actuels + archivés)
+    const tousLesQuais = [
+      ...(resultatsActuels.results || []),
+      ...(resultatsArchives.results || [])
+    ]
+    
+    console.log(`📊✅ KPI: ${resultatsActuels.results?.length || 0} quais actuels + ${resultatsArchives.results?.length || 0} quais archivés = ${tousLesQuais.length} total pour ${date || "aujourd'hui"}`)
     
     // Retourner les quais tels quels (front-end utilisera renderQuaiCard)
-    const quais = results.map(quai => ({
+    const quais = tousLesQuais.map(quai => ({
       ...quai,
-      // Ajouter quai_numero pour compatibilité
       quai_numero: quai.quai_numero
     }))
     
-    // Calcul moyennes
+    // 4️⃣ Calcul moyennes sur TOUS les quais
     const totalQuais = quais.length
     let totalDechargement = 0
     let totalControle = 0
