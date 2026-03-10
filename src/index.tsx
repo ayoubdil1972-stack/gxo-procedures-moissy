@@ -1523,59 +1523,60 @@ app.post('/api/fin-controle', async (c) => {
     
     console.log(`✅ Quai ${quai} passé en fin de contrôle - Timer figé à ${timerControleDuration}s - Contrôleur: ${controleurNom}`)
     
-    // 🔄 SYNCHRONISATION AUTOMATIQUE : Mettre à jour OU créer l'alerte dans controleur_alertes
+    // 🔄 SYNCHRONISATION AUTOMATIQUE : CRÉATION SYSTÉMATIQUE de l'alerte KPI
     try {
-      // Récupérer les données complètes du quai depuis quai_status
+      console.log(`🔄 Début synchronisation KPI pour Quai ${quai}`)
+      
+      // Récupérer TOUTES les données du quai depuis quai_status
       const quaiStatusData = await c.env.DB.prepare(`
-        SELECT 
-          timer_start,
-          timer_fin_timestamp,
-          timer_duration,
-          commentaire,
-          controle_fournisseur,
-          controle_id_chauffeur
+        SELECT *
         FROM quai_status
         WHERE quai_numero = ?
       `).bind(quai).first()
       
-      // Extraire numero_id et fournisseur depuis le commentaire ou les colonnes controle_*
-      let numeroId = quaiStatusData?.controle_id_chauffeur || null
-      let fournisseur = quaiStatusData?.controle_fournisseur || null
+      console.log(`📊 Données quai_status:`, JSON.stringify(quaiStatusData))
       
+      // Utiliser les données du contrôle (déjà extraites plus haut)
+      let numeroId = quaiData?.controle_id_chauffeur || 'INCONNU'
+      let fournisseur = quaiData?.controle_fournisseur || 'INCONNU'
+      
+      // Si commentaire existe, extraire le vrai fournisseur
       if (quaiStatusData?.commentaire && quaiStatusData.commentaire.includes('ID:')) {
-        // Format: "Déchargement terminé - Agent - Fournisseur - ID:123456"
         const parts = quaiStatusData.commentaire.split(' - ')
+        console.log(`📝 Commentaire parts:`, parts)
         if (parts.length >= 3) {
-          fournisseur = parts[2].trim() // Fournisseur (GVT, pas Ayoub)
+          fournisseur = parts[2].trim()
+          console.log(`✅ Fournisseur extrait: ${fournisseur}`)
         }
         const idMatch = quaiStatusData.commentaire.match(/ID:(\w+)/)
         if (idMatch) {
           numeroId = idMatch[1]
+          console.log(`✅ Numero ID extrait: ${numeroId}`)
         }
       }
       
-      // Calculer heure_premier_scan = timer_fin_timestamp - timer_duration
+      // Calculer heure_premier_scan
       let heurePremierScan = null
       if (quaiStatusData?.timer_fin_timestamp && quaiStatusData?.timer_duration) {
-        heurePremierScan = await c.env.DB.prepare(`
+        const calcResult = await c.env.DB.prepare(`
           SELECT datetime(?, '-' || ? || ' seconds') as result
         `).bind(quaiStatusData.timer_fin_timestamp, quaiStatusData.timer_duration).first()
-        heurePremierScan = heurePremierScan?.result
+        heurePremierScan = calcResult?.result
+        console.log(`⏱️ Heure premier scan calculée: ${heurePremierScan}`)
       }
       
-      // Vérifier si une alerte existe déjà pour ce quai
+      // Vérifier si alerte existe
       const alerteExistante = await c.env.DB.prepare(`
         SELECT id
         FROM controleur_alertes
         WHERE quai_numero = ?
-          AND heure_fin_dechargement IS NOT NULL
-          AND duree_controle_secondes IS NULL
+          AND (duree_controle_secondes IS NULL OR duree_controle_secondes = 0)
         ORDER BY created_at DESC
         LIMIT 1
       `).bind(quai).first()
       
       if (alerteExistante) {
-        // Mettre à jour l'alerte existante
+        // UPDATE alerte existante
         await c.env.DB.prepare(`
           UPDATE controleur_alertes
           SET duree_controle_secondes = ?,
@@ -1585,9 +1586,11 @@ app.post('/api/fin-controle', async (c) => {
           WHERE id = ?
         `).bind(timerControleDuration, controleurNom, alerteExistante.id).run()
         
-        console.log(`✅ Alerte #${alerteExistante.id} mise à jour avec durée contrôle: ${timerControleDuration}s`)
+        console.log(`✅✅✅ ALERTE #${alerteExistante.id} MISE À JOUR - Contrôle: ${timerControleDuration}s`)
       } else {
-        // Créer une nouvelle alerte avec toutes les données
+        // CREATE nouvelle alerte
+        console.log(`🆕 Création nouvelle alerte - Quai: ${quai}, ID: ${numeroId}, Fournisseur: ${fournisseur}`)
+        
         const insertResult = await c.env.DB.prepare(`
           INSERT INTO controleur_alertes (
             quai_numero, numero_id, fournisseur,
@@ -1604,15 +1607,17 @@ app.post('/api/fin-controle', async (c) => {
           fournisseur,
           heurePremierScan,
           quaiStatusData?.timer_fin_timestamp,
-          quaiStatusData?.timer_duration,
+          quaiStatusData?.timer_duration || 0,
           timerControleDuration,
           controleurNom
         ).run()
         
-        console.log(`✅✅✅ NOUVELLE ALERTE KPI CRÉÉE - ID: ${insertResult.meta.last_row_id}, Quai: ${quai}, Fournisseur: ${fournisseur}, Déchargement: ${quaiStatusData?.timer_duration}s, Contrôle: ${timerControleDuration}s`)
+        console.log(`✅✅✅ NOUVELLE ALERTE KPI CRÉÉE - ID: ${insertResult.meta.last_row_id}`)
+        console.log(`📊 Détails: Quai ${quai}, ${fournisseur}, Déch: ${quaiStatusData?.timer_duration}s, Ctrl: ${timerControleDuration}s`)
       }
     } catch (syncError) {
-      console.error('❌ Erreur synchronisation KPI:', syncError)
+      console.error('❌❌❌ ERREUR SYNC KPI:', syncError)
+      console.error('❌ Message:', syncError.message)
       console.error('❌ Stack:', syncError.stack)
     }
     
