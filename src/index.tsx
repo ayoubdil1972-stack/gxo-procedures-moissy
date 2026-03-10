@@ -1505,8 +1505,16 @@ app.post('/api/fin-controle', async (c) => {
       // ⚠️ NE PAS AJOUTER 'Z' car timer_controle_start est déjà en heure locale
       const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
       const endTime = new Date(getParisTime()).getTime()
-      timerControleDuration = Math.floor((endTime - startTime) / 1000)
-      console.log(`⏱️ Durée contrôle calculée: ${timerControleDuration}s`)
+      let calculatedDuration = Math.floor((endTime - startTime) / 1000)
+      
+      // 🔧 CORRECTION AUTOMATIQUE : Soustraire 3600 secondes (1 heure) si >= 3600
+      if (calculatedDuration >= 3600) {
+        timerControleDuration = calculatedDuration - 3600
+        console.log(`⏱️ Durée contrôle AVANT correction: ${calculatedDuration}s → APRÈS: ${timerControleDuration}s (-1h)`)
+      } else {
+        timerControleDuration = calculatedDuration
+      }
+      console.log(`⏱️ Durée contrôle finale: ${timerControleDuration}s`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3129,8 +3137,16 @@ app.post('/api/fin-dechargement', async (c) => {
         // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
         const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
         const endTime = new Date(getParisTime()).getTime()
-        timerDuration = Math.floor((endTime - startTime) / 1000)
-        console.log(`⏱️ Durée calculée: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
+        let calculatedDuration = Math.floor((endTime - startTime) / 1000)
+        
+        // 🔧 CORRECTION AUTOMATIQUE : Soustraire 3600 secondes (1 heure) si >= 3600
+        if (calculatedDuration >= 3600) {
+          timerDuration = calculatedDuration - 3600
+          console.log(`⏱️ Durée AVANT correction: ${calculatedDuration}s → APRÈS: ${timerDuration}s (-1h)`)
+        } else {
+          timerDuration = calculatedDuration
+        }
+        console.log(`⏱️ Durée finale: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
