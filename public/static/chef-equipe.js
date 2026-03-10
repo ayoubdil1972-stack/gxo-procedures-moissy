@@ -440,6 +440,24 @@ function updateKPIMoyennes(moyennes) {
   
   const controle = moyennes.controle_minutes || 0
   document.getElementById('kpi-moy-controle').textContent = `${controle} min`
+  
+  // NOUVEAU : Changer la couleur si dépassement objectif
+  const cardDechargement = document.getElementById('card-moy-dechargement')
+  const cardControle = document.getElementById('card-moy-controle')
+  
+  // Objectif déchargement : 30 minutes
+  if (dechargement > 30) {
+    cardDechargement.className = 'bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300'
+  } else {
+    cardDechargement.className = 'bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300'
+  }
+  
+  // Objectif contrôle : 30 minutes
+  if (controle > 30) {
+    cardControle.className = 'bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300'
+  } else {
+    cardControle.className = 'bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300'
+  }
 }
 
 // Afficher les quais terminés sous forme de cartes (comme interface quais)
