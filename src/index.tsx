@@ -1523,6 +1523,34 @@ app.post('/api/fin-controle', async (c) => {
     
     console.log(`✅ Quai ${quai} passé en fin de contrôle - Timer figé à ${timerControleDuration}s - Contrôleur: ${controleurNom}`)
     
+    // 🔄 SYNCHRONISATION AUTOMATIQUE : Mettre à jour controleur_alertes avec la durée de contrôle
+    // Récupérer l'alerte existante pour ce quai
+    const alerteExistante = await c.env.DB.prepare(`
+      SELECT id, heure_fin_dechargement
+      FROM controleur_alertes
+      WHERE quai_numero = ?
+        AND heure_fin_dechargement IS NOT NULL
+        AND duree_controle_secondes IS NULL
+      ORDER BY created_at DESC
+      LIMIT 1
+    `).bind(quai).first()
+    
+    if (alerteExistante) {
+      // Mettre à jour l'alerte existante avec la durée de contrôle
+      await c.env.DB.prepare(`
+        UPDATE controleur_alertes
+        SET duree_controle_secondes = ?,
+            traite_le = datetime('now', 'localtime'),
+            traite_par = ?,
+            statut = 'traitee'
+        WHERE id = ?
+      `).bind(timerControleDuration, controleurNom, alerteExistante.id).run()
+      
+      console.log(`✅ Alerte #${alerteExistante.id} mise à jour avec durée contrôle: ${timerControleDuration}s`)
+    } else {
+      console.log(`⚠️ Aucune alerte trouvée pour le quai ${quai}, elle sera créée lors du prochain déchargement`)
+    }
+    
     return c.json({ 
       success: true, 
       quai: quai,
