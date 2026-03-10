@@ -1523,32 +1523,97 @@ app.post('/api/fin-controle', async (c) => {
     
     console.log(`✅ Quai ${quai} passé en fin de contrôle - Timer figé à ${timerControleDuration}s - Contrôleur: ${controleurNom}`)
     
-    // 🔄 SYNCHRONISATION AUTOMATIQUE : Mettre à jour controleur_alertes avec la durée de contrôle
-    // Récupérer l'alerte existante pour ce quai
-    const alerteExistante = await c.env.DB.prepare(`
-      SELECT id, heure_fin_dechargement
-      FROM controleur_alertes
-      WHERE quai_numero = ?
-        AND heure_fin_dechargement IS NOT NULL
-        AND duree_controle_secondes IS NULL
-      ORDER BY created_at DESC
-      LIMIT 1
-    `).bind(quai).first()
-    
-    if (alerteExistante) {
-      // Mettre à jour l'alerte existante avec la durée de contrôle
-      await c.env.DB.prepare(`
-        UPDATE controleur_alertes
-        SET duree_controle_secondes = ?,
-            traite_le = datetime('now', 'localtime'),
-            traite_par = ?,
-            statut = 'traitee'
-        WHERE id = ?
-      `).bind(timerControleDuration, controleurNom, alerteExistante.id).run()
+    // 🔄 SYNCHRONISATION AUTOMATIQUE : Mettre à jour OU créer l'alerte dans controleur_alertes
+    try {
+      // Récupérer les données complètes du quai depuis quai_status
+      const quaiStatusData = await c.env.DB.prepare(`
+        SELECT 
+          timer_start,
+          timer_fin_timestamp,
+          timer_duration,
+          commentaire,
+          controle_fournisseur,
+          controle_id_chauffeur
+        FROM quai_status
+        WHERE quai_numero = ?
+      `).bind(quai).first()
       
-      console.log(`✅ Alerte #${alerteExistante.id} mise à jour avec durée contrôle: ${timerControleDuration}s`)
-    } else {
-      console.log(`⚠️ Aucune alerte trouvée pour le quai ${quai}, elle sera créée lors du prochain déchargement`)
+      // Extraire numero_id et fournisseur depuis le commentaire ou les colonnes controle_*
+      let numeroId = quaiStatusData?.controle_id_chauffeur || null
+      let fournisseur = quaiStatusData?.controle_fournisseur || null
+      
+      if (quaiStatusData?.commentaire && quaiStatusData.commentaire.includes('ID:')) {
+        // Format: "Déchargement terminé - Agent - Fournisseur - ID:123456"
+        const parts = quaiStatusData.commentaire.split(' - ')
+        if (parts.length >= 3) {
+          fournisseur = parts[2].trim() // Fournisseur (GVT, pas Ayoub)
+        }
+        const idMatch = quaiStatusData.commentaire.match(/ID:(\w+)/)
+        if (idMatch) {
+          numeroId = idMatch[1]
+        }
+      }
+      
+      // Calculer heure_premier_scan = timer_fin_timestamp - timer_duration
+      let heurePremierScan = null
+      if (quaiStatusData?.timer_fin_timestamp && quaiStatusData?.timer_duration) {
+        heurePremierScan = await c.env.DB.prepare(`
+          SELECT datetime(?, '-' || ? || ' seconds') as result
+        `).bind(quaiStatusData.timer_fin_timestamp, quaiStatusData.timer_duration).first()
+        heurePremierScan = heurePremierScan?.result
+      }
+      
+      // Vérifier si une alerte existe déjà pour ce quai
+      const alerteExistante = await c.env.DB.prepare(`
+        SELECT id
+        FROM controleur_alertes
+        WHERE quai_numero = ?
+          AND heure_fin_dechargement IS NOT NULL
+          AND duree_controle_secondes IS NULL
+        ORDER BY created_at DESC
+        LIMIT 1
+      `).bind(quai).first()
+      
+      if (alerteExistante) {
+        // Mettre à jour l'alerte existante
+        await c.env.DB.prepare(`
+          UPDATE controleur_alertes
+          SET duree_controle_secondes = ?,
+              traite_le = datetime('now', 'localtime'),
+              traite_par = ?,
+              statut = 'traitee'
+          WHERE id = ?
+        `).bind(timerControleDuration, controleurNom, alerteExistante.id).run()
+        
+        console.log(`✅ Alerte #${alerteExistante.id} mise à jour avec durée contrôle: ${timerControleDuration}s`)
+      } else {
+        // Créer une nouvelle alerte avec toutes les données
+        const insertResult = await c.env.DB.prepare(`
+          INSERT INTO controleur_alertes (
+            quai_numero, numero_id, fournisseur,
+            heure_premier_scan, heure_fin_dechargement,
+            duree_dechargement_secondes, duree_controle_secondes,
+            traite_le, traite_par,
+            ecart_palettes_attendues, ecart_palettes_recues,
+            non_conformites, verification_points,
+            statut, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?, 100, 100, '[]', '{}', 'traitee', datetime('now', 'localtime'))
+        `).bind(
+          quai,
+          numeroId,
+          fournisseur,
+          heurePremierScan,
+          quaiStatusData?.timer_fin_timestamp,
+          quaiStatusData?.timer_duration,
+          timerControleDuration,
+          controleurNom
+        ).run()
+        
+        console.log(`✅✅✅ NOUVELLE ALERTE KPI CRÉÉE - ID: ${insertResult.meta.last_row_id}, Quai: ${quai}, Fournisseur: ${fournisseur}, Déchargement: ${quaiStatusData?.timer_duration}s, Contrôle: ${timerControleDuration}s`)
+      }
+    } catch (syncError) {
+      console.error('❌ Erreur synchronisation KPI:', syncError)
+      console.error('❌ Stack:', syncError.stack)
     }
     
     return c.json({ 

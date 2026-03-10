@@ -2971,7 +2971,7 @@ var $r=Object.defineProperty;var Nt=t=>{throw TypeError(t)};var Vr=(t,r,s)=>r in
         controle_debut_timestamp
       FROM quai_status 
       WHERE quai_numero = ?
-    `).bind(s).first();let n=null;if(a!=null&&a.timer_controle_start){const o=new Date(a.timer_controle_start.replace(" ","T")).getTime(),c=new Date(Hr()).getTime();n=Math.floor((c-o)/1e3),console.log(`⏱️ Durée contrôle calculée: ${n}s`)}await t.env.DB.prepare(`
+    `).bind(s).first();let n=null;if(a!=null&&a.timer_controle_start){const l=new Date(a.timer_controle_start.replace(" ","T")).getTime(),o=new Date(Hr()).getTime();n=Math.floor((o-l)/1e3),console.log(`⏱️ Durée contrôle calculée: ${n}s`)}await t.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'fin_controle',
           timer_controle_start = NULL,
@@ -2980,22 +2980,44 @@ var $r=Object.defineProperty;var Nt=t=>{throw TypeError(t)};var Vr=(t,r,s)=>r in
           controleur_nom = ?,
           updated_at = datetime('now', 'localtime')
       WHERE quai_numero = ?
-    `).bind(n,i,s).run(),console.log(`✅ Quai ${s} passé en fin de contrôle - Timer figé à ${n}s - Contrôleur: ${i}`);const l=await t.env.DB.prepare(`
-      SELECT id, heure_fin_dechargement
-      FROM controleur_alertes
-      WHERE quai_numero = ?
-        AND heure_fin_dechargement IS NOT NULL
-        AND duree_controle_secondes IS NULL
-      ORDER BY created_at DESC
-      LIMIT 1
-    `).bind(s).first();return l?(await t.env.DB.prepare(`
-        UPDATE controleur_alertes
-        SET duree_controle_secondes = ?,
-            traite_le = datetime('now', 'localtime'),
-            traite_par = ?,
-            statut = 'traitee'
-        WHERE id = ?
-      `).bind(n,i,l.id).run(),console.log(`✅ Alerte #${l.id} mise à jour avec durée contrôle: ${n}s`)):console.log(`⚠️ Aucune alerte trouvée pour le quai ${s}, elle sera créée lors du prochain déchargement`),t.json({success:!0,quai:s,dureeControle:n,controleurNom:i,fournisseur:(a==null?void 0:a.controle_fournisseur)||"",idChauffeur:(a==null?void 0:a.controle_id_chauffeur)||"",debutTimestamp:(a==null?void 0:a.controle_debut_timestamp)||""})}catch(r){return console.error("❌ Erreur fin contrôle:",r),t.json({error:"Erreur serveur"},500)}});p.get("/scan-fin-controle-success",t=>{const r=t.req.query("quai"),s=parseInt(t.req.query("duree")||"0"),i=t.req.query("nom")||"",a=t.req.query("fournisseur")||"",n=t.req.query("id")||"",l=t.req.query("debut")||"",o=Math.floor(s/3600),c=Math.floor(s%3600/60),d=s%60;`${String(o).padStart(2,"0")}${String(c).padStart(2,"0")}${String(d).padStart(2,"0")}`;let u="";if(l)try{const h=new Date(l.replace(" ","T")+"Z"),f=String(h.getDate()).padStart(2,"0"),g=String(h.getMonth()+1).padStart(2,"0"),b=h.getFullYear(),v=String(h.getHours()).padStart(2,"0"),x=String(h.getMinutes()).padStart(2,"0");u=`${f}/${g}/${b} à ${v}h${x}`}catch{u=l}return t.html(`
+    `).bind(n,i,s).run(),console.log(`✅ Quai ${s} passé en fin de contrôle - Timer figé à ${n}s - Contrôleur: ${i}`);try{const l=await t.env.DB.prepare(`
+        SELECT 
+          timer_start,
+          timer_fin_timestamp,
+          timer_duration,
+          commentaire,
+          controle_fournisseur,
+          controle_id_chauffeur
+        FROM quai_status
+        WHERE quai_numero = ?
+      `).bind(s).first();let o=(l==null?void 0:l.controle_id_chauffeur)||null,c=(l==null?void 0:l.controle_fournisseur)||null;if(l!=null&&l.commentaire&&l.commentaire.includes("ID:")){const h=l.commentaire.split(" - ");h.length>=3&&(c=h[2].trim());const f=l.commentaire.match(/ID:(\w+)/);f&&(o=f[1])}let d=null;l!=null&&l.timer_fin_timestamp&&(l!=null&&l.timer_duration)&&(d=await t.env.DB.prepare(`
+          SELECT datetime(?, '-' || ? || ' seconds') as result
+        `).bind(l.timer_fin_timestamp,l.timer_duration).first(),d=d==null?void 0:d.result);const u=await t.env.DB.prepare(`
+        SELECT id
+        FROM controleur_alertes
+        WHERE quai_numero = ?
+          AND heure_fin_dechargement IS NOT NULL
+          AND duree_controle_secondes IS NULL
+        ORDER BY created_at DESC
+        LIMIT 1
+      `).bind(s).first();if(u)await t.env.DB.prepare(`
+          UPDATE controleur_alertes
+          SET duree_controle_secondes = ?,
+              traite_le = datetime('now', 'localtime'),
+              traite_par = ?,
+              statut = 'traitee'
+          WHERE id = ?
+        `).bind(n,i,u.id).run(),console.log(`✅ Alerte #${u.id} mise à jour avec durée contrôle: ${n}s`);else{const h=await t.env.DB.prepare(`
+          INSERT INTO controleur_alertes (
+            quai_numero, numero_id, fournisseur,
+            heure_premier_scan, heure_fin_dechargement,
+            duree_dechargement_secondes, duree_controle_secondes,
+            traite_le, traite_par,
+            ecart_palettes_attendues, ecart_palettes_recues,
+            non_conformites, verification_points,
+            statut, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?, 100, 100, '[]', '{}', 'traitee', datetime('now', 'localtime'))
+        `).bind(s,o,c,d,l==null?void 0:l.timer_fin_timestamp,l==null?void 0:l.timer_duration,n,i).run();console.log(`✅✅✅ NOUVELLE ALERTE KPI CRÉÉE - ID: ${h.meta.last_row_id}, Quai: ${s}, Fournisseur: ${c}, Déchargement: ${l==null?void 0:l.timer_duration}s, Contrôle: ${n}s`)}}catch(l){console.error("❌ Erreur synchronisation KPI:",l),console.error("❌ Stack:",l.stack)}return t.json({success:!0,quai:s,dureeControle:n,controleurNom:i,fournisseur:(a==null?void 0:a.controle_fournisseur)||"",idChauffeur:(a==null?void 0:a.controle_id_chauffeur)||"",debutTimestamp:(a==null?void 0:a.controle_debut_timestamp)||""})}catch(r){return console.error("❌ Erreur fin contrôle:",r),t.json({error:"Erreur serveur"},500)}});p.get("/scan-fin-controle-success",t=>{const r=t.req.query("quai"),s=parseInt(t.req.query("duree")||"0"),i=t.req.query("nom")||"",a=t.req.query("fournisseur")||"",n=t.req.query("id")||"",l=t.req.query("debut")||"",o=Math.floor(s/3600),c=Math.floor(s%3600/60),d=s%60;`${String(o).padStart(2,"0")}${String(c).padStart(2,"0")}${String(d).padStart(2,"0")}`;let u="";if(l)try{const h=new Date(l.replace(" ","T")+"Z"),f=String(h.getDate()).padStart(2,"0"),g=String(h.getMonth()+1).padStart(2,"0"),b=h.getFullYear(),v=String(h.getHours()).padStart(2,"0"),x=String(h.getMinutes()).padStart(2,"0");u=`${f}/${g}/${b} à ${v}h${x}`}catch{u=l}return t.html(`
     <!DOCTYPE html>
     <html lang="fr">
     <head>
