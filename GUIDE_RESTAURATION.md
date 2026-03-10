@@ -25,72 +25,72 @@ SELECT COUNT(*) AS total FROM quai_status;
 ```sql
 -- Quais Zone A (1-10)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(1, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(2, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(3, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(4, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(5, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(6, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(7, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(8, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(9, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(10, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(1, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(3, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(4, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(5, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(6, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(7, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(8, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(9, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Quais Zone B (32-38)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(32, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(33, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(34, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(35, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(36, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(37, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(38, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(32, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(33, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(34, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(35, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(36, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(37, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(38, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Quais Zone C (45-49)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(45, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(46, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(47, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(48, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(49, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(45, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(46, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(47, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(48, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(49, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Quais Zone D (60-62)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(60, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(61, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(62, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(60, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(61, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(62, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Quais Zone E (67-69)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(67, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(68, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(69, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(67, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(68, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(69, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Quais Zone F (75-79)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(75, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(76, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(77, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(78, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(79, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(75, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(76, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(77, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(78, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(79, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Quais Zone G (81-87)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(81, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(82, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(83, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(84, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(85, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(86, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(87, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(81, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(82, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(83, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(84, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(85, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(86, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(87, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Quais Zone H (99-103)
 INSERT OR REPLACE INTO quai_status (quai_numero, statut, created_at, updated_at) VALUES
-(99, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(100, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(101, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(102, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime')),
-(103, 'disponible', datetime('now', 'localtime'), datetime('now', 'localtime'));
+(99, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(100, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(101, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(102, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(103, 'disponible', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 ```
 
 ### Étape 4 : Vérifier la restauration
