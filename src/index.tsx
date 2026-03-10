@@ -1565,18 +1565,17 @@ app.post('/api/fin-controle', async (c) => {
         console.log(`⏱️ Heure premier scan calculée: ${heurePremierScan}`)
       }
       
-      // Vérifier si alerte existe
+      // Vérifier si alerte existe pour ce quai (peu importe l'état de duree_controle_secondes)
       const alerteExistante = await c.env.DB.prepare(`
-        SELECT id
+        SELECT id, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement, duree_dechargement_secondes
         FROM controleur_alertes
         WHERE quai_numero = ?
-          AND (duree_controle_secondes IS NULL OR duree_controle_secondes = 0)
         ORDER BY created_at DESC
         LIMIT 1
       `).bind(quai).first()
       
       if (alerteExistante) {
-        // UPDATE alerte existante
+        // UPDATE alerte existante avec la durée de contrôle RÉELLE
         await c.env.DB.prepare(`
           UPDATE controleur_alertes
           SET duree_controle_secondes = ?,
@@ -1586,7 +1585,8 @@ app.post('/api/fin-controle', async (c) => {
           WHERE id = ?
         `).bind(timerControleDuration, controleurNom, alerteExistante.id).run()
         
-        console.log(`✅✅✅ ALERTE #${alerteExistante.id} MISE À JOUR - Contrôle: ${timerControleDuration}s`)
+        console.log(`✅✅✅ ALERTE #${alerteExistante.id} MISE À JOUR - Quai ${quai} - Contrôle: ${timerControleDuration}s`)
+        console.log(`📊 Détails: ${alerteExistante.fournisseur} (${alerteExistante.numero_id}) - Déch: ${alerteExistante.duree_dechargement_secondes}s + Ctrl: ${timerControleDuration}s`)
       } else {
         // CREATE nouvelle alerte
         console.log(`🆕 Création nouvelle alerte - Quai: ${quai}, ID: ${numeroId}, Fournisseur: ${fournisseur}`)
@@ -3728,6 +3728,7 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
     console.log('📊 Récupération KPI pour date:', dateFilter)
     
     // Récupérer TOUTES les alertes avec les données réelles depuis controleur_alertes
+    // ✅ CORRECTION: Filtrer sur created_at au lieu de heure_premier_scan (qui peut être NULL)
     const { results } = await c.env.DB.prepare(`
       SELECT 
         ca.id,
@@ -3737,10 +3738,12 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         ca.heure_premier_scan,
         ca.heure_fin_dechargement,
         ca.traite_le,
+        ca.duree_dechargement_secondes,
+        ca.duree_controle_secondes,
         ca.created_at
       FROM controleur_alertes ca
-      WHERE DATE(ca.heure_premier_scan) = ?
-      ORDER BY ca.heure_premier_scan ASC
+      WHERE DATE(ca.created_at) = ?
+      ORDER BY ca.created_at ASC
       LIMIT 100
     `).bind(dateFilter).all()
     
@@ -3748,22 +3751,22 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
     
     // Calculer les KPI pour chaque camion
     const kpiData = results.map(row => {
-      // Convertir les timestamps SQL en format Date JavaScript
-      const debutDechargement = row.heure_premier_scan ? new Date(row.heure_premier_scan.replace(' ', 'T')) : null
-      const finDechargement = row.heure_fin_dechargement ? new Date(row.heure_fin_dechargement.replace(' ', 'T')) : null
-      const validationControle = row.traite_le ? new Date(row.traite_le.replace(' ', 'T')) : null
+      // ✅ PRIORITÉ: Utiliser les durées EXACTES stockées en base (en secondes)
+      // Si non disponibles, calculer à partir des timestamps
       
-      // 1. TEMPS DE DÉCHARGEMENT (heure_premier_scan → heure_fin_dechargement)
+      // 1. TEMPS DE DÉCHARGEMENT
       let tempsDechargementMinutes = null
       let tempsDechargementStatut = 'grey'
       let tempsDechargementFormate = '—'
       
-      if (debutDechargement && finDechargement) {
-        const diffMs = finDechargement.getTime() - debutDechargement.getTime()
-        tempsDechargementMinutes = Math.round(diffMs / 60000)
-        const hours = Math.floor(tempsDechargementMinutes / 60)
-        const mins = tempsDechargementMinutes % 60
-        tempsDechargementFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
+      if (row.duree_dechargement_secondes) {
+        // ✅ Utiliser la durée exacte du timer (en secondes)
+        const secondes = row.duree_dechargement_secondes
+        const hours = Math.floor(secondes / 3600)
+        const mins = Math.floor((secondes % 3600) / 60)
+        const secs = secondes % 60
+        tempsDechargementFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+        tempsDechargementMinutes = Math.round(secondes / 60)
         
         // Seuils: ≤20 min = vert, 21-25 = orange, >25 = rouge
         if (tempsDechargementMinutes <= 20) {
@@ -3773,19 +3776,34 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         } else {
           tempsDechargementStatut = 'red'
         }
+      } else if (row.heure_premier_scan && row.heure_fin_dechargement) {
+        // Fallback: calculer à partir des timestamps
+        const debut = new Date(row.heure_premier_scan.replace(' ', 'T'))
+        const fin = new Date(row.heure_fin_dechargement.replace(' ', 'T'))
+        const diffMs = fin.getTime() - debut.getTime()
+        tempsDechargementMinutes = Math.round(diffMs / 60000)
+        const hours = Math.floor(tempsDechargementMinutes / 60)
+        const mins = tempsDechargementMinutes % 60
+        tempsDechargementFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
+        
+        if (tempsDechargementMinutes <= 20) tempsDechargementStatut = 'green'
+        else if (tempsDechargementMinutes <= 25) tempsDechargementStatut = 'orange'
+        else tempsDechargementStatut = 'red'
       }
       
-      // 2. TEMPS DE CONTRÔLE (heure_fin_dechargement → traite_le)
+      // 2. TEMPS DE CONTRÔLE
       let tempsControleMinutes = null
       let tempsControleStatut = 'grey'
       let tempsControleFormate = '—'
       
-      if (finDechargement && validationControle) {
-        const diffMs = validationControle.getTime() - finDechargement.getTime()
-        tempsControleMinutes = Math.round(diffMs / 60000)
-        const hours = Math.floor(tempsControleMinutes / 60)
-        const mins = tempsControleMinutes % 60
-        tempsControleFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
+      if (row.duree_controle_secondes) {
+        // ✅ Utiliser la durée exacte du timer (en secondes)
+        const secondes = row.duree_controle_secondes
+        const hours = Math.floor(secondes / 3600)
+        const mins = Math.floor((secondes % 3600) / 60)
+        const secs = secondes % 60
+        tempsControleFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+        tempsControleMinutes = Math.round(secondes / 60)
         
         // Seuils: ≤30 min = vert, 31-40 = orange, >40 = rouge
         if (tempsControleMinutes <= 30) {
@@ -3795,19 +3813,34 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         } else {
           tempsControleStatut = 'red'
         }
+      } else if (row.heure_fin_dechargement && row.traite_le) {
+        // Fallback: calculer à partir des timestamps
+        const fin = new Date(row.heure_fin_dechargement.replace(' ', 'T'))
+        const validation = new Date(row.traite_le.replace(' ', 'T'))
+        const diffMs = validation.getTime() - fin.getTime()
+        tempsControleMinutes = Math.round(diffMs / 60000)
+        const hours = Math.floor(tempsControleMinutes / 60)
+        const mins = tempsControleMinutes % 60
+        tempsControleFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
+        
+        if (tempsControleMinutes <= 30) tempsControleStatut = 'green'
+        else if (tempsControleMinutes <= 40) tempsControleStatut = 'orange'
+        else tempsControleStatut = 'red'
       }
       
-      // 3. TEMPS TOTAL AU QUAI (heure_premier_scan → traite_le)
+      // 3. TEMPS TOTAL AU QUAI (déchargement + contrôle)
       let tempsTotalMinutes = null
       let tempsTotalStatut = 'grey'
       let tempsTotalFormate = '—'
       
-      if (debutDechargement && validationControle) {
-        const diffMs = validationControle.getTime() - debutDechargement.getTime()
-        tempsTotalMinutes = Math.round(diffMs / 60000)
-        const hours = Math.floor(tempsTotalMinutes / 60)
-        const mins = tempsTotalMinutes % 60
-        tempsTotalFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
+      if (row.duree_dechargement_secondes && row.duree_controle_secondes) {
+        // ✅ Utiliser les durées exactes
+        const totalSecondes = row.duree_dechargement_secondes + row.duree_controle_secondes
+        const hours = Math.floor(totalSecondes / 3600)
+        const mins = Math.floor((totalSecondes % 3600) / 60)
+        const secs = totalSecondes % 60
+        tempsTotalFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+        tempsTotalMinutes = Math.round(totalSecondes / 60)
         
         // Seuils: ≤60 min = vert, 61-70 = orange, >70 = rouge
         if (tempsTotalMinutes <= 60) {
@@ -3817,6 +3850,19 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         } else {
           tempsTotalStatut = 'red'
         }
+      } else if (row.heure_premier_scan && row.traite_le) {
+        // Fallback: calculer à partir des timestamps
+        const debut = new Date(row.heure_premier_scan.replace(' ', 'T'))
+        const validation = new Date(row.traite_le.replace(' ', 'T'))
+        const diffMs = validation.getTime() - debut.getTime()
+        tempsTotalMinutes = Math.round(diffMs / 60000)
+        const hours = Math.floor(tempsTotalMinutes / 60)
+        const mins = tempsTotalMinutes % 60
+        tempsTotalFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
+        
+        if (tempsTotalMinutes <= 60) tempsTotalStatut = 'green'
+        else if (tempsTotalMinutes <= 70) tempsTotalStatut = 'orange'
+        else tempsTotalStatut = 'red'
       }
       
       // Formater les heures au format HH:MM
