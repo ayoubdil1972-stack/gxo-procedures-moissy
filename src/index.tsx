@@ -38,11 +38,21 @@ const app = new Hono<{ Bindings: Bindings }>()
 // Cette fonction génère un timestamp au format ISO 8601 avec le fuseau horaire de Paris
 // Utilisée pour garantir la cohérence des horodatages dans toute l'application
 function getParisTime(): string {
+  // Retourner l'heure actuelle de Paris au format SQLite: "YYYY-MM-DD HH:MM:SS"
+  // (SANS 'Z' pour que JavaScript l'interprète comme heure locale, pas UTC)
   const now = new Date()
-  // Convertir en heure de Paris (Europe/Paris)
-  const parisTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }))
-  // Retourner au format ISO 8601
-  return parisTime.toISOString()
+  const parisTime = now.toLocaleString('sv-SE', { 
+    timeZone: 'Europe/Paris',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  })
+  // Format: "YYYY-MM-DD HH:MM:SS" (compatible avec SQLite datetime)
+  return parisTime.replace(',', '')
 }
 
 // Fonction pour formater l'affichage d'une date en français (Paris)
@@ -1501,12 +1511,15 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // Calculer la durée en secondes avec JavaScript (méthode v3.7.3)
-      // ⚠️ NE PAS AJOUTER 'Z' car timer_controle_start est déjà en heure locale
+      // Calculer la durée en secondes avec JavaScript
+      // timer_controle_start est au format SQLite: "YYYY-MM-DD HH:MM:SS" (heure locale)
+      // getParisTime() retourne maintenant aussi "YYYY-MM-DD HH:MM:SS" (heure locale)
       const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
-      const endTime = new Date(getParisTime()).getTime()
+      const endTime = new Date(getParisTime().replace(' ', 'T')).getTime()
       timerControleDuration = Math.floor((endTime - startTime) / 1000)
       console.log(`⏱️ Durée contrôle calculée (JavaScript): ${timerControleDuration}s`)
+      console.log(`   Start: ${quaiData.timer_controle_start} → ${startTime}`)
+      console.log(`   End: ${getParisTime()} → ${endTime}`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3121,13 +3134,16 @@ app.post('/api/fin-dechargement', async (c) => {
 
     let timerDuration = null
     if (quaiData?.timer_start) {
-      // Calculer la durée en secondes avec JavaScript (méthode v3.7.3)
-      // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
-      // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
+      // Calculer la durée en secondes avec JavaScript
+      // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS" (heure locale)
+      // getParisTime() retourne maintenant aussi "YYYY-MM-DD HH:MM:SS" (heure locale)
+      // On remplace l'espace par 'T' pour que JavaScript comprenne: "YYYY-MM-DDTHH:MM:SS"
       const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
-      const endTime = new Date(getParisTime()).getTime()
+      const endTime = new Date(getParisTime().replace(' ', 'T')).getTime()
       timerDuration = Math.floor((endTime - startTime) / 1000)
       console.log(`⏱️ Durée calculée (JavaScript): ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
+      console.log(`   Start: ${quaiData.timer_start} → ${startTime}`)
+      console.log(`   End: ${getParisTime()} → ${endTime}`)
     }
     console.log('📊 Timer start:', quaiData?.timer_start)
 
