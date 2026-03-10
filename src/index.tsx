@@ -1488,7 +1488,7 @@ app.post('/api/fin-controle', async (c) => {
       return c.json({ error: 'Données manquantes' }, 400)
     }
 
-    // Récupérer les informations du quai ET calculer la durée avec SQLite
+    // Récupérer les informations du quai ET calculer la durée avec SQLite (utiliser 'localtime' car timer_controle_start est en local)
     const quaiData = await c.env.DB.prepare(`
       SELECT 
         timer_controle_start,
@@ -3104,7 +3104,7 @@ app.post('/api/fin-dechargement', async (c) => {
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
     // Mettre à jour le statut du quai à "fin_dechargement" (timer figé)
-    // Calculer la durée DIRECTEMENT avec SQLite pour éviter les problèmes de timezone
+    // Calculer la durée DIRECTEMENT avec SQLite (utiliser 'localtime' car timer_start est en local)
     const durationResult = await c.env.DB.prepare(`
       SELECT 
         timer_start,
