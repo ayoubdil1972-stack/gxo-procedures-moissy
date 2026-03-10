@@ -186,46 +186,22 @@ export function ChefEquipePage() {
             </div>
           </div>
 
-          {/* Tableau détaillé */}
+          {/* Grille de cartes quais terminés */}
           <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
               <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                <i class="fas fa-table text-indigo-500"></i>
-                Détail par camion
+                <i class="fas fa-warehouse text-indigo-500"></i>
+                Quais terminés (Fin de contrôle)
               </h3>
             </div>
             
-            <div class="overflow-x-auto">
-              <table class="w-full">
-                <thead class="bg-gray-50 border-b border-gray-200">
-                  <tr class="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    <th class="px-6 py-4">Quai</th>
-                    <th class="px-6 py-4">Camion</th>
-                    <th class="px-6 py-4">Fournisseur</th>
-                    <th class="px-6 py-4">Contrôleur</th>
-                    <th class="px-6 py-4 text-center">
-                      <div class="flex items-center justify-center gap-1">
-                        <i class="fas fa-truck-loading text-green-500"></i>
-                        <span>Déchargement</span>
-                      </div>
-                    </th>
-                    <th class="px-6 py-4 text-center">
-                      <div class="flex items-center justify-center gap-1">
-                        <i class="fas fa-clipboard-check text-purple-500"></i>
-                        <span>Contrôle</span>
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody id="kpi-tableau-body" class="divide-y divide-gray-200">
-                  <tr>
-                    <td colspan="6" class="px-6 py-12 text-center text-gray-500">
-                      <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
-                      <p>Chargement des données KPI...</p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            {/* Grille de cartes */}
+            <div id="kpi-quais-grid" class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {/* Les cartes seront générées par JavaScript */}
+              <div class="col-span-full text-center py-12 text-gray-500">
+                <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                <p>Chargement des quais terminés...</p>
+              </div>
             </div>
           </div>
 

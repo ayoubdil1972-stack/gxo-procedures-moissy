@@ -3700,96 +3700,59 @@ app.get('/api/improductivites/utilisateur/:nom', async (c) => {
 // ==============================================
 
 // GET /api/chef-equipe/kpi/reception-camion - KPI réception camion
-// 🎯 ARCHIVES DIRECTES (kpi_archives) - Comme improductivités
+// 🎯 CARTES QUAIS TERMINÉS (statut fin_controle depuis quai_status)
 app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   try {
     const date = c.req.query('date') // Format: YYYY-MM-DD
     
-    // Créer la table kpi_archives si elle n'existe pas
-    await c.env.DB.prepare(`
-      CREATE TABLE IF NOT EXISTS kpi_archives (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        quai_numero INTEGER NOT NULL,
-        numero_camion TEXT NOT NULL,
-        fournisseur TEXT NOT NULL,
-        duree_dechargement_secondes INTEGER NOT NULL,
-        duree_controle_secondes INTEGER NOT NULL,
-        controleur_nom TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `).run()
-    
-    // ✅ SIMPLE: Récupérer TOUTES les archives (comme improductivités)
-    let query = 'SELECT * FROM kpi_archives'
+    // Récupérer les quais en statut 'fin_controle'
+    let query = `
+      SELECT * FROM quai_status
+      WHERE statut = 'fin_controle'
+    `
     let params = []
     
     if (date) {
-      query += ' WHERE DATE(created_at) = ?'
+      query += ' AND DATE(updated_at) = ?'
       params.push(date)
     } else {
-      query += ' WHERE DATE(created_at) = DATE("now")'
+      query += ' AND DATE(updated_at) = DATE("now")'
     }
     
-    query += ' ORDER BY created_at DESC LIMIT 200'
+    query += ' ORDER BY updated_at DESC LIMIT 200'
     
     const { results } = await c.env.DB.prepare(query).bind(...params).all()
     
-    console.log(`📊✅ KPI: ${results.length} quais archivés pour ${date || "aujourd\'hui"}`)
+    console.log(`📊✅ KPI: ${results.length} quais terminés pour ${date || "aujourd\'hui"}`)
     
-    // ✅ TRAITEMENT SIMPLE (comme improductivités)
-    const kpiData = results.map(row => {
-      // Helper functions
-      const formatDuree = (sec) => {
-        if (!sec) return '—'
-        const h = Math.floor(sec / 3600)
-        const m = Math.floor((sec % 3600) / 60)
-        const s = sec % 60
-        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-      }
-      
-      const getStatut = (sec, vert_min, orange_min) => {
-        if (!sec) return 'grey'
-        const min = Math.round(sec / 60)
-        if (min <= vert_min) return 'green'
-        if (min <= orange_min) return 'orange'
-        return 'red'
-      }
-      
-      const dechSec = row.duree_dechargement_secondes || 0
-      const ctrlSec = row.duree_controle_secondes || 0
-      
-      return {
-        id: row.id,
-        quai_numero: row.quai_numero,
-        numero_camion: row.numero_camion,
-        fournisseur: row.fournisseur,
-        duree_dechargement: formatDuree(dechSec),
-        duree_dechargement_minutes: Math.round(dechSec / 60),
-        duree_dechargement_status: getStatut(dechSec, 20, 25),
-        duree_controle: formatDuree(ctrlSec),
-        duree_controle_minutes: Math.round(ctrlSec / 60),
-        duree_controle_status: getStatut(ctrlSec, 30, 40),
-        controleur_nom: row.controleur_nom || '—',
-        created_at: row.created_at
-      }
+    // Retourner les quais tels quels (front-end utilisera renderQuaiCard)
+    const quais = results.map(quai => ({
+      ...quai,
+      // Ajouter quai_numero pour compatibilité
+      quai_numero: quai.quai_numero
+    }))
+    
+    // Calcul moyennes
+    const totalQuais = quais.length
+    let totalDechargement = 0
+    let totalControle = 0
+    
+    quais.forEach(q => {
+      if (q.timer_duration) totalDechargement += q.timer_duration
+      if (q.timer_controle_duration) totalControle += q.timer_controle_duration
     })
     
-    // Moyennes SEULEMENT déchargement et contrôle (PAS de total)
-    const totalCamions = kpiData.length
     const moyennes = {
-      total_camions: totalCamions,
-      dechargement_minutes: totalCamions > 0 
-        ? Math.round(kpiData.reduce((sum, k) => sum + k.duree_dechargement_minutes, 0) / totalCamions) : 0,
-      controle_minutes: totalCamions > 0
-        ? Math.round(kpiData.reduce((sum, k) => sum + k.duree_controle_minutes, 0) / totalCamions) : 0
+      total_camions: totalQuais,
+      dechargement_minutes: totalQuais > 0 ? Math.round(totalDechargement / totalQuais / 60) : 0,
+      controle_minutes: totalQuais > 0 ? Math.round(totalControle / totalQuais / 60) : 0
     }
     
     console.log('📊✅ Moyennes:', moyennes)
     
-    // ✅ RETOUR SIMPLE (comme improductivités)
     return c.json({
       success: true,
-      kpi: kpiData,
+      quais: quais,
       moyennes: moyennes,
       date: date || new Date().toISOString().split('T')[0]
     })

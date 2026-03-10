@@ -415,8 +415,8 @@ async function loadKPIReception() {
     // Mettre à jour les cartes de moyennes
     updateKPIMoyennes(data.moyennes)
     
-    // Mettre à jour le tableau
-    updateKPITableau(data.kpi)
+    // Mettre à jour la grille de cartes quais
+    updateKPITableau(data.quais)
     
   } catch (error) {
     console.error('❌ Erreur chargement KPI:', error)
@@ -440,50 +440,122 @@ function updateKPIMoyennes(moyennes) {
   
   const controle = moyennes.controle_minutes || 0
   document.getElementById('kpi-moy-controle').textContent = `${controle} min`
-  
-  // Supprimer la carte Total si elle existe
-  const totalCard = document.getElementById('kpi-moy-total')
-  if (totalCard) {
-    totalCard.closest('.bg-white')?.remove()
-  }
 }
 
-// Mettre à jour le tableau détaillé (SANS colonnes heures et SANS Total)
-function updateKPITableau(kpiData) {
-  const tbody = document.getElementById('kpi-tableau-body')
+// Afficher les quais terminés sous forme de cartes (comme interface quais)
+function updateKPITableau(quais) {
+  const grid = document.getElementById('kpi-quais-grid')
   
-  if (!kpiData || kpiData.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
-          <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
-          <p class="text-lg">Aucun camion traité pour cette date</p>
-        </td>
-      </tr>
+  if (!quais || quais.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full text-center py-12 text-gray-500">
+        <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+        <p class="text-lg">Aucun quai terminé pour cette date</p>
+      </div>
     `
     return
   }
   
-  tbody.innerHTML = kpiData.map(kpi => {
-    const statutDechargement = getStatutBadge(kpi.duree_dechargement, kpi.duree_dechargement_status)
-    const statutControle = getStatutBadge(kpi.duree_controle, kpi.duree_controle_status)
+  // Générer les cartes de quais (EXACTEMENT comme dans l'interface quais)
+  grid.innerHTML = quais.map(quai => renderQuaiCardKPI(quai)).join('')
+}
+
+// Fonction pour rendre une carte de quai (copie de renderQuaiCard)
+function renderQuaiCardKPI(quai) {
+  // Fonction helper pour formater les durées
+  const formatDuration = (seconds) => {
+    if (!seconds || seconds <= 0) return null
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+  }
+  
+  // Formater durées
+  const formattedDechargement = formatDuration(quai.timer_duration)
+  const formattedControle = formatDuration(quai.timer_controle_duration)
+  
+  // Info déchargement
+  const dechargementInfo = formattedDechargement ? `
+    <div class="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-200">
+      <div class="text-xs text-blue-800 font-semibold mb-1">📋 Déchargement terminé</div>
+      <div class="text-sm font-mono font-bold text-blue-900">${formattedDechargement}</div>
+    </div>
+  ` : ''
+  
+  // Info contrôle
+  let controleInfo = ''
+  if (formattedControle) {
+    // Formater date de fin
+    let finControleFormatted = ''
+    if (quai.controle_fin_timestamp) {
+      try {
+        const date = new Date(quai.controle_fin_timestamp.replace(' ', 'T') + 'Z')
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const year = date.getFullYear()
+        const hour = String(date.getHours()).padStart(2, '0')
+        const minute = String(date.getMinutes()).padStart(2, '0')
+        finControleFormatted = `${day}/${month}/${year} à ${hour}h${minute}`
+      } catch (e) {
+        finControleFormatted = quai.controle_fin_timestamp
+      }
+    }
     
-    return `
-      <tr class="hover:bg-gray-50 transition-colors">
-        <td class="px-6 py-4">
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
-            <i class="fas fa-warehouse mr-1"></i>
-            Quai ${kpi.quai_numero}
-          </span>
-        </td>
-        <td class="px-6 py-4 font-medium text-gray-900">${kpi.numero_camion}</td>
-        <td class="px-6 py-4 text-gray-600">${kpi.fournisseur || '-'}</td>
-        <td class="px-6 py-4 text-sm text-gray-600">${kpi.controleur_nom}</td>
-        <td class="px-6 py-4 text-center">${statutDechargement}</td>
-        <td class="px-6 py-4 text-center">${statutControle}</td>
-      </tr>
+    controleInfo = `
+      <div class="mt-2 bg-purple-50 rounded-lg p-2 border border-purple-200">
+        <div class="text-xs text-purple-800 font-semibold mb-1">📝 Contrôle terminé</div>
+        <div class="text-sm font-mono font-bold text-purple-900">${formattedControle}</div>
+        ${quai.controleur_nom ? `<div class="text-xs text-purple-700 mt-1"><i class="fas fa-user mr-1"></i>${quai.controleur_nom}</div>` : ''}
+        ${quai.controle_fournisseur ? `<div class="text-xs text-purple-700 mt-0.5"><i class="fas fa-truck mr-1"></i>${quai.controle_fournisseur}</div>` : ''}
+        ${quai.controle_id_chauffeur ? `<div class="text-xs text-purple-700 mt-0.5"><i class="fas fa-id-card mr-1"></i>ID: ${quai.controle_id_chauffeur}</div>` : ''}
+        ${finControleFormatted ? `<div class="text-xs text-purple-700 mt-0.5"><i class="fas fa-clock mr-1"></i>${finControleFormatted}</div>` : ''}
+      </div>
     `
-  }).join('')
+  }
+  
+  return `
+    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-md hover:shadow-xl p-5 cursor-pointer transition-all duration-200 hover:scale-105">
+      <div class="text-center">
+        <!-- Icône -->
+        <div class="flex justify-center mb-3">
+          <div class="bg-green-200 rounded-full w-14 h-14 flex items-center justify-center shadow-lg">
+            <span class="text-3xl">✅</span>
+          </div>
+        </div>
+        
+        <!-- Numéro du quai -->
+        <div class="font-extrabold text-gray-800 text-2xl mb-1">
+          Quai ${quai.quai_numero}
+        </div>
+        
+        <!-- Statut -->
+        <div class="text-sm font-bold uppercase tracking-wide text-green-800 mb-1">
+          Fin de contrôle
+        </div>
+        
+        <!-- Info déchargement -->
+        ${dechargementInfo}
+        
+        <!-- Info contrôle -->
+        ${controleInfo}
+        
+        <!-- Commentaire -->
+        ${quai.commentaire ? `
+          <div class="mt-3 text-xs bg-white/70 rounded-lg p-3 text-left shadow-inner">
+            <div class="flex items-start space-x-2 mb-1">
+              <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+              <div class="font-semibold text-gray-800">${quai.commentaire}</div>
+            </div>
+            <div class="text-gray-600 flex items-center space-x-1 mt-1">
+              <i class="fas fa-user text-xs"></i>
+              <span>${quai.commentaire_auteur || 'Inconnu'}</span>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `
 }
 
 // Obtenir le badge de statut
