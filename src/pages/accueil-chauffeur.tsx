@@ -358,6 +358,16 @@ export function AccueilChauffeurPage() {
                       <span class="text-2xl mr-3">✅</span>
                       Disponible - Prêt pour chargement
                     </button>
+                    <button onclick="setQuaiStatus('en_cours')" 
+                            class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-yellow-500 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
+                      <span class="text-2xl mr-3">⏱️</span>
+                      En cours d'utilisation - Timer actif
+                    </button>
+                    <button onclick="setQuaiStatus('fin_dechargement')" 
+                            class="w-full bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-3 rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
+                      <span class="text-2xl mr-3">📋</span>
+                      Fin de déchargement - Timer figé
+                    </button>
                     <button onclick="toggleCommentaire('mise_a_quai_non_decharge')" 
                             class="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-amber-700 hover:to-amber-800 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center">
                       <span class="text-2xl mr-3">📦</span>
