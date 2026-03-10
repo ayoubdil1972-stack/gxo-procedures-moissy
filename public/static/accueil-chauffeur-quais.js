@@ -265,7 +265,6 @@ function getStatusColor(statut) {
     case 'fin_dechargement': return 'bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-400'
     case 'en_controle': return 'bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-400'
     case 'fin_controle': return 'bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-400'
-    case 'mise_a_quai_non_decharge': return 'bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-700'
     case 'indisponible': return 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400'
     default: return 'bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-400'
   }
@@ -278,7 +277,6 @@ function getStatusIcon(statut) {
     case 'fin_dechargement': return '📋'
     case 'en_controle': return '🔍'
     case 'fin_controle': return '📝'
-    case 'mise_a_quai_non_decharge': return '📦'
     case 'indisponible': return '🚫'
     default: return '❓'
   }
@@ -291,7 +289,6 @@ function getStatusIconBg(statut) {
     case 'fin_dechargement': return 'bg-blue-200'
     case 'en_controle': return 'bg-orange-200'
     case 'fin_controle': return 'bg-purple-200'
-    case 'mise_a_quai_non_decharge': return 'bg-amber-300'
     case 'indisponible': return 'bg-red-200'
     default: return 'bg-gray-200'
   }
@@ -304,7 +301,6 @@ function getStatusTextColor(statut) {
     case 'fin_dechargement': return 'text-blue-700'
     case 'en_controle': return 'text-orange-700'
     case 'fin_controle': return 'text-purple-700'
-    case 'mise_a_quai_non_decharge': return 'text-amber-800'
     case 'indisponible': return 'text-red-700'
     default: return 'text-gray-700'
   }
@@ -317,7 +313,6 @@ function getStatusLabel(statut) {
     case 'fin_dechargement': return 'Fin de déchargement'
     case 'en_controle': return 'En contrôle'
     case 'fin_controle': return 'Fin de contrôle'
-    case 'mise_a_quai_non_decharge': return 'Mise à quai non déchargé'
     case 'indisponible': return 'Indisponible'
     default: return 'Inconnu'
   }
@@ -496,54 +491,15 @@ function closeQuaiModal() {
 window.openQuaiModal = openQuaiModal
 window.closeQuaiModal = closeQuaiModal
 
-// Variable pour stocker le statut en attente de confirmation
-let pendingStatus = null
-
-function toggleCommentaire(statut) {
+function toggleCommentaire() {
   const commentaireSection = document.getElementById('commentaire-section')
-  const commentaireLabel = document.getElementById('commentaire-label')
-  const confirmBtn = document.getElementById('confirm-status-btn')
-  const confirmBtnText = document.getElementById('confirm-btn-text')
-  
   if (commentaireSection) {
-    // Stocker le statut en attente
-    pendingStatus = statut
-    
-    // Afficher la section commentaire
-    commentaireSection.classList.remove('hidden')
-    
-    // Personnaliser le texte selon le statut
-    if (statut === 'mise_a_quai_non_decharge') {
-      commentaireLabel.innerHTML = '<i class="fas fa-comment-alt mr-2 text-amber-700"></i>Commentaire obligatoire'
-      confirmBtn.className = 'w-full mt-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-amber-700 hover:to-amber-800 transition-all shadow-md hover:shadow-lg font-semibold'
-      confirmBtnText.textContent = 'Confirmer la mise à quai'
-    } else if (statut === 'indisponible') {
-      commentaireLabel.innerHTML = '<i class="fas fa-comment-alt mr-2 text-red-500"></i>Commentaire obligatoire'
-      confirmBtn.className = 'w-full mt-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg font-semibold'
-      confirmBtnText.textContent = 'Confirmer l\'indisponibilité'
-    }
+    commentaireSection.classList.toggle('hidden')
   }
 }
 
-// Nouvelle fonction pour confirmer le statut avec commentaire
-async function confirmQuaiStatus() {
-  if (!pendingStatus) {
-    console.error('Aucun statut en attente')
-    return
-  }
-  
-  const commentaire = document.getElementById('quai-commentaire')?.value.trim()
-  if (!commentaire) {
-    alert('⚠️ Un commentaire est obligatoire')
-    return
-  }
-  
-  await setQuaiStatus(pendingStatus)
-}
-
-// Rendre les fonctions globalement accessibles
+// Rendre toggleCommentaire globalement accessible
 window.toggleCommentaire = toggleCommentaire
-window.confirmQuaiStatus = confirmQuaiStatus
 
 async function setQuaiStatus(statut) {
   if (!currentQuaiNumero) {
@@ -551,11 +507,18 @@ async function setQuaiStatus(statut) {
     return
   }
   
-  // Si mise_a_quai_non_decharge ou indisponible, le commentaire doit déjà être rempli
-  if ((statut === 'indisponible' || statut === 'mise_a_quai_non_decharge')) {
+  // Si indisponible, afficher le champ commentaire
+  if (statut === 'indisponible') {
+    const commentaireSection = document.getElementById('commentaire-section')
+    if (commentaireSection && commentaireSection.classList.contains('hidden')) {
+      commentaireSection.classList.remove('hidden')
+      return // Ne pas sauvegarder, attendre que l'utilisateur remplisse le commentaire
+    }
+    
+    // Vérifier que le commentaire est rempli
     const commentaire = document.getElementById('quai-commentaire')?.value.trim()
     if (!commentaire) {
-      alert('⚠️ Un commentaire est obligatoire pour ce statut')
+      alert('⚠️ Un commentaire est obligatoire pour mettre un quai en "Indisponible"')
       return
     }
   }
@@ -570,7 +533,7 @@ window.setQuaiStatus = setQuaiStatus
 async function saveQuaiStatusWithStatut(statut) {
   if (!currentQuaiNumero) return
   
-  const commentaire = (statut === 'indisponible' || statut === 'mise_a_quai_non_decharge')
+  const commentaire = statut === 'indisponible' 
     ? document.getElementById('quai-commentaire').value.trim()
     : null
   
@@ -598,10 +561,9 @@ async function saveQuaiStatusWithStatut(statut) {
     // Fermer le modal
     closeQuaiModal()
     
-    // Réinitialiser le champ commentaire et le statut en attente
+    // Réinitialiser le champ commentaire
     document.getElementById('quai-commentaire').value = ''
     document.getElementById('commentaire-section').classList.add('hidden')
-    pendingStatus = null
     
     // Recharger les données
     await loadQuais()

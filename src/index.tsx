@@ -3369,11 +3369,11 @@ app.post('/api/quais/:numero', async (c) => {
       return c.json({ success: false, error: `Numéro de quai invalide. Quais valides : ${quaisValides.join(', ')}` }, 400)
     }
     
-    if (!['disponible', 'en_cours', 'indisponible', 'fin_dechargement', 'mise_a_quai_non_decharge'].includes(statut)) {
+    if (!['disponible', 'en_cours', 'indisponible', 'fin_dechargement'].includes(statut)) {
       return c.json({ success: false, error: 'Statut invalide' }, 400)
     }
     
-    if ((statut === 'indisponible' || statut === 'mise_a_quai_non_decharge') && !commentaire) {
+    if (statut === 'indisponible' && !commentaire) {
       return c.json({ success: false, error: 'Commentaire obligatoire pour ce statut' }, 400)
     }
     
