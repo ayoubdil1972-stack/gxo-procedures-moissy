@@ -179,7 +179,7 @@ export function ChefEquipePage() {
             <div id="card-moy-controle" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300">
               <div class="flex items-center justify-between mb-3">
                 <i class="fas fa-clipboard-check text-3xl opacity-80"></i>
-                <span class="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Objectif ≤30min</span>
+                <span class="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Objectif ≤40min</span>
               </div>
               <div class="text-3xl font-bold mb-1" id="kpi-moy-controle">-</div>
               <div class="text-purple-100 text-sm">Temps contrôle moyen</div>
@@ -207,18 +207,24 @@ export function ChefEquipePage() {
 
           {/* Légende */}
           <div class="mt-6 bg-gray-50 rounded-lg p-4">
-            <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center justify-center gap-2">
               <i class="fas fa-info-circle text-gray-500"></i>
               Objectifs de performance
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div class="text-gray-700 bg-white p-3 rounded-lg border border-gray-200">
-                <strong class="text-green-600">📦 Déchargement:</strong>
+              <div class="text-gray-700 bg-white p-3 rounded-lg border border-gray-200 text-center">
+                <strong class="text-green-600 flex items-center justify-center gap-1">
+                  <i class="fas fa-truck-loading"></i>
+                  Déchargement
+                </strong>
                 <div class="mt-1 text-xs">Objectif ≤ 30 minutes</div>
               </div>
-              <div class="text-gray-700 bg-white p-3 rounded-lg border border-gray-200">
-                <strong class="text-purple-600">✅ Contrôle:</strong>
-                <div class="mt-1 text-xs">Objectif ≤ 30 minutes</div>
+              <div class="text-gray-700 bg-white p-3 rounded-lg border border-gray-200 text-center">
+                <strong class="text-purple-600 flex items-center justify-center gap-1">
+                  <i class="fas fa-clipboard-check"></i>
+                  Contrôle
+                </strong>
+                <div class="mt-1 text-xs">Objectif ≤ 40 minutes</div>
               </div>
             </div>
             <div class="mt-3 text-xs text-gray-500 text-center">

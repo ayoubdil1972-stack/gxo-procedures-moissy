@@ -452,8 +452,8 @@ function updateKPIMoyennes(moyennes) {
     cardDechargement.className = 'bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300'
   }
   
-  // Objectif contrôle : 30 minutes
-  if (controle > 30) {
+  // Objectif contrôle : 40 minutes
+  if (controle > 40) {
     cardControle.className = 'bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300'
   } else {
     cardControle.className = 'bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg transition-all duration-300'

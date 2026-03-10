@@ -3390,11 +3390,78 @@ app.post('/api/quais/:numero', async (c) => {
         WHERE quai_numero = ?
       `).bind(statut, numero).run()
     } else if (statut === 'disponible') {
-      // Réinitialiser le timer
+      // NOUVEAU : Archiver le quai s'il était en fin_controle
+      const quaiActuel = await c.env.DB.prepare(`
+        SELECT * FROM quai_status WHERE quai_numero = ?
+      `).bind(numero).first()
+      
+      if (quaiActuel && quaiActuel.statut === 'fin_controle') {
+        console.log(`📦 Archivage historique Quai ${numero} avant remise en disponible`)
+        
+        // Créer table historique si nécessaire
+        await c.env.DB.prepare(`
+          CREATE TABLE IF NOT EXISTS quai_historique (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            quai_numero INTEGER NOT NULL,
+            statut TEXT NOT NULL,
+            timer_start TEXT,
+            timer_duration INTEGER,
+            timer_controle_start TEXT,
+            timer_controle_duration INTEGER,
+            controle_debut_timestamp TEXT,
+            controle_fin_timestamp TEXT,
+            controle_fournisseur TEXT,
+            controle_id_chauffeur TEXT,
+            controleur_nom TEXT,
+            commentaire TEXT,
+            commentaire_auteur TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            archived_at DATETIME DEFAULT CURRENT_TIMESTAMP
+          )
+        `).run()
+        
+        // Copier les données dans l'historique
+        await c.env.DB.prepare(`
+          INSERT INTO quai_historique (
+            quai_numero, statut, timer_start, timer_duration,
+            timer_controle_start, timer_controle_duration,
+            controle_debut_timestamp, controle_fin_timestamp,
+            controle_fournisseur, controle_id_chauffeur, controleur_nom,
+            commentaire, commentaire_auteur, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          quaiActuel.quai_numero,
+          quaiActuel.statut,
+          quaiActuel.timer_start,
+          quaiActuel.timer_duration,
+          quaiActuel.timer_controle_start,
+          quaiActuel.timer_controle_duration,
+          quaiActuel.controle_debut_timestamp,
+          quaiActuel.controle_fin_timestamp,
+          quaiActuel.controle_fournisseur,
+          quaiActuel.controle_id_chauffeur,
+          quaiActuel.controleur_nom,
+          quaiActuel.commentaire,
+          quaiActuel.commentaire_auteur,
+          quaiActuel.updated_at
+        ).run()
+        
+        console.log(`✅ Quai ${numero} archivé dans quai_historique`)
+      }
+      
+      // Réinitialiser le timer et remettre en disponible
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
             timer_start = NULL,
+            timer_duration = NULL,
+            timer_controle_start = NULL,
+            timer_controle_duration = NULL,
+            controle_debut_timestamp = NULL,
+            controle_fin_timestamp = NULL,
+            controle_fournisseur = NULL,
+            controle_id_chauffeur = NULL,
+            controleur_nom = NULL,
             commentaire = NULL,
             commentaire_auteur = NULL,
             updated_at = datetime('now', 'localtime')
@@ -3700,30 +3767,52 @@ app.get('/api/improductivites/utilisateur/:nom', async (c) => {
 // ==============================================
 
 // GET /api/chef-equipe/kpi/reception-camion - KPI réception camion
-// 🎯 CARTES QUAIS TERMINÉS (statut fin_controle depuis quai_status)
+// 🎯 CARTES QUAIS TERMINÉS (historique complet depuis quai_historique)
 app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   try {
     const date = c.req.query('date') // Format: YYYY-MM-DD
     
-    // Récupérer les quais en statut 'fin_controle'
+    // Créer table historique si nécessaire
+    await c.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS quai_historique (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        quai_numero INTEGER NOT NULL,
+        statut TEXT NOT NULL,
+        timer_start TEXT,
+        timer_duration INTEGER,
+        timer_controle_start TEXT,
+        timer_controle_duration INTEGER,
+        controle_debut_timestamp TEXT,
+        controle_fin_timestamp TEXT,
+        controle_fournisseur TEXT,
+        controle_id_chauffeur TEXT,
+        controleur_nom TEXT,
+        commentaire TEXT,
+        commentaire_auteur TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        archived_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run()
+    
+    // Récupérer TOUS les quais archivés pour la date
     let query = `
-      SELECT * FROM quai_status
+      SELECT * FROM quai_historique
       WHERE statut = 'fin_controle'
     `
     let params = []
     
     if (date) {
-      query += ' AND DATE(updated_at) = ?'
+      query += ' AND DATE(archived_at) = ?'
       params.push(date)
     } else {
-      query += ' AND DATE(updated_at) = DATE("now")'
+      query += ' AND DATE(archived_at) = DATE("now")'
     }
     
-    query += ' ORDER BY updated_at DESC LIMIT 200'
+    query += ' ORDER BY archived_at DESC LIMIT 200'
     
     const { results } = await c.env.DB.prepare(query).bind(...params).all()
     
-    console.log(`📊✅ KPI: ${results.length} quais terminés pour ${date || "aujourd\'hui"}`)
+    console.log(`📊✅ KPI: ${results.length} quais archivés pour ${date || "aujourd\'hui"}`)
     
     // Retourner les quais tels quels (front-end utilisera renderQuaiCard)
     const quais = results.map(quai => ({
