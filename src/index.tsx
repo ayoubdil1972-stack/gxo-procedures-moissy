@@ -1565,11 +1565,14 @@ app.post('/api/fin-controle', async (c) => {
         console.log(`⏱️ Heure premier scan calculée: ${heurePremierScan}`)
       }
       
-      // Vérifier si alerte existe pour ce quai (peu importe l'état de duree_controle_secondes)
+      // Vérifier si alerte existe pour ce quai ET ce camion (celui en cours de contrôle)
+      // PRIORITÉ: Chercher alerte sans durée de contrôle (= contrôle en cours)
       const alerteExistante = await c.env.DB.prepare(`
         SELECT id, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement, duree_dechargement_secondes
         FROM controleur_alertes
         WHERE quai_numero = ?
+          AND (duree_controle_secondes IS NULL OR duree_controle_secondes = 0)
+          AND DATE(created_at) = DATE('now')
         ORDER BY created_at DESC
         LIMIT 1
       `).bind(quai).first()
