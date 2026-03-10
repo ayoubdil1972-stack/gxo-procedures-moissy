@@ -3749,7 +3749,6 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
     `).run()
     
     // ✅ SIMPLE: Récupérer TOUTES les alertes (comme improductivités)
-    // Si date fournie, filtrer, sinon prendre toutes celles d'aujourd'hui
     let query = 'SELECT * FROM controleur_alertes'
     let params = []
     
@@ -3764,185 +3763,89 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
     
     const { results } = await c.env.DB.prepare(query).bind(...params).all()
     
-    console.log(`📊✅ ${results.length} camions trouvés (date: ${date || 'aujourd\'hui'})`)
+    console.log(`📊✅ KPI: ${results.length} alertes trouvées pour ${date || "aujourd\'hui"}`)
     
-    // Calculer les KPI pour chaque camion
+    // ✅ TRAITEMENT SIMPLE (comme improductivités - pas de calculs complexes)
     const kpiData = results.map(row => {
-      // ✅ PRIORITÉ: Utiliser les durées EXACTES stockées en base (en secondes)
-      // Si non disponibles, calculer à partir des timestamps
-      
-      // 1. TEMPS DE DÉCHARGEMENT
-      let tempsDechargementMinutes = null
-      let tempsDechargementStatut = 'grey'
-      let tempsDechargementFormate = '—'
-      
-      if (row.duree_dechargement_secondes) {
-        // ✅ Utiliser la durée exacte du timer (en secondes)
-        const secondes = row.duree_dechargement_secondes
-        const hours = Math.floor(secondes / 3600)
-        const mins = Math.floor((secondes % 3600) / 60)
-        const secs = secondes % 60
-        tempsDechargementFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-        tempsDechargementMinutes = Math.round(secondes / 60)
-        
-        // Seuils: ≤20 min = vert, 21-25 = orange, >25 = rouge
-        if (tempsDechargementMinutes <= 20) {
-          tempsDechargementStatut = 'green'
-        } else if (tempsDechargementMinutes <= 25) {
-          tempsDechargementStatut = 'orange'
-        } else {
-          tempsDechargementStatut = 'red'
-        }
-      } else if (row.heure_premier_scan && row.heure_fin_dechargement) {
-        // Fallback: calculer à partir des timestamps
-        const debut = new Date(row.heure_premier_scan.replace(' ', 'T'))
-        const fin = new Date(row.heure_fin_dechargement.replace(' ', 'T'))
-        const diffMs = fin.getTime() - debut.getTime()
-        tempsDechargementMinutes = Math.round(diffMs / 60000)
-        const hours = Math.floor(tempsDechargementMinutes / 60)
-        const mins = tempsDechargementMinutes % 60
-        tempsDechargementFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
-        
-        if (tempsDechargementMinutes <= 20) tempsDechargementStatut = 'green'
-        else if (tempsDechargementMinutes <= 25) tempsDechargementStatut = 'orange'
-        else tempsDechargementStatut = 'red'
+      // Helper functions
+      const formatDuree = (sec) => {
+        if (!sec) return '—'
+        const h = Math.floor(sec / 3600)
+        const m = Math.floor((sec % 3600) / 60)
+        const s = sec % 60
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
       }
       
-      // 2. TEMPS DE CONTRÔLE
-      let tempsControleMinutes = null
-      let tempsControleStatut = 'grey'
-      let tempsControleFormate = '—'
-      
-      if (row.duree_controle_secondes) {
-        // ✅ Utiliser la durée exacte du timer (en secondes)
-        const secondes = row.duree_controle_secondes
-        const hours = Math.floor(secondes / 3600)
-        const mins = Math.floor((secondes % 3600) / 60)
-        const secs = secondes % 60
-        tempsControleFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-        tempsControleMinutes = Math.round(secondes / 60)
-        
-        // Seuils: ≤30 min = vert, 31-40 = orange, >40 = rouge
-        if (tempsControleMinutes <= 30) {
-          tempsControleStatut = 'green'
-        } else if (tempsControleMinutes <= 40) {
-          tempsControleStatut = 'orange'
-        } else {
-          tempsControleStatut = 'red'
-        }
-      } else if (row.heure_fin_dechargement && row.traite_le) {
-        // Fallback: calculer à partir des timestamps
-        const fin = new Date(row.heure_fin_dechargement.replace(' ', 'T'))
-        const validation = new Date(row.traite_le.replace(' ', 'T'))
-        const diffMs = validation.getTime() - fin.getTime()
-        tempsControleMinutes = Math.round(diffMs / 60000)
-        const hours = Math.floor(tempsControleMinutes / 60)
-        const mins = tempsControleMinutes % 60
-        tempsControleFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
-        
-        if (tempsControleMinutes <= 30) tempsControleStatut = 'green'
-        else if (tempsControleMinutes <= 40) tempsControleStatut = 'orange'
-        else tempsControleStatut = 'red'
-      }
-      
-      // 3. TEMPS TOTAL AU QUAI (déchargement + contrôle)
-      let tempsTotalMinutes = null
-      let tempsTotalStatut = 'grey'
-      let tempsTotalFormate = '—'
-      
-      if (row.duree_dechargement_secondes && row.duree_controle_secondes) {
-        // ✅ Utiliser les durées exactes
-        const totalSecondes = row.duree_dechargement_secondes + row.duree_controle_secondes
-        const hours = Math.floor(totalSecondes / 3600)
-        const mins = Math.floor((totalSecondes % 3600) / 60)
-        const secs = totalSecondes % 60
-        tempsTotalFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-        tempsTotalMinutes = Math.round(totalSecondes / 60)
-        
-        // Seuils: ≤60 min = vert, 61-70 = orange, >70 = rouge
-        if (tempsTotalMinutes <= 60) {
-          tempsTotalStatut = 'green'
-        } else if (tempsTotalMinutes <= 70) {
-          tempsTotalStatut = 'orange'
-        } else {
-          tempsTotalStatut = 'red'
-        }
-      } else if (row.heure_premier_scan && row.traite_le) {
-        // Fallback: calculer à partir des timestamps
-        const debut = new Date(row.heure_premier_scan.replace(' ', 'T'))
-        const validation = new Date(row.traite_le.replace(' ', 'T'))
-        const diffMs = validation.getTime() - debut.getTime()
-        tempsTotalMinutes = Math.round(diffMs / 60000)
-        const hours = Math.floor(tempsTotalMinutes / 60)
-        const mins = tempsTotalMinutes % 60
-        tempsTotalFormate = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`
-        
-        if (tempsTotalMinutes <= 60) tempsTotalStatut = 'green'
-        else if (tempsTotalMinutes <= 70) tempsTotalStatut = 'orange'
-        else tempsTotalStatut = 'red'
-      }
-      
-      // Formater les heures au format HH:MM
       const formatHeure = (dateStr) => {
         if (!dateStr) return '—'
-        const d = new Date(dateStr.replace(' ', 'T'))
-        return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+        try {
+          const d = new Date(dateStr.replace(' ', 'T'))
+          return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+        } catch { return '—' }
       }
+      
+      const getStatut = (sec, vert_min, orange_min) => {
+        if (!sec) return 'grey'
+        const min = Math.round(sec / 60)
+        if (min <= vert_min) return 'green'
+        if (min <= orange_min) return 'orange'
+        return 'red'
+      }
+      
+      const dechSec = row.duree_dechargement_secondes || 0
+      const ctrlSec = row.duree_controle_secondes || 0
+      const totalSec = dechSec + ctrlSec
       
       return {
         id: row.id,
         quai_numero: row.quai_numero,
-        numero_camion: row.numero_id || `C${String(row.id).padStart(3, '0')}e`,
-        fournisseur: row.fournisseur,
+        numero_camion: row.numero_id || `C${String(row.id).padStart(3, '0')}`,
+        fournisseur: row.fournisseur || '—',
         heure_debut: formatHeure(row.heure_premier_scan),
         heure_fin: formatHeure(row.heure_fin_dechargement),
         heure_validation: formatHeure(row.traite_le),
-        duree_dechargement: tempsDechargementFormate,
-        duree_dechargement_minutes: tempsDechargementMinutes,
-        duree_dechargement_status: tempsDechargementStatut,
-        duree_controle: tempsControleFormate,
-        duree_controle_minutes: tempsControleMinutes,
-        duree_controle_status: tempsControleStatut,
-        duree_totale: tempsTotalFormate,
-        duree_totale_minutes: tempsTotalMinutes,
-        duree_totale_status: tempsTotalStatut
+        duree_dechargement: formatDuree(dechSec),
+        duree_dechargement_minutes: Math.round(dechSec / 60),
+        duree_dechargement_status: getStatut(dechSec, 20, 25),
+        duree_controle: formatDuree(ctrlSec),
+        duree_controle_minutes: Math.round(ctrlSec / 60),
+        duree_controle_status: getStatut(ctrlSec, 30, 40),
+        duree_totale: formatDuree(totalSec),
+        duree_totale_minutes: Math.round(totalSec / 60),
+        duree_totale_status: getStatut(totalSec, 60, 70),
+        statut: row.statut || 'en_attente',
+        traite_par: row.traite_par || '—',
+        created_at: row.created_at
       }
     })
     
-    // Calculer les moyennes
-    const kpiAvecTemps = kpiData.filter(k => 
-      k.duree_dechargement_minutes !== null && 
-      k.duree_controle_minutes !== null && 
-      k.duree_totale_minutes !== null
-    )
-    
+    // Moyennes (seulement pour contrôle terminé)
+    const kpiComplets = kpiData.filter(k => k.duree_controle_minutes > 0)
     const moyennes = {
-      dechargement_minutes: kpiAvecTemps.length > 0 
-        ? Math.round(kpiAvecTemps.reduce((sum, k) => sum + k.duree_dechargement_minutes, 0) / kpiAvecTemps.length)
-        : 0,
-      controle_minutes: kpiAvecTemps.length > 0
-        ? Math.round(kpiAvecTemps.reduce((sum, k) => sum + k.duree_controle_minutes, 0) / kpiAvecTemps.length)
-        : 0,
-      total_minutes: kpiAvecTemps.length > 0
-        ? Math.round(kpiAvecTemps.reduce((sum, k) => sum + k.duree_totale_minutes, 0) / kpiAvecTemps.length)
-        : 0,
       total_camions: kpiData.length,
-      camions_complets: kpiAvecTemps.length
+      camions_complets: kpiComplets.length,
+      dechargement_minutes: kpiComplets.length > 0 
+        ? Math.round(kpiComplets.reduce((sum, k) => sum + k.duree_dechargement_minutes, 0) / kpiComplets.length) : 0,
+      controle_minutes: kpiComplets.length > 0
+        ? Math.round(kpiComplets.reduce((sum, k) => sum + k.duree_controle_minutes, 0) / kpiComplets.length) : 0,
+      total_minutes: kpiComplets.length > 0
+        ? Math.round(kpiComplets.reduce((sum, k) => sum + k.duree_totale_minutes, 0) / kpiComplets.length) : 0
     }
     
+    console.log('📊✅ Moyennes calculées:', moyennes)
+    
+    // ✅ RETOUR SIMPLE (comme improductivités)
     return c.json({
       success: true,
-      date: dateFilter,
       kpi: kpiData,
-      moyennes
+      moyennes: moyennes,
+      date: date || new Date().toISOString().split('T')[0]
     })
   } catch (error) {
-    console.error('❌ Erreur récupération KPI:', error)
-    return c.json({ 
-      success: false, 
-      error: error.message 
-    }, 500)
+    console.error('❌ Erreur chargement KPI:', error)
+    return c.json({ success: false, error: error.message }, 500)
   }
 })
+
 
 export default app
