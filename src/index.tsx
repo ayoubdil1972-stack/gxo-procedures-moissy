@@ -1501,15 +1501,16 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // 🔧 CORRECTION FINALE : Ne plus utiliser getParisTime() qui retourne UTC
-      // Calculer directement avec Date.now() (timestamp Unix en millisecondes)
-      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
-      const endTime = Date.now()  // Timestamp actuel (millisecondes depuis 1970)
+      // ✅ Parser correctement en ajoutant +01:00 pour forcer la timezone Paris
+      // SQLite stocke : "2026-03-10 20:30:00" (heure locale Paris)
+      // JavaScript doit parser : "2026-03-10T20:30:00+01:00"
+      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T') + '+01:00').getTime()
+      const endTime = Date.now()
       const calculatedDuration = Math.floor((endTime - startTime) / 1000)
       
-      // Enregistrer la durée EXACTE calculée (sans correction)
       timerControleDuration = calculatedDuration
-      console.log(`⏱️ Durée contrôle: Start=${quaiData.timer_controle_start} → ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}m ${timerControleDuration%60}s)`)
+      
+      console.log(`⏱️ CONTRÔLE: Durée exacte = ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3127,15 +3128,16 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // 🔧 CORRECTION FINALE : Ne plus utiliser getParisTime() qui retourne UTC
-        // Calculer directement avec Date.now() (timestamp Unix en millisecondes)
-        const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
-        const endTime = Date.now()  // Timestamp actuel (millisecondes depuis 1970)
+        // ✅ Parser correctement en ajoutant +01:00 pour forcer la timezone Paris
+        // SQLite stocke : "2026-03-10 20:30:00" (heure locale Paris)
+        // JavaScript doit parser : "2026-03-10T20:30:00+01:00"
+        const startTime = new Date(quaiData.timer_start.replace(' ', 'T') + '+01:00').getTime()
+        const endTime = Date.now()
         const calculatedDuration = Math.floor((endTime - startTime) / 1000)
         
-        // Enregistrer la durée EXACTE calculée (sans correction)
         timerDuration = calculatedDuration
-        console.log(`⏱️ Durée déchargement: Start=${quaiData.timer_start} → ${timerDuration}s (${Math.floor(timerDuration/60)}m ${timerDuration%60}s)`)
+        
+        console.log(`⏱️ DÉCHARGEMENT: Durée exacte = ${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
