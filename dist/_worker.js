@@ -2971,7 +2971,9 @@ var zr=Object.defineProperty;var Rt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
         controle_debut_timestamp
       FROM quai_status 
       WHERE quai_numero = ?
-    `).bind(s).first();let n=null;if(a!=null&&a.timer_controle_start){const l=new Date(a.timer_controle_start.replace(" ","T")).getTime(),o=Date.now();n=Math.floor((o-l)/1e3),console.log(`⏱️ CONTRÔLE: Durée exacte = ${n}s (${Math.floor(n/60)}min ${n%60}s)`)}await t.env.DB.prepare(`
+    `).bind(s).first();let n=null;if(a!=null&&a.timer_controle_start){const l=await t.env.DB.prepare(`
+        SELECT CAST((julianday('now', 'localtime') - julianday(?)) * 86400 AS INTEGER) as duration
+      `).bind(a.timer_controle_start).first();n=(l==null?void 0:l.duration)||0,console.log(`⏱️ CONTRÔLE: Durée calculée par SQLite = ${n}s (${Math.floor(n/60)}min ${n%60}s)`)}await t.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'fin_controle',
           timer_controle_start = NULL,
@@ -3664,7 +3666,9 @@ var zr=Object.defineProperty;var Rt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
     `).bind(r.quai_numero,r.nom_agent,r.palettes_attendues,r.palettes_recues,r.palettes_a_rendre,a,r.autres_commentaire||null,i).run();console.log("✅ Fin de déchargement enregistrée - ID:",n.meta.last_row_id);try{const o=await t.env.DB.prepare(`
         SELECT timer_start, timer_fin_timestamp FROM quai_status WHERE quai_numero = ?
-      `).bind(r.quai_numero).first();console.log("📊 Quai data AVANT UPDATE:",o);const c=o==null?void 0:o.timer_start;let d=null;if(o!=null&&o.timer_start){const u=new Date(o.timer_start.replace(" ","T")).getTime(),h=Date.now();d=Math.floor((h-u)/1e3),console.log(`⏱️ DÉCHARGEMENT: Durée exacte = ${d}s (${Math.floor(d/60)}min ${d%60}s)`)}console.log("💾 UPDATE avec:",{timerDuration:d,commentaire:`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,commentaire_auteur:r.nom_agent,quai_numero:r.quai_numero}),await t.env.DB.prepare(`
+      `).bind(r.quai_numero).first();console.log("📊 Quai data AVANT UPDATE:",o);const c=o==null?void 0:o.timer_start;let d=null;if(o!=null&&o.timer_start){const u=await t.env.DB.prepare(`
+          SELECT CAST((julianday('now', 'localtime') - julianday(?)) * 86400 AS INTEGER) as duration
+        `).bind(o.timer_start).first();d=(u==null?void 0:u.duration)||0,console.log(`⏱️ DÉCHARGEMENT: Durée calculée par SQLite = ${d}s (${Math.floor(d/60)}min ${d%60}s)`)}console.log("💾 UPDATE avec:",{timerDuration:d,commentaire:`Déchargement terminé - ${r.nom_agent} - ${r.fournisseur} - ID:${r.numero_id}`,commentaire_auteur:r.nom_agent,quai_numero:r.quai_numero}),await t.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = 'fin_dechargement',
             timer_start = NULL,

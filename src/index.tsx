@@ -1501,17 +1501,16 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // ✅ SOLUTION SIMPLE : Comparer directement milliseconds Unix
-      // SQLite stocke datetime('now','localtime') au format "YYYY-MM-DD HH:MM:SS"
-      // JavaScript new Date() parse ce format en HEURE LOCALE également
-      // Pas besoin de timezone, les deux sont cohérents
-      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
-      const endTime = Date.now()
-      const calculatedDuration = Math.floor((endTime - startTime) / 1000)
+      // ✅ SOLUTION DÉFINITIVE : Calcul dans SQLite qui connaît sa propre timezone
+      // SQLite stocke datetime('now','localtime') et connaît l'heure locale
+      // Faire le calcul EN SQLite garantit la cohérence
+      const durationResult = await c.env.DB.prepare(`
+        SELECT CAST((julianday('now', 'localtime') - julianday(?)) * 86400 AS INTEGER) as duration
+      `).bind(quaiData.timer_controle_start).first()
       
-      timerControleDuration = calculatedDuration
+      timerControleDuration = durationResult?.duration || 0
       
-      console.log(`⏱️ CONTRÔLE: Durée exacte = ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
+      console.log(`⏱️ CONTRÔLE: Durée calculée par SQLite = ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3185,17 +3184,16 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ SOLUTION SIMPLE : Comparer directement milliseconds Unix
-        // SQLite stocke datetime('now','localtime') au format "YYYY-MM-DD HH:MM:SS"
-        // JavaScript new Date() parse ce format en HEURE LOCALE également
-        // Pas besoin de timezone, les deux sont cohérents
-        const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
-        const endTime = Date.now()
-        const calculatedDuration = Math.floor((endTime - startTime) / 1000)
+        // ✅ SOLUTION DÉFINITIVE : Calcul dans SQLite qui connaît sa propre timezone
+        // SQLite stocke datetime('now','localtime') et connaît l'heure locale
+        // Faire le calcul EN SQLite garantit la cohérence
+        const durationResult = await c.env.DB.prepare(`
+          SELECT CAST((julianday('now', 'localtime') - julianday(?)) * 86400 AS INTEGER) as duration
+        `).bind(quaiData.timer_start).first()
         
-        timerDuration = calculatedDuration
+        timerDuration = durationResult?.duration || 0
         
-        console.log(`⏱️ DÉCHARGEMENT: Durée exacte = ${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
+        console.log(`⏱️ DÉCHARGEMENT: Durée calculée par SQLite = ${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
