@@ -1501,10 +1501,11 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // ✅ Parser correctement en ajoutant +01:00 pour forcer la timezone Paris
-      // SQLite stocke : "2026-03-10 20:30:00" (heure locale Paris)
-      // JavaScript doit parser : "2026-03-10T20:30:00+01:00"
-      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T') + '+01:00').getTime()
+      // ✅ SOLUTION SIMPLE : Comparer directement milliseconds Unix
+      // SQLite stocke datetime('now','localtime') au format "YYYY-MM-DD HH:MM:SS"
+      // JavaScript new Date() parse ce format en HEURE LOCALE également
+      // Pas besoin de timezone, les deux sont cohérents
+      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
       const endTime = Date.now()
       const calculatedDuration = Math.floor((endTime - startTime) / 1000)
       
@@ -3184,10 +3185,11 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ Parser correctement en ajoutant +01:00 pour forcer la timezone Paris
-        // SQLite stocke : "2026-03-10 20:30:00" (heure locale Paris)
-        // JavaScript doit parser : "2026-03-10T20:30:00+01:00"
-        const startTime = new Date(quaiData.timer_start.replace(' ', 'T') + '+01:00').getTime()
+        // ✅ SOLUTION SIMPLE : Comparer directement milliseconds Unix
+        // SQLite stocke datetime('now','localtime') au format "YYYY-MM-DD HH:MM:SS"
+        // JavaScript new Date() parse ce format en HEURE LOCALE également
+        // Pas besoin de timezone, les deux sont cohérents
+        const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
         const endTime = Date.now()
         const calculatedDuration = Math.floor((endTime - startTime) / 1000)
         
