@@ -1498,17 +1498,17 @@ app.post('/api/fin-controle', async (c) => {
       WHERE quai_numero = ?
     `).bind(quai).first()
     
+    // ✅ CALCUL SIMPLE avec julianday() - même référentiel temporel
     let timerControleDuration = null
-    if (quaiData?.timer_controle_start) {
-      // ✅ CALCUL EN SQLite avec unixepoch() SANS localtime (UTC)
-      // timer_controle_start stocké en localtime, mais unixepoch() le convertit en UTC
+    if (quaiData?.controle_debut_timestamp) {
       const durationResult = await c.env.DB.prepare(`
-        SELECT unixepoch('now') - unixepoch(?) as duration
-      `).bind(quaiData.timer_controle_start).first()
+        SELECT 
+          CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as duration
+      `).bind(quaiData.controle_debut_timestamp).first()
       
       timerControleDuration = durationResult?.duration
       
-      console.log(`⏱️ CONTRÔLE: timer_controle_start=${quaiData.timer_controle_start}, Durée=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
+      console.log(`⏱️ CONTRÔLE: debut=${quaiData.controle_debut_timestamp}, Durée=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3182,10 +3182,10 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ CALCUL EN SQLite avec unixepoch() SANS localtime (UTC)
-        // timer_start stocké en localtime, mais unixepoch() le convertit en UTC
+        // ✅ CALCUL SIMPLE avec julianday() - même référentiel temporel
         const durationResult = await c.env.DB.prepare(`
-          SELECT unixepoch('now') - unixepoch(?) as duration
+          SELECT 
+            CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as duration
         `).bind(quaiData.timer_start).first()
         
         timerDuration = durationResult?.duration
