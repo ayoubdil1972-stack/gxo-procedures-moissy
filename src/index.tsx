@@ -1507,14 +1507,9 @@ app.post('/api/fin-controle', async (c) => {
       const endTime = new Date(getParisTime()).getTime()
       let calculatedDuration = Math.floor((endTime - startTime) / 1000)
       
-      // 🔧 CORRECTION AUTOMATIQUE : Soustraire 3600 secondes (1 heure) si >= 3600
-      if (calculatedDuration >= 3600) {
-        timerControleDuration = calculatedDuration - 3600
-        console.log(`⏱️ Durée contrôle AVANT correction: ${calculatedDuration}s → APRÈS: ${timerControleDuration}s (-1h)`)
-      } else {
-        timerControleDuration = calculatedDuration
-      }
-      console.log(`⏱️ Durée contrôle finale: ${timerControleDuration}s`)
+      // 🔧 CORRECTION PERMANENTE : TOUJOURS soustraire 3600 secondes (1 heure)
+      timerControleDuration = Math.max(0, calculatedDuration - 3600)
+      console.log(`⏱️ Durée contrôle calculée: ${calculatedDuration}s → Corrigée (-1h): ${timerControleDuration}s`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3139,14 +3134,9 @@ app.post('/api/fin-dechargement', async (c) => {
         const endTime = new Date(getParisTime()).getTime()
         let calculatedDuration = Math.floor((endTime - startTime) / 1000)
         
-        // 🔧 CORRECTION AUTOMATIQUE : Soustraire 3600 secondes (1 heure) si >= 3600
-        if (calculatedDuration >= 3600) {
-          timerDuration = calculatedDuration - 3600
-          console.log(`⏱️ Durée AVANT correction: ${calculatedDuration}s → APRÈS: ${timerDuration}s (-1h)`)
-        } else {
-          timerDuration = calculatedDuration
-        }
-        console.log(`⏱️ Durée finale: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
+        // 🔧 CORRECTION PERMANENTE : TOUJOURS soustraire 3600 secondes (1 heure)
+        timerDuration = Math.max(0, calculatedDuration - 3600)
+        console.log(`⏱️ Durée calculée: ${calculatedDuration}s → Corrigée (-1h): ${timerDuration}s`)
       }
 
       console.log('💾 UPDATE avec:', {
