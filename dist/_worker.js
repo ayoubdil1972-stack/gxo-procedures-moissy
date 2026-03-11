@@ -2757,7 +2757,7 @@ var zr=Object.defineProperty;var Rt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
     `).bind(r).first();let i=null,a=null;if(s!=null&&s.commentaire){const n=s.commentaire.split(" - ");if(n.length>=3&&(i=n[2]),n.length>=4){const l=n[3].match(/ID:(\d+)/);l&&(a=l[1])}}return await t.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'en_controle',
-          timer_controle_start = datetime('now', 'localtime'),
+          timer_controle_start = datetime('now'),
           timer_controle_duration = NULL,
           controle_debut_timestamp = datetime('now', 'localtime'),
           controle_fournisseur = ?,
@@ -3715,7 +3715,7 @@ var zr=Object.defineProperty;var Rt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
         `).bind(r.quai_numero,r.numero_id,r.fournisseur,timerStartSauvegarde||null,u||null,timerDuration||null,parseInt(r.palettes_attendues),parseInt(r.palettes_recues),f,g,x).run();l=!0,console.log(`✅✅✅ ALERTE KPI CRÉÉE ${o||d?"🚨 AVEC PROBLÈMES":"✅ SANS PROBLÈME"} - ID:`,v.meta.last_row_id)}}catch(o){console.error("❌ ERREUR création alerte:",o),console.error("❌ Stack:",o.stack)}return t.json({success:!0,id:n.meta.last_row_id,message:"Déchargement enregistré avec succès",alerte_creee:l})}catch(r){return console.error("❌ Erreur enregistrement fin déchargement:",r),t.json({success:!1,error:r.message},500)}});p.get("/api/fin-dechargement",async t=>{try{const r=t.req.query("quai"),s=parseInt(t.req.query("limit")||"50");let i="SELECT * FROM fin_dechargement",a=[];r&&(i+=" WHERE quai_numero = ?",a.push(parseInt(r))),i+=" ORDER BY created_at DESC LIMIT ?",a.push(s);const{results:n}=await t.env.DB.prepare(i).bind(...a).all(),l=n.map(o=>{let c=null;try{c=JSON.parse(o.remarques||"{}")}catch{c={remarques_utilisateur:o.remarques||""}}return{...o,problemes:JSON.parse(o.problemes||"[]"),numero_id:c.numero_id||null,fournisseur:c.fournisseur||null,remarques:c.remarques_utilisateur||o.remarques||""}});return t.json({success:!0,data:l})}catch(r){return console.error("❌ Erreur récupération fins déchargement:",r),t.json({success:!1,error:r.message},500)}});p.post("/api/quais/:numero",async t=>{try{const r=parseInt(t.req.param("numero")),{statut:s,commentaire:i,commentaire_auteur:a}=await t.req.json(),n=[1,2,3,4,5,6,7,8,9,10,32,33,34,35,36,37,38,45,46,47,48,49,60,61,62,67,68,69,75,76,77,78,79,81,82,83,84,85,86,87,99,100,101,102,103];if(!n.includes(r))return t.json({success:!1,error:`Numéro de quai invalide. Quais valides : ${n.join(", ")}`},400);if(!["disponible","en_cours","indisponible","fin_dechargement"].includes(s))return t.json({success:!1,error:"Statut invalide"},400);if(s==="indisponible"&&!i)return t.json({success:!1,error:"Commentaire obligatoire pour statut indisponible"},400);if(s==="en_cours")await t.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
-            timer_start = datetime('now', 'localtime'),
+            timer_start = datetime('now'),
             commentaire = NULL,
             commentaire_auteur = NULL,
             updated_at = datetime('now', 'localtime')

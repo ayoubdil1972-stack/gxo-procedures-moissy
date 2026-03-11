@@ -379,10 +379,10 @@ function startTimers() {
       return
     }
     
-    // ✅ CORRECT: Parsing datetime SQLite sans forcer UTC
-    // Format: "2026-03-11 14:30:00" (Paris local time)
-    // Ne PAS ajouter 'Z' pour ne pas convertir en UTC
-    const start = new Date(startTime.replace(' ', 'T'))
+    // ✅ v3.11.3: timer_start stocké en UTC dans SQLite (datetime('now'))
+    // Format: "2026-03-11 13:30:00" (UTC)
+    // On ajoute 'Z' pour indiquer que c'est UTC
+    const start = new Date(startTime.replace(' ', 'T') + 'Z')
     
     if (isNaN(start.getTime())) {
       console.error('❌ Invalid timer_start:', startTime)
@@ -390,7 +390,7 @@ function startTimers() {
       return
     }
     
-    console.log(`✅ Timer démarré: ${startTime} → ${start}`)
+    console.log(`✅ Timer démarré (UTC): ${startTime} → ${start}`)
     
     // Fonction de mise à jour du timer
     const updateTimer = () => {

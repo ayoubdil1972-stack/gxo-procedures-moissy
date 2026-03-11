@@ -1242,11 +1242,11 @@ app.get('/scan-controle', async (c) => {
       }
     }
     
-    // Mettre à jour le statut du quai à "en_controle" et sauvegarder les infos
+    // ✅ Mettre à jour le statut du quai à "en_controle" - timer_controle_start en UTC
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'en_controle',
-          timer_controle_start = datetime('now', 'localtime'),
+          timer_controle_start = datetime('now'),
           timer_controle_duration = NULL,
           controle_debut_timestamp = datetime('now', 'localtime'),
           controle_fournisseur = ?,
@@ -3440,11 +3440,11 @@ app.post('/api/quais/:numero', async (c) => {
     // Mettre à jour le quai avec gestion du timer
     if (statut === 'en_cours') {
       // ✅ NOUVELLE APPROCHE : Stocker timestamp Unix (nombre entier en secondes)
-      // Timer démarre avec datetime() au format texte (compatible frontend)
+      // ✅ Timer démarre en UTC (pas de localtime pour éviter décalage unixepoch)
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
-            timer_start = datetime('now', 'localtime'),
+            timer_start = datetime('now'),
             commentaire = NULL,
             commentaire_auteur = NULL,
             updated_at = datetime('now', 'localtime')
