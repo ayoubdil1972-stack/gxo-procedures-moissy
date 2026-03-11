@@ -1243,11 +1243,11 @@ app.get('/scan-controle', async (c) => {
     }
     
     // Mettre à jour le statut du quai à "en_controle" et sauvegarder les infos
-    // Note: datetime('now', 'localtime') utilise le fuseau horaire du serveur
+    // ✅ NOUVELLE APPROCHE : Stocker timestamp Unix (nombre entier) pour timer_controle_start
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'en_controle',
-          timer_controle_start = datetime('now', 'localtime'),
+          timer_controle_start = CAST(unixepoch('now', 'localtime') AS TEXT),
           timer_controle_duration = NULL,
           controle_debut_timestamp = datetime('now', 'localtime'),
           controle_fournisseur = ?,
@@ -1501,16 +1501,13 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // ✅ SOLUTION DÉFINITIVE : unixepoch() pour éviter tout problème timezone
-      // timer_controle_start est au format "YYYY-MM-DD HH:MM:SS" en heure locale
-      // On le convertit en timestamp Unix, puis on soustrait du timestamp actuel
-      const durationResult = await c.env.DB.prepare(`
-        SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
-      `).bind(quaiData.timer_controle_start).first()
+      // ✅ CALCUL SIMPLE : timer_controle_start est maintenant un timestamp Unix (nombre)
+      // Soustraction directe, pas de conversion timezone
+      const startTimestamp = parseInt(quaiData.timer_controle_start)
+      const nowTimestamp = Math.floor(Date.now() / 1000) // JavaScript Date.now() en millisecondes → diviser par 1000
+      timerControleDuration = nowTimestamp - startTimestamp
       
-      timerControleDuration = durationResult?.duration || 0
-      
-      console.log(`⏱️ CONTRÔLE: Durée = ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
+      console.log(`⏱️ CONTRÔLE: Start=${startTimestamp}, Now=${nowTimestamp}, Durée=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3184,16 +3181,13 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ SOLUTION DÉFINITIVE : unixepoch() pour éviter tout problème timezone
-        // timer_start est au format "YYYY-MM-DD HH:MM:SS" en heure locale
-        // On le convertit en timestamp Unix, puis on soustrait du timestamp actuel
-        const durationResult = await c.env.DB.prepare(`
-          SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
-        `).bind(quaiData.timer_start).first()
+        // ✅ CALCUL SIMPLE : timer_start est maintenant un timestamp Unix (nombre)
+        // Soustraction directe, pas de conversion timezone
+        const startTimestamp = parseInt(quaiData.timer_start)
+        const nowTimestamp = Math.floor(Date.now() / 1000) // JavaScript Date.now() en millisecondes → diviser par 1000
+        timerDuration = nowTimestamp - startTimestamp
         
-        timerDuration = durationResult?.duration || 0
-        
-        console.log(`⏱️ DÉCHARGEMENT: Durée = ${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
+        console.log(`⏱️ DÉCHARGEMENT: Start=${startTimestamp}, Now=${nowTimestamp}, Durée=${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
@@ -3442,11 +3436,12 @@ app.post('/api/quais/:numero', async (c) => {
     
     // Mettre à jour le quai avec gestion du timer
     if (statut === 'en_cours') {
-      // Démarrer le timer avec datetime SQLite (heure locale)
+      // ✅ NOUVELLE APPROCHE : Stocker timestamp Unix (nombre entier en secondes)
+      // Cela évite TOUS les problèmes de timezone avec datetime()
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
-            timer_start = datetime('now', 'localtime'),
+            timer_start = CAST(unixepoch('now', 'localtime') AS TEXT),
             commentaire = NULL,
             commentaire_auteur = NULL,
             updated_at = datetime('now', 'localtime')
