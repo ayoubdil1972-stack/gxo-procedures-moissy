@@ -1500,9 +1500,10 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // ✅ CALCUL EN SQLite avec unixepoch() - garantit cohérence timezone
+      // ✅ CALCUL EN SQLite avec unixepoch() SANS localtime (UTC)
+      // timer_controle_start stocké en localtime, mais unixepoch() le convertit en UTC
       const durationResult = await c.env.DB.prepare(`
-        SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
+        SELECT unixepoch('now') - unixepoch(?) as duration
       `).bind(quaiData.timer_controle_start).first()
       
       timerControleDuration = durationResult?.duration
@@ -3181,9 +3182,10 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ CALCUL EN SQLite avec unixepoch() - garantit cohérence timezone
+        // ✅ CALCUL EN SQLite avec unixepoch() SANS localtime (UTC)
+        // timer_start stocké en localtime, mais unixepoch() le convertit en UTC
         const durationResult = await c.env.DB.prepare(`
-          SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
+          SELECT unixepoch('now') - unixepoch(?) as duration
         `).bind(quaiData.timer_start).first()
         
         timerDuration = durationResult?.duration
