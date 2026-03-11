@@ -1501,15 +1501,15 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // Calculer la durée en secondes (en utilisant l'heure de Paris)
-      // ⚠️ NE PAS AJOUTER 'Z' car timer_controle_start est déjà en heure locale
+      // 🔧 CORRECTION FINALE : Ne plus utiliser getParisTime() qui retourne UTC
+      // Calculer directement avec Date.now() (timestamp Unix en millisecondes)
       const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
-      const endTime = new Date(getParisTime()).getTime()
-      let calculatedDuration = Math.floor((endTime - startTime) / 1000)
+      const endTime = Date.now()  // Timestamp actuel (millisecondes depuis 1970)
+      const calculatedDuration = Math.floor((endTime - startTime) / 1000)
       
-      // 🔧 CORRECTION PERMANENTE : TOUJOURS soustraire 3600 secondes (1 heure)
-      timerControleDuration = Math.max(0, calculatedDuration - 3600)
-      console.log(`⏱️ Durée contrôle calculée: ${calculatedDuration}s → Corrigée (-1h): ${timerControleDuration}s`)
+      // Enregistrer la durée EXACTE calculée (sans correction)
+      timerControleDuration = calculatedDuration
+      console.log(`⏱️ Durée contrôle: Start=${quaiData.timer_controle_start} → ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}m ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3127,16 +3127,15 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // Calculer la durée en secondes (en utilisant l'heure de Paris)
-        // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
-        // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
+        // 🔧 CORRECTION FINALE : Ne plus utiliser getParisTime() qui retourne UTC
+        // Calculer directement avec Date.now() (timestamp Unix en millisecondes)
         const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
-        const endTime = new Date(getParisTime()).getTime()
-        let calculatedDuration = Math.floor((endTime - startTime) / 1000)
+        const endTime = Date.now()  // Timestamp actuel (millisecondes depuis 1970)
+        const calculatedDuration = Math.floor((endTime - startTime) / 1000)
         
-        // 🔧 CORRECTION PERMANENTE : TOUJOURS soustraire 3600 secondes (1 heure)
-        timerDuration = Math.max(0, calculatedDuration - 3600)
-        console.log(`⏱️ Durée calculée: ${calculatedDuration}s → Corrigée (-1h): ${timerDuration}s`)
+        // Enregistrer la durée EXACTE calculée (sans correction)
+        timerDuration = calculatedDuration
+        console.log(`⏱️ Durée déchargement: Start=${quaiData.timer_start} → ${timerDuration}s (${Math.floor(timerDuration/60)}m ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
