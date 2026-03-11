@@ -1243,11 +1243,10 @@ app.get('/scan-controle', async (c) => {
     }
     
     // Mettre à jour le statut du quai à "en_controle" et sauvegarder les infos
-    // ✅ NOUVELLE APPROCHE : Stocker timestamp Unix (nombre entier) pour timer_controle_start
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'en_controle',
-          timer_controle_start = CAST(unixepoch('now', 'localtime') AS TEXT),
+          timer_controle_start = datetime('now', 'localtime'),
           timer_controle_duration = NULL,
           controle_debut_timestamp = datetime('now', 'localtime'),
           controle_fournisseur = ?,
@@ -1501,13 +1500,14 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // ✅ CALCUL SIMPLE : timer_controle_start est maintenant un timestamp Unix (nombre)
-      // Soustraction directe, pas de conversion timezone
-      const startTimestamp = parseInt(quaiData.timer_controle_start)
-      const nowTimestamp = Math.floor(Date.now() / 1000) // JavaScript Date.now() en millisecondes → diviser par 1000
-      timerControleDuration = nowTimestamp - startTimestamp
+      // ✅ CALCUL EN SQLite avec unixepoch() - garantit cohérence timezone
+      const durationResult = await c.env.DB.prepare(`
+        SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
+      `).bind(quaiData.timer_controle_start).first()
       
-      console.log(`⏱️ CONTRÔLE: Start=${startTimestamp}, Now=${nowTimestamp}, Durée=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
+      timerControleDuration = durationResult?.duration
+      
+      console.log(`⏱️ CONTRÔLE: timer_controle_start=${quaiData.timer_controle_start}, Durée=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3181,13 +3181,14 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ CALCUL SIMPLE : timer_start est maintenant un timestamp Unix (nombre)
-        // Soustraction directe, pas de conversion timezone
-        const startTimestamp = parseInt(quaiData.timer_start)
-        const nowTimestamp = Math.floor(Date.now() / 1000) // JavaScript Date.now() en millisecondes → diviser par 1000
-        timerDuration = nowTimestamp - startTimestamp
+        // ✅ CALCUL EN SQLite avec unixepoch() - garantit cohérence timezone
+        const durationResult = await c.env.DB.prepare(`
+          SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
+        `).bind(quaiData.timer_start).first()
         
-        console.log(`⏱️ DÉCHARGEMENT: Start=${startTimestamp}, Now=${nowTimestamp}, Durée=${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
+        timerDuration = durationResult?.duration
+        
+        console.log(`⏱️ DÉCHARGEMENT: timer_start=${quaiData.timer_start}, Durée=${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
@@ -3437,11 +3438,11 @@ app.post('/api/quais/:numero', async (c) => {
     // Mettre à jour le quai avec gestion du timer
     if (statut === 'en_cours') {
       // ✅ NOUVELLE APPROCHE : Stocker timestamp Unix (nombre entier en secondes)
-      // Cela évite TOUS les problèmes de timezone avec datetime()
+      // Timer démarre avec datetime() au format texte (compatible frontend)
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
-            timer_start = CAST(unixepoch('now', 'localtime') AS TEXT),
+            timer_start = datetime('now', 'localtime'),
             commentaire = NULL,
             commentaire_auteur = NULL,
             updated_at = datetime('now', 'localtime')
