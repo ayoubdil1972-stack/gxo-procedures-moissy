@@ -1498,17 +1498,20 @@ app.post('/api/fin-controle', async (c) => {
       WHERE quai_numero = ?
     `).bind(quai).first()
     
-    // ✅ CALCUL SIMPLE avec julianday() - même référentiel temporel
+    // ✅ CALCUL avec correction automatique -3600s (bug timezone)
     let timerControleDuration = null
     if (quaiData?.controle_debut_timestamp) {
       const durationResult = await c.env.DB.prepare(`
         SELECT 
-          CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as duration
+          CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as raw_duration
       `).bind(quaiData.controle_debut_timestamp).first()
       
-      timerControleDuration = durationResult?.duration
+      const rawDuration = durationResult?.raw_duration || 0
       
-      console.log(`⏱️ CONTRÔLE: debut=${quaiData.controle_debut_timestamp}, Durée=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
+      // 🔧 CORRECTION AUTOMATIQUE : Si durée >= 3600s, retirer 3600s (1 heure en trop)
+      timerControleDuration = rawDuration >= 3600 ? rawDuration - 3600 : rawDuration
+      
+      console.log(`⏱️ CONTRÔLE: debut=${quaiData.controle_debut_timestamp}, Brut=${rawDuration}s, Corrigé=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3182,15 +3185,18 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ CALCUL SIMPLE avec julianday() - même référentiel temporel
+        // ✅ CALCUL avec correction automatique -3600s (bug timezone)
         const durationResult = await c.env.DB.prepare(`
           SELECT 
-            CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as duration
+            CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as raw_duration
         `).bind(quaiData.timer_start).first()
         
-        timerDuration = durationResult?.duration
+        const rawDuration = durationResult?.raw_duration || 0
         
-        console.log(`⏱️ DÉCHARGEMENT: timer_start=${quaiData.timer_start}, Durée=${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
+        // 🔧 CORRECTION AUTOMATIQUE : Si durée >= 3600s, retirer 3600s (1 heure en trop)
+        timerDuration = rawDuration >= 3600 ? rawDuration - 3600 : rawDuration
+        
+        console.log(`⏱️ DÉCHARGEMENT: timer_start=${quaiData.timer_start}, Brut=${rawDuration}s, Corrigé=${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
