@@ -3037,6 +3037,62 @@ app.put('/api/controleur/alertes/:id', async (c) => {
 
 // ===== GESTION DES QUAIS - API ROUTES =====
 
+// POST /api/fix-timers-db - CORRIGER LES DURÉES +1H DANS LA BASE DE DONNÉES
+// Cette route corrige les durées déjà enregistrées avec +3600s en trop
+app.post('/api/fix-timers-db', async (c) => {
+  try {
+    console.log('🔧 Correction des timers dans la base de données...')
+    
+    // 1. Corriger timer_duration (déchargement)
+    const result1 = await c.env.DB.prepare(`
+      UPDATE quai_status 
+      SET timer_duration = CASE 
+        WHEN timer_duration >= 3600 THEN timer_duration - 3600
+        ELSE timer_duration
+      END,
+      updated_at = datetime('now', 'localtime')
+      WHERE timer_duration IS NOT NULL AND timer_duration > 0
+    `).run()
+    
+    console.log(`✅ timer_duration corrigés: ${result1.meta.changes} lignes`)
+    
+    // 2. Corriger timer_controle_duration (contrôle)
+    const result2 = await c.env.DB.prepare(`
+      UPDATE quai_status 
+      SET timer_controle_duration = CASE 
+        WHEN timer_controle_duration >= 3600 THEN timer_controle_duration - 3600
+        ELSE timer_controle_duration
+      END,
+      updated_at = datetime('now', 'localtime')
+      WHERE timer_controle_duration IS NOT NULL AND timer_controle_duration > 0
+    `).run()
+    
+    console.log(`✅ timer_controle_duration corrigés: ${result2.meta.changes} lignes`)
+    
+    // 3. Récupérer les quais corrigés
+    const { results } = await c.env.DB.prepare(`
+      SELECT quai_numero, statut, timer_duration, timer_controle_duration 
+      FROM quai_status 
+      WHERE timer_duration IS NOT NULL OR timer_controle_duration IS NOT NULL
+      ORDER BY quai_numero ASC
+    `).all()
+    
+    return c.json({ 
+      success: true, 
+      message: 'Correction terminée',
+      corrections: {
+        timer_duration: result1.meta.changes,
+        timer_controle_duration: result2.meta.changes
+      },
+      quais_corriges: results
+    })
+    
+  } catch (error) {
+    console.error('❌ Erreur correction timers:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 // GET /api/quais - Récupérer l'état de tous les quais
 app.get('/api/quais', async (c) => {
   try {
