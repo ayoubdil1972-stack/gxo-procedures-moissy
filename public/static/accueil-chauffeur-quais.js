@@ -379,8 +379,19 @@ function startTimers() {
       return
     }
     
-    // Parser le datetime SQLite (format: "2024-03-04 12:30:45")
-    const start = new Date(startTime.replace(' ', 'T') + 'Z')
+    // ✅ v3.11.0 : timer_start est maintenant un timestamp Unix (nombre en secondes)
+    // Si c'est un nombre, on le convertit en millisecondes pour JavaScript
+    // Si c'est un ancien format datetime, on le parse normalement
+    let start
+    if (/^\d+$/.test(startTime)) {
+      // Format Unix timestamp (nombre de secondes)
+      start = new Date(parseInt(startTime) * 1000)
+      console.log(`✅ Timer Unix timestamp: ${startTime} → ${start}`)
+    } else {
+      // Ancien format datetime SQLite (format: "2024-03-04 12:30:45")
+      start = new Date(startTime.replace(' ', 'T'))
+      console.log(`⚠️ Timer ancien format datetime: ${startTime} → ${start}`)
+    }
     
     if (isNaN(start.getTime())) {
       console.error('❌ Invalid timer_start:', startTime)
