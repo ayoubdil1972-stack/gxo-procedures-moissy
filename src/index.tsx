@@ -1501,16 +1501,16 @@ app.post('/api/fin-controle', async (c) => {
     
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
-      // ✅ SOLUTION DÉFINITIVE : Calcul dans SQLite qui connaît sa propre timezone
-      // SQLite stocke datetime('now','localtime') et connaît l'heure locale
-      // Faire le calcul EN SQLite garantit la cohérence
+      // ✅ SOLUTION DÉFINITIVE : unixepoch() pour éviter tout problème timezone
+      // timer_controle_start est au format "YYYY-MM-DD HH:MM:SS" en heure locale
+      // On le convertit en timestamp Unix, puis on soustrait du timestamp actuel
       const durationResult = await c.env.DB.prepare(`
-        SELECT CAST((julianday('now', 'localtime') - julianday(?)) * 86400 AS INTEGER) as duration
+        SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
       `).bind(quaiData.timer_controle_start).first()
       
       timerControleDuration = durationResult?.duration || 0
       
-      console.log(`⏱️ CONTRÔLE: Durée calculée par SQLite = ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
+      console.log(`⏱️ CONTRÔLE: Durée = ${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3184,16 +3184,16 @@ app.post('/api/fin-dechargement', async (c) => {
 
       let timerDuration = null
       if (quaiData?.timer_start) {
-        // ✅ SOLUTION DÉFINITIVE : Calcul dans SQLite qui connaît sa propre timezone
-        // SQLite stocke datetime('now','localtime') et connaît l'heure locale
-        // Faire le calcul EN SQLite garantit la cohérence
+        // ✅ SOLUTION DÉFINITIVE : unixepoch() pour éviter tout problème timezone
+        // timer_start est au format "YYYY-MM-DD HH:MM:SS" en heure locale
+        // On le convertit en timestamp Unix, puis on soustrait du timestamp actuel
         const durationResult = await c.env.DB.prepare(`
-          SELECT CAST((julianday('now', 'localtime') - julianday(?)) * 86400 AS INTEGER) as duration
+          SELECT unixepoch('now', 'localtime') - unixepoch(?) as duration
         `).bind(quaiData.timer_start).first()
         
         timerDuration = durationResult?.duration || 0
         
-        console.log(`⏱️ DÉCHARGEMENT: Durée calculée par SQLite = ${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
+        console.log(`⏱️ DÉCHARGEMENT: Durée = ${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
