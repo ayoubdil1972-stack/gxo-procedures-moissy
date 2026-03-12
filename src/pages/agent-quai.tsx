@@ -7,7 +7,7 @@ export function AgentQuaiPage() {
       duration: '10-15 min',
       level: '🟢',
       vigilance: ['Vérifier assignation', 'Sécuriser zone', 'Briefing chauffeur'],
-      document: 'accueil-preparation-quai.pdf',
+      document: 'static/accueil-preparation-quai.pdf',
       description: 'Procédure complète d\'accueil du camion et préparation du quai : récupération du dossier chauffeur, vérification de la sécurité du hayon, contrôle de l\'accessibilité et briefing chauffeur.'
     },
     {
