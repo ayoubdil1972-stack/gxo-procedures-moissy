@@ -6,7 +6,9 @@ export function AgentQuaiPage() {
       icon: 'fa-hand-paper',
       duration: '10-15 min',
       level: '🟢',
-      vigilance: ['Vérifier assignation', 'Sécuriser zone', 'Briefing chauffeur']
+      vigilance: ['Vérifier assignation', 'Sécuriser zone', 'Briefing chauffeur'],
+      document: 'accueil-preparation-quai.pdf',
+      description: 'Procédure complète d\'accueil du camion et préparation du quai : récupération du dossier chauffeur, vérification de la sécurité du hayon, contrôle de l\'accessibilité et briefing chauffeur.'
     },
     {
       id: 'dechargement-quai',
@@ -292,10 +294,22 @@ export function AgentQuaiPage() {
                         </div>
                       )}
                       
-                      {/* Bouton Vidéo tutoriel */}
-                      <div class="mt-4">
+                      {/* Boutons Document et Vidéo tutoriel */}
+                      <div class="mt-4 flex gap-3">
+                        {process.document && (
+                          <a 
+                            href={`/${process.document}`}
+                            download
+                            class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-3 rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 flex-1 justify-center"
+                            title={process.description || 'Télécharger le document'}
+                          >
+                            <i class="fas fa-file-download"></i>
+                            <span class="font-semibold">Document</span>
+                          </a>
+                        )}
+                        
                         <button 
-                          class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 w-full justify-center"
+                          class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 flex-1 justify-center"
                           onclick="alert('Fonctionnalité Vidéo tutoriel à venir')"
                         >
                           <i class="fas fa-video"></i>
