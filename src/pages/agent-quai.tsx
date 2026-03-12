@@ -16,7 +16,9 @@ export function AgentQuaiPage() {
       icon: 'fa-dolly-flatbed',
       duration: '30-60 min',
       level: '🟢',
-      vigilance: ['Respect sécurité', 'Vérifier palettes', 'Noter anomalies']
+      vigilance: ['Respect sécurité', 'Vérifier palettes', 'Noter anomalies'],
+      document: 'static/dechargement-controle-quai.pdf',
+      description: 'Procédure complète de déchargement et contrôle : mise en place et vérifications de l\'engin de manutention, organisation du déchargement par articles, schéma d\'organisation du quai, contrôle qualité et sécurité.'
     },
     {
       id: 'verification-conformite-quai',
