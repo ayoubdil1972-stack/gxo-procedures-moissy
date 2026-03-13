@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>TEST DIRECT - Fin Déchargement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .success-box {
+            background: #10b981;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .error-box {
+            background: #ef4444;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">
+            🧪 TEST DIRECT - Fin Déchargement
+        </h1>
+        
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6">
+            <p class="font-bold">Version : v3.11.22-DIRECT</p>
+            <p>URL API : https://gxomoissyprocedures.pages.dev</p>
+        </div>
+
+        <form id="testForm" class="space-y-4">
+            <div>
+                <label class="block font-bold mb-2">Quai</label>
+                <input type="number" id="quai" value="2" required 
+                       class="w-full border-2 border-gray-300 rounded px-4 py-2">
+            </div>
+
+            <div>
+                <label class="block font-bold mb-2">Nom Agent</label>
+                <input type="text" id="nom_agent" value="TEST_DIRECT" required 
+                       class="w-full border-2 border-gray-300 rounded px-4 py-2">
+            </div>
+
+            <div>
+                <label class="block font-bold mb-2">N° ID</label>
+                <input type="text" id="numero_id" value="TESTDIR001" required 
+                       class="w-full border-2 border-gray-300 rounded px-4 py-2">
+            </div>
+
+            <div>
+                <label class="block font-bold mb-2">Fournisseur</label>
+                <input type="text" id="fournisseur" value="TEST_FOURNISSEUR" required 
+                       class="w-full border-2 border-gray-300 rounded px-4 py-2">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-bold mb-2">Palettes Attendues</label>
+                    <input type="number" id="palettes_attendues" value="10" required 
+                           class="w-full border-2 border-gray-300 rounded px-4 py-2">
+                </div>
+                <div>
+                    <label class="block font-bold mb-2">Palettes Reçues</label>
+                    <input type="number" id="palettes_recues" value="7" required 
+                           class="w-full border-2 border-gray-300 rounded px-4 py-2">
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-2">Problèmes Rencontrés</label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" value="palettes_instables" class="mr-2">
+                        Palettes instables
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" value="palettes_mal_filmees" class="mr-2">
+                        Palettes mal filmées
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700">
+                🚀 ENVOYER LE TEST
+            </button>
+        </form>
+
+        <div id="result" class="mt-6"></div>
+        <div id="console" class="mt-6 bg-black text-green-400 p-4 rounded font-mono text-sm" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        const consoleDiv = document.getElementById('console');
+        const resultDiv = document.getElementById('result');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'text-red-400' : type === 'success' ? 'text-green-400' : 'text-blue-400';
+            consoleDiv.innerHTML += `<div class="${color}">[${timestamp}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            console.log(message);
+        }
+
+        log('✅ Page chargée - Version v3.11.22-DIRECT', 'success');
+        log('📍 URL API: https://gxomoissyprocedures.pages.dev');
+
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            log('🚀 Début du test...', 'info');
+            
+            const data = {
+                quai_numero: parseInt(document.getElementById('quai').value),
+                nom_agent: document.getElementById('nom_agent').value,
+                numero_id: document.getElementById('numero_id').value,
+                fournisseur: document.getElementById('fournisseur').value,
+                palettes_attendues: parseInt(document.getElementById('palettes_attendues').value),
+                palettes_recues: parseInt(document.getElementById('palettes_recues').value),
+                palettes_a_rendre: "oui",
+                verification_points: {
+                    point_1: "conforme",
+                    point_2: "conforme",
+                    point_3: "conforme",
+                    point_4: "conforme",
+                    point_5: "conforme",
+                    point_6: "conforme",
+                    point_7: "conforme"
+                },
+                problemes: Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value),
+                autres_commentaire: "Test direct depuis page HTML",
+                remarques: "Test v3.11.22-DIRECT",
+                timestamp: new Date().toISOString()
+            };
+
+            log('📦 Données préparées:', 'info');
+            log(`   Quai: ${data.quai_numero}`);
+            log(`   Palettes: ${data.palettes_attendues} → ${data.palettes_recues}`);
+            log(`   Écart: ${data.palettes_attendues !== data.palettes_recues ? 'OUI ⚠️' : 'NON'}`);
+            log(`   Problèmes: ${data.problemes.length}`);
+
+            try {
+                log('🌐 Envoi vers API...', 'info');
+                const response = await fetch('https://gxomoissyprocedures.pages.dev/api/fin-dechargement', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                log('✅ Réponse API reçue:', 'success');
+                log(`   Success: ${result.success}`);
+                log(`   Version: ${result.version || 'N/A'}`);
+                log(`   Alerte créée: ${result.alerte_creee ? 'OUI ✅' : 'NON ❌'}`);
+                
+                if (result.debug) {
+                    log(`   Debug:`);
+                    log(`     - Points vérification: ${result.debug.verification_points_recus}`);
+                    log(`     - Problèmes: ${result.debug.problemes_recus}`);
+                    log(`     - Écart palettes: ${result.debug.ecart_palettes}`);
+                    log(`     - Erreur: ${result.debug.alerte_erreur || 'aucune'}`);
+                }
+
+                if (result.alerte_creee) {
+                    resultDiv.innerHTML = `
+                        <div class="success-box">
+                            <h2 class="text-2xl font-bold mb-2">✅ SUCCÈS !</h2>
+                            <p class="mb-2">Déchargement enregistré : ID ${result.id}</p>
+                            <p class="mb-2">Alerte créée : OUI</p>
+                            <p class="font-bold">Vérifiez maintenant sur :</p>
+                            <a href="https://gxomoissyprocedures.pages.dev/controleur?v=2" 
+                               target="_blank"
+                               class="underline">
+                                https://gxomoissyprocedures.pages.dev/controleur?v=2
+                            </a>
+                            <p class="mt-2 text-sm">👉 Rubrique "En attente"</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error-box">
+                            <h2 class="text-2xl font-bold mb-2">⚠️ ATTENTION</h2>
+                            <p>L'alerte n'a PAS été créée</p>
+                            <p class="text-sm mt-2">Version API: ${result.version || 'Ancienne version cachée'}</p>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                log(`❌ ERREUR: ${error.message}`, 'error');
+                resultDiv.innerHTML = `
+                    <div class="error-box">
+                        <h2 class="text-2xl font-bold mb-2">❌ ERREUR</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
