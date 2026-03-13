@@ -3280,6 +3280,7 @@ app.post('/api/fin-dechargement', async (c) => {
 
     // ===== CRÉATION ALERTE AUTOMATIQUE SI ÉCART OU NON-CONFORMITÉ =====
     let alerteCreee = false
+    let alerteErreur = null
     try {
       console.log('🔍 Vérification alerte - Données reçues:', {
         palettes_attendues: data.palettes_attendues,
@@ -3406,6 +3407,7 @@ app.post('/api/fin-dechargement', async (c) => {
         palettes_attendues: data.palettes_attendues,
         palettes_recues: data.palettes_recues
       })
+      alerteErreur = error.message
     }
 
     return c.json({ 
@@ -3416,7 +3418,8 @@ app.post('/api/fin-dechargement', async (c) => {
       debug: {
         verification_points_recus: Object.keys(data.verification_points || {}).length,
         problemes_recus: (data.problemes || []).length,
-        ecart_palettes: parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues)
+        ecart_palettes: parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues),
+        alerte_erreur: alerteErreur
       }
     })
   } catch (error) {
