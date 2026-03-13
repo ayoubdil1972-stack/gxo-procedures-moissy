@@ -77,6 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadImprodHistorique()
   }, 30000)
   
+  // ✨ Rafraîchir les alertes toutes les 10 secondes pour afficher les nouvelles alertes en temps réel
+  setInterval(() => {
+    loadAlertes(alertesState.currentFilter)
+    loadAlertesStats()
+  }, 10000)
+  
   // Charger les alertes et statistiques
   loadAlertes('en_attente')
   loadAlertesStats()
