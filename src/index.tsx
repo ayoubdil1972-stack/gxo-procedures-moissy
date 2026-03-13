@@ -3285,10 +3285,23 @@ app.post('/api/fin-dechargement', async (c) => {
       const ecartPalettes = parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues)
       console.log('📊 Écart palettes:', ecartPalettes, `(${data.palettes_attendues} vs ${data.palettes_recues})`)
       
-      // Vérifier s'il y a des non-conformités dans les problèmes
+      // Vérifier s'il y a des non-conformités dans les problèmes (checkboxes)
       const problemes = data.problemes || []
-      const aDesNonConformites = problemes.length > 0
-      console.log('⚠️ Non-conformités:', aDesNonConformites, 'Nombre:', problemes.length)
+      const aDesProblemes = problemes.length > 0
+      console.log('⚠️ Problèmes cochés:', aDesProblemes, 'Nombre:', problemes.length)
+      
+      // Vérifier s'il y a des points de vérification marqués "non_conforme"
+      const verificationPoints = data.verification_points || {}
+      const pointsNonConformes = Object.values(verificationPoints).filter(v => v === 'non_conforme')
+      const aDesPointsNonConformes = pointsNonConformes.length > 0
+      console.log('❌ Points non conformes:', aDesPointsNonConformes, 'Nombre:', pointsNonConformes.length)
+      
+      // Une alerte doit être créée si :
+      // - Il y a un écart de palettes OU
+      // - Il y a des problèmes cochés OU
+      // - Il y a des points de vérification non conformes
+      const aDesNonConformites = aDesProblemes || aDesPointsNonConformes
+      console.log('🚨 Nécessite attention contrôleur:', aDesNonConformites)
       
       // ✨ CRÉER SYSTÉMATIQUEMENT UNE ALERTE KPI POUR CHAQUE CAMION (même sans problème)
       // Cela permet de capturer tous les temps pour les KPI de la page Chef d'équipe
