@@ -361,7 +361,7 @@ app.get('/scan-fin-dechargement', (c) => {
               </h1>
               <p class="text-gray-600 mt-2">Quai n°${quaiNumero}</p>
               <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">
-                v3.11.18 - ${new Date().toISOString().split('T')[0]}
+                v3.11.19 CRITIQUE - ${new Date().toISOString().split('T')[0]}
               </span>
             </div>
             <div class="text-5xl">📦</div>
@@ -949,10 +949,10 @@ app.get('/scan-fin-dechargement', (c) => {
       </div>
 
       <script>
-        // ===== VERSION v3.11.18 - CORRECTION FINALE CORRÉLATION ALERTES =====
-        console.log('🚀🚀🚀 VERSION v3.11.18 CHARGÉE - ${new Date().toISOString()} 🚀🚀🚀');
+        // ===== VERSION v3.11.19 CRITIQUE - FIX GARANTIE CRÉATION ALERTES =====
+        console.log('🚀🚀🚀 VERSION v3.11.19 CRITIQUE CHARGÉE - ${new Date().toISOString()} 🚀🚀🚀');
+        console.log('✅ FIX: Création alerte GARANTIE même sans timer_start');
         console.log('✅ Détection automatique: Écarts + Non-conformités + Problèmes');
-        console.log('✅ Création alertes en_attente garantie');
         
         // ===== GESTION AUTOCOMPLETE NOMS ET FOURNISSEURS =====
         
