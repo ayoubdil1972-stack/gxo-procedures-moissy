@@ -3412,7 +3412,12 @@ app.post('/api/fin-dechargement', async (c) => {
       success: true, 
       id: result.meta.last_row_id,
       message: 'Déchargement enregistré avec succès',
-      alerte_creee: alerteCreee
+      alerte_creee: alerteCreee,
+      debug: {
+        verification_points_recus: Object.keys(data.verification_points || {}).length,
+        problemes_recus: (data.problemes || []).length,
+        ecart_palettes: parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues)
+      }
     })
   } catch (error) {
     console.error('❌ Erreur enregistrement fin déchargement:', error)
