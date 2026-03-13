@@ -952,10 +952,22 @@ app.get('/scan-fin-dechargement', (c) => {
       </div>
 
       <script>
-        // ===== VERSION v3.11.19 CRITIQUE - FIX GARANTIE CRÉATION ALERTES =====
-        console.log('🚀🚀🚀 VERSION v3.11.19 CRITIQUE CHARGÉE - ${new Date().toISOString()} 🚀🚀🚀');
-        console.log('✅ FIX: Création alerte GARANTIE même sans timer_start');
+        // ===== FORCE RELOAD v3.11.23 =====
+        (function() {
+          const VERSION = '3.11.23';
+          const currentV = new URLSearchParams(window.location.search).get('v');
+          if (currentV !== VERSION) {
+            const newUrl = window.location.pathname + '?quai=${quaiNumero}&v=' + VERSION + '&t=' + Date.now();
+            console.log('🔄 Rechargement forcé vers ' + newUrl);
+            window.location.replace(newUrl);
+            return;
+          }
+        })();
+        
+        // ===== VERSION v3.11.23 ACTIVE =====
+        console.log('🚀🚀🚀 VERSION v3.11.23 CHARGÉE 🚀🚀🚀');
         console.log('✅ Détection automatique: Écarts + Non-conformités + Problèmes');
+        console.log('✅ Création alertes en_attente garantie');
         
         // ===== GESTION AUTOCOMPLETE NOMS ET FOURNISSEURS =====
         
