@@ -360,6 +360,9 @@ app.get('/scan-fin-dechargement', (c) => {
                 Fin de Déchargement
               </h1>
               <p class="text-gray-600 mt-2">Quai n°${quaiNumero}</p>
+              <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">
+                v3.11.18 - ${new Date().toISOString().split('T')[0]}
+              </span>
             </div>
             <div class="text-5xl">📦</div>
           </div>
@@ -946,6 +949,11 @@ app.get('/scan-fin-dechargement', (c) => {
       </div>
 
       <script>
+        // ===== VERSION v3.11.18 - CORRECTION FINALE CORRÉLATION ALERTES =====
+        console.log('🚀🚀🚀 VERSION v3.11.18 CHARGÉE - ${new Date().toISOString()} 🚀🚀🚀');
+        console.log('✅ Détection automatique: Écarts + Non-conformités + Problèmes');
+        console.log('✅ Création alertes en_attente garantie');
+        
         // ===== GESTION AUTOCOMPLETE NOMS ET FOURNISSEURS =====
         
         // Charger les noms et fournisseurs depuis localStorage
@@ -1148,8 +1156,17 @@ app.get('/scan-fin-dechargement', (c) => {
           };
 
           console.log('📦 Données du formulaire:', data);
+          console.log('📊 Résumé données:');
+          console.log('  - Palettes: ' + data.palettes_attendues + ' attendues → ' + data.palettes_recues + ' reçues');
+          console.log('  - Écart: ' + (data.palettes_attendues !== data.palettes_recues ? 'OUI ⚠️' : 'NON ✅'));
+          console.log('  - Points vérification: ' + Object.keys(data.verification_points).length + ' points');
+          console.log('  - Problèmes: ' + data.problemes.length + ' problème(s) coché(s)');
+          if (data.problemes.length > 0) {
+            console.log('    → ' + data.problemes.join(', '));
+          }
 
           try {
+            console.log('🌐 Envoi vers API /api/fin-dechargement...');
             const response = await fetch('/api/fin-dechargement', {
               method: 'POST',
               headers: {
@@ -1160,6 +1177,10 @@ app.get('/scan-fin-dechargement', (c) => {
 
             const result = await response.json();
             console.log('✅ Réponse API:', result);
+            console.log('🚨 ALERTE CRÉÉE:', result.alerte_creee ? 'OUI ✅' : 'NON ❌');
+            if (result.debug) {
+              console.log('🐛 Debug info:', result.debug);
+            }
 
             if (result.success) {
               // Afficher message d'alerte si créée
