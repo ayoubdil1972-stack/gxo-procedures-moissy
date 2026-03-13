@@ -317,8 +317,11 @@ app.get('/scan-fin-dechargement', (c) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+      <meta http-equiv="Pragma" content="no-cache">
+      <meta http-equiv="Expires" content="0">
       <title>Fin Déchargement Quai ${quaiNumero} - GXO Moissy</title>
-      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.tailwindcss.com?v=${Date.now()}"></script>
       <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
       <style>
         .checkbox-grid {
