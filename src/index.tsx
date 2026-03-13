@@ -3392,20 +3392,34 @@ app.post('/api/fin-dechargement', async (c) => {
         // ✅ AJOUTER LA DURÉE DE DÉCHARGEMENT EN SECONDES
         console.log('⏱️ Durée déchargement:', timerDuration, 'secondes')
         
+        // 🔥 LOG FINAL AVANT INSERT
+        console.log('🚀 INSERTION ALERTE EN COURS - Données finales:', {
+          quai_numero: data.quai_numero,
+          numero_id: data.numero_id,
+          fournisseur: data.fournisseur,
+          timer_start: timerStartSauvegarde || 'NULL',
+          timer_duration: timerDuration || 0,
+          palettes_attendues: data.palettes_attendues,
+          palettes_recues: data.palettes_recues,
+          statut: statutAlerte,
+          ecartPalettes: ecartPalettes,
+          aDesNonConformites: aDesNonConformites
+        })
+        
         // Insérer l'alerte avec tous les champs + durée déchargement
+        // 🔥 FIX CRITIQUE v3.11.19: Toujours utiliser datetime('now') pour heure_fin_dechargement
         const alerteResult = await c.env.DB.prepare(`
           INSERT INTO controleur_alertes (
             quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement, duree_dechargement_secondes,
             ecart_palettes_attendues, ecart_palettes_recues, non_conformites, verification_points,
             traite_le, statut
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?)
+          ) VALUES (?, ?, ?, ?, datetime('now', 'localtime'), ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?)
         `).bind(
           data.quai_numero,
           data.numero_id,
           data.fournisseur,
-          timerStartSauvegarde || null,  // ✅ Utiliser la sauvegarde du timer_start
-          timerFinTimestamp || null,     // ✅ Utiliser NOW comme heure_fin_dechargement
-          timerDuration || null,         // ✅ Durée de déchargement en secondes
+          timerStartSauvegarde || null,  // ✅ NULL si pas de "Début déchargement" cliqué
+          timerDuration || 0,            // ✅ 0 si pas de timer (au lieu de NULL)
           parseInt(data.palettes_attendues),
           parseInt(data.palettes_recues),
           nonConformitesJson,
