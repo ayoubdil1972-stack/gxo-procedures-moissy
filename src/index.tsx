@@ -3199,6 +3199,10 @@ app.post('/api/fin-dechargement', async (c) => {
 
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
+    // Déclarer les variables partagées entre les deux blocs try
+    let timerStartSauvegarde = null
+    let timerDuration = null
+
     // Mettre à jour le statut du quai à "fin_dechargement" (timer reste figé)
     // IMPORTANT: Essayer d'abord avec 'fin_dechargement', si échec utiliser 'disponible'
     try {
@@ -3211,9 +3215,8 @@ app.post('/api/fin-dechargement', async (c) => {
       console.log('📊 Quai data AVANT UPDATE:', quaiData)
       
       // 💾 SAUVEGARDER timer_start pour l'alerte KPI (car il sera mis à NULL dans l'UPDATE)
-      const timerStartSauvegarde = quaiData?.timer_start
+      timerStartSauvegarde = quaiData?.timer_start
 
-      let timerDuration = null
       if (quaiData?.timer_start) {
         // ✅ CALCUL avec correction automatique -3600s (bug timezone)
         const durationResult = await c.env.DB.prepare(`
