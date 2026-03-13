@@ -3570,7 +3570,7 @@ app.post('/api/fin-dechargement', async (c) => {
       id: result.meta.last_row_id,
       message: 'Déchargement enregistré avec succès',
       alerte_creee: alerteCreee,
-      version: '3.11.22-PROD',
+      version: '3.11.24-PRODUCTION-FINALE',
       timestamp: new Date().toISOString(),
       debug: {
         verification_points_recus: Object.keys(data.verification_points || {}).length,
