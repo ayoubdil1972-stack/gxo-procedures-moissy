@@ -2667,6 +2667,7 @@ var zr=Object.defineProperty;var Rt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
               verificationPoints['point_' + i] = pointValue;
             }
           }
+          console.log('🔍 Points de vérification collectés:', verificationPoints);
 
           
           const nomAgent = formData.get('nom_agent');
@@ -3673,7 +3674,7 @@ var zr=Object.defineProperty;var Rt=t=>{throw TypeError(t)};var $r=(t,r,s)=>r in
         updated_at
       FROM quai_status 
       ORDER BY quai_numero ASC
-    `).all();return t.json({success:!0,quais:r})}catch(r){return console.error("Erreur récupération quais:",r),t.json({success:!1,error:r.message},500)}});p.post("/api/fin-dechargement",async t=>{try{const r=await t.req.json();if(console.log("📦 Données reçues fin déchargement:",r),!r.quai_numero||!r.nom_agent||!r.numero_id||!r.fournisseur||!r.palettes_attendues||!r.palettes_recues||!r.palettes_a_rendre)return t.json({success:!1,error:"Données manquantes"},400);const s={numero_id:r.numero_id,fournisseur:r.fournisseur,remarques_utilisateur:r.remarques||""},i=JSON.stringify(s),a=JSON.stringify(r.problemes||[]);await t.env.DB.prepare(`
+    `).all();return t.json({success:!0,quais:r})}catch(r){return console.error("Erreur récupération quais:",r),t.json({success:!1,error:r.message},500)}});p.post("/api/fin-dechargement",async t=>{try{const r=await t.req.json();if(console.log("📦 Données reçues fin déchargement:",r),console.log("🔍 verification_points reçus:",r.verification_points),console.log("🔍 problemes reçus:",r.problemes),!r.quai_numero||!r.nom_agent||!r.numero_id||!r.fournisseur||!r.palettes_attendues||!r.palettes_recues||!r.palettes_a_rendre)return t.json({success:!1,error:"Données manquantes"},400);const s={numero_id:r.numero_id,fournisseur:r.fournisseur,remarques_utilisateur:r.remarques||""},i=JSON.stringify(s),a=JSON.stringify(r.problemes||[]);await t.env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS fin_dechargement (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         quai_numero INTEGER NOT NULL,

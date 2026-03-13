@@ -1121,6 +1121,7 @@ app.get('/scan-fin-dechargement', (c) => {
               verificationPoints['point_' + i] = pointValue;
             }
           }
+          console.log('🔍 Points de vérification collectés:', verificationPoints);
 
           
           const nomAgent = formData.get('nom_agent');
@@ -3140,6 +3141,8 @@ app.post('/api/fin-dechargement', async (c) => {
   try {
     const data = await c.req.json()
     console.log('📦 Données reçues fin déchargement:', data)
+    console.log('🔍 verification_points reçus:', data.verification_points)
+    console.log('🔍 problemes reçus:', data.problemes)
 
     // Validation des données
     if (!data.quai_numero || !data.nom_agent || !data.numero_id || !data.fournisseur || !data.palettes_attendues || !data.palettes_recues || !data.palettes_a_rendre) {
