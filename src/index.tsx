@@ -3394,7 +3394,15 @@ app.post('/api/fin-dechargement', async (c) => {
       }
     } catch (error) {
       console.error('❌ ERREUR création alerte:', error)
+      console.error('❌ Message:', error.message)
       console.error('❌ Stack:', error.stack)
+      console.error('❌ Données envoyées:', {
+        quai_numero: data.quai_numero,
+        verification_points: data.verification_points,
+        problemes: data.problemes,
+        palettes_attendues: data.palettes_attendues,
+        palettes_recues: data.palettes_recues
+      })
     }
 
     return c.json({ 
