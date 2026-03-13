@@ -3552,13 +3552,14 @@ app.post('/api/fin-dechargement', async (c) => {
       alerteErreur = error.message
     }
 
-    // v3.11.21 - Force rebuild
+    // v3.11.22 - PRODUCTION FINALE - ${Date.now()}
     return c.json({ 
       success: true, 
       id: result.meta.last_row_id,
       message: 'Déchargement enregistré avec succès',
       alerte_creee: alerteCreee,
-      version: '3.11.21',
+      version: '3.11.22-PROD',
+      timestamp: new Date().toISOString(),
       debug: {
         verification_points_recus: Object.keys(data.verification_points || {}).length,
         problemes_recus: (data.problemes || []).length,
