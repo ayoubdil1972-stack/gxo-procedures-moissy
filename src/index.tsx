@@ -2994,6 +2994,110 @@ app.get('/api/controleur/alertes/archives', async (c) => {
   }
 })
 
+// POST /api/controleur/alertes/sync - Synchroniser les alertes manquantes
+app.post('/api/controleur/alertes/sync', async (c) => {
+  try {
+    console.log('🔄 SYNCHRONISATION ALERTES MANQUANTES DÉMARRÉE')
+    
+    // Étape 1: Identifier les déchargements sans alerte
+    const dechargementsSansAlerte = await c.env.DB.prepare(`
+      SELECT 
+        fd.id,
+        fd.quai_numero,
+        fd.palettes_attendues,
+        fd.palettes_recues,
+        fd.problemes,
+        fd.remarques,
+        fd.timestamp
+      FROM fin_dechargement fd
+      LEFT JOIN controleur_alertes ca ON (
+        ca.quai_numero = fd.quai_numero 
+        AND ca.created_at >= datetime(fd.timestamp, '-5 minutes')
+        AND ca.created_at <= datetime(fd.timestamp, '+5 minutes')
+      )
+      WHERE ca.id IS NULL
+        AND (
+          fd.palettes_attendues != fd.palettes_recues
+          OR (fd.problemes != '[]' AND fd.problemes IS NOT NULL AND fd.problemes != '')
+        )
+      ORDER BY fd.timestamp DESC
+    `).all()
+    
+    console.log(`📊 Déchargements sans alerte: ${dechargementsSansAlerte.results?.length || 0}`)
+    
+    let alertesCreees = 0
+    const alertesIds = []
+    
+    // Étape 2: Créer les alertes manquantes
+    for (const fd of (dechargementsSansAlerte.results || [])) {
+      try {
+        // Extraire numero_id et fournisseur depuis remarques
+        let numero_id = 'INCONNU'
+        let fournisseur = 'INCONNU'
+        
+        try {
+          const remarquesData = JSON.parse(fd.remarques || '{}')
+          numero_id = remarquesData.numero_id || 'INCONNU'
+          fournisseur = remarquesData.fournisseur || 'INCONNU'
+        } catch (e) {
+          console.warn('⚠️ Impossible de parser remarques pour déchargement', fd.id)
+        }
+        
+        // Insérer l'alerte
+        const result = await c.env.DB.prepare(`
+          INSERT INTO controleur_alertes (
+            quai_numero,
+            numero_id,
+            fournisseur,
+            heure_premier_scan,
+            heure_fin_dechargement,
+            duree_dechargement_secondes,
+            ecart_palettes_attendues,
+            ecart_palettes_recues,
+            non_conformites,
+            verification_points,
+            statut,
+            traite_le,
+            created_at
+          ) VALUES (?, ?, ?, NULL, ?, 0, ?, ?, ?, '{}', 'en_attente', datetime('now', 'localtime'), datetime('now', 'localtime'))
+        `).bind(
+          fd.quai_numero,
+          numero_id,
+          fournisseur,
+          fd.timestamp,
+          parseInt(fd.palettes_attendues),
+          parseInt(fd.palettes_recues),
+          fd.problemes || '[]'
+        ).run()
+        
+        alertesCreees++
+        alertesIds.push(result.meta.last_row_id)
+        
+        console.log(`✅ Alerte créée - ID: ${result.meta.last_row_id}, Quai: ${fd.quai_numero}, Déchargement: ${fd.id}`)
+      } catch (err) {
+        console.error(`❌ Erreur création alerte pour déchargement ${fd.id}:`, err.message)
+      }
+    }
+    
+    console.log(`✅ SYNCHRONISATION TERMINÉE - ${alertesCreees} alerte(s) créée(s)`)
+    
+    return c.json({
+      success: true,
+      message: `Synchronisation réussie - ${alertesCreees} alerte(s) créée(s)`,
+      dechargements_analyses: dechargementsSansAlerte.results?.length || 0,
+      alertes_creees: alertesCreees,
+      alertes_ids: alertesIds
+    })
+    
+  } catch (error) {
+    console.error('❌ Erreur synchronisation alertes:', error)
+    return c.json({
+      success: false,
+      error: error.message
+    }, 500)
+  }
+})
+
 // PUT /api/controleur/alertes/:id - Traiter une alerte
 app.put('/api/controleur/alertes/:id', async (c) => {
   try {
