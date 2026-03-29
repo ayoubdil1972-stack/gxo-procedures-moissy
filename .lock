@@ -1,0 +1,47 @@
+# 🔒 FICHIERS VERROUILLÉS - NE PAS MODIFIER
+
+## Version Finale : v3.11.34
+## Date de Verrouillage : 29 mars 2026 - 14:00 UTC
+## Commit : ae766fe
+
+---
+
+## Pages Verrouillées
+
+### Frontend
+- src/pages/controleur.tsx
+- src/pages/accueil-chauffeur.tsx
+- public/static/accueil-chauffeur-quais.js
+
+### Backend (src/index.tsx)
+- Lignes 3125-3127 : Déclaration variables (timerStartSauvegarde, timerDuration)
+- Lignes 3140-3148 : Calcul timer
+- Lignes 3196-3303 : Création d'alertes
+
+### URLs
+- https://gxomoissyprocedures.pages.dev/controleur?v=2
+- https://gxomoissyprocedures.pages.dev/accueil-chauffeur?v=2
+
+---
+
+## Raison du Verrouillage
+Ces pages fonctionnent parfaitement avec toutes les corrélations appliquées :
+- Timer corrigé (démarre à 00:00:00)
+- Alertes créées automatiquement
+- Affichage instantané en "En Attente"
+- Capture complète des données (écarts, non-conformités, problèmes)
+
+Toute modification pourrait casser le système.
+
+---
+
+## Avant de Modifier
+
+1. Consulter VERROUILLAGE_v3.11.34.md
+2. Faire un backup complet
+3. Tester sur un environnement de staging
+4. Documenter TOUS les changements
+
+---
+
+🔒 NE PAS MODIFIER SANS AUTORISATION EXPLICITE
