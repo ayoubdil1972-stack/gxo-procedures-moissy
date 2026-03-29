@@ -398,7 +398,10 @@ function startTimers() {
     // Fonction de mise à jour du timer
     const updateTimer = () => {
       const now = new Date()
-      const diff = Math.floor((now - start) / 1000) // Différence en secondes
+      let diff = Math.floor((now - start) / 1000) // Différence en secondes
+      
+      // 🔧 FIX v3.11.31 : Correction automatique -7200s (2h) pour timer EN COURS
+      diff = Math.max(0, diff - 7200)
       
       if (diff < 0) {
         element.textContent = '00:00:00'
