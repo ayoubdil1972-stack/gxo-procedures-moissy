@@ -3122,6 +3122,10 @@ app.post('/api/fin-dechargement', async (c) => {
 
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
+    // ✅ DÉCLARER LES VARIABLES EN DEHORS DU TRY POUR QU'ELLES SOIENT ACCESSIBLES PARTOUT
+    let timerStartSauvegarde = null
+    let timerDuration = null
+
     // Mettre à jour le statut du quai à "fin_dechargement" (timer reste figé)
     // IMPORTANT: Essayer d'abord avec 'fin_dechargement', si échec utiliser 'disponible'
     try {
@@ -3134,9 +3138,7 @@ app.post('/api/fin-dechargement', async (c) => {
       console.log('📊 Quai data AVANT UPDATE:', quaiData)
       
       // 💾 SAUVEGARDER timer_start pour l'alerte KPI (car il sera mis à NULL dans l'UPDATE)
-      const timerStartSauvegarde = quaiData?.timer_start
-
-      let timerDuration = null
+      timerStartSauvegarde = quaiData?.timer_start
       if (quaiData?.timer_start) {
         // Calculer la durée en secondes (en utilisant l'heure de Paris)
         // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
