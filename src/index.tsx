@@ -1557,20 +1557,13 @@ app.post('/api/fin-controle', async (c) => {
       WHERE quai_numero = ?
     `).bind(quai).first()
     
-    // ✅ CALCUL avec correction automatique -3600s (bug timezone)
     let timerControleDuration = null
-    if (quaiData?.controle_debut_timestamp) {
-      const durationResult = await c.env.DB.prepare(`
-        SELECT 
-          CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as raw_duration
-      `).bind(quaiData.controle_debut_timestamp).first()
-      
-      const rawDuration = durationResult?.raw_duration || 0
-      
-      // 🔧 CORRECTION AUTOMATIQUE : Si durée >= 3600s, retirer 3600s (1 heure en trop)
-      timerControleDuration = rawDuration >= 3600 ? rawDuration - 3600 : rawDuration
-      
-      console.log(`⏱️ CONTRÔLE: debut=${quaiData.controle_debut_timestamp}, Brut=${rawDuration}s, Corrigé=${timerControleDuration}s (${Math.floor(timerControleDuration/60)}min ${timerControleDuration%60}s)`)
+    if (quaiData?.timer_controle_start) {
+      // Calculer la durée en secondes (en utilisant l'heure de Paris)
+      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T') + 'Z').getTime()
+      const endTime = new Date(getParisTime()).getTime()
+      timerControleDuration = Math.floor((endTime - startTime) / 1000)
+      console.log(`⏱️ Durée contrôle calculée: ${timerControleDuration}s`)
     }
     
     // Mettre à jour le statut du quai à "fin_controle" avec le nom du contrôleur
@@ -3261,26 +3254,7 @@ app.post('/api/fix-timers-db', async (c) => {
 app.get('/api/quais', async (c) => {
   try {
     const { results } = await c.env.DB.prepare(`
-      SELECT 
-        id,
-        quai_numero,
-        statut,
-        timer_start,
-        timer_duration,
-        timer_fin_timestamp,
-        timer_controle_start,
-        timer_controle_duration,
-        controle_debut_timestamp,
-        controle_fin_timestamp,
-        controle_fournisseur,
-        controle_id_chauffeur,
-        controleur_nom,
-        commentaire,
-        commentaire_auteur,
-        created_at,
-        updated_at
-      FROM quai_status 
-      ORDER BY quai_numero ASC
+      SELECT * FROM quai_status ORDER BY quai_numero ASC
     `).all()
     
     return c.json({ success: true, quais: results })
@@ -3372,18 +3346,11 @@ app.post('/api/fin-dechargement', async (c) => {
       timerStartSauvegarde = quaiData?.timer_start
 
       if (quaiData?.timer_start) {
-        // ✅ CALCUL avec correction automatique -3600s (bug timezone)
-        const durationResult = await c.env.DB.prepare(`
-          SELECT 
-            CAST((julianday('now') - julianday(?)) * 86400 AS INTEGER) as raw_duration
-        `).bind(quaiData.timer_start).first()
-        
-        const rawDuration = durationResult?.raw_duration || 0
-        
-        // 🔧 CORRECTION AUTOMATIQUE : Si durée >= 3600s, retirer 3600s (1 heure en trop)
-        timerDuration = rawDuration >= 3600 ? rawDuration - 3600 : rawDuration
-        
-        console.log(`⏱️ DÉCHARGEMENT: timer_start=${quaiData.timer_start}, Brut=${rawDuration}s, Corrigé=${timerDuration}s (${Math.floor(timerDuration/60)}min ${timerDuration%60}s)`)
+        // Calculer la durée en secondes (en utilisant l'heure de Paris)
+        const startTime = new Date(quaiData.timer_start.replace(' ', 'T') + 'Z').getTime()
+        const endTime = new Date(getParisTime()).getTime()
+        timerDuration = Math.floor((endTime - startTime) / 1000)
+        console.log(`⏱️ Durée déchargement calculée: ${timerDuration}s`)
       }
 
       console.log('💾 UPDATE avec:', {
