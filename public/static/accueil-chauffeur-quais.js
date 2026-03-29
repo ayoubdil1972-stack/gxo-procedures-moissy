@@ -101,7 +101,7 @@ function renderQuaiCard(quai) {
     if (!timestamp) return null
     try {
       // Utiliser la même méthode que controle_debut_timestamp (qui fonctionne)
-      const date = new Date(timestamp.replace(' ', 'T') + 'Z')
+      const date = new Date(timestamp.replace(' ', 'T'))
       const hour = String(date.getHours()).padStart(2, '0')
       const minute = String(date.getMinutes()).padStart(2, '0')
       return `${hour}h${minute}`
@@ -173,7 +173,7 @@ function renderQuaiCard(quai) {
       let finControleFormatted = ''
       if (quai.controle_fin_timestamp) {
         try {
-          const date = new Date(quai.controle_fin_timestamp.replace(' ', 'T') + 'Z')
+          const date = new Date(quai.controle_fin_timestamp.replace(' ', 'T'))
           const day = String(date.getDate()).padStart(2, '0')
           const month = String(date.getMonth() + 1).padStart(2, '0')
           const year = date.getFullYear()
@@ -321,7 +321,7 @@ function getStatusLabel(statut) {
 function formatDate(dateString) {
   if (!dateString) return ''
   // Ajouter 'Z' pour que JavaScript interprète comme UTC, puis convertir en Europe/Paris
-  const date = new Date(dateString.replace(' ', 'T') + 'Z')
+  const date = new Date(dateString.replace(' ', 'T'))
   return date.toLocaleString('fr-FR', { 
     timeZone: 'Europe/Paris',
     day: '2-digit', 
@@ -379,10 +379,9 @@ function startTimers() {
       return
     }
     
-    // ✅ v3.11.3: timer_start stocké en UTC dans SQLite (datetime('now'))
-    // Format: "2026-03-11 13:30:00" (UTC)
-    // On ajoute 'Z' pour indiquer que c'est UTC
-    const start = new Date(startTime.replace(' ', 'T') + 'Z')
+    // timer_start est en heure locale de Paris
+    // Format: "2026-03-29 12:30:00" (Paris local time)
+    const start = new Date(startTime.replace(' ', 'T'))
     
     if (isNaN(start.getTime())) {
       console.error('❌ Invalid timer_start:', startTime)
@@ -390,7 +389,8 @@ function startTimers() {
       return
     }
     
-    console.log(`✅ Timer démarré (UTC): ${startTime} → ${start}`)
+    console.log(`✅ Timer démarré (Paris local): ${startTime} → ${start}`)
+    
     
     // Fonction de mise à jour du timer
     const updateTimer = () => {
