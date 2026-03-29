@@ -35,23 +35,16 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>()
 
 // ===== REDIRECTION AUTOMATIQUE .com → .pages.dev =====
-// Middleware pour rediriger tous les utilisateurs du domaine .com vers .pages.dev
 app.use('*', async (c, next) => {
   const url = new URL(c.req.url)
   const host = url.hostname.toLowerCase()
   
-  // Si l'utilisateur accède via gxomoissyprocedures.com
   if (host === 'gxomoissyprocedures.com' || host === 'www.gxomoissyprocedures.com') {
-    // Construire la nouvelle URL avec .pages.dev
     const newUrl = `https://gxomoissyprocedures.pages.dev${url.pathname}${url.search}${url.hash}`
-    
-    console.log(`🔄 REDIRECTION AUTOMATIQUE: ${url.hostname} → gxomoissyprocedures.pages.dev`)
-    
-    // Redirection 301 permanente
+    console.log(`🔄 REDIRECTION: ${url.hostname} → gxomoissyprocedures.pages.dev`)
     return c.redirect(newUrl, 301)
   }
   
-  // Sinon, continuer normalement
   await next()
 })
 
@@ -338,11 +331,8 @@ app.get('/scan-fin-dechargement', (c) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-      <meta http-equiv="Pragma" content="no-cache">
-      <meta http-equiv="Expires" content="0">
       <title>Fin Déchargement Quai ${quaiNumero} - GXO Moissy</title>
-      <script src="https://cdn.tailwindcss.com?v=${Date.now()}"></script>
+      <script src="https://cdn.tailwindcss.com"></script>
       <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
       <style>
         .checkbox-grid {
@@ -384,9 +374,6 @@ app.get('/scan-fin-dechargement', (c) => {
                 Fin de Déchargement
               </h1>
               <p class="text-gray-600 mt-2">Quai n°${quaiNumero}</p>
-              <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">
-                v3.11.25 PRODUCTION - ${new Date().toISOString().split('T')[0]}
-              </span>
             </div>
             <div class="text-5xl">📦</div>
           </div>
@@ -973,24 +960,6 @@ app.get('/scan-fin-dechargement', (c) => {
       </div>
 
       <script>
-        // ===== FORCE RELOAD v3.11.25 =====
-        (function() {
-          const VERSION = '3.11.25';
-          const currentV = new URLSearchParams(window.location.search).get('v');
-          if (currentV !== VERSION) {
-            const newUrl = window.location.pathname + '?quai=${quaiNumero}&v=' + VERSION + '&t=' + Date.now();
-            console.log('🔄 Rechargement forcé vers ' + newUrl);
-            window.location.replace(newUrl);
-            return;
-          }
-        })();
-        
-        // ===== VERSION v3.11.25 PRODUCTION FINALE =====
-        console.log('🚀🚀🚀 VERSION v3.11.25 PRODUCTION FINALE CHARGÉE 🚀🚀🚀');
-        console.log('✅ Détection automatique: Écarts + Non-conformités + Problèmes');
-        console.log('✅ Création alertes en_attente garantie');
-        console.log('✅ Backend v3.11.24 - Corrélation 100% opérationnelle');
-        
         // ===== GESTION AUTOCOMPLETE NOMS ET FOURNISSEURS =====
         
         // Charger les noms et fournisseurs depuis localStorage
@@ -1166,7 +1135,6 @@ app.get('/scan-fin-dechargement', (c) => {
               verificationPoints['point_' + i] = pointValue;
             }
           }
-          console.log('🔍 Points de vérification collectés:', verificationPoints);
 
           
           const nomAgent = formData.get('nom_agent');
@@ -1193,17 +1161,8 @@ app.get('/scan-fin-dechargement', (c) => {
           };
 
           console.log('📦 Données du formulaire:', data);
-          console.log('📊 Résumé données:');
-          console.log('  - Palettes: ' + data.palettes_attendues + ' attendues → ' + data.palettes_recues + ' reçues');
-          console.log('  - Écart: ' + (data.palettes_attendues !== data.palettes_recues ? 'OUI ⚠️' : 'NON ✅'));
-          console.log('  - Points vérification: ' + Object.keys(data.verification_points).length + ' points');
-          console.log('  - Problèmes: ' + data.problemes.length + ' problème(s) coché(s)');
-          if (data.problemes.length > 0) {
-            console.log('    → ' + data.problemes.join(', '));
-          }
 
           try {
-            console.log('🌐 Envoi vers API /api/fin-dechargement...');
             const response = await fetch('/api/fin-dechargement', {
               method: 'POST',
               headers: {
@@ -1214,10 +1173,6 @@ app.get('/scan-fin-dechargement', (c) => {
 
             const result = await response.json();
             console.log('✅ Réponse API:', result);
-            console.log('🚨 ALERTE CRÉÉE:', result.alerte_creee ? 'OUI ✅' : 'NON ❌');
-            if (result.debug) {
-              console.log('🐛 Debug info:', result.debug);
-            }
 
             if (result.success) {
               // Afficher message d'alerte si créée
@@ -1301,11 +1256,12 @@ app.get('/scan-controle', async (c) => {
       }
     }
     
-    // ✅ Mettre à jour le statut du quai à "en_controle" - timer_controle_start en UTC
+    // Mettre à jour le statut du quai à "en_controle" et sauvegarder les infos
+    // Note: datetime('now', 'localtime') utilise le fuseau horaire du serveur
     await c.env.DB.prepare(`
       UPDATE quai_status 
       SET statut = 'en_controle',
-          timer_controle_start = datetime('now'),
+          timer_controle_start = datetime('now', 'localtime'),
           timer_controle_duration = NULL,
           controle_debut_timestamp = datetime('now', 'localtime'),
           controle_fournisseur = ?,
@@ -1560,7 +1516,8 @@ app.post('/api/fin-controle', async (c) => {
     let timerControleDuration = null
     if (quaiData?.timer_controle_start) {
       // Calculer la durée en secondes (en utilisant l'heure de Paris)
-      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T') + 'Z').getTime()
+      // ⚠️ NE PAS AJOUTER 'Z' car timer_controle_start est déjà en heure locale
+      const startTime = new Date(quaiData.timer_controle_start.replace(' ', 'T')).getTime()
       const endTime = new Date(getParisTime()).getTime()
       timerControleDuration = Math.floor((endTime - startTime) / 1000)
       console.log(`⏱️ Durée contrôle calculée: ${timerControleDuration}s`)
@@ -3021,110 +2978,6 @@ app.get('/api/controleur/alertes/archives', async (c) => {
   }
 })
 
-// POST /api/controleur/alertes/sync - Synchroniser les alertes manquantes
-app.post('/api/controleur/alertes/sync', async (c) => {
-  try {
-    console.log('🔄 SYNCHRONISATION ALERTES MANQUANTES DÉMARRÉE')
-    
-    // Étape 1: Identifier les déchargements sans alerte
-    const dechargementsSansAlerte = await c.env.DB.prepare(`
-      SELECT 
-        fd.id,
-        fd.quai_numero,
-        fd.palettes_attendues,
-        fd.palettes_recues,
-        fd.problemes,
-        fd.remarques,
-        fd.timestamp
-      FROM fin_dechargement fd
-      LEFT JOIN controleur_alertes ca ON (
-        ca.quai_numero = fd.quai_numero 
-        AND ca.created_at >= datetime(fd.timestamp, '-5 minutes')
-        AND ca.created_at <= datetime(fd.timestamp, '+5 minutes')
-      )
-      WHERE ca.id IS NULL
-        AND (
-          fd.palettes_attendues != fd.palettes_recues
-          OR (fd.problemes != '[]' AND fd.problemes IS NOT NULL AND fd.problemes != '')
-        )
-      ORDER BY fd.timestamp DESC
-    `).all()
-    
-    console.log(`📊 Déchargements sans alerte: ${dechargementsSansAlerte.results?.length || 0}`)
-    
-    let alertesCreees = 0
-    const alertesIds = []
-    
-    // Étape 2: Créer les alertes manquantes
-    for (const fd of (dechargementsSansAlerte.results || [])) {
-      try {
-        // Extraire numero_id et fournisseur depuis remarques
-        let numero_id = 'INCONNU'
-        let fournisseur = 'INCONNU'
-        
-        try {
-          const remarquesData = JSON.parse(fd.remarques || '{}')
-          numero_id = remarquesData.numero_id || 'INCONNU'
-          fournisseur = remarquesData.fournisseur || 'INCONNU'
-        } catch (e) {
-          console.warn('⚠️ Impossible de parser remarques pour déchargement', fd.id)
-        }
-        
-        // Insérer l'alerte
-        const result = await c.env.DB.prepare(`
-          INSERT INTO controleur_alertes (
-            quai_numero,
-            numero_id,
-            fournisseur,
-            heure_premier_scan,
-            heure_fin_dechargement,
-            duree_dechargement_secondes,
-            ecart_palettes_attendues,
-            ecart_palettes_recues,
-            non_conformites,
-            verification_points,
-            statut,
-            traite_le,
-            created_at
-          ) VALUES (?, ?, ?, NULL, ?, 0, ?, ?, ?, '{}', 'en_attente', datetime('now', 'localtime'), datetime('now', 'localtime'))
-        `).bind(
-          fd.quai_numero,
-          numero_id,
-          fournisseur,
-          fd.timestamp,
-          parseInt(fd.palettes_attendues),
-          parseInt(fd.palettes_recues),
-          fd.problemes || '[]'
-        ).run()
-        
-        alertesCreees++
-        alertesIds.push(result.meta.last_row_id)
-        
-        console.log(`✅ Alerte créée - ID: ${result.meta.last_row_id}, Quai: ${fd.quai_numero}, Déchargement: ${fd.id}`)
-      } catch (err) {
-        console.error(`❌ Erreur création alerte pour déchargement ${fd.id}:`, err.message)
-      }
-    }
-    
-    console.log(`✅ SYNCHRONISATION TERMINÉE - ${alertesCreees} alerte(s) créée(s)`)
-    
-    return c.json({
-      success: true,
-      message: `Synchronisation réussie - ${alertesCreees} alerte(s) créée(s)`,
-      dechargements_analyses: dechargementsSansAlerte.results?.length || 0,
-      alertes_creees: alertesCreees,
-      alertes_ids: alertesIds
-    })
-    
-  } catch (error) {
-    console.error('❌ Erreur synchronisation alertes:', error)
-    return c.json({
-      success: false,
-      error: error.message
-    }, 500)
-  }
-})
-
 // PUT /api/controleur/alertes/:id - Traiter une alerte
 app.put('/api/controleur/alertes/:id', async (c) => {
   try {
@@ -3194,62 +3047,6 @@ app.put('/api/controleur/alertes/:id', async (c) => {
 
 // ===== GESTION DES QUAIS - API ROUTES =====
 
-// POST /api/fix-timers-db - CORRIGER LES DURÉES +1H DANS LA BASE DE DONNÉES
-// Cette route corrige les durées déjà enregistrées avec +3600s en trop
-app.post('/api/fix-timers-db', async (c) => {
-  try {
-    console.log('🔧 Correction des timers dans la base de données...')
-    
-    // 1. Corriger timer_duration (déchargement)
-    const result1 = await c.env.DB.prepare(`
-      UPDATE quai_status 
-      SET timer_duration = CASE 
-        WHEN timer_duration >= 3600 THEN timer_duration - 3600
-        ELSE timer_duration
-      END,
-      updated_at = datetime('now', 'localtime')
-      WHERE timer_duration IS NOT NULL AND timer_duration > 0
-    `).run()
-    
-    console.log(`✅ timer_duration corrigés: ${result1.meta.changes} lignes`)
-    
-    // 2. Corriger timer_controle_duration (contrôle)
-    const result2 = await c.env.DB.prepare(`
-      UPDATE quai_status 
-      SET timer_controle_duration = CASE 
-        WHEN timer_controle_duration >= 3600 THEN timer_controle_duration - 3600
-        ELSE timer_controle_duration
-      END,
-      updated_at = datetime('now', 'localtime')
-      WHERE timer_controle_duration IS NOT NULL AND timer_controle_duration > 0
-    `).run()
-    
-    console.log(`✅ timer_controle_duration corrigés: ${result2.meta.changes} lignes`)
-    
-    // 3. Récupérer les quais corrigés
-    const { results } = await c.env.DB.prepare(`
-      SELECT quai_numero, statut, timer_duration, timer_controle_duration 
-      FROM quai_status 
-      WHERE timer_duration IS NOT NULL OR timer_controle_duration IS NOT NULL
-      ORDER BY quai_numero ASC
-    `).all()
-    
-    return c.json({ 
-      success: true, 
-      message: 'Correction terminée',
-      corrections: {
-        timer_duration: result1.meta.changes,
-        timer_controle_duration: result2.meta.changes
-      },
-      quais_corriges: results
-    })
-    
-  } catch (error) {
-    console.error('❌ Erreur correction timers:', error)
-    return c.json({ success: false, error: error.message }, 500)
-  }
-})
-
 // GET /api/quais - Récupérer l'état de tous les quais
 app.get('/api/quais', async (c) => {
   try {
@@ -3269,8 +3066,6 @@ app.post('/api/fin-dechargement', async (c) => {
   try {
     const data = await c.req.json()
     console.log('📦 Données reçues fin déchargement:', data)
-    console.log('🔍 verification_points reçus:', data.verification_points)
-    console.log('🔍 problemes reçus:', data.problemes)
 
     // Validation des données
     if (!data.quai_numero || !data.nom_agent || !data.numero_id || !data.fournisseur || !data.palettes_attendues || !data.palettes_recues || !data.palettes_a_rendre) {
@@ -3327,10 +3122,6 @@ app.post('/api/fin-dechargement', async (c) => {
 
     console.log('✅ Fin de déchargement enregistrée - ID:', result.meta.last_row_id)
 
-    // Déclarer les variables partagées entre les deux blocs try
-    let timerStartSauvegarde = null
-    let timerDuration = null
-
     // Mettre à jour le statut du quai à "fin_dechargement" (timer reste figé)
     // IMPORTANT: Essayer d'abord avec 'fin_dechargement', si échec utiliser 'disponible'
     try {
@@ -3343,14 +3134,17 @@ app.post('/api/fin-dechargement', async (c) => {
       console.log('📊 Quai data AVANT UPDATE:', quaiData)
       
       // 💾 SAUVEGARDER timer_start pour l'alerte KPI (car il sera mis à NULL dans l'UPDATE)
-      timerStartSauvegarde = quaiData?.timer_start
+      const timerStartSauvegarde = quaiData?.timer_start
 
+      let timerDuration = null
       if (quaiData?.timer_start) {
         // Calculer la durée en secondes (en utilisant l'heure de Paris)
-        const startTime = new Date(quaiData.timer_start.replace(' ', 'T') + 'Z').getTime()
+        // timer_start est au format SQLite: "YYYY-MM-DD HH:MM:SS"
+        // ⚠️ NE PAS AJOUTER 'Z' car timer_start est déjà en heure locale
+        const startTime = new Date(quaiData.timer_start.replace(' ', 'T')).getTime()
         const endTime = new Date(getParisTime()).getTime()
         timerDuration = Math.floor((endTime - startTime) / 1000)
-        console.log(`⏱️ Durée déchargement calculée: ${timerDuration}s`)
+        console.log(`⏱️ Durée calculée: ${timerDuration}s (${Math.floor(timerDuration/3600)}h ${Math.floor((timerDuration%3600)/60)}m ${timerDuration%60}s)`)
       }
 
       console.log('💾 UPDATE avec:', {
@@ -3401,7 +3195,6 @@ app.post('/api/fin-dechargement', async (c) => {
 
     // ===== CRÉATION ALERTE AUTOMATIQUE SI ÉCART OU NON-CONFORMITÉ =====
     let alerteCreee = false
-    let alerteErreur = null
     try {
       console.log('🔍 Vérification alerte - Données reçues:', {
         palettes_attendues: data.palettes_attendues,
@@ -3413,23 +3206,10 @@ app.post('/api/fin-dechargement', async (c) => {
       const ecartPalettes = parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues)
       console.log('📊 Écart palettes:', ecartPalettes, `(${data.palettes_attendues} vs ${data.palettes_recues})`)
       
-      // Vérifier s'il y a des non-conformités dans les problèmes (checkboxes)
+      // Vérifier s'il y a des non-conformités dans les problèmes
       const problemes = data.problemes || []
-      const aDesProblemes = problemes.length > 0
-      console.log('⚠️ Problèmes cochés:', aDesProblemes, 'Nombre:', problemes.length)
-      
-      // Vérifier s'il y a des points de vérification marqués "non_conforme"
-      const verificationPoints = data.verification_points || {}
-      const pointsNonConformes = Object.values(verificationPoints).filter(v => v === 'non_conforme')
-      const aDesPointsNonConformes = pointsNonConformes.length > 0
-      console.log('❌ Points non conformes:', aDesPointsNonConformes, 'Nombre:', pointsNonConformes.length)
-      
-      // Une alerte doit être créée si :
-      // - Il y a un écart de palettes OU
-      // - Il y a des problèmes cochés OU
-      // - Il y a des points de vérification non conformes
-      const aDesNonConformites = aDesProblemes || aDesPointsNonConformes
-      console.log('🚨 Nécessite attention contrôleur:', aDesNonConformites)
+      const aDesNonConformites = problemes.length > 0
+      console.log('⚠️ Non-conformités:', aDesNonConformites, 'Nombre:', problemes.length)
       
       // ✨ CRÉER SYSTÉMATIQUEMENT UNE ALERTE KPI POUR CHAQUE CAMION (même sans problème)
       // Cela permet de capturer tous les temps pour les KPI de la page Chef d'équipe
@@ -3492,34 +3272,20 @@ app.post('/api/fin-dechargement', async (c) => {
         // ✅ AJOUTER LA DURÉE DE DÉCHARGEMENT EN SECONDES
         console.log('⏱️ Durée déchargement:', timerDuration, 'secondes')
         
-        // 🔥 LOG FINAL AVANT INSERT
-        console.log('🚀 INSERTION ALERTE EN COURS - Données finales:', {
-          quai_numero: data.quai_numero,
-          numero_id: data.numero_id,
-          fournisseur: data.fournisseur,
-          timer_start: timerStartSauvegarde || 'NULL',
-          timer_duration: timerDuration || 0,
-          palettes_attendues: data.palettes_attendues,
-          palettes_recues: data.palettes_recues,
-          statut: statutAlerte,
-          ecartPalettes: ecartPalettes,
-          aDesNonConformites: aDesNonConformites
-        })
-        
         // Insérer l'alerte avec tous les champs + durée déchargement
-        // 🔥 FIX CRITIQUE v3.11.19: Toujours utiliser datetime('now') pour heure_fin_dechargement
         const alerteResult = await c.env.DB.prepare(`
           INSERT INTO controleur_alertes (
             quai_numero, numero_id, fournisseur, heure_premier_scan, heure_fin_dechargement, duree_dechargement_secondes,
             ecart_palettes_attendues, ecart_palettes_recues, non_conformites, verification_points,
             traite_le, statut
-          ) VALUES (?, ?, ?, ?, datetime('now', 'localtime'), ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), ?)
         `).bind(
           data.quai_numero,
           data.numero_id,
           data.fournisseur,
-          timerStartSauvegarde || null,  // ✅ NULL si pas de "Début déchargement" cliqué
-          timerDuration || 0,            // ✅ 0 si pas de timer (au lieu de NULL)
+          timerStartSauvegarde || null,  // ✅ Utiliser la sauvegarde du timer_start
+          timerFinTimestamp || null,     // ✅ Utiliser NOW comme heure_fin_dechargement
+          timerDuration || null,         // ✅ Durée de déchargement en secondes
           parseInt(data.palettes_attendues),
           parseInt(data.palettes_recues),
           nonConformitesJson,
@@ -3533,32 +3299,14 @@ app.post('/api/fin-dechargement', async (c) => {
       }
     } catch (error) {
       console.error('❌ ERREUR création alerte:', error)
-      console.error('❌ Message:', error.message)
       console.error('❌ Stack:', error.stack)
-      console.error('❌ Données envoyées:', {
-        quai_numero: data.quai_numero,
-        verification_points: data.verification_points,
-        problemes: data.problemes,
-        palettes_attendues: data.palettes_attendues,
-        palettes_recues: data.palettes_recues
-      })
-      alerteErreur = error.message
     }
 
-    // v3.11.22 - PRODUCTION FINALE - ${Date.now()}
     return c.json({ 
       success: true, 
       id: result.meta.last_row_id,
       message: 'Déchargement enregistré avec succès',
-      alerte_creee: alerteCreee,
-      version: '3.11.24-PRODUCTION-FINALE',
-      timestamp: new Date().toISOString(),
-      debug: {
-        verification_points_recus: Object.keys(data.verification_points || {}).length,
-        problemes_recus: (data.problemes || []).length,
-        ecart_palettes: parseInt(data.palettes_attendues) !== parseInt(data.palettes_recues),
-        alerte_erreur: alerteErreur
-      }
+      alerte_creee: alerteCreee
     })
   } catch (error) {
     console.error('❌ Erreur enregistrement fin déchargement:', error)
@@ -3645,90 +3393,22 @@ app.post('/api/quais/:numero', async (c) => {
     
     // Mettre à jour le quai avec gestion du timer
     if (statut === 'en_cours') {
-      // ✅ NOUVELLE APPROCHE : Stocker timestamp Unix (nombre entier en secondes)
-      // ✅ Timer démarre en UTC (pas de localtime pour éviter décalage unixepoch)
+      // Démarrer le timer avec datetime SQLite (heure locale)
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
-            timer_start = datetime('now'),
+            timer_start = datetime('now', 'localtime'),
             commentaire = NULL,
             commentaire_auteur = NULL,
             updated_at = datetime('now', 'localtime')
         WHERE quai_numero = ?
       `).bind(statut, numero).run()
     } else if (statut === 'disponible') {
-      // NOUVEAU : Archiver le quai s'il était en fin_controle
-      const quaiActuel = await c.env.DB.prepare(`
-        SELECT * FROM quai_status WHERE quai_numero = ?
-      `).bind(numero).first()
-      
-      if (quaiActuel && quaiActuel.statut === 'fin_controle') {
-        console.log(`📦 Archivage historique Quai ${numero} avant remise en disponible`)
-        
-        // Créer table historique si nécessaire
-        await c.env.DB.prepare(`
-          CREATE TABLE IF NOT EXISTS quai_historique (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            quai_numero INTEGER NOT NULL,
-            statut TEXT NOT NULL,
-            timer_start TEXT,
-            timer_duration INTEGER,
-            timer_controle_start TEXT,
-            timer_controle_duration INTEGER,
-            controle_debut_timestamp TEXT,
-            controle_fin_timestamp TEXT,
-            controle_fournisseur TEXT,
-            controle_id_chauffeur TEXT,
-            controleur_nom TEXT,
-            commentaire TEXT,
-            commentaire_auteur TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            archived_at DATETIME DEFAULT CURRENT_TIMESTAMP
-          )
-        `).run()
-        
-        // Copier les données dans l'historique
-        await c.env.DB.prepare(`
-          INSERT INTO quai_historique (
-            quai_numero, statut, timer_start, timer_duration,
-            timer_controle_start, timer_controle_duration,
-            controle_debut_timestamp, controle_fin_timestamp,
-            controle_fournisseur, controle_id_chauffeur, controleur_nom,
-            commentaire, commentaire_auteur, created_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).bind(
-          quaiActuel.quai_numero,
-          quaiActuel.statut,
-          quaiActuel.timer_start,
-          quaiActuel.timer_duration,
-          quaiActuel.timer_controle_start,
-          quaiActuel.timer_controle_duration,
-          quaiActuel.controle_debut_timestamp,
-          quaiActuel.controle_fin_timestamp,
-          quaiActuel.controle_fournisseur,
-          quaiActuel.controle_id_chauffeur,
-          quaiActuel.controleur_nom,
-          quaiActuel.commentaire,
-          quaiActuel.commentaire_auteur,
-          quaiActuel.updated_at
-        ).run()
-        
-        console.log(`✅ Quai ${numero} archivé dans quai_historique`)
-      }
-      
-      // Réinitialiser le timer et remettre en disponible
+      // Réinitialiser le timer
       await c.env.DB.prepare(`
         UPDATE quai_status 
         SET statut = ?, 
             timer_start = NULL,
-            timer_duration = NULL,
-            timer_controle_start = NULL,
-            timer_controle_duration = NULL,
-            controle_debut_timestamp = NULL,
-            controle_fin_timestamp = NULL,
-            controle_fournisseur = NULL,
-            controle_id_chauffeur = NULL,
-            controleur_nom = NULL,
             commentaire = NULL,
             commentaire_auteur = NULL,
             updated_at = datetime('now', 'localtime')
@@ -4034,138 +3714,96 @@ app.get('/api/improductivites/utilisateur/:nom', async (c) => {
 // ==============================================
 
 // GET /api/chef-equipe/kpi/reception-camion - KPI réception camion
-// 🎯 CARTES QUAIS TERMINÉS (quai_status + quai_historique)
+// 🎯 ARCHIVES DIRECTES (kpi_archives) - Comme improductivités
 app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   try {
     const date = c.req.query('date') // Format: YYYY-MM-DD
     
-    // Créer table historique si nécessaire
+    // Créer la table kpi_archives si elle n'existe pas
     await c.env.DB.prepare(`
-      CREATE TABLE IF NOT EXISTS quai_historique (
+      CREATE TABLE IF NOT EXISTS kpi_archives (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         quai_numero INTEGER NOT NULL,
-        statut TEXT NOT NULL,
-        timer_start TEXT,
-        timer_duration INTEGER,
-        timer_controle_start TEXT,
-        timer_controle_duration INTEGER,
-        controle_debut_timestamp TEXT,
-        controle_fin_timestamp TEXT,
-        controle_fournisseur TEXT,
-        controle_id_chauffeur TEXT,
+        numero_camion TEXT NOT NULL,
+        fournisseur TEXT NOT NULL,
+        duree_dechargement_secondes INTEGER NOT NULL,
+        duree_controle_secondes INTEGER NOT NULL,
         controleur_nom TEXT,
-        commentaire TEXT,
-        commentaire_auteur TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        archived_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `).run()
     
-    // 1️⃣ Récupérer les quais ACTUELLEMENT en fin_controle (quai_status)
-    let queryActuels = `
-      SELECT 
-        NULL as id,
-        quai_numero,
-        statut,
-        timer_start,
-        timer_duration,
-        timer_controle_start,
-        timer_controle_duration,
-        controle_debut_timestamp,
-        controle_fin_timestamp,
-        controle_fournisseur,
-        controle_id_chauffeur,
-        controleur_nom,
-        commentaire,
-        commentaire_auteur,
-        updated_at as created_at,
-        updated_at as archived_at,
-        'actuel' as source
-      FROM quai_status
-      WHERE statut = 'fin_controle'
-    `
+    // ✅ SIMPLE: Récupérer TOUTES les archives (comme improductivités)
+    let query = 'SELECT * FROM kpi_archives'
+    let params = []
     
-    const paramsActuels = []
     if (date) {
-      queryActuels += ' AND DATE(updated_at) = ?'
-      paramsActuels.push(date)
+      query += ' WHERE DATE(created_at) = ?'
+      params.push(date)
     } else {
-      queryActuels += ' AND DATE(updated_at) = DATE("now")'
+      query += ' WHERE DATE(created_at) = DATE("now")'
     }
     
-    const resultatsActuels = await c.env.DB.prepare(queryActuels).bind(...paramsActuels).all()
+    query += ' ORDER BY created_at DESC LIMIT 200'
     
-    // 2️⃣ Récupérer les quais déjà archivés (quai_historique)
-    let queryArchives = `
-      SELECT 
-        id,
-        quai_numero,
-        statut,
-        timer_start,
-        timer_duration,
-        timer_controle_start,
-        timer_controle_duration,
-        controle_debut_timestamp,
-        controle_fin_timestamp,
-        controle_fournisseur,
-        controle_id_chauffeur,
-        controleur_nom,
-        commentaire,
-        commentaire_auteur,
-        created_at,
-        archived_at,
-        'archive' as source
-      FROM quai_historique
-      WHERE statut = 'fin_controle'
-    `
+    const { results } = await c.env.DB.prepare(query).bind(...params).all()
     
-    const paramsArchives = []
-    if (date) {
-      queryArchives += ' AND DATE(archived_at) = ?'
-      paramsArchives.push(date)
-    } else {
-      queryArchives += ' AND DATE(archived_at) = DATE("now")'
-    }
+    console.log(`📊✅ KPI: ${results.length} quais archivés pour ${date || "aujourd\'hui"}`)
     
-    queryArchives += ' ORDER BY archived_at DESC LIMIT 200'
-    
-    const resultatsArchives = await c.env.DB.prepare(queryArchives).bind(...paramsArchives).all()
-    
-    // 3️⃣ Fusionner les résultats (actuels + archivés)
-    const tousLesQuais = [
-      ...(resultatsActuels.results || []),
-      ...(resultatsArchives.results || [])
-    ]
-    
-    console.log(`📊✅ KPI: ${resultatsActuels.results?.length || 0} quais actuels + ${resultatsArchives.results?.length || 0} quais archivés = ${tousLesQuais.length} total pour ${date || "aujourd'hui"}`)
-    
-    // Retourner les quais tels quels (front-end utilisera renderQuaiCard)
-    const quais = tousLesQuais.map(quai => ({
-      ...quai,
-      quai_numero: quai.quai_numero
-    }))
-    
-    // 4️⃣ Calcul moyennes sur TOUS les quais
-    const totalQuais = quais.length
-    let totalDechargement = 0
-    let totalControle = 0
-    
-    quais.forEach(q => {
-      if (q.timer_duration) totalDechargement += q.timer_duration
-      if (q.timer_controle_duration) totalControle += q.timer_controle_duration
+    // ✅ TRAITEMENT SIMPLE (comme improductivités)
+    const kpiData = results.map(row => {
+      // Helper functions
+      const formatDuree = (sec) => {
+        if (!sec) return '—'
+        const h = Math.floor(sec / 3600)
+        const m = Math.floor((sec % 3600) / 60)
+        const s = sec % 60
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+      }
+      
+      const getStatut = (sec, vert_min, orange_min) => {
+        if (!sec) return 'grey'
+        const min = Math.round(sec / 60)
+        if (min <= vert_min) return 'green'
+        if (min <= orange_min) return 'orange'
+        return 'red'
+      }
+      
+      const dechSec = row.duree_dechargement_secondes || 0
+      const ctrlSec = row.duree_controle_secondes || 0
+      
+      return {
+        id: row.id,
+        quai_numero: row.quai_numero,
+        numero_camion: row.numero_camion,
+        fournisseur: row.fournisseur,
+        duree_dechargement: formatDuree(dechSec),
+        duree_dechargement_minutes: Math.round(dechSec / 60),
+        duree_dechargement_status: getStatut(dechSec, 20, 25),
+        duree_controle: formatDuree(ctrlSec),
+        duree_controle_minutes: Math.round(ctrlSec / 60),
+        duree_controle_status: getStatut(ctrlSec, 30, 40),
+        controleur_nom: row.controleur_nom || '—',
+        created_at: row.created_at
+      }
     })
     
+    // Moyennes SEULEMENT déchargement et contrôle (PAS de total)
+    const totalCamions = kpiData.length
     const moyennes = {
-      total_camions: totalQuais,
-      dechargement_minutes: totalQuais > 0 ? Math.round(totalDechargement / totalQuais / 60) : 0,
-      controle_minutes: totalQuais > 0 ? Math.round(totalControle / totalQuais / 60) : 0
+      total_camions: totalCamions,
+      dechargement_minutes: totalCamions > 0 
+        ? Math.round(kpiData.reduce((sum, k) => sum + k.duree_dechargement_minutes, 0) / totalCamions) : 0,
+      controle_minutes: totalCamions > 0
+        ? Math.round(kpiData.reduce((sum, k) => sum + k.duree_controle_minutes, 0) / totalCamions) : 0
     }
     
     console.log('📊✅ Moyennes:', moyennes)
     
+    // ✅ RETOUR SIMPLE (comme improductivités)
     return c.json({
       success: true,
-      quais: quais,
+      kpi: kpiData,
       moyennes: moyennes,
       date: date || new Date().toISOString().split('T')[0]
     })
