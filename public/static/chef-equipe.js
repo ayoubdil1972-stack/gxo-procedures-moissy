@@ -481,11 +481,14 @@ function updateKPITableau(quais) {
 // Fonction pour rendre une carte de quai (copie de renderQuaiCard)
 function renderQuaiCardKPI(quai) {
   // Fonction helper pour formater les durées
+  // 🔧 FIX v3.11.37 : Correction automatique -7200s (2h) comme accueil-chauffeur
   const formatDuration = (seconds) => {
     if (!seconds || seconds <= 0) return null
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
+    // Soustraire 7200 secondes (2 heures) pour corriger l'offset
+    let correctedSeconds = Math.max(0, seconds - 7200)
+    const hours = Math.floor(correctedSeconds / 3600)
+    const minutes = Math.floor((correctedSeconds % 3600) / 60)
+    const secs = correctedSeconds % 60
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
   }
   
