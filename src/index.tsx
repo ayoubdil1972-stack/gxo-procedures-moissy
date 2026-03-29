@@ -34,6 +34,27 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
+// ===== REDIRECTION AUTOMATIQUE .com → .pages.dev =====
+// Middleware pour rediriger tous les utilisateurs du domaine .com vers .pages.dev
+app.use('*', async (c, next) => {
+  const url = new URL(c.req.url)
+  const host = url.hostname.toLowerCase()
+  
+  // Si l'utilisateur accède via gxomoissyprocedures.com
+  if (host === 'gxomoissyprocedures.com' || host === 'www.gxomoissyprocedures.com') {
+    // Construire la nouvelle URL avec .pages.dev
+    const newUrl = `https://gxomoissyprocedures.pages.dev${url.pathname}${url.search}${url.hash}`
+    
+    console.log(`🔄 REDIRECTION AUTOMATIQUE: ${url.hostname} → gxomoissyprocedures.pages.dev`)
+    
+    // Redirection 301 permanente
+    return c.redirect(newUrl, 301)
+  }
+  
+  // Sinon, continuer normalement
+  await next()
+})
+
 // ===== FONCTION UTILITAIRE : HEURE DE PARIS =====
 // Cette fonction génère un timestamp au format ISO 8601 avec le fuseau horaire de Paris
 // Utilisée pour garantir la cohérence des horodatages dans toute l'application
