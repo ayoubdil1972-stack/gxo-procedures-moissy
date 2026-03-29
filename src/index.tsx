@@ -3745,15 +3745,19 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
     // Moyennes SEULEMENT déchargement et contrôle (PAS de total)
     const totalCamions = results.length
     
-    // Calculer durées moyennes
+    // 🔧 FIX v3.11.38 : Calculer durées moyennes avec correction -7200s (2h)
     const dureeDechTotal = results.reduce((sum, row) => {
       const duree = row.timer_duration || 0
-      return sum + duree
+      // Soustraire 7200s (2h) pour corriger l'offset, comme dans le frontend
+      const dureeCorrigee = Math.max(0, duree - 7200)
+      return sum + dureeCorrigee
     }, 0)
     
     const dureeCtrlTotal = results.reduce((sum, row) => {
       const duree = row.timer_controle_duration || 0
-      return sum + duree
+      // Soustraire 7200s (2h) pour corriger l'offset, comme dans le frontend
+      const dureeCorrigee = Math.max(0, duree - 7200)
+      return sum + dureeCorrigee
     }, 0)
     
     const moyennes = {
