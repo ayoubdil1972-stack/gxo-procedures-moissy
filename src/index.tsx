@@ -3266,18 +3266,10 @@ app.get('/api/quais', async (c) => {
         quai_numero,
         statut,
         timer_start,
-        -- 🔧 CORRECTION AUTO : Si timer_duration >= 3600, retirer 3600s
-        CASE 
-          WHEN timer_duration >= 3600 THEN timer_duration - 3600
-          ELSE timer_duration
-        END as timer_duration,
+        timer_duration,
         timer_fin_timestamp,
         timer_controle_start,
-        -- 🔧 CORRECTION AUTO : Si timer_controle_duration >= 3600, retirer 3600s
-        CASE 
-          WHEN timer_controle_duration >= 3600 THEN timer_controle_duration - 3600
-          ELSE timer_controle_duration
-        END as timer_controle_duration,
+        timer_controle_duration,
         controle_debut_timestamp,
         controle_fin_timestamp,
         controle_fournisseur,
@@ -4109,17 +4101,9 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         quai_numero,
         statut,
         timer_start,
-        -- 🔧 CORRECTION AUTO timer_duration
-        CASE 
-          WHEN timer_duration >= 3600 THEN timer_duration - 3600
-          ELSE timer_duration
-        END as timer_duration,
+        timer_duration,
         timer_controle_start,
-        -- 🔧 CORRECTION AUTO timer_controle_duration
-        CASE 
-          WHEN timer_controle_duration >= 3600 THEN timer_controle_duration - 3600
-          ELSE timer_controle_duration
-        END as timer_controle_duration,
+        timer_controle_duration,
         controle_debut_timestamp,
         controle_fin_timestamp,
         controle_fournisseur,
@@ -4151,17 +4135,9 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
         quai_numero,
         statut,
         timer_start,
-        -- 🔧 CORRECTION AUTO timer_duration
-        CASE 
-          WHEN timer_duration >= 3600 THEN timer_duration - 3600
-          ELSE timer_duration
-        END as timer_duration,
+        timer_duration,
         timer_controle_start,
-        -- 🔧 CORRECTION AUTO timer_controle_duration
-        CASE 
-          WHEN timer_controle_duration >= 3600 THEN timer_controle_duration - 3600
-          ELSE timer_controle_duration
-        END as timer_controle_duration,
+        timer_controle_duration,
         controle_debut_timestamp,
         controle_fin_timestamp,
         controle_fournisseur,
