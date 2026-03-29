@@ -3721,21 +3721,22 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   try {
     const date = c.req.query('date') // Format: YYYY-MM-DD
     
-    // ✅ SIMPLE: Récupérer TOUS les quais terminés depuis quai_status
+    // ✅ SIMPLE: Récupérer TOUS les quais avec contrôle terminé (timer_controle_duration présent)
     let query = `
       SELECT * FROM quai_status 
-      WHERE statut = 'fin_controle'
+      WHERE timer_controle_duration IS NOT NULL
+        AND timer_duration IS NOT NULL
     `
     let params = []
     
     if (date) {
-      query += ' AND DATE(updated_at) = ?'
+      query += ' AND DATE(controle_fin_timestamp) = ?'
       params.push(date)
     } else {
-      query += ' AND DATE(updated_at) = DATE("now")'
+      query += ' AND DATE(controle_fin_timestamp) = DATE("now")'
     }
     
-    query += ' ORDER BY updated_at DESC LIMIT 200'
+    query += ' ORDER BY controle_fin_timestamp DESC LIMIT 200'
     
     const { results } = await c.env.DB.prepare(query).bind(...params).all()
     
