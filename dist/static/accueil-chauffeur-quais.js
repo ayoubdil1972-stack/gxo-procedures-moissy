@@ -90,9 +90,12 @@ function renderQuaiCard(quai) {
   // Fonction helper pour formater les durées
   const formatDuration = (seconds) => {
     if (!seconds || seconds <= 0) return null
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
+    // 🔧 FIX: Soustraire automatiquement 2 heures (7200 secondes) pour corriger le décalage
+    const correctedSeconds = seconds - 7200
+    if (correctedSeconds <= 0) return null
+    const hours = Math.floor(correctedSeconds / 3600)
+    const minutes = Math.floor((correctedSeconds % 3600) / 60)
+    const secs = correctedSeconds % 60
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
   }
   
