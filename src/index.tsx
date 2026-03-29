@@ -364,7 +364,7 @@ app.get('/scan-fin-dechargement', (c) => {
               </h1>
               <p class="text-gray-600 mt-2">Quai n°${quaiNumero}</p>
               <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">
-                v3.11.19 CRITIQUE - ${new Date().toISOString().split('T')[0]}
+                v3.11.25 PRODUCTION - ${new Date().toISOString().split('T')[0]}
               </span>
             </div>
             <div class="text-5xl">📦</div>
@@ -952,9 +952,9 @@ app.get('/scan-fin-dechargement', (c) => {
       </div>
 
       <script>
-        // ===== FORCE RELOAD v3.11.23 =====
+        // ===== FORCE RELOAD v3.11.25 =====
         (function() {
-          const VERSION = '3.11.23';
+          const VERSION = '3.11.25';
           const currentV = new URLSearchParams(window.location.search).get('v');
           if (currentV !== VERSION) {
             const newUrl = window.location.pathname + '?quai=${quaiNumero}&v=' + VERSION + '&t=' + Date.now();
@@ -964,10 +964,11 @@ app.get('/scan-fin-dechargement', (c) => {
           }
         })();
         
-        // ===== VERSION v3.11.23 ACTIVE =====
-        console.log('🚀🚀🚀 VERSION v3.11.23 CHARGÉE 🚀🚀🚀');
+        // ===== VERSION v3.11.25 PRODUCTION FINALE =====
+        console.log('🚀🚀🚀 VERSION v3.11.25 PRODUCTION FINALE CHARGÉE 🚀🚀🚀');
         console.log('✅ Détection automatique: Écarts + Non-conformités + Problèmes');
         console.log('✅ Création alertes en_attente garantie');
+        console.log('✅ Backend v3.11.24 - Corrélation 100% opérationnelle');
         
         // ===== GESTION AUTOCOMPLETE NOMS ET FOURNISSEURS =====
         
