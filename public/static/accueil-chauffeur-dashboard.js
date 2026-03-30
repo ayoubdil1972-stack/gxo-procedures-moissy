@@ -54,10 +54,15 @@ function afficherDashboardChauffeurs(chauffeurs) {
     const progression = Math.round((tachesCompletes / taches.length) * 100);
     
     // Calculer durée
-    const arrival = new Date(chauffeur.arrival_time);
-    const now = new Date();
-    // Correction offset +2h (7200000 ms = 7200 secondes)
-    const dureeMinutes = Math.floor((now - arrival - 7200000) / 60000);
+    // Si l'API retourne duree_minutes (calculé côté serveur), l'utiliser
+    // Sinon, calculer côté client
+    const dureeMinutes = chauffeur.duree_minutes !== undefined && chauffeur.duree_minutes !== null
+      ? chauffeur.duree_minutes
+      : (() => {
+          const arrival = new Date(chauffeur.arrival_time);
+          const now = new Date();
+          return Math.floor((now - arrival) / 60000);
+        })();
     
     // Couleur selon progression
     let borderColor = 'border-red-500';
