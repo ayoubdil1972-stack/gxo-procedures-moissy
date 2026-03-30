@@ -1,0 +1,73 @@
+✅ VERSION v3.11.38 - ENREGISTRÉE ET POUSSÉE SUR GITHUB
+
+📅 Date : 29 mars 2026 - 15h00
+🔗 Repository : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+🏷️ Tag : v3.11.38
+
+═══════════════════════════════════════════════════════════
+
+📦 COMMITS POUSSÉS :
+
+1. ca5f080 - 🔒 VERSION v3.11.38 FINALE - Verrouillage complet avec documentation
+2. 0855df1 - 📄 Documentation v3.11.38 - Fix moyennes KPI
+3. c16153a - v3.11.38 - FIX moyennes KPI (calcul avec -7200s pour durées corrigées)
+4. 5280aa2 - 📄 Documentation v3.11.37 - Fix timers KPI
+5. 7b3fd10 - v3.11.37 - FIX timers KPI (formatDuration -7200s comme accueil-chauffeur)
+6. 6a3c13b - 📄 Documentation v3.11.36 - Corrélation KPI rétablie
+7. 559be84 - v3.11.36 - KPI chercher timer_controle_duration au lieu de statut
+8. ac538a7 - v3.11.35 - RÉTABLIR corrélation KPI chef-equipe avec quai_status
+
+═══════════════════════════════════════════════════════════
+
+✅ FONCTIONNALITÉS INCLUSES :
+
+1. ✅ Timers EN COURS corrigés (démarrage 00:00:00)
+   - Fichier : public/static/accueil-chauffeur-quais.js
+   - Correction : -7200s appliquée
+
+2. ✅ Alertes contrôleur fonctionnelles
+   - Affichage instantané des non-conformités
+   - Corrélation .com ↔ .pages.dev
+
+3. ✅ Corrélation KPI rétablie
+   - API : /api/chef-equipe/kpi/reception-camion
+   - Requête : timer_controle_duration IS NOT NULL
+
+4. ✅ Durées individuelles KPI corrigées
+   - Fichier : public/static/chef-equipe.js
+   - Fonction : formatDuration avec -7200s
+
+5. ✅ Moyennes KPI corrigées
+   - Fichier : src/index.tsx
+   - Calcul : avec -7200s avant division
+
+═══════════════════════════════════════════════════════════
+
+🔒 PAGES VERROUILLÉES :
+
+1. accueil-chauffeur?v=2 - Gestion des quais
+2. controleur?v=2 - Alertes et non-conformités
+
+═══════════════════════════════════════════════════════════
+
+📄 DOCUMENTATION INCLUSE :
+
+1. VERSION_v3.11.38_FINAL.md - Résumé complet
+2. FIX_MOYENNES_KPI_v3.11.38.md - Correction moyennes
+3. FIX_TIMERS_KPI_v3.11.37.md - Correction durées individuelles
+4. CORRELATION_KPI_RETABLIE_v3.11.36.md - Rétablissement corrélation
+5. VERROUILLAGE_v3.11.34.md - Documentation verrouillage
+6. .lock - Fichier indicateur de verrouillage
+
+═══════════════════════════════════════════════════════════
+
+🚀 DÉPLOIEMENT :
+
+Production : https://gxomoissyprocedures.pages.dev
+Domaine    : https://gxomoissyprocedures.com
+GitHub     : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+Tag        : v3.11.38
+
+═══════════════════════════════════════════════════════════
+
+✅ STATUT : TOUT EST ENREGISTRÉ ET POUSSÉ SUR GITHUB

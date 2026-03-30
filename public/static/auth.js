@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '/chauffeur/langue',
     '/chauffeur/video',
     '/chauffeur/inscription',
+    '/chauffeur/taches',
     '/accueil-chauffeur'
   ];
   
