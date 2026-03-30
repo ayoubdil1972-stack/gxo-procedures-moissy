@@ -1,0 +1,23 @@
+STATUT DÉPLOIEMENT v3.11.39
+============================
+
+✅ MODIFICATIONS PRÊTES
+- Code corrigé: public/static/auth.js
+- Build: v3.11.39 (dist/ prêt)
+- Git: Commit b8a9ca3 poussé sur GitHub
+- Cloudflare: TIMEOUT RÉSEAU
+
+⚠️ PROBLÈME TECHNIQUE
+Les déploiements vers Cloudflare timeout (problème réseau temporaire).
+
+✅ SOLUTION
+Réessayer le déploiement dans quelques minutes:
+  cd /home/user/webapp
+  npx wrangler pages deploy dist --project-name gxomoissyprocedures
+
+📋 VÉRIFICATION
+Après déploiement, vérifier que /chauffeur/taches est dans publicPaths:
+  curl -s "https://gxomoissyprocedures.pages.dev/static/auth.js" | grep -A 8 "publicPaths"
+
+✅ AUCUNE AUTRE MODIFICATION
+Seul auth.js a été modifié. Les pages accueil-chauffeur, controleur et chef-equipe sont inchangées.
