@@ -2410,8 +2410,7 @@ app.get('/api/chauffeur/liste', async (c) => {
     let query = `
       SELECT 
         ca.*,
-        0 as online_status,
-        CAST((julianday('now') - julianday(ca.arrival_time)) * 1440 AS INTEGER) as duree_minutes
+        0 as online_status
       FROM chauffeur_arrivals ca
       WHERE ca.status = 'in_progress' 
       ORDER BY ca.arrival_time DESC
@@ -2430,8 +2429,7 @@ app.get('/api/chauffeur/liste', async (c) => {
               AND (julianday('now') - julianday(cs.last_heartbeat)) * 86400 < 30 
             THEN 1 
             ELSE 0 
-          END as online_status,
-          CAST((julianday('now') - julianday(ca.arrival_time)) * 1440 AS INTEGER) as duree_minutes
+          END as online_status
         FROM chauffeur_arrivals ca
         LEFT JOIN chauffeur_sessions cs ON ca.id = cs.chauffeur_id
         WHERE ca.status = 'in_progress' 

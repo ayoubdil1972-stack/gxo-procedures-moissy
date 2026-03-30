@@ -53,17 +53,6 @@ function afficherDashboardChauffeurs(chauffeurs) {
     const tachesCompletes = taches.filter(t => t === 1).length;
     const progression = Math.round((tachesCompletes / taches.length) * 100);
     
-    // Calculer durée
-    // Si l'API retourne duree_minutes (calculé côté serveur), l'utiliser
-    // Sinon, calculer côté client
-    const dureeMinutes = chauffeur.duree_minutes !== undefined && chauffeur.duree_minutes !== null
-      ? chauffeur.duree_minutes
-      : (() => {
-          const arrival = new Date(chauffeur.arrival_time);
-          const now = new Date();
-          return Math.floor((now - arrival) / 60000);
-        })();
-    
     // Couleur selon progression
     let borderColor = 'border-red-500';
     let bgColor = 'bg-red-50';
@@ -140,11 +129,7 @@ function afficherDashboardChauffeurs(chauffeurs) {
         }).join('')}
       </div>
       
-      <div class="flex items-center justify-between text-xs pt-3 border-t">
-        <div class="flex items-center text-gray-500">
-          <i class="fas fa-clock mr-1.5"></i>
-          <span>${dureeMinutes} min</span>
-        </div>
+      <div class="flex items-center justify-center text-xs pt-3 border-t">
         <div class="flex items-center ${bgColor} ${textColor} px-2.5 py-1 rounded-full text-xs font-semibold">
           ${progression === 100 ? '<i class="fas fa-check-circle mr-1.5"></i>Prêt' : progression > 0 ? '<i class="fas fa-hourglass-half mr-1.5"></i>En cours' : '<i class="fas fa-circle-notch mr-1.5"></i>Début'}
         </div>
