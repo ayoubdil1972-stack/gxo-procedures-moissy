@@ -3814,16 +3814,7 @@ app.get('/api/archives/kpi', async (c) => {
     }
     
     const { results } = await c.env.DB.prepare(`
-      SELECT 
-        quai_numero,
-        statut,
-        timer_duration,
-        timer_controle_duration,
-        fournisseur,
-        controleur_nom,
-        chauffeur_id,
-        commentaire,
-        updated_at
+      SELECT *
       FROM quai_status
       ${whereClause}
       ORDER BY updated_at DESC
