@@ -3836,43 +3836,43 @@ app.get('/api/archives/kpi', async (c) => {
   try {
     const { date, week, day } = c.req.query()
     
-    // Construction de la requête avec filtres
+    // Construction de la requête avec filtres (utiliser controle_fin_timestamp pour filtrage par date)
     let whereClause = "WHERE timer_controle_duration IS NOT NULL"
     
     if (date) {
       if (date.length === 7) { // Format: YYYY-MM
-        whereClause += ` AND strftime('%Y-%m', updated_at) = '${date}'`
+        whereClause += ` AND strftime('%Y-%m', controle_fin_timestamp) = '${date}'`
       } else if (date.length === 4) { // Format: YYYY
-        whereClause += ` AND strftime('%Y', updated_at) = '${date}'`
+        whereClause += ` AND strftime('%Y', controle_fin_timestamp) = '${date}'`
       } else { // Format: YYYY-MM-DD
-        whereClause += ` AND DATE(updated_at) = '${date}'`
+        whereClause += ` AND DATE(controle_fin_timestamp) = '${date}'`
       }
     }
     
     if (week) {
-      whereClause += ` AND CAST(strftime('%W', updated_at) AS INTEGER) = ${week}`
+      whereClause += ` AND CAST(strftime('%W', controle_fin_timestamp) AS INTEGER) = ${week}`
     }
     
     if (day) {
-      whereClause += ` AND CAST(strftime('%w', updated_at) AS INTEGER) = ${day}`
+      whereClause += ` AND CAST(strftime('%w', controle_fin_timestamp) AS INTEGER) = ${day}`
     }
     
     const { results } = await c.env.DB.prepare(`
       SELECT *
       FROM quai_status
       ${whereClause}
-      ORDER BY updated_at DESC
+      ORDER BY controle_fin_timestamp DESC
       LIMIT 100
     `).all()
     
-    // Calculer les stats (durées en secondes déjà correctes)
+    // Calculer les stats AVEC correction -7200s (comme chef-equipe)
     const stats = {
       total_camions: results.length,
       dechargement_minutes: results.length > 0 
-        ? Math.round(results.reduce((sum, q) => sum + (q.timer_duration || 0), 0) / 60 / results.length)
+        ? Math.round(results.reduce((sum, q) => sum + Math.max(0, (q.timer_duration || 0) - 7200), 0) / 60 / results.length)
         : 0,
       controle_minutes: results.length > 0
-        ? Math.round(results.reduce((sum, q) => sum + (q.timer_controle_duration || 0), 0) / 60 / results.length)
+        ? Math.round(results.reduce((sum, q) => sum + Math.max(0, (q.timer_controle_duration || 0) - 7200), 0) / 60 / results.length)
         : 0
     }
     

@@ -208,7 +208,7 @@ async function chargerKPI() {
   }
 }
 
-// Render liste KPI (affichage des durées correctes)
+// Render liste KPI (affichage des durées correctes avec correction -7200s)
 function renderListeKPI(quais) {
   const container = document.getElementById('liste-kpi');
   
@@ -223,9 +223,19 @@ function renderListeKPI(quais) {
   }
   
   container.innerHTML = quais.map(quai => {
-    // Calcul des durées en minutes (les secondes viennent déjà du serveur sans décalage)
-    const dureeDecharge = quai.timer_duration ? Math.floor(quai.timer_duration / 60) : 0;
-    const dureeControle = quai.timer_controle_duration ? Math.floor(quai.timer_controle_duration / 60) : 0;
+    // Calcul des durées AVEC correction -7200s (2h) comme dans chef-equipe
+    const dureeDechargeSeconds = Math.max(0, (quai.timer_duration || 0) - 7200);
+    const dureeControleSeconds = Math.max(0, (quai.timer_controle_duration || 0) - 7200);
+    
+    // Formater en MM:SS
+    const formatDuree = (seconds) => {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    };
+    
+    const dureeDecharge = formatDuree(dureeDechargeSeconds);
+    const dureeControle = formatDuree(dureeControleSeconds);
     
     return `
     <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 border-l-4 border-green-500">
@@ -242,24 +252,24 @@ function renderListeKPI(quais) {
         <div class="text-right">
           <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
             <i class="fas fa-check-circle mr-1"></i>
-            Terminé
+            Fin de contrôle
           </span>
         </div>
       </div>
       
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
-          <div class="text-xs text-gray-600">Déchargement</div>
+          <div class="text-xs text-gray-600">📋 Déchargement terminé</div>
           <div class="text-lg font-bold text-blue-700">
             <i class="fas fa-truck-loading mr-1"></i>
-            ${dureeDecharge} min
+            ${dureeDecharge}
           </div>
         </div>
         <div>
-          <div class="text-xs text-gray-600">Contrôle</div>
+          <div class="text-xs text-gray-600">📝 Contrôle terminé</div>
           <div class="text-lg font-bold text-purple-700">
             <i class="fas fa-clipboard-check mr-1"></i>
-            ${dureeControle} min
+            ${dureeControle}
           </div>
         </div>
         <div>
@@ -272,12 +282,19 @@ function renderListeKPI(quais) {
         </div>
       </div>
       
+      ${quai.controle_id_chauffeur ? `
+        <div class="mt-3 pt-3 border-t border-gray-200">
+          <p class="text-xs text-gray-600">ID Chauffeur: ${quai.controle_id_chauffeur}</p>
+        </div>
+      ` : ''}
+      
       ${quai.commentaire ? `
         <div class="mt-3 pt-3 border-t border-gray-200">
           <p class="text-sm text-gray-700">
             <i class="fas fa-comment mr-1 text-gray-400"></i>
             <strong>Commentaire :</strong> ${quai.commentaire}
           </p>
+          ${quai.commentaire_auteur ? `<p class="text-xs text-gray-500 mt-1">${quai.commentaire_auteur}</p>` : ''}
         </div>
       ` : ''}
     </div>
@@ -308,20 +325,20 @@ async function chargerImproductivite() {
       }
       
       // Séparer en traité/non-traité
-      const traites = filteredImprods.filter(i => i.statut === 'valide' || i.statut === 'traite');
+      const traites = filteredImprods.filter(i => i.statut === 'valide' || i.statut === 'validee' || i.statut === 'traite');
       const enAttente = filteredImprods.filter(i => i.statut === 'en_transmission' || i.statut === 'en_attente');
       
-      // Calculer les stats
-      const totalDuree = filteredImprods.reduce((sum, i) => {
-        const duree = parseDuree(i.duree);
-        return sum + duree;
+      // Calculer les stats - CORRECTION: bien parser HH:MM:SS en secondes puis convertir
+      const totalDureeSecondes = filteredImprods.reduce((sum, i) => {
+        const dureeSecondes = parseDureeToSeconds(i.duree);
+        return sum + dureeSecondes;
       }, 0);
       
       // Mettre à jour les stats
       document.getElementById('stat-total-improd').textContent = filteredImprods.length;
       document.getElementById('stat-traites-improd').textContent = traites.length;
       document.getElementById('stat-attente-improd').textContent = enAttente.length;
-      document.getElementById('stat-duree-improd').textContent = formatDureeMinutes(totalDuree);
+      document.getElementById('stat-duree-improd').textContent = formatDureeFromSeconds(totalDureeSecondes);
       
       renderListeImprod(filteredImprods);
     }
@@ -336,25 +353,26 @@ async function chargerImproductivite() {
   }
 }
 
-// Parser durée format HH:MM:SS en minutes
-function parseDuree(duree) {
+// Parser durée format HH:MM:SS en secondes totales
+function parseDureeToSeconds(duree) {
   if (!duree) return 0;
   const parts = duree.split(':');
   if (parts.length !== 3) return 0;
   const hours = parseInt(parts[0]) || 0;
   const minutes = parseInt(parts[1]) || 0;
   const seconds = parseInt(parts[2]) || 0;
-  return (hours * 60) + minutes + Math.floor(seconds / 60);
+  return (hours * 3600) + (minutes * 60) + seconds;
 }
 
-// Formater durée en minutes
-function formatDureeMinutes(minutes) {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
+// Formater durée depuis secondes totales vers format lisible
+function formatDureeFromSeconds(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  
   if (hours > 0) {
-    return `${hours}h ${mins}min`;
+    return `${hours}h ${minutes}min`;
   }
-  return `${mins} min`;
+  return `${minutes} min`;
 }
 
 // Render liste improductivités
