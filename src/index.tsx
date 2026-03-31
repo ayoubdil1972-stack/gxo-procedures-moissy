@@ -3785,5 +3785,178 @@ app.get('/api/chef-equipe/kpi/reception-camion', async (c) => {
   }
 })
 
+// ===== API ARCHIVES =====
+
+// API: Archives KPI - Quais terminés
+app.get('/api/archives/kpi', async (c) => {
+  try {
+    const { date, week, day } = c.req.query()
+    
+    // Construction de la requête avec filtres
+    let whereClause = "WHERE timer_controle_duration IS NOT NULL"
+    
+    if (date) {
+      if (date.length === 7) { // Format: YYYY-MM
+        whereClause += ` AND strftime('%Y-%m', updated_at) = '${date}'`
+      } else if (date.length === 4) { // Format: YYYY
+        whereClause += ` AND strftime('%Y', updated_at) = '${date}'`
+      } else { // Format: YYYY-MM-DD
+        whereClause += ` AND DATE(updated_at) = '${date}'`
+      }
+    }
+    
+    if (week) {
+      whereClause += ` AND CAST(strftime('%W', updated_at) AS INTEGER) = ${week}`
+    }
+    
+    if (day) {
+      whereClause += ` AND CAST(strftime('%w', updated_at) AS INTEGER) = ${day}`
+    }
+    
+    const { results } = await c.env.DB.prepare(`
+      SELECT 
+        quai_numero,
+        statut,
+        timer_duration,
+        timer_controle_duration,
+        fournisseur,
+        controleur_nom,
+        chauffeur_id,
+        commentaire,
+        updated_at
+      FROM quai_status
+      ${whereClause}
+      ORDER BY updated_at DESC
+      LIMIT 100
+    `).all()
+    
+    // Calculer les stats
+    const stats = {
+      total_camions: results.length,
+      dechargement_minutes: results.length > 0 
+        ? Math.round(results.reduce((sum, q) => sum + ((q.timer_duration || 0) - 7200), 0) / 60 / results.length)
+        : 0,
+      controle_minutes: results.length > 0
+        ? Math.round(results.reduce((sum, q) => sum + ((q.timer_controle_duration || 0) - 7200), 0) / 60 / results.length)
+        : 0
+    }
+    
+    return c.json({
+      success: true,
+      quais: results,
+      stats
+    })
+  } catch (error) {
+    console.error('❌ Erreur archives KPI:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// API: Archives Improductivité
+app.get('/api/archives/improd', async (c) => {
+  try {
+    const { date, week, day } = c.req.query()
+    
+    let whereClause = "WHERE 1=1"
+    
+    if (date) {
+      if (date.length === 7) {
+        whereClause += ` AND strftime('%Y-%m', timestamp) = '${date}'`
+      } else if (date.length === 4) {
+        whereClause += ` AND strftime('%Y', timestamp) = '${date}'`
+      } else {
+        whereClause += ` AND DATE(timestamp) = '${date}'`
+      }
+    }
+    
+    if (week) {
+      whereClause += ` AND CAST(strftime('%W', timestamp) AS INTEGER) = ${week}`
+    }
+    
+    if (day) {
+      whereClause += ` AND CAST(strftime('%w', timestamp) AS INTEGER) = ${day}`
+    }
+    
+    const { results } = await c.env.DB.prepare(`
+      SELECT *
+      FROM controleur_improd
+      ${whereClause}
+      ORDER BY timestamp DESC
+      LIMIT 100
+    `).all()
+    
+    const stats = {
+      total: results.length,
+      duree_totale: results.reduce((sum, i) => sum + (parseInt(i.duree) || 0), 0)
+    }
+    
+    return c.json({
+      success: true,
+      improductivites: results,
+      stats
+    })
+  } catch (error) {
+    console.error('❌ Erreur archives improductivité:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// API: Archives Écarts et Non-conformités
+app.get('/api/archives/ecarts', async (c) => {
+  try {
+    const { date, week, day } = c.req.query()
+    
+    let whereClause = "WHERE alerte_creee = 1"
+    
+    if (date) {
+      if (date.length === 7) {
+        whereClause += ` AND strftime('%Y-%m', timestamp) = '${date}'`
+      } else if (date.length === 4) {
+        whereClause += ` AND strftime('%Y', timestamp) = '${date}'`
+      } else {
+        whereClause += ` AND DATE(timestamp) = '${date}'`
+      }
+    }
+    
+    if (week) {
+      whereClause += ` AND CAST(strftime('%W', timestamp) AS INTEGER) = ${week}`
+    }
+    
+    if (day) {
+      whereClause += ` AND CAST(strftime('%w', timestamp) AS INTEGER) = ${day}`
+    }
+    
+    const { results } = await c.env.DB.prepare(`
+      SELECT *
+      FROM dechargement_data
+      ${whereClause}
+      ORDER BY timestamp DESC
+      LIMIT 100
+    `).all()
+    
+    const stats = {
+      total_ecarts: results.length,
+      non_conformites: results.filter(e => {
+        try {
+          const problemes = JSON.parse(e.problemes || '[]')
+          return problemes.length > 0
+        } catch {
+          return false
+        }
+      }).length,
+      alertes_critiques: results.filter(e => e.alerte_creee === 1).length
+    }
+    
+    return c.json({
+      success: true,
+      ecarts: results,
+      stats
+    })
+  } catch (error) {
+    console.error('❌ Erreur archives écarts:', error)
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 
 export default app
