@@ -1,0 +1,118 @@
+═══════════════════════════════════════════════════════
+   DÉPLOIEMENT MANUEL v3.11.42
+   Suppression timer Chauffeurs Actifs
+═══════════════════════════════════════════════════════
+
+✅ FICHIERS PRÊTS À DÉPLOYER
+────────────────────────────
+📦 Archive : gxo-deploy-v3.11.42.tar.gz (11M)
+📁 Dossier : dist/ (tous les fichiers)
+
+✅ MODIFICATION EFFECTUÉE
+─────────────────────────
+❌ Suppression du timer "⏰ X min" dans Chauffeurs Actifs
+✅ Toutes les autres fonctionnalités INTACTES
+
+═══════════════════════════════════════════════════════
+   MÉTHODE 1 : CLOUDFLARE DASHBOARD (Recommandée)
+═══════════════════════════════════════════════════════
+
+1. Ouvrir : https://dash.cloudflare.com
+
+2. Naviguer vers :
+   Pages → gxomoissyprocedures → Deployments
+
+3. Cliquer sur :
+   "Create deployment" ou "Upload assets"
+
+4. Uploader :
+   Soit l'archive : gxo-deploy-v3.11.42.tar.gz
+   Soit le dossier : dist/ (glisser-déposer)
+
+5. Attendre :
+   ~30 secondes pour le déploiement
+
+6. Vérifier :
+   https://gxomoissyprocedures.pages.dev/accueil-chauffeur?v=2
+   → Onglet "Chauffeurs Actifs"
+   → Plus de timer "⏰ X min"
+
+═══════════════════════════════════════════════════════
+   MÉTHODE 2 : GITHUB AUTO-DEPLOY
+═══════════════════════════════════════════════════════
+
+Si GitHub est connecté à Cloudflare Pages :
+
+1. Vérifier sur GitHub :
+   https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+   → Commit 0273bf5 présent ✅
+
+2. Vérifier sur Cloudflare :
+   https://dash.cloudflare.com
+   → Pages → gxomoissyprocedures → Deployments
+   → Rechercher deployment depuis "main" branch
+
+3. Si pas de déploiement auto :
+   → Pages → Settings → Builds & deployments
+   → Vérifier que GitHub est connecté
+
+═══════════════════════════════════════════════════════
+   MÉTHODE 3 : LIGNE DE COMMANDE (Avec Token)
+═══════════════════════════════════════════════════════
+
+Si vous avez un token Cloudflare valide :
+
+1. Créer token sur :
+   https://dash.cloudflare.com/profile/api-tokens
+   → "Create Token"
+   → Template "Edit Cloudflare Workers"
+   → Account → Cloudflare Pages → Edit
+
+2. Dans terminal :
+   export CLOUDFLARE_API_TOKEN="votre-token-ici"
+   cd /home/user/webapp
+   npx wrangler pages deploy dist --project-name gxomoissyprocedures
+
+═══════════════════════════════════════════════════════
+   VÉRIFICATION APRÈS DÉPLOIEMENT
+═══════════════════════════════════════════════════════
+
+✅ Page à tester :
+https://gxomoissyprocedures.pages.dev/accueil-chauffeur?v=2
+
+✅ Actions :
+1. Cliquer sur "Chauffeurs Actifs"
+2. Vérifier absence du timer "⏰ X min"
+3. Vérifier que tout le reste fonctionne :
+   - Avatar et pseudo
+   - Progression (%)
+   - 5 icônes tâches
+   - Statut (Début/En cours/Prêt)
+   - Boutons Chat et Clôturer
+
+✅ Autres pages NON modifiées :
+- /controleur?v=2
+- /chef-equipe?v=2
+- /chauffeur/taches
+- Gestion des quais
+
+═══════════════════════════════════════════════════════
+   FICHIERS DISPONIBLES
+═══════════════════════════════════════════════════════
+
+📦 Archive : /home/user/webapp/gxo-deploy-v3.11.42.tar.gz
+📁 Source  : /home/user/webapp/dist/
+📋 GitHub  : https://github.com/ayoubdil1972-stack/gxo-procedures-moissy
+🏷️  Commit  : 0273bf5
+
+═══════════════════════════════════════════════════════
+   RÉSUMÉ
+═══════════════════════════════════════════════════════
+
+Version  : v3.11.42
+Date     : 31 mars 2026
+Modif    : Suppression timer Chauffeurs Actifs
+Impact   : Aucune autre fonctionnalité touchée
+Status   : ✅ Prêt à déployer
+
+═══════════════════════════════════════════════════════
