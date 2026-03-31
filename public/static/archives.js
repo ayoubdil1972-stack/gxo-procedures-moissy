@@ -375,7 +375,7 @@ function formatDureeFromSeconds(totalSeconds) {
   return `${minutes} min`;
 }
 
-// Render liste improductivités
+// Render liste improductivités avec sections séparées
 function renderListeImprod(improds) {
   const container = document.getElementById('liste-improd');
   
@@ -390,33 +390,37 @@ function renderListeImprod(improds) {
   }
   
   // Séparer en traité/non-traité
-  const traites = improds.filter(i => i.statut === 'valide' || i.statut === 'traite');
+  const traites = improds.filter(i => i.statut === 'valide' || i.statut === 'validee' || i.statut === 'traite');
   const enAttente = improds.filter(i => i.statut === 'en_transmission' || i.statut === 'en_attente');
   
   let html = '';
   
-  // Section traités
+  // Section traités (VERT)
   if (traites.length > 0) {
     html += `
-      <div class="mb-6">
-        <h4 class="text-lg font-bold text-green-700 mb-3">
-          <i class="fas fa-check-circle mr-2"></i>
+      <div class="mb-6 bg-green-50 rounded-xl p-4 border-2 border-green-200">
+        <h4 class="text-xl font-bold text-green-800 mb-4 flex items-center">
+          <i class="fas fa-check-circle mr-2 text-2xl"></i>
           Improductivités Traitées (${traites.length})
         </h4>
-        ${traites.map(improd => renderImprodCard(improd, true)).join('')}
+        <div class="space-y-4">
+          ${traites.map(improd => renderImprodCard(improd, true)).join('')}
+        </div>
       </div>
     `;
   }
   
-  // Section en attente
+  // Section en attente (ORANGE)
   if (enAttente.length > 0) {
     html += `
-      <div>
-        <h4 class="text-lg font-bold text-orange-700 mb-3">
-          <i class="fas fa-clock mr-2"></i>
+      <div class="bg-orange-50 rounded-xl p-4 border-2 border-orange-200">
+        <h4 class="text-xl font-bold text-orange-800 mb-4 flex items-center">
+          <i class="fas fa-clock mr-2 text-2xl"></i>
           En Transmission (${enAttente.length})
         </h4>
-        ${enAttente.map(improd => renderImprodCard(improd, false)).join('')}
+        <div class="space-y-4">
+          ${enAttente.map(improd => renderImprodCard(improd, false)).join('')}
+        </div>
       </div>
     `;
   }
@@ -576,16 +580,10 @@ function renderListeEcarts(ecarts) {
       </div>
       
       <!-- Informations générales -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <div class="text-xs text-gray-600">Fournisseur</div>
           <div class="text-sm font-semibold text-gray-800">${ecart.fournisseur}</div>
-        </div>
-        <div>
-          <div class="text-xs text-gray-600">Durée déchargement</div>
-          <div class="text-sm font-semibold text-blue-700">
-            ${ecart.duree_dechargement_secondes ? Math.floor(ecart.duree_dechargement_secondes / 60) + ' min' : 'N/A'}
-          </div>
         </div>
         ${ecart.traite_par ? `
         <div>
