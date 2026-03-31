@@ -43,7 +43,7 @@ export function ArchivesPage() {
               {/* Année */}
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Année</label>
-                <select id="filter-year" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                <select id="filter-year" onchange="chargerSemaines()" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
                   <option value="2026">2026</option>
                   <option value="2025">2025</option>
                   <option value="2024">2024</option>
@@ -53,7 +53,7 @@ export function ArchivesPage() {
               {/* Mois */}
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Mois</label>
-                <select id="filter-month" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                <select id="filter-month" onchange="chargerSemaines()" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
                   <option value="">Tous les mois</option>
                   <option value="01">Janvier</option>
                   <option value="02">Février</option>
