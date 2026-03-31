@@ -3852,27 +3852,27 @@ app.get('/api/archives/improd', async (c) => {
     
     if (date) {
       if (date.length === 7) {
-        whereClause += ` AND strftime('%Y-%m', timestamp) = '${date}'`
+        whereClause += ` AND strftime('%Y-%m', created_at) = '${date}'`
       } else if (date.length === 4) {
-        whereClause += ` AND strftime('%Y', timestamp) = '${date}'`
+        whereClause += ` AND strftime('%Y', created_at) = '${date}'`
       } else {
-        whereClause += ` AND DATE(timestamp) = '${date}'`
+        whereClause += ` AND DATE(created_at) = '${date}'`
       }
     }
     
     if (week) {
-      whereClause += ` AND CAST(strftime('%W', timestamp) AS INTEGER) = ${week}`
+      whereClause += ` AND CAST(strftime('%W', created_at) AS INTEGER) = ${week}`
     }
     
     if (day) {
-      whereClause += ` AND CAST(strftime('%w', timestamp) AS INTEGER) = ${day}`
+      whereClause += ` AND CAST(strftime('%w', created_at) AS INTEGER) = ${day}`
     }
     
     const { results } = await c.env.DB.prepare(`
       SELECT *
       FROM controleur_improd
       ${whereClause}
-      ORDER BY timestamp DESC
+      ORDER BY created_at DESC
       LIMIT 100
     `).all()
     
@@ -3897,31 +3897,31 @@ app.get('/api/archives/ecarts', async (c) => {
   try {
     const { date, week, day } = c.req.query()
     
-    let whereClause = "WHERE alerte_creee = 1"
+    let whereClause = "WHERE 1=1"
     
     if (date) {
       if (date.length === 7) {
-        whereClause += ` AND strftime('%Y-%m', timestamp) = '${date}'`
+        whereClause += ` AND strftime('%Y-%m', created_at) = '${date}'`
       } else if (date.length === 4) {
-        whereClause += ` AND strftime('%Y', timestamp) = '${date}'`
+        whereClause += ` AND strftime('%Y', created_at) = '${date}'`
       } else {
-        whereClause += ` AND DATE(timestamp) = '${date}'`
+        whereClause += ` AND DATE(created_at) = '${date}'`
       }
     }
     
     if (week) {
-      whereClause += ` AND CAST(strftime('%W', timestamp) AS INTEGER) = ${week}`
+      whereClause += ` AND CAST(strftime('%W', created_at) AS INTEGER) = ${week}`
     }
     
     if (day) {
-      whereClause += ` AND CAST(strftime('%w', timestamp) AS INTEGER) = ${day}`
+      whereClause += ` AND CAST(strftime('%w', created_at) AS INTEGER) = ${day}`
     }
     
     const { results } = await c.env.DB.prepare(`
       SELECT *
-      FROM dechargement_data
+      FROM controleur_alertes
       ${whereClause}
-      ORDER BY timestamp DESC
+      ORDER BY created_at DESC
       LIMIT 100
     `).all()
     
@@ -3929,13 +3929,13 @@ app.get('/api/archives/ecarts', async (c) => {
       total_ecarts: results.length,
       non_conformites: results.filter(e => {
         try {
-          const problemes = JSON.parse(e.problemes || '[]')
+          const problemes = JSON.parse(e.non_conformites || '[]')
           return problemes.length > 0
         } catch {
           return false
         }
       }).length,
-      alertes_critiques: results.filter(e => e.alerte_creee === 1).length
+      alertes_critiques: results.filter(e => e.statut === 'en_attente').length
     }
     
     return c.json({
