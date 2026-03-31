@@ -3711,6 +3711,50 @@ app.get('/api/improductivites/utilisateur/:nom', async (c) => {
   }
 })
 
+// GET /api/improductivites - Récupérer les improductivités avec filtres de date (pour Archives)
+app.get('/api/improductivites', async (c) => {
+  try {
+    const { date, week, day } = c.req.query()
+    
+    let whereClause = "WHERE 1=1"
+    
+    if (date) {
+      if (date.length === 7) {
+        whereClause += ` AND strftime('%Y-%m', created_at) = '${date}'`
+      } else if (date.length === 4) {
+        whereClause += ` AND strftime('%Y', created_at) = '${date}'`
+      } else {
+        whereClause += ` AND DATE(created_at) = '${date}'`
+      }
+    }
+    
+    if (week) {
+      whereClause += ` AND CAST(strftime('%W', created_at) AS INTEGER) = ${week}`
+    }
+    
+    if (day) {
+      whereClause += ` AND CAST(strftime('%w', created_at) AS INTEGER) = ${day}`
+    }
+    
+    const { results } = await c.env.DB.prepare(`
+      SELECT *
+      FROM improductivites
+      ${whereClause}
+      ORDER BY created_at DESC
+      LIMIT 100
+    `).all()
+    
+    return c.json({
+      success: true,
+      improductivites: results
+    })
+  } catch (error) {
+    console.error('❌ Erreur archives improductivité:', error)
+    // Si la table n'existe pas, retourner liste vide
+    return c.json({ success: true, improductivites: [] })
+  }
+})
+
 // ==============================================
 // APIS KPI RÉCEPTION CAMION
 // ==============================================
@@ -3821,14 +3865,14 @@ app.get('/api/archives/kpi', async (c) => {
       LIMIT 100
     `).all()
     
-    // Calculer les stats
+    // Calculer les stats (durées en secondes déjà correctes)
     const stats = {
       total_camions: results.length,
       dechargement_minutes: results.length > 0 
-        ? Math.round(results.reduce((sum, q) => sum + ((q.timer_duration || 0) - 7200), 0) / 60 / results.length)
+        ? Math.round(results.reduce((sum, q) => sum + (q.timer_duration || 0), 0) / 60 / results.length)
         : 0,
       controle_minutes: results.length > 0
-        ? Math.round(results.reduce((sum, q) => sum + ((q.timer_controle_duration || 0) - 7200), 0) / 60 / results.length)
+        ? Math.round(results.reduce((sum, q) => sum + (q.timer_controle_duration || 0), 0) / 60 / results.length)
         : 0
     }
     

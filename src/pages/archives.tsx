@@ -166,11 +166,35 @@ export function ArchivesPage() {
                 Improductivités validées et traitées
               </h3>
               
+              {/* Sous-onglets Improductivité */}
+              <div class="flex space-x-2 mb-6">
+                <button id="improd-tab-total" onclick="switchImprodTab('total')" class="px-4 py-2 rounded-lg font-semibold transition-colors bg-orange-500 text-white">
+                  <i class="fas fa-list mr-2"></i>
+                  Total
+                </button>
+                <button id="improd-tab-controleurs" onclick="switchImprodTab('controleurs')" class="px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-clipboard-check mr-2"></i>
+                  Contrôleurs
+                </button>
+                <button id="improd-tab-agents" onclick="switchImprodTab('agents')" class="px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-dolly mr-2"></i>
+                  Agents de Quai
+                </button>
+              </div>
+              
               {/* Stats */}
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="stats-improd">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" id="stats-improd">
+                <div class="bg-blue-50 rounded-lg p-4">
+                  <div class="text-sm text-blue-600 font-semibold">Total</div>
+                  <div class="text-3xl font-bold text-blue-700" id="stat-total-improd">0</div>
+                </div>
+                <div class="bg-green-50 rounded-lg p-4">
+                  <div class="text-sm text-green-600 font-semibold">Traités</div>
+                  <div class="text-3xl font-bold text-green-700" id="stat-traites-improd">0</div>
+                </div>
                 <div class="bg-orange-50 rounded-lg p-4">
-                  <div class="text-sm text-orange-600 font-semibold">Total Improductivités</div>
-                  <div class="text-3xl font-bold text-orange-700" id="stat-total-improd">0</div>
+                  <div class="text-sm text-orange-600 font-semibold">En Transmission</div>
+                  <div class="text-3xl font-bold text-orange-700" id="stat-attente-improd">0</div>
                 </div>
                 <div class="bg-red-50 rounded-lg p-4">
                   <div class="text-sm text-red-600 font-semibold">Durée Totale</div>
