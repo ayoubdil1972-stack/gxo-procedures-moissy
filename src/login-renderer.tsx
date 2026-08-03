@@ -33,7 +33,7 @@ export const loginRenderer = jsxRenderer(({ children }) => {
       </head>
       <body>
         {children}
-        <script src="/static/auth.js?v=1.1.0"></script>
+        <script src="/static/auth.js?v=1.2.0"></script>
       </body>
     </html>
   )
