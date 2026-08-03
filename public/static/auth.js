@@ -4,9 +4,18 @@
 const AUTH_CONFIG = {
   // Identifiants par défaut - CHANGER EN PRODUCTION !
   credentials: [
+    // Compte admin principal
     { username: 'gxo.admin', password: 'GXO2026!Moissy', role: 'admin', name: 'Administrateur' },
     { username: 'gxo.user', password: 'GXO@Moissy2026', role: 'user', name: 'Utilisateur' },
-    { username: 'chef.equipe', password: 'ChefGXO2026!', role: 'manager', name: 'Chef d\'équipe' }
+    { username: 'chef.equipe', password: 'ChefGXO2026!', role: 'manager', name: 'Chef d\'équipe' },
+    
+    // Utilisateurs GXO Moissy (ajoutés le 2 juin 2026)
+    // Format: email complet comme username, mot de passe simple (GXO+initiales+2026)
+    { username: 'sonia.cornette@gxo.com', password: 'GXOsc2026', role: 'chef', name: 'Sonia Cornette' },
+    { username: 'rocky.gussie@gxo.com', password: 'GXOrg2026', role: 'user', name: 'Rocky Gussie' },
+    { username: 'marius.dumitru@gxo.com', password: 'GXOmd2026', role: 'user', name: 'Marius Dumitru' },
+    { username: 'hassan.mounaim@gxo.com', password: 'GXOhm2026', role: 'user', name: 'Hassan Mounaim' },
+    { username: 'gabriel.nguidjol@gxo.com', password: 'GXOgn2026', role: 'user', name: 'Gabriel Nguidjol' }
   ],
   sessionDuration: 8 * 60 * 60 * 1000, // 8 heures
   maxAttempts: 5,
