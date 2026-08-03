@@ -876,7 +876,7 @@ export const renderer = jsxRenderer(({ children }) => {
           <span id="auto-indicator" class="auto-indicator">AUTO</span>
         </button>
         
-        <script src="/static/auth.js"></script>
+        <script src="/static/auth.js?v=1.1.0"></script>
         <script src="/static/app.v2.js"></script>
         <script src="/static/reviews.js"></script>
         <script src="/static/onboarding.js"></script>
