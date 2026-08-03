@@ -1,0 +1,401 @@
+{
+  "accueil-chauffeur": {
+    "title": "Accueil Chauffeur",
+    "color": "blue",
+    "procedures": [
+      {
+        "id": "creation-tu",
+        "title": "Création TU",
+        "description": "Créer une Transportation Unit dans Process TU et y rattacher une livraison",
+        "icon": "fa-plus-circle",
+        "level": "🟢",
+        "duration": "5-10 min",
+        "file": "01_Creation_TU.pdf"
+      },
+      {
+        "id": "assigner-camion-quai",
+        "title": "Assigner Camion à Quai",
+        "description": "Retrouver le dossier du camion, identifier la TU et l'affecter au bon quai",
+        "icon": "fa-truck-loading",
+        "level": "🟢",
+        "duration": "5 min",
+        "file": "02_Assigner_Camion_Quai.pdf"
+      },
+      {
+        "id": "mode-operatoire-accueil",
+        "title": "Mode Opératoire Synthétique",
+        "description": "Lecture rapide du flux accueil chauffeur - Points clés à mémoriser",
+        "icon": "fa-list-check",
+        "level": "🟢",
+        "duration": "Référence",
+        "file": "03_Mode_Operatoire_Accueil.pdf"
+      }
+    ]
+  },
+  "controleur": {
+    "title": "Contrôleur",
+    "color": "green",
+    "procedures": [
+      {
+        "id": "process-scan",
+        "title": "Process Scan",
+        "description": "Allumer le scan, s'identifier et connecter l'imprimante",
+        "icon": "fa-barcode",
+        "level": "🟢",
+        "duration": "2-3 min",
+        "file": "04_Process_Scan.pdf"
+      },
+      {
+        "id": "traitement-anomalie",
+        "title": "Traitement d'une Anomalie",
+        "description": "Utiliser le formulaire Teams pour signaler un problème",
+        "icon": "fa-exclamation-triangle",
+        "level": "🟡",
+        "duration": "10-15 min",
+        "file": "05_Traitement_Anomalie.pdf"
+      },
+      {
+        "id": "dlc-courte-abrand",
+        "title": "DLC Courte Abrand Crossdock",
+        "description": "Traiter une palette avec DLC courte et tracer la modification",
+        "icon": "fa-calendar-times",
+        "level": "🟡",
+        "duration": "10 min",
+        "file": "06_DLC_Courte_Abrand.pdf"
+      },
+      {
+        "id": "etiquettes-rouges",
+        "title": "Étiquettes Rouges - Traçabilité",
+        "description": "Renseigner et tracer les anomalies avec étiquettes rouges",
+        "icon": "fa-tag",
+        "level": "🟡",
+        "duration": "5 min",
+        "file": "07_Etiquettes_Rouges.pdf"
+      },
+      {
+        "id": "mode-operatoire-controleur",
+        "title": "Mode Opératoire Synthétique",
+        "description": "Lecture rapide du flux terrain contrôleur",
+        "icon": "fa-list-check",
+        "level": "🟢",
+        "duration": "Référence",
+        "file": "08_Mode_Operatoire_Controleur.pdf"
+      },
+      {
+        "id": "anomalie-order-planning",
+        "title": "Anomalie et Order Planning",
+        "description": "Traiter un écart de livraison (manquant, quantité incohérente)",
+        "icon": "fa-clipboard-list",
+        "level": "🟡",
+        "duration": "15-20 min",
+        "file": "35_Anomalie_Order_Planning.pdf"
+      },
+      {
+        "id": "reception-ncg",
+        "title": "Réception NCG",
+        "description": "Réception NCG pour flux hors normes ou non standardisés",
+        "icon": "fa-box-open",
+        "level": "🔴",
+        "duration": "20-30 min",
+        "file": "36_Reception_NCG.pdf"
+      },
+      {
+        "id": "fichier-etetage",
+        "title": "Fichier Étêtage et Container",
+        "description": "Mettre en forme et renseigner le fichier quotidien étêtage",
+        "icon": "fa-file-excel",
+        "level": "🟢",
+        "duration": "10 min",
+        "file": "37_Fichier_Etetage_Container.pdf"
+      }
+    ]
+  },
+  "agent-quai": {
+    "title": "Agent de Quai",
+    "color": "yellow",
+    "procedures": [
+      {
+        "id": "accueil-camion",
+        "title": "Accueil Camion et Préparation Quai",
+        "description": "Sécurité et contrôle avant déchargement",
+        "icon": "fa-truck",
+        "level": "🟢",
+        "duration": "5 min",
+        "file": "09_Accueil_Camion.pdf"
+      },
+      {
+        "id": "dechargement-controle",
+        "title": "Déchargement et Contrôle",
+        "description": "Mise en place et vérifications de sécurité",
+        "icon": "fa-dolly",
+        "level": "🟢",
+        "duration": "30-60 min",
+        "file": "10_Dechargement_Controle.pdf"
+      },
+      {
+        "id": "verification-conformite",
+        "title": "Vérification Conformité",
+        "description": "Disposition et espacement des palettes",
+        "icon": "fa-check-circle",
+        "level": "🟢",
+        "duration": "10 min",
+        "file": "11_Verification_Conformite.pdf"
+      },
+      {
+        "id": "mode-operatoire-agent",
+        "title": "Mode Opératoire Synthétique",
+        "description": "Fil conducteur du flux quai",
+        "icon": "fa-list-check",
+        "level": "🟢",
+        "duration": "Référence",
+        "file": "12_Mode_Operatoire_Agent.pdf"
+      }
+    ]
+  },
+  "chef-equipe": {
+    "title": "Chef d'Équipe",
+    "color": "indigo",
+    "procedures": [
+      {
+        "id": "chef-equipe-reception",
+        "title": "Chef d'Équipe Réception",
+        "description": "Position dans la chaîne de commandement",
+        "icon": "fa-users-cog",
+        "level": "🟢",
+        "duration": "Référence",
+        "file": "13_Chef_Equipe_Reception.pdf"
+      },
+      {
+        "id": "pilotage-quotidien",
+        "title": "Pilotage Quotidien et Supervision",
+        "description": "Organisation quotidienne et formation équipe",
+        "icon": "fa-clipboard-list",
+        "level": "🟡",
+        "duration": "Journée",
+        "file": "14_Pilotage_Quotidien.pdf"
+      },
+      {
+        "id": "supervision-terrain",
+        "title": "Supervision Terrain et Backoffice",
+        "description": "Supervision du contrôleur terrain",
+        "icon": "fa-eye",
+        "level": "🟡",
+        "duration": "Continu",
+        "file": "15_Supervision_Terrain.pdf"
+      },
+      {
+        "id": "gestion-ecarts",
+        "title": "Gestion des Écarts et Suivi KPI",
+        "description": "Gestion des écarts (manco/surplus) et litiges",
+        "icon": "fa-chart-line",
+        "level": "🟡",
+        "duration": "Variable",
+        "file": "16_Gestion_Ecarts.pdf"
+      },
+      {
+        "id": "controles-eop",
+        "title": "Contrôles Quotidiens et End of Period",
+        "description": "Contrôles administratifs et planning de charge",
+        "icon": "fa-calendar-check",
+        "level": "🟡",
+        "duration": "20-30 min",
+        "file": "17_Controles_EOP.pdf"
+      },
+      {
+        "id": "flux-hazardous-analyse",
+        "title": "Flux Hazardous - Analyse et Regroupement TU",
+        "description": "Repérer le flux hazardous et décider des manipulations",
+        "icon": "fa-radiation",
+        "level": "🔴",
+        "duration": "20-30 min",
+        "file": "18_Flux_Hazardous_Analyse.pdf"
+      },
+      {
+        "id": "flux-hazardous-checkpoint",
+        "title": "Flux Hazardous - Checkpoint et Mise à Quai",
+        "description": "Vider et clôturer le TU PGS",
+        "icon": "fa-warehouse",
+        "level": "🔴",
+        "duration": "15-20 min",
+        "file": "19_Flux_Hazardous_Checkpoint.pdf"
+      },
+      {
+        "id": "correction-etiquette-suppression",
+        "title": "Correction Étiquette - Suppression HU",
+        "description": "Supprimer une étiquette HU posée à tort",
+        "icon": "fa-tag",
+        "level": "🟡",
+        "duration": "5-10 min",
+        "file": "20_Correction_Etiquette_Suppression.pdf"
+      },
+      {
+        "id": "correction-etiquette-reedition",
+        "title": "Correction Étiquette - Réédition HU",
+        "description": "Rééditer un HU correct dont l'étiquette est illisible",
+        "icon": "fa-print",
+        "level": "🟢",
+        "duration": "5 min",
+        "file": "21_Correction_Etiquette_Reedition.pdf"
+      },
+      {
+        "id": "verification-dossier",
+        "title": "Vérification Dossier Après Contrôle",
+        "description": "Reprendre le dossier après contrôle physique",
+        "icon": "fa-folder-open",
+        "level": "🟡",
+        "duration": "10-15 min",
+        "file": "22_Verification_Dossier.pdf"
+      },
+      {
+        "id": "fermer-porte-quai",
+        "title": "Fermer une Porte de Quai",
+        "description": "Libérer une porte de quai dans RFUI",
+        "icon": "fa-door-closed",
+        "level": "🟢",
+        "duration": "2-3 min",
+        "file": "23_Fermer_Porte_Quai.pdf"
+      },
+      {
+        "id": "cloture-livraisons",
+        "title": "Clôture Livraisons Ouvertes",
+        "description": "Clôturer une livraison inbound restée ouverte dans MON",
+        "icon": "fa-check-double",
+        "level": "🟡",
+        "duration": "10 min",
+        "file": "24_Cloture_Livraisons.pdf"
+      },
+      {
+        "id": "livraison-ouverte-eop",
+        "title": "Livraison Ouverte EOP",
+        "description": "Clôturer une livraison EOP ouverte sans flux démarré",
+        "icon": "fa-calendar-times",
+        "level": "🟡",
+        "duration": "5-10 min",
+        "file": "25_Livraison_Ouverte_EOP.pdf"
+      },
+      {
+        "id": "cloture-tu-actif",
+        "title": "Clôture TU Actif",
+        "description": "Clôturer une TU en statut Active déjà terminée terrain",
+        "icon": "fa-times-circle",
+        "level": "🟡",
+        "duration": "10-15 min",
+        "file": "26_Cloture_TU_Actif.pdf"
+      },
+      {
+        "id": "creer-packspec",
+        "title": "Créer un Packspec",
+        "description": "Créer ou corriger un packspec manquant ou faux",
+        "icon": "fa-box",
+        "level": "🔴",
+        "duration": "15-20 min",
+        "file": "27_Creer_Packspec.pdf"
+      },
+      {
+        "id": "procedures-operationnelles",
+        "title": "Procédures Opérationnelles à Utiliser",
+        "description": "Liste des procédures terrain à appliquer",
+        "icon": "fa-list-ul",
+        "level": "🟢",
+        "duration": "Référence",
+        "file": "28_Procedures_Operationnelles.pdf"
+      }
+    ]
+  },
+  "administrateur": {
+    "title": "Administrateur",
+    "color": "purple",
+    "procedures": [
+      {
+        "id": "taches-ouvertes",
+        "title": "Tâches Ouvertes 9010/9015 et Analyse 9030",
+        "description": "Contrôle administratif quotidien et End of Period",
+        "icon": "fa-tasks",
+        "level": "🟡",
+        "duration": "20-30 min",
+        "file": "29_Taches_Ouvertes.pdf"
+      },
+      {
+        "id": "mouvement-adprod",
+        "title": "Mouvement ADPROD",
+        "description": "Remettre un article 9030 sans HU dans le bon flux",
+        "icon": "fa-exchange-alt",
+        "level": "🟡",
+        "duration": "10 min",
+        "file": "30_Mouvement_ADPROD.pdf"
+      },
+      {
+        "id": "fichier-ecart-gds",
+        "title": "Fichier Écart GDS",
+        "description": "Vérifier dans SAP si l'écart est valide avant GDS",
+        "icon": "fa-file-excel",
+        "level": "🟡",
+        "duration": "15-20 min",
+        "file": "31_Fichier_Ecart_GDS.pdf"
+      },
+      {
+        "id": "retour-fournisseur",
+        "title": "Retour Fournisseur",
+        "description": "Renvoyer marchandise au fournisseur après erreur",
+        "icon": "fa-undo",
+        "level": "🟡",
+        "duration": "20 min",
+        "file": "32_Retour_Fournisseur.pdf"
+      },
+      {
+        "id": "creation-conditionnement-prd",
+        "title": "Création Conditionnement PRD",
+        "description": "Créer un nouveau conditionnement PRD dans SAP",
+        "icon": "fa-cube",
+        "level": "🟡",
+        "duration": "10 min",
+        "file": "33_Creation_Conditionnement_PRD.pdf"
+      },
+      {
+        "id": "extraction-icpe",
+        "title": "Extraction ICPE",
+        "description": "Contrôler le volume ICPE et enrichir les données",
+        "icon": "fa-database",
+        "level": "🔴",
+        "duration": "30 min",
+        "file": "34_Extraction_ICPE.pdf"
+      },
+      {
+        "id": "chronogramme-journalier",
+        "title": "Chronogramme Journalier - Procédures Administratives",
+        "description": "Frise chronologique des tâches administratives quotidiennes",
+        "icon": "fa-clock",
+        "level": "🟢",
+        "duration": "Référence",
+        "file": "38_Chronogramme_Journalier.pdf"
+      },
+      {
+        "id": "anomalie-order-planning-admin",
+        "title": "Anomalie et Order Planning",
+        "description": "Traiter un écart de livraison (manquant, quantité incohérente)",
+        "icon": "fa-clipboard-list",
+        "level": "🟡",
+        "duration": "15-20 min",
+        "file": "35_Anomalie_Order_Planning.pdf"
+      },
+      {
+        "id": "reception-ncg-admin",
+        "title": "Réception NCG",
+        "description": "Réception NCG pour flux hors normes ou non standardisés",
+        "icon": "fa-box-open",
+        "level": "🔴",
+        "duration": "20-30 min",
+        "file": "36_Reception_NCG.pdf"
+      },
+      {
+        "id": "fichier-etetage-admin",
+        "title": "Fichier Étêtage et Container",
+        "description": "Mettre en forme et renseigner le fichier quotidien étêtage",
+        "icon": "fa-file-excel",
+        "level": "🟢",
+        "duration": "10 min",
+        "file": "37_Fichier_Etetage_Container.pdf"
+      }
+    ]
+  }
+}

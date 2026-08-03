@@ -6,7 +6,7 @@ export function HomePage() {
       icon: 'fa-truck-loading',
       color: 'bg-orange-500',
       description: 'Base générale des procédures - Réception marchandises',
-      processes: 29
+      processes: 0
     },
     {
       id: 'accueil-chauffeur',
@@ -14,7 +14,7 @@ export function HomePage() {
       icon: 'fa-truck',
       color: 'bg-blue-500',
       description: 'Procédures d\'arrivée et livraison chauffeurs',
-      processes: 4
+      processes: 3
     },
     {
       id: 'administrateur',
@@ -22,7 +22,7 @@ export function HomePage() {
       icon: 'fa-user-tie',
       color: 'bg-purple-500',
       description: 'Gestion administrative et suivi documentaire',
-      processes: 5
+      processes: 10
     },
     {
       id: 'controleur',
@@ -30,7 +30,7 @@ export function HomePage() {
       icon: 'fa-user-check',
       color: 'bg-green-500',
       description: 'Contrôle qualité et conformité réception',
-      processes: 5
+      processes: 8
     },
     {
       id: 'agent-quai',
@@ -38,7 +38,7 @@ export function HomePage() {
       icon: 'fa-hard-hat',
       color: 'bg-yellow-500',
       description: 'Opérations de déchargement et contrôle',
-      processes: 6
+      processes: 4
     },
     {
       id: 'chef-equipe',
@@ -46,7 +46,7 @@ export function HomePage() {
       icon: 'fa-users-cog',
       color: 'bg-indigo-500',
       description: 'Gestion d\'équipe et supervision des opérations',
-      processes: 0
+      processes: 16
     },
     {
       id: 'nouveau',
@@ -54,7 +54,7 @@ export function HomePage() {
       icon: 'fa-graduation-cap',
       color: 'bg-pink-500',
       description: 'Parcours d\'intégration et formations de base',
-      processes: 6
+      processes: 0
     },
     {
       id: 'archives',
@@ -70,7 +70,7 @@ export function HomePage() {
       icon: 'fa-exclamation-circle',
       color: 'bg-red-500',
       description: 'Gestion incidents, litiges, arbres de décision',
-      processes: 20
+      processes: 0
     }
   ]
 
