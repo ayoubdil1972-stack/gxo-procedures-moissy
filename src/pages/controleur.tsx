@@ -1,44 +1,116 @@
 export function ControleurPage() {
   const processes = [
     {
-      id: 'controle-qualite',
-      title: 'Contrôle qualité marchandises',
-      icon: 'fa-search',
-      duration: '20-30 min',
-      level: '🟡',
-      vigilance: ['Inspection visuelle', 'Vérifier température', 'Documenter anomalies']
-    },
-    {
-      id: 'controle-quantitatif',
-      title: 'Contrôle quantitatif',
-      icon: 'fa-calculator',
-      duration: '15-25 min',
+      id: 'process-scan',
+      title: 'Process Scan',
+      icon: 'fa-barcode',
+      duration: '2-3 min',
       level: '🟢',
-      vigilance: ['Recompter si doute', 'Vérifier unités', 'Noter écarts']
+      vigilance: [
+        'Allumer le scan correctement',
+        'S\'identifier avec ses codes',
+        'Connecter l\'imprimante avant de commencer'
+      ],
+      document: '04_Process_Scan.pdf',
+      description: 'Allumer le scan, s\'identifier et connecter l\'imprimante'
     },
     {
-      id: 'controle-conformite',
-      title: 'Contrôle de conformité produit',
-      icon: 'fa-clipboard-check',
-      duration: '25-35 min',
-      level: '🔴',
-      vigilance: ['Références exactes', 'Dates limite', 'Normes qualité']
-    },
-    {
-      id: 'gestion-non-conformites',
-      title: 'Gestion des non-conformités',
-      icon: 'fa-times-circle',
-      duration: '30-45 min',
-      level: '🔴',
-      vigilance: ['Isoler produits', 'Traçabilité', 'Notification rapide']
-    },
-    {
-      id: 'audit-reception',
-      title: 'Audit aléatoire réception',
-      icon: 'fa-random',
-      duration: '30-40 min',
+      id: 'traitement-anomalie',
+      title: 'Traitement d\'une Anomalie',
+      icon: 'fa-exclamation-triangle',
+      duration: '10-15 min',
       level: '🟡',
-      vigilance: ['Sélection aléatoire', 'Objectivité', 'Reporting précis']
+      vigilance: [
+        'Utiliser le formulaire Teams',
+        'Documenter le problème précisément',
+        'Joindre des photos si nécessaire'
+      ],
+      document: '05_Traitement_Anomalie.pdf',
+      description: 'Utiliser le formulaire Teams pour signaler un problème'
+    },
+    {
+      id: 'dlc-courte-abrand',
+      title: 'DLC Courte Abrand Crossdock',
+      icon: 'fa-calendar-times',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Vérifier la date limite de consommation',
+        'Tracer la modification dans le système',
+        'Appliquer la procédure Abrand'
+      ],
+      document: '06_DLC_Courte_Abrand.pdf',
+      description: 'Traiter une palette avec DLC courte et tracer la modification'
+    },
+    {
+      id: 'etiquettes-rouges',
+      title: 'Étiquettes Rouges - Traçabilité',
+      icon: 'fa-tag',
+      duration: '5 min',
+      level: '🟡',
+      vigilance: [
+        'Renseigner l\'étiquette rouge complètement',
+        'Tracer l\'anomalie dans le système',
+        'Placer l\'étiquette de manière visible'
+      ],
+      document: '07_Etiquettes_Rouges.pdf',
+      description: 'Renseigner et tracer les anomalies avec étiquettes rouges'
+    },
+    {
+      id: 'mode-operatoire-controleur',
+      title: 'Mode Opératoire Synthétique',
+      icon: 'fa-list-check',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Lecture rapide du flux terrain contrôleur',
+        'Points clés du processus',
+        'Référence quotidienne'
+      ],
+      document: '08_Mode_Operatoire_Controleur.pdf',
+      description: 'Lecture rapide du flux terrain contrôleur'
+    },
+    {
+      id: 'anomalie-order-planning',
+      title: 'Anomalie et Order Planning',
+      icon: 'fa-clipboard-list',
+      duration: '15-20 min',
+      level: '🟡',
+      vigilance: [
+        'Traiter les écarts de livraison',
+        'Gérer les manquants',
+        'Vérifier les quantités incohérentes'
+      ],
+      document: '35_Anomalie_Order_Planning.pdf',
+      description: 'Traiter un écart de livraison (manquant, quantité incohérente)'
+    },
+    {
+      id: 'reception-ncg',
+      title: 'Réception NCG',
+      icon: 'fa-box-open',
+      duration: '20-30 min',
+      level: '🔴',
+      vigilance: [
+        'Réception pour flux hors normes',
+        'Flux non standardisés',
+        'Procédure spécifique NCG'
+      ],
+      document: '36_Reception_NCG.pdf',
+      description: 'Réception NCG pour flux hors normes ou non standardisés'
+    },
+    {
+      id: 'fichier-etetage',
+      title: 'Fichier Étêtage et Container',
+      icon: 'fa-file-excel',
+      duration: '10 min',
+      level: '🟢',
+      vigilance: [
+        'Mettre en forme le fichier quotidien',
+        'Renseigner toutes les données',
+        'Vérifier les containers'
+      ],
+      document: '37_Fichier_Etetage_Container.pdf',
+      description: 'Mettre en forme et renseigner le fichier quotidien étêtage'
     }
   ]
 
@@ -396,59 +468,78 @@ export function ControleurPage() {
         </div>
       </div>
 
-      {/* Processes Grid */}
-      <div class="grid grid-cols-1 gap-6">
+      {/* GXO-Procédures Section */}
+      <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow-xl p-6 mb-6">
+        <h2 class="text-3xl font-bold flex items-center">
+          <i class="fas fa-file-alt mr-3"></i>
+          GXO-Procédures Contrôleur
+        </h2>
+        <p class="text-lg opacity-90 mt-2">
+          {processes.length} procédures opérationnelles détaillées
+        </p>
+      </div>
+
+      {/* Process Cards - Format Reception.tsx */}
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {processes.map((process) => (
-          <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-green-500">
-            <div class="flex items-start justify-between mb-4">
-              <div class="flex items-start space-x-4 flex-1">
-                <div class="bg-green-100 p-3 rounded-lg">
-                  <i class={`fas ${process.icon} text-2xl text-green-600`}></i>
-                </div>
+          <div id={process.id} class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4">
+              <div class="flex items-start justify-between">
                 <div class="flex-1">
-                  <h3 class="text-xl font-bold text-gray-800 mb-2">{process.title}</h3>
-                  <div class="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                    <span class="flex items-center">
-                      <i class="fas fa-clock mr-2 text-green-500"></i>
-                      {process.duration}
-                    </span>
-                    <span class="flex items-center">
-                      <span class="mr-2">Niveau:</span>
-                      <span class="text-lg">{process.level}</span>
-                    </span>
+                  <div class="flex items-center mb-2">
+                    <i class={`fas ${process.icon} text-3xl mr-4`}></i>
+                    <h3 class="text-xl font-bold flex-1">{process.title}</h3>
                   </div>
-                  {process.vigilance && (
-                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
-                      <p class="text-sm font-semibold text-yellow-800 mb-2">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        Points de vigilance:
-                      </p>
-                      <ul class="text-sm text-yellow-700 space-y-1">
-                        {process.vigilance.map(point => (
-                          <li class="flex items-start">
-                            <i class="fas fa-chevron-right mr-2 mt-1 text-xs"></i>
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  
-                  {/* Bouton Vidéo tutoriel */}
-                  <div class="mt-4">
-                    <button 
-                      class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 w-full justify-center"
-                      onclick="alert('Fonctionnalité Vidéo tutoriel à venir')"
-                    >
-                      <i class="fas fa-video"></i>
-                      <span class="font-semibold">Vidéo tutoriel</span>
-                    </button>
+                  <div class="flex items-center space-x-4 text-sm opacity-90">
+                    <span>
+                      <i class="far fa-clock mr-1"></i>{process.duration}
+                    </span>
+                    <span>
+                      Niveau {process.level}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
+            
+            <div class="p-6">
+              {/* Description */}
+              {process.description && (
+                <div class="mb-4">
+                  <p class="text-gray-700 text-sm">{process.description}</p>
+                </div>
+              )}
 
+              {/* Points de vigilance */}
+              <div class="mb-4">
+                <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                  <i class="fas fa-exclamation-triangle text-green-500 mr-2"></i>
+                  Points de vigilance
+                </h4>
+                <ul class="space-y-1">
+                  {process.vigilance.map((point) => (
+                    <li class="text-sm text-gray-600 flex items-start">
+                      <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
+              {/* Actions */}
+              <div class="flex flex-wrap gap-2 mt-4">
+                {process.document && (
+                  <a 
+                    href={`/procedures/${process.document}`}
+                    target="_blank"
+                    class="gxo-btn bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-600 flex items-center"
+                  >
+                    <i class="fas fa-file-download mr-2"></i>
+                    Télécharger PDF
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
         ))}
       </div>

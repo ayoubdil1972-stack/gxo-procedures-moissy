@@ -2,55 +2,59 @@ export function AgentQuaiPage() {
   const processes = [
     {
       id: 'accueil-camion',
-      title: 'Accueil camion et préparation quai',
-      icon: 'fa-hand-paper',
-      duration: '10-15 min',
+      title: 'Accueil Camion et Préparation Quai',
+      icon: 'fa-truck',
+      duration: '5 min',
       level: '🟢',
-      vigilance: ['Vérifier assignation', 'Sécuriser zone', 'Briefing chauffeur'],
-      document: 'static/accueil-preparation-quai.pdf',
-      description: 'Procédure complète d\'accueil du camion et préparation du quai : récupération du dossier chauffeur, vérification de la sécurité du hayon, contrôle de l\'accessibilité et briefing chauffeur.'
+      vigilance: [
+        'Sécurité et contrôle avant déchargement',
+        'Vérifier assignation du camion',
+        'Préparer la zone de déchargement'
+      ],
+      document: '09_Accueil_Camion.pdf',
+      description: 'Sécurité et contrôle avant déchargement'
     },
     {
-      id: 'dechargement-quai',
-      title: 'Déchargement et contrôle',
-      icon: 'fa-dolly-flatbed',
+      id: 'dechargement-controle',
+      title: 'Déchargement et Contrôle',
+      icon: 'fa-dolly',
       duration: '30-60 min',
       level: '🟢',
-      vigilance: ['Respect sécurité', 'Vérifier palettes', 'Noter anomalies'],
-      document: 'static/dechargement-controle-quai.pdf',
-      description: 'Procédure complète de déchargement et contrôle : mise en place et vérifications de l\'engin de manutention, organisation du déchargement par articles, schéma d\'organisation du quai, contrôle qualité et sécurité.'
+      vigilance: [
+        'Mise en place sécurisée',
+        'Vérifications de sécurité complètes',
+        'Respecter les procédures'
+      ],
+      document: '10_Dechargement_Controle.pdf',
+      description: 'Mise en place et vérifications de sécurité'
     },
     {
-      id: 'verification-conformite-quai',
-      title: 'Vérification conformité',
-      icon: 'fa-check-double',
-      duration: '15-20 min',
-      level: '🟡',
-      vigilance: ['BL vs physique', 'Références correctes', 'Températures']
-    },
-    {
-      id: 'rangement-palettes',
-      title: 'Rangement et étiquetage',
-      icon: 'fa-warehouse',
-      duration: '15-20 min',
-      level: '🟢',
-      vigilance: ['Zone appropriée', 'Étiquettes claires', 'Stabilité palettes']
-    },
-    {
-      id: 'cloture-quai',
-      title: 'Clôture quai et libération',
-      icon: 'fa-door-closed',
+      id: 'verification-conformite',
+      title: 'Vérification Conformité',
+      icon: 'fa-check-circle',
       duration: '10 min',
       level: '🟢',
-      vigilance: ['Documents complets', 'Zone propre', 'Quai libre']
+      vigilance: [
+        'Disposition correcte des palettes',
+        'Espacement réglementaire',
+        'Stabilité des charges'
+      ],
+      document: '11_Verification_Conformite.pdf',
+      description: 'Disposition et espacement des palettes'
     },
     {
-      id: 'gestion-urgences-quai',
-      title: 'Gestion des situations d\'urgence',
-      icon: 'fa-ambulance',
-      duration: 'Variable',
-      level: '🔴',
-      vigilance: ['Sécurité prioritaire', 'Alerter secours', 'Évacuer zone']
+      id: 'mode-operatoire-agent',
+      title: 'Mode Opératoire Synthétique',
+      icon: 'fa-list-check',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Fil conducteur du flux quai',
+        'Points clés du processus',
+        'Référence quotidienne'
+      ],
+      document: '12_Mode_Operatoire_Agent.pdf',
+      description: 'Fil conducteur du flux quai'
     }
   ]
 
@@ -258,70 +262,78 @@ export function AgentQuaiPage() {
             Procédures de travail
           </h2>
           
-          {/* Processes Grid */}
-          <div class="grid grid-cols-1 gap-6">
+          {/* GXO-Procédures Section */}
+          <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg shadow-xl p-6 mb-6">
+            <h2 class="text-3xl font-bold flex items-center">
+              <i class="fas fa-file-alt mr-3"></i>
+              GXO-Procédures Agent de Quai
+            </h2>
+            <p class="text-lg opacity-90 mt-2">
+              {processes.length} procédures opérationnelles détaillées
+            </p>
+          </div>
+
+          {/* Process Cards - Format Reception.tsx */}
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {processes.map((process) => (
-              <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-yellow-500">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex items-start space-x-4 flex-1">
-                    <div class="bg-yellow-100 p-3 rounded-lg">
-                      <i class={`fas ${process.icon} text-2xl text-yellow-600`}></i>
-                    </div>
+              <div id={process.id} class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white p-4">
+                  <div class="flex items-start justify-between">
                     <div class="flex-1">
-                      <h3 class="text-xl font-bold text-gray-800 mb-2">{process.title}</h3>
-                      <div class="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                        <span class="flex items-center">
-                          <i class="fas fa-clock mr-2 text-yellow-500"></i>
-                          {process.duration}
-                        </span>
-                        <span class="flex items-center">
-                          <span class="mr-2">Niveau:</span>
-                          <span class="text-lg">{process.level}</span>
-                        </span>
+                      <div class="flex items-center mb-2">
+                        <i class={`fas ${process.icon} text-3xl mr-4`}></i>
+                        <h3 class="text-xl font-bold flex-1">{process.title}</h3>
                       </div>
-                      {process.vigilance && (
-                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
-                          <p class="text-sm font-semibold text-yellow-800 mb-2">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            Points de vigilance:
-                          </p>
-                          <ul class="text-sm text-yellow-700 space-y-1">
-                            {process.vigilance.map(point => (
-                              <li class="flex items-start">
-                                <i class="fas fa-chevron-right mr-2 mt-1 text-xs"></i>
-                                <span>{point}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      
-                      {/* Boutons Document et Vidéo tutoriel */}
-                      <div class="mt-4 flex gap-3">
-                        {process.document && (
-                          <a 
-                            href={`/${process.document}`}
-                            download
-                            class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-3 rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 flex-1 justify-center"
-                            title={process.description || 'Télécharger le document'}
-                          >
-                            <i class="fas fa-file-download"></i>
-                            <span class="font-semibold">Document</span>
-                          </a>
-                        )}
-                        
-                        <button 
-                          class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 flex-1 justify-center"
-                          onclick="alert('Fonctionnalité Vidéo tutoriel à venir')"
-                        >
-                          <i class="fas fa-video"></i>
-                          <span class="font-semibold">Vidéo tutoriel</span>
-                        </button>
+                      <div class="flex items-center space-x-4 text-sm opacity-90">
+                        <span>
+                          <i class="far fa-clock mr-1"></i>{process.duration}
+                        </span>
+                        <span>
+                          Niveau {process.level}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
+                
+                <div class="p-6">
+                  {/* Description */}
+                  {process.description && (
+                    <div class="mb-4">
+                      <p class="text-gray-700 text-sm">{process.description}</p>
+                    </div>
+                  )}
 
+                  {/* Points de vigilance */}
+                  <div class="mb-4">
+                    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                      <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                      Points de vigilance
+                    </h4>
+                    <ul class="space-y-1">
+                      {process.vigilance.map((point) => (
+                        <li class="text-sm text-gray-600 flex items-start">
+                          <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Actions */}
+                  <div class="flex flex-wrap gap-2 mt-4">
+                    {process.document && (
+                      <a 
+                        href={`/procedures/${process.document}`}
+                        target="_blank"
+                        class="gxo-btn bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 flex items-center"
+                      >
+                        <i class="fas fa-file-download mr-2"></i>
+                        Télécharger PDF
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

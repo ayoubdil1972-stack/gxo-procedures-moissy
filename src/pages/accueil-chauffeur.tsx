@@ -1,37 +1,46 @@
 export function AccueilChauffeurPage() {
   const processes = [
     {
-      id: 'arrivee-chauffeur',
-      title: 'Arrivée et enregistrement',
-      icon: 'fa-truck',
-      duration: '10-15 min',
+      id: 'creation-tu',
+      title: 'Création TU',
+      icon: 'fa-plus-circle',
+      duration: '5-10 min',
       level: '🟢',
-      vigilance: ['Se présenter à l\'accueil', 'Préparer documents', 'Suivre signalisation'],
-      document: 'Assigner camion à quai-2.docx'
+      vigilance: [
+        'Créer une Transportation Unit dans Process TU',
+        'Rattacher une livraison à la TU',
+        'Vérifier la zone de destination'
+      ],
+      document: '01_Creation_TU.pdf',
+      description: 'Créer une Transportation Unit dans Process TU et y rattacher une livraison'
     },
     {
-      id: 'procedures-securite',
-      title: 'Procédures de sécurité',
-      icon: 'fa-shield-alt',
+      id: 'assigner-camion-quai',
+      title: 'Assigner Camion à Quai',
+      icon: 'fa-truck-loading',
       duration: '5 min',
-      level: '🟡',
-      vigilance: ['Port EPI obligatoire', 'Respecter zones', 'Signaler anomalies']
+      level: '🟢',
+      vigilance: [
+        'Retrouver le dossier du camion',
+        'Identifier la TU correcte',
+        'Affecter au bon quai de déchargement'
+      ],
+      document: '02_Assigner_Camion_Quai.pdf',
+      description: 'Retrouver le dossier du camion, identifier la TU et l\'affecter au bon quai'
     },
     {
-      id: 'dechargement-chauffeur',
-      title: 'Opération de déchargement',
-      icon: 'fa-dolly',
-      duration: '30-60 min',
+      id: 'mode-operatoire-accueil',
+      title: 'Mode Opératoire Synthétique',
+      icon: 'fa-list-check',
+      duration: 'Référence',
       level: '🟢',
-      vigilance: ['Attendre autorisation', 'Ouvrir portes si demandé', 'Rester disponible']
-    },
-    {
-      id: 'depart-chauffeur',
-      title: 'Clôture et départ',
-      icon: 'fa-sign-out-alt',
-      duration: '10 min',
-      level: '🟢',
-      vigilance: ['Récupérer documents signés', 'Vérifier camion vide', 'Signaler départ']
+      vigilance: [
+        'Lecture rapide du flux accueil chauffeur',
+        'Points clés à mémoriser',
+        'Référence quotidienne'
+      ],
+      document: '03_Mode_Operatoire_Accueil.pdf',
+      description: 'Lecture rapide du flux accueil chauffeur - Points clés à mémoriser'
     }
   ]
 
@@ -447,69 +456,77 @@ export function AccueilChauffeurPage() {
         </div>
       </div>
 
-      {/* Processes Grid */}
-      <div class="grid grid-cols-1 gap-6">
+      {/* GXO-Procédures Section */}
+      <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-xl p-6 mb-6">
+        <h2 class="text-3xl font-bold flex items-center">
+          <i class="fas fa-file-alt mr-3"></i>
+          GXO-Procédures Accueil Chauffeur
+        </h2>
+        <p class="text-lg opacity-90 mt-2">
+          {processes.length} procédures opérationnelles détaillées
+        </p>
+      </div>
+
+      {/* Process Cards - Format Reception.tsx */}
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {processes.map((process) => (
-          <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-blue-500">
-            <div class="flex items-start justify-between mb-4">
-              <div class="flex items-start space-x-4 flex-1">
-                <div class="bg-blue-100 p-3 rounded-lg">
-                  <i class={`fas ${process.icon} text-2xl text-blue-600`}></i>
-                </div>
+          <div id={process.id} class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4">
+              <div class="flex items-start justify-between">
                 <div class="flex-1">
-                  <h3 class="text-xl font-bold text-gray-800 mb-2">{process.title}</h3>
-                  <div class="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                    <span class="flex items-center">
-                      <i class="fas fa-clock mr-2 text-blue-500"></i>
-                      {process.duration}
-                    </span>
-                    <span class="flex items-center">
-                      <span class="mr-2">Niveau:</span>
-                      <span class="text-lg">{process.level}</span>
-                    </span>
+                  <div class="flex items-center mb-2">
+                    <i class={`fas ${process.icon} text-3xl mr-4`}></i>
+                    <h3 class="text-xl font-bold flex-1">{process.title}</h3>
                   </div>
-                  {process.vigilance && (
-                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
-                      <p class="text-sm font-semibold text-yellow-800 mb-2">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        Points de vigilance:
-                      </p>
-                      <ul class="text-sm text-yellow-700 space-y-1">
-                        {process.vigilance.map(point => (
-                          <li class="flex items-start">
-                            <i class="fas fa-chevron-right mr-2 mt-1 text-xs"></i>
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  
-                  {/* Bouton Vidéo tutoriel */}
-                  <div class="mt-4">
-                    <button 
-                      class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg flex items-center space-x-2 w-full justify-center"
-                      onclick="alert('Fonctionnalité Vidéo tutoriel à venir')"
-                    >
-                      <i class="fas fa-video"></i>
-                      <span class="font-semibold">Vidéo tutoriel</span>
-                    </button>
+                  <div class="flex items-center space-x-4 text-sm opacity-90">
+                    <span>
+                      <i class="far fa-clock mr-1"></i>{process.duration}
+                    </span>
+                    <span>
+                      Niveau {process.level}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="flex flex-wrap gap-2">
-              {process.document && (
-                <a 
-                  href={`/static/documents/${process.document}`}
-                  target="_blank"
-                  class="gxo-btn bg-gray-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-600 flex items-center"
-                >
-                  <i class="fas fa-file-download mr-2"></i>
-                  Document
-                </a>
+            
+            <div class="p-6">
+              {/* Description */}
+              {process.description && (
+                <div class="mb-4">
+                  <p class="text-gray-700 text-sm">{process.description}</p>
+                </div>
               )}
+
+              {/* Points de vigilance */}
+              <div class="mb-4">
+                <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                  <i class="fas fa-exclamation-triangle text-blue-500 mr-2"></i>
+                  Points de vigilance
+                </h4>
+                <ul class="space-y-1">
+                  {process.vigilance.map((point) => (
+                    <li class="text-sm text-gray-600 flex items-start">
+                      <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Actions */}
+              <div class="flex flex-wrap gap-2 mt-4">
+                {process.document && (
+                  <a 
+                    href={`/procedures/${process.document}`}
+                    target="_blank"
+                    class="gxo-btn bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 flex items-center"
+                  >
+                    <i class="fas fa-file-download mr-2"></i>
+                    Télécharger PDF
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         ))}

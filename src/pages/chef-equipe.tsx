@@ -1,4 +1,231 @@
 export function ChefEquipePage() {
+  const processes = [
+    {
+      id: 'chef-equipe-reception',
+      title: 'Chef d\'Équipe Réception',
+      icon: 'fa-users-cog',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Position dans la chaîne de commandement',
+        'Responsabilités et périmètre',
+        'Coordination avec les équipes'
+      ],
+      document: '13_Chef_Equipe_Reception.pdf',
+      description: 'Position dans la chaîne de commandement'
+    },
+    {
+      id: 'pilotage-quotidien',
+      title: 'Pilotage Quotidien et Supervision',
+      icon: 'fa-clipboard-list',
+      duration: 'Journée',
+      level: '🟡',
+      vigilance: [
+        'Organisation quotidienne',
+        'Formation de l\'équipe',
+        'Suivi des performances'
+      ],
+      document: '14_Pilotage_Quotidien.pdf',
+      description: 'Organisation quotidienne et formation équipe'
+    },
+    {
+      id: 'supervision-terrain',
+      title: 'Supervision Terrain et Backoffice',
+      icon: 'fa-eye',
+      duration: 'Continu',
+      level: '🟡',
+      vigilance: [
+        'Supervision du contrôleur terrain',
+        'Coordination backoffice',
+        'Résolution de problèmes'
+      ],
+      document: '15_Supervision_Terrain.pdf',
+      description: 'Supervision du contrôleur terrain'
+    },
+    {
+      id: 'gestion-ecarts',
+      title: 'Gestion des Écarts et Suivi KPI',
+      icon: 'fa-chart-line',
+      duration: 'Variable',
+      level: '🟡',
+      vigilance: [
+        'Gestion des mancos/surplus',
+        'Traitement des litiges',
+        'Suivi des indicateurs'
+      ],
+      document: '16_Gestion_Ecarts.pdf',
+      description: 'Gestion des écarts (manco/surplus) et litiges'
+    },
+    {
+      id: 'controles-eop',
+      title: 'Contrôles Quotidiens et End of Period',
+      icon: 'fa-calendar-check',
+      duration: '20-30 min',
+      level: '🟡',
+      vigilance: [
+        'Contrôles administratifs',
+        'Planning de charge',
+        'Vérifications EOP'
+      ],
+      document: '17_Controles_EOP.pdf',
+      description: 'Contrôles administratifs et planning de charge'
+    },
+    {
+      id: 'flux-hazardous-analyse',
+      title: 'Flux Hazardous - Analyse et Regroupement TU',
+      icon: 'fa-radiation',
+      duration: '20-30 min',
+      level: '🔴',
+      vigilance: [
+        'Repérer le flux hazardous',
+        'Décider des manipulations',
+        'Sécurité renforcée'
+      ],
+      document: '18_Flux_Hazardous_Analyse.pdf',
+      description: 'Repérer le flux hazardous et décider des manipulations'
+    },
+    {
+      id: 'flux-hazardous-checkpoint',
+      title: 'Flux Hazardous - Checkpoint et Mise à Quai',
+      icon: 'fa-warehouse',
+      duration: '15-20 min',
+      level: '🔴',
+      vigilance: [
+        'Vider et clôturer le TU PGS',
+        'Mise à quai sécurisée',
+        'Respect des normes hazardous'
+      ],
+      document: '19_Flux_Hazardous_Checkpoint.pdf',
+      description: 'Vider et clôturer le TU PGS'
+    },
+    {
+      id: 'correction-etiquette-suppression',
+      title: 'Correction Étiquette - Suppression HU',
+      icon: 'fa-tag',
+      duration: '5-10 min',
+      level: '🟡',
+      vigilance: [
+        'Supprimer une étiquette HU posée à tort',
+        'Vérifier avant suppression',
+        'Tracer la correction'
+      ],
+      document: '20_Correction_Etiquette_Suppression.pdf',
+      description: 'Supprimer une étiquette HU posée à tort'
+    },
+    {
+      id: 'correction-etiquette-reedition',
+      title: 'Correction Étiquette - Réédition HU',
+      icon: 'fa-print',
+      duration: '5 min',
+      level: '🟢',
+      vigilance: [
+        'Rééditer un HU correct dont l\'étiquette est illisible',
+        'Vérifier la qualité d\'impression',
+        'Apposer la nouvelle étiquette'
+      ],
+      document: '21_Correction_Etiquette_Reedition.pdf',
+      description: 'Rééditer un HU correct dont l\'étiquette est illisible'
+    },
+    {
+      id: 'verification-dossier',
+      title: 'Vérification Dossier Après Contrôle',
+      icon: 'fa-folder-open',
+      duration: '10-15 min',
+      level: '🟡',
+      vigilance: [
+        'Reprendre le dossier après contrôle physique',
+        'Vérifier la cohérence des données',
+        'Valider les corrections'
+      ],
+      document: '22_Verification_Dossier.pdf',
+      description: 'Reprendre le dossier après contrôle physique'
+    },
+    {
+      id: 'fermer-porte-quai',
+      title: 'Fermer une Porte de Quai',
+      icon: 'fa-door-closed',
+      duration: '2-3 min',
+      level: '🟢',
+      vigilance: [
+        'Libérer une porte de quai dans RFUI',
+        'Vérifier qu\'aucun camion n\'est présent',
+        'Mettre à jour le statut'
+      ],
+      document: '23_Fermer_Porte_Quai.pdf',
+      description: 'Libérer une porte de quai dans RFUI'
+    },
+    {
+      id: 'cloture-livraisons',
+      title: 'Clôture Livraisons Ouvertes',
+      icon: 'fa-check-double',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Clôturer une livraison inbound restée ouverte dans MON',
+        'Vérifier les HU associés',
+        'Confirmer la clôture'
+      ],
+      document: '24_Cloture_Livraisons.pdf',
+      description: 'Clôturer une livraison inbound restée ouverte dans MON'
+    },
+    {
+      id: 'livraison-ouverte-eop',
+      title: 'Livraison Ouverte EOP',
+      icon: 'fa-calendar-times',
+      duration: '5-10 min',
+      level: '🟡',
+      vigilance: [
+        'Clôturer une livraison EOP ouverte sans flux démarré',
+        'Vérifier l\'absence de flux',
+        'Forcer la clôture si nécessaire'
+      ],
+      document: '25_Livraison_Ouverte_EOP.pdf',
+      description: 'Clôturer une livraison EOP ouverte sans flux démarré'
+    },
+    {
+      id: 'cloture-tu-actif',
+      title: 'Clôture TU Actif',
+      icon: 'fa-times-circle',
+      duration: '10-15 min',
+      level: '🟡',
+      vigilance: [
+        'Clôturer une TU en statut Active déjà terminée terrain',
+        'Vérifier le statut terrain',
+        'Synchroniser système et réel'
+      ],
+      document: '26_Cloture_TU_Actif.pdf',
+      description: 'Clôturer une TU en statut Active déjà terminée terrain'
+    },
+    {
+      id: 'creer-packspec',
+      title: 'Créer un Packspec',
+      icon: 'fa-box',
+      duration: '15-20 min',
+      level: '🔴',
+      vigilance: [
+        'Créer ou corriger un packspec manquant ou faux',
+        'Vérifier les données techniques',
+        'Valider dans SAP'
+      ],
+      document: '27_Creer_Packspec.pdf',
+      description: 'Créer ou corriger un packspec manquant ou faux'
+    },
+    {
+      id: 'procedures-operationnelles',
+      title: 'Procédures Opérationnelles à Utiliser',
+      icon: 'fa-list-ul',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Liste des procédures terrain à appliquer',
+        'Guide de référence quotidien',
+        'Arbre décisionnel'
+      ],
+      document: '28_Procedures_Operationnelles.pdf',
+      description: 'Liste des procédures terrain à appliquer'
+    }
+  ]
+
   return (
     <div>
       {/* Hero Section */}
@@ -235,24 +462,80 @@ export function ChefEquipePage() {
 
         {/* Tab Content - Procédures */}
         <div id="tab-procedures-chef-content" class="p-6 hidden">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">
-            <i class="fas fa-clipboard-list mr-2 text-indigo-500"></i>
-            Procédures du Chef d'équipe
-          </h2>
+          {/* GXO-Procédures Section */}
+          <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg shadow-xl p-6 mb-6">
+            <h2 class="text-3xl font-bold flex items-center">
+              <i class="fas fa-file-alt mr-3"></i>
+              GXO-Procédures Chef d'Équipe
+            </h2>
+            <p class="text-lg opacity-90 mt-2">
+              {processes.length} procédures opérationnelles détaillées
+            </p>
+          </div>
 
-          <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-lg">
-            <h3 class="text-lg font-bold text-indigo-800 mb-3">
-              <i class="fas fa-info-circle mr-2"></i>
-              Contenu à venir
-            </h3>
-            <ul class="text-gray-700 space-y-2">
-              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Gestion des équipes et planification</li>
-              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Supervision des opérations quotidiennes</li>
-              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Reporting et indicateurs de performance</li>
-              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Gestion des incidents et escalades</li>
-              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Coordination inter-services</li>
-              <li><i class="fas fa-check text-indigo-500 mr-2"></i>Formation et développement des équipes</li>
-            </ul>
+          {/* Process Cards - Format Reception.tsx */}
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {processes.map((process) => (
+              <div id={process.id} class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-4">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center mb-2">
+                        <i class={`fas ${process.icon} text-3xl mr-4`}></i>
+                        <h3 class="text-xl font-bold flex-1">{process.title}</h3>
+                      </div>
+                      <div class="flex items-center space-x-4 text-sm opacity-90">
+                        <span>
+                          <i class="far fa-clock mr-1"></i>{process.duration}
+                        </span>
+                        <span>
+                          Niveau {process.level}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="p-6">
+                  {/* Description */}
+                  {process.description && (
+                    <div class="mb-4">
+                      <p class="text-gray-700 text-sm">{process.description}</p>
+                    </div>
+                  )}
+
+                  {/* Points de vigilance */}
+                  <div class="mb-4">
+                    <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                      <i class="fas fa-exclamation-triangle text-indigo-500 mr-2"></i>
+                      Points de vigilance
+                    </h4>
+                    <ul class="space-y-1">
+                      {process.vigilance.map((point) => (
+                        <li class="text-sm text-gray-600 flex items-start">
+                          <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Actions */}
+                  <div class="flex flex-wrap gap-2 mt-4">
+                    {process.document && (
+                      <a 
+                        href={`/procedures/${process.document}`}
+                        target="_blank"
+                        class="gxo-btn bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-600 flex items-center"
+                      >
+                        <i class="fas fa-file-download mr-2"></i>
+                        Télécharger PDF
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
