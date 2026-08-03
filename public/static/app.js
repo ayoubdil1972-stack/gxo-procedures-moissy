@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // BIBLIOTHEQUE - Document Preview
 // ========================================
 
-function openDocumentPreview(filename, type, title) {
+function openDocumentPreview(filename, type, title, basePath = '/static/documents/') {
   const modal = document.getElementById('preview-modal');
   const titleEl = document.getElementById('preview-title');
   const contentEl = document.getElementById('preview-content');
@@ -202,13 +202,13 @@ function openDocumentPreview(filename, type, title) {
   
   // Update title and download button
   titleEl.textContent = title;
-  downloadBtn.href = `/static/documents/${filename}`;
+  downloadBtn.href = `${basePath}${filename}`;
   downloadBtn.download = filename;
   
   // Clear previous content
   contentEl.innerHTML = '';
   
-  const documentUrl = `/static/documents/${filename}`;
+  const documentUrl = `${basePath}${filename}`;
   
   if (type === 'pdf') {
     // PDF: Use iframe for direct viewing

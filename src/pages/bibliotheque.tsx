@@ -412,6 +412,388 @@ export function BibliothequePage() {
       description: 'Transfert de rolls via TRM Manipulation (RET_PICK_01)',
       keywords: 'transfert, roll, TRM, RET_PICK_01, manipulation',
       level: '🟡'
+    },
+
+    // GXO Procédures - 38 documents
+    {
+      id: 100,
+      name: 'Création TU',
+      file: '01_Creation_TU.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Créer une Transportation Unit dans Process TU et y rattacher une livraison',
+      keywords: 'GXO, création tu, procédure',
+      level: '🟢'
+    },
+    {
+      id: 101,
+      name: 'Assigner Camion à Quai',
+      file: '02_Assigner_Camion_Quai.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Retrouver le dossier du camion, identifier la TU et l'affecter au bon quai',
+      keywords: 'GXO, assigner camion à quai, procédure',
+      level: '🟢'
+    },
+    {
+      id: 102,
+      name: 'Mode Opératoire Synthétique',
+      file: '03_Mode_Operatoire_Accueil.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Lecture rapide du flux accueil chauffeur - Points clés à mémoriser',
+      keywords: 'GXO, mode opératoire synthétique, procédure',
+      level: '🟢'
+    },
+    {
+      id: 103,
+      name: 'Process Scan',
+      file: '04_Process_Scan.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Allumer le scan, s'identifier et connecter l'imprimante',
+      keywords: 'GXO, process scan, procédure',
+      level: '🟢'
+    },
+    {
+      id: 104,
+      name: 'Traitement d\'une Anomalie',
+      file: '05_Traitement_Anomalie.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Utiliser le formulaire Teams pour signaler un problème',
+      keywords: 'GXO, traitement d\'une anomalie, procédure',
+      level: '🟡'
+    },
+    {
+      id: 105,
+      name: 'DLC Courte Abrand Crossdock',
+      file: '06_DLC_Courte_Abrand.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Traiter une palette avec DLC courte et tracer la modification',
+      keywords: 'GXO, dlc courte abrand crossdock, procédure',
+      level: '🟡'
+    },
+    {
+      id: 106,
+      name: 'Étiquettes Rouges - Traçabilité',
+      file: '07_Etiquettes_Rouges.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Renseigner et tracer les anomalies avec étiquettes rouges',
+      keywords: 'GXO, étiquettes rouges - traçabilité, procédure',
+      level: '🟡'
+    },
+    {
+      id: 107,
+      name: 'Mode Opératoire Synthétique',
+      file: '08_Mode_Operatoire_Controleur.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Lecture rapide du flux terrain contrôleur',
+      keywords: 'GXO, mode opératoire synthétique, procédure',
+      level: '🟢'
+    },
+    {
+      id: 108,
+      name: 'Accueil Camion et Préparation Quai',
+      file: '09_Accueil_Camion.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Accueillir le chauffeur, vérifier documents et identifier anomalies',
+      keywords: 'GXO, accueil camion et préparation quai, procédure',
+      level: '🟢'
+    },
+    {
+      id: 109,
+      name: 'Déchargement et Contrôle',
+      file: '10_Dechargement_Controle.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Superviser le déchargement et effectuer les contrôles terrain',
+      keywords: 'GXO, déchargement et contrôle, procédure',
+      level: '🟡'
+    },
+    {
+      id: 110,
+      name: 'Vérification de Conformité',
+      file: '11_Verification_Conformite.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Vérifier la conformité physique et documentaire de la réception',
+      keywords: 'GXO, vérification de conformité, procédure',
+      level: '🟡'
+    },
+    {
+      id: 111,
+      name: 'Mode Opératoire Synthétique',
+      file: '12_Mode_Operatoire_Agent.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Lecture rapide du flux agent de quai - Points essentiels',
+      keywords: 'GXO, mode opératoire synthétique, procédure',
+      level: '🟢'
+    },
+    {
+      id: 112,
+      name: 'Chef d\'Équipe Réception',
+      file: '13_Chef_Equipe_Reception.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Responsabilités et missions du chef d\'équipe réception',
+      keywords: 'GXO, chef d\'équipe réception, procédure',
+      level: '🔴'
+    },
+    {
+      id: 113,
+      name: 'Pilotage Quotidien',
+      file: '14_Pilotage_Quotidien.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Piloter l\'activité quotidienne et suivre les KPIs',
+      keywords: 'GXO, pilotage quotidien, procédure',
+      level: '🔴'
+    },
+    {
+      id: 114,
+      name: 'Supervision Terrain',
+      file: '15_Supervision_Terrain.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Superviser les opérations terrain et manager les équipes',
+      keywords: 'GXO, supervision terrain, procédure',
+      level: '🟡'
+    },
+    {
+      id: 115,
+      name: 'Gestion des Écarts',
+      file: '16_Gestion_Ecarts.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Analyser et traiter les écarts de réception',
+      keywords: 'GXO, gestion des écarts, procédure',
+      level: '🔴'
+    },
+    {
+      id: 116,
+      name: 'Contrôles Quotidiens et End of Period',
+      file: '17_Controles_EOP.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Effectuer les contrôles End of Period (fin de période)',
+      keywords: 'GXO, contrôles quotidiens et end of period, procédure',
+      level: '🟡'
+    },
+    {
+      id: 117,
+      name: 'Flux Hazardous - Analyse Détaillée',
+      file: '18_Flux_Hazardous_Analyse.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Analyse détaillée du flux matières dangereuses',
+      keywords: 'GXO, flux hazardous - analyse détaillée, procédure',
+      level: '🔴'
+    },
+    {
+      id: 118,
+      name: 'Flux Hazardous - Checkpoint',
+      file: '19_Flux_Hazardous_Checkpoint.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Points de contrôle spécifiques pour matières dangereuses',
+      keywords: 'GXO, flux hazardous - checkpoint, procédure',
+      level: '🔴'
+    },
+    {
+      id: 119,
+      name: 'Correction Étiquette - Suppression HU',
+      file: '20_Correction_Etiquette_Suppression.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Procédure pour supprimer une étiquette incorrecte',
+      keywords: 'GXO, correction étiquette - suppression hu, procédure',
+      level: '🟢'
+    },
+    {
+      id: 120,
+      name: 'Correction Étiquette - Réédition HU',
+      file: '21_Correction_Etiquette_Reedition.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Procédure pour rééditer une étiquette corrigée',
+      keywords: 'GXO, correction étiquette - réédition hu, procédure',
+      level: '🟢'
+    },
+    {
+      id: 121,
+      name: 'Vérification Dossier',
+      file: '22_Verification_Dossier.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Vérifier la complétude et conformité du dossier de réception',
+      keywords: 'GXO, vérification dossier, procédure',
+      level: '🟡'
+    },
+    {
+      id: 122,
+      name: 'Fermer une Porte de Quai',
+      file: '23_Fermer_Porte_Quai.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Procédure de fermeture sécurisée d\'un quai',
+      keywords: 'GXO, fermer une porte de quai, procédure',
+      level: '🟢'
+    },
+    {
+      id: 123,
+      name: 'Clôture Livraisons Ouvertes',
+      file: '24_Cloture_Livraisons.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Clôturer une livraison dans le système EWM',
+      keywords: 'GXO, clôture livraisons ouvertes, procédure',
+      level: '🟡'
+    },
+    {
+      id: 124,
+      name: 'Livraison Ouverte EOP',
+      file: '25_Livraison_Ouverte_EOP.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Traiter les livraisons encore ouvertes en fin de période',
+      keywords: 'GXO, livraison ouverte eop, procédure',
+      level: '🟡'
+    },
+    {
+      id: 125,
+      name: 'Clôture TU Actif',
+      file: '26_Cloture_TU_Actif.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Clôturer les Transportation Units encore actifs',
+      keywords: 'GXO, clôture tu actif, procédure',
+      level: '🟡'
+    },
+    {
+      id: 126,
+      name: 'Créer un Packspec',
+      file: '27_Creer_Packspec.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Créer une spécification d\'emballage dans le système',
+      keywords: 'GXO, créer un packspec, procédure',
+      level: '🟡'
+    },
+    {
+      id: 127,
+      name: 'Procédures Opérationnelles',
+      file: '28_Procedures_Operationnelles.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Vue d\'ensemble des procédures opérationnelles standards',
+      keywords: 'GXO, procédures opérationnelles, procédure',
+      level: '🟢'
+    },
+    {
+      id: 128,
+      name: 'Tâches Ouvertes',
+      file: '29_Taches_Ouvertes.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Gérer et suivre les tâches ouvertes dans le système',
+      keywords: 'GXO, tâches ouvertes, procédure',
+      level: '🟡'
+    },
+    {
+      id: 129,
+      name: 'Mouvement ADPROD',
+      file: '30_Mouvement_ADPROD.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Créer un mouvement ADPROD pour ajustement de stock',
+      keywords: 'GXO, mouvement adprod, procédure',
+      level: '🟡'
+    },
+    {
+      id: 130,
+      name: 'Fichier Écart GDS',
+      file: '31_Fichier_Ecart_GDS.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Renseigner le fichier d\'écart GDS pour suivi qualité',
+      keywords: 'GXO, fichier écart gds, procédure',
+      level: '🔴'
+    },
+    {
+      id: 131,
+      name: 'Retour Fournisseur',
+      file: '32_Retour_Fournisseur.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Gérer un retour de marchandises vers le fournisseur',
+      keywords: 'GXO, retour fournisseur, procédure',
+      level: '🔴'
+    },
+    {
+      id: 132,
+      name: 'Création Conditionnement PRD',
+      file: '33_Creation_Conditionnement_PRD.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Créer un conditionnement produit dans le système',
+      keywords: 'GXO, création conditionnement prd, procédure',
+      level: '🟡'
+    },
+    {
+      id: 133,
+      name: 'Extraction ICPE',
+      file: '34_Extraction_ICPE.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Extraire les données ICPE (Installations Classées)',
+      keywords: 'GXO, extraction icpe, procédure',
+      level: '🟡'
+    },
+    {
+      id: 134,
+      name: 'Anomalie et Order Planning',
+      file: '35_Anomalie_Order_Planning.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Gérer les anomalies dans l\'Order Planning système',
+      keywords: 'GXO, anomalie et order planning, procédure',
+      level: '🟡'
+    },
+    {
+      id: 135,
+      name: 'Réception NCG',
+      file: '36_Reception_NCG.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Réception NCG pour flux hors normes ou non standardisés',
+      keywords: 'GXO, réception ncg, procédure',
+      level: '🟡'
+    },
+    {
+      id: 136,
+      name: 'Fichier Étêtage et Container',
+      file: '37_Fichier_Etetage_Container.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Mettre en forme et renseigner le fichier quotidien étêtage',
+      keywords: 'GXO, fichier étêtage et container, procédure',
+      level: '🟢'
+    },
+    {
+      id: 137,
+      name: 'Chronogramme Journalier - Procédures Administratives',
+      file: '38_Chronogramme_Journalier.pdf',
+      category: 'GXO Procédures',
+      type: 'pdf',
+      description: 'Planning type d\'une journée de réception - horaires et jalons',
+      keywords: 'GXO, chronogramme journalier - procédures administratives, procédure',
+      level: '🟢'
     }
   ]
 
@@ -509,6 +891,13 @@ export function BibliothequePage() {
           >
             <i class="fas fa-exclamation-circle mr-2"></i>Anomalies ({documents.filter(d => d.category === 'Anomalies').length})
           </button>
+          <button 
+            onclick="filterByCategory('GXO Procédures')"
+            class="filter-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors"
+            data-category="GXO Procédures"
+          >
+            <i class="fas fa-file-pdf mr-2"></i>GXO Procédures ({documents.filter(d => d.category === 'GXO Procédures').length})
+          </button>
         </div>
       </div>
 
@@ -521,7 +910,8 @@ export function BibliothequePage() {
             'Administrateur': 'border-purple-500 bg-purple-50',
             'Contrôleur': 'border-green-500 bg-green-50',
             'Agent de Quai': 'border-yellow-500 bg-yellow-50',
-            'Anomalies': 'border-red-500 bg-red-50'
+            'Anomalies': 'border-red-500 bg-red-50',
+            'GXO Procédures': 'border-indigo-600 bg-indigo-50'
           }
 
           const categoryIcons = {
@@ -530,7 +920,8 @@ export function BibliothequePage() {
             'Administrateur': 'fa-user-tie',
             'Contrôleur': 'fa-clipboard-check',
             'Agent de Quai': 'fa-hard-hat',
-            'Anomalies': 'fa-exclamation-circle'
+            'Anomalies': 'fa-exclamation-circle',
+            'GXO Procédures': 'fa-file-pdf'
           }
 
           const fileIcons = {
@@ -582,13 +973,13 @@ export function BibliothequePage() {
                 {/* Actions */}
                 <div class="flex gap-2">
                   <button 
-                    onclick={`openDocumentPreview('${doc.file}', '${doc.type}', '${doc.name.replace(/'/g, "\\'")}')`}
+                    onclick={`openDocumentPreview('${doc.file}', '${doc.type}', '${doc.name.replace(/'/g, "\\'")}', '${doc.category === 'GXO Procédures' ? '/procedures/' : '/static/documents/'}')`}
                     class="flex-1 bg-[#FF4500] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF5A1A] transition-colors text-center"
                   >
                     <i class="fas fa-eye mr-2"></i>Aperçu
                   </button>
                   <a 
-                    href={`/static/documents/${doc.file}`}
+                    href={doc.category === 'GXO Procédures' ? `/procedures/${doc.file}` : `/static/documents/${doc.file}`}
                     download
                     class="bg-[#FF4500] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#FF5A1A] transition-colors"
                     title="Télécharger"
