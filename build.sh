@@ -10,10 +10,11 @@ echo "🔄 Copying static HTML files from public/ to dist/"
 # Copier les fichiers HTML statiques
 cp -v public/*.html dist/ 2>/dev/null || true
 
-# Copier les dossiers static, chauffeur, consignes
+# Copier les dossiers static, chauffeur, consignes, procedures
 cp -rv public/static/* dist/static/ 2>/dev/null || true
 cp -rv public/chauffeur/* dist/chauffeur/ 2>/dev/null || true
 cp -rv public/consignes/* dist/consignes/ 2>/dev/null || true
+cp -rv public/procedures/* dist/procedures/ 2>/dev/null || true
 
 echo ""
 echo "✅ Files ready for deployment:"
