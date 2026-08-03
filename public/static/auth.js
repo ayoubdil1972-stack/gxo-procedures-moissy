@@ -1,4 +1,6 @@
 // auth.js - Système d'authentification sécurisé GXO
+// Dernière mise à jour: 2026-08-03 09:00:00 (5 utilisateurs GXO ajoutés)
+// Version: 1.1.0
 
 // Configuration (À MODIFIER POUR LA PRODUCTION)
 const AUTH_CONFIG = {

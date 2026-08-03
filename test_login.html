@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Connexion</title>
+    <script src="http://localhost:3000/static/auth.js"></script>
+</head>
+<body>
+    <h1>Test de Connexion</h1>
+    <div id="result"></div>
+    <script>
+        // Test avec Sonia Cornette
+        const username = 'sonia.cornette@gxo.com';
+        const password = 'GXOsc2026';
+        
+        console.log('Testing login with:', username);
+        console.log('Password:', password);
+        console.log('AUTH_CONFIG:', AUTH_CONFIG);
+        
+        const user = AUTH_CONFIG.credentials.find(
+            u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+        );
+        
+        console.log('Found user:', user);
+        document.getElementById('result').innerHTML = user ? 
+            '✅ Connexion réussie: ' + JSON.stringify(user) : 
+            '❌ Échec de connexion';
+    </script>
+</body>
+</html>
