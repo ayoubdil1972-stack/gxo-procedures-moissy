@@ -5,6 +5,7 @@
     "/*.html",
     "/consignes/*",
     "/static/*",
+    "/procedures/*",
     "/download-qr-pdf",
     "/download-qr-fin-dechargement"
   ]

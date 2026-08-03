@@ -15,209 +15,502 @@ export function ReceptionPage() {
         'Flux administratif et physique'
       ],
       document: 'EWM Procedure document - 01. Goods Receipt - FR.pdf',
+      documentPath: '/static/documents',
       description: 'Ce document de procédure EWM décrit en détail tous les processus de réception des marchandises au DC : enregistrement trucks, aiguillage vers quais, réception et inspection physique, enregistrement système, signalement/résolution des écarts, et présentation du flux marchandises.'
     },
     {
-      id: 'reception-standard',
-      title: 'Réception palette fournisseur',
-      icon: 'fa-truck-loading',
-      duration: '15-20 min',
-      level: '🟢',
-      vigilance: ['Vérifier état emballage', 'Scanner BL complet', 'Contrôle quantité'],
-      document: 'Assigner camion à quai-2.docx',
-      checklist: [
-        'Vérifier BL du fournisseur (quantité, références)',
-        'Inspecter visuellement l\'état de l\'emballage',
-        'Scanner le code-barres du BL',
-        'Contrôler le nombre de palettes reçues',
-        'Vérifier la température si produits frais',
-        'Apposer étiquette si nécessaire',
-        'Ranger la palette en zone appropriée',
-        'Clôturer la réception dans le système'
-      ]
-    },
-    {
-      id: 'dechargement',
-      title: 'Déchargement camion',
-      icon: 'fa-dolly-flatbed',
-      duration: '30-45 min',
-      level: '🟢',
-      vigilance: ['Sécurité chauffeur', 'Respect zone déchargement', 'Vérifier température si requis'],
-      document: 'Assigner camion à quai-2.docx',
-      checklist: [
-        'Vérifier l\'assignation du camion au quai',
-        'Sécuriser la zone (calles, signalisation)',
-        'Briefing sécurité avec le chauffeur',
-        'Ouvrir les portes du camion',
-        'Inspecter visuellement le chargement',
-        'Décharger palette par palette avec chariot',
-        'Vérifier chaque palette (état, quantité)',
-        'Ranger les palettes en zone dédiée',
-        'Faire signer le BL au chauffeur',
-        'Libérer le quai et fermer la porte'
-      ]
-    },
-    {
-      id: 'cloture-livraison',
-      title: 'Clôture livraison',
-      icon: 'fa-check-circle',
-      duration: '5-10 min',
-      level: '🟡',
-      vigilance: ['Vérifier ASN', 'Statut NOT STARTED → COMPLETED', 'Récupérer TU'],
-      document: 'cloture livraison new.docx',
-      checklist: [
-        'Ouvrir EWM et accéder à l\'ASN',
-        'Vérifier le statut de la livraison (NOT STARTED)',
-        'Passer le statut à COMPLETED',
-        'Récupérer le numéro TU généré',
-        'Vérifier les HU associés au TU',
-        'Contrôler les quantités',
-        'Valider la clôture',
-        'Imprimer étiquette TU si nécessaire'
-      ]
-    },
-    {
-      id: 'cloture-tu',
-      title: 'Clôture TU actif',
-      icon: 'fa-clipboard-check',
-      duration: '10-15 min',
-      level: '🟡',
-      vigilance: ['Filtrer date J-1', 'Exclure date du jour', 'Vérifier articles, HU et statut'],
-      document: 'Cloture TU actif.docx',
-      checklist: [
-        'Accéder à MON → Transport Unit Overview',
-        'Filtrer par date J-1 (exclure date du jour)',
-        'Identifier les TU en statut "Active"',
-        'Vérifier les articles associés',
-        'Vérifier les HU (Handling Units)',
-        'Vérifier le statut de chaque TU',
-        'Action : Unload + Finish unloading',
-        'Alternative : Arrival + Departure',
-        'Valider la clôture',
-        'Vérifier que le statut passe à "Completed"'
-      ]
-    },
-    {
-      id: 'creer-tu',
-      title: 'Créer TU',
+      id: 'creation-tu',
+      title: 'Création TU',
       icon: 'fa-plus-circle',
+      duration: '5-10 min',
+      level: '🟢',
+      vigilance: [
+        'Créer une Transportation Unit dans Process TU et y rattacher une livraison'
+      ],
+      document: '01_Creation_TU.pdf',
+      documentPath: '/procedures',
+      description: 'Créer une Transportation Unit dans Process TU et y rattacher une livraison'
+    },
+    {
+      id: 'assigner-camion-quai',
+      title: 'Assigner Camion à Quai',
+      icon: 'fa-truck-loading',
       duration: '5 min',
       level: '🟢',
-      vigilance: ['Numéro de document ou ERP', 'Vérifier zone destination'],
-      document: 'Créer TU.docx',
-      checklist: [
-        'Récupérer le numéro de document ou ERP',
-        'Accéder à la transaction de création TU',
-        'Saisir le numéro de document',
-        'Sélectionner la zone de destination',
-        'Vérifier les articles à inclure',
-        'Valider la création du TU',
-        'Noter le numéro TU généré',
-        'Imprimer l\'étiquette TU'
-      ]
+      vigilance: [
+        'Retrouver le dossier du camion, identifier la TU et l\'affecter au bon quai'
+      ],
+      document: '02_Assigner_Camion_Quai.pdf',
+      documentPath: '/procedures',
+      description: 'Retrouver le dossier du camion, identifier la TU et l\'affecter au bon quai'
     },
     {
-      id: 'verification-dossier',
-      title: 'Vérification dossier après contrôle',
-      icon: 'fa-folder-open',
-      duration: '10-15 min',
-      level: '🔴',
-      vigilance: ['Vérifier manco/surplus', 'Comparer avec BL', 'Déclarer surplus sous 48h'],
-      document: 'Verification dossier aprés control.docx',
-      checklist: [
-        'Récupérer le BL et le dossier de réception',
-        'Comparer les quantités BL vs réception physique',
-        'Identifier les mancos (manquants)',
-        'Identifier les surplus (excédents)',
-        'Si surplus : créer fichier GDS pour re-contrôle',
-        'Si manco : signaler à Invoice Moissy sous 48h',
-        'Prendre des photos si nécessaire',
-        'Remplir le rapport d\'écart',
-        'Informer le chef d\'équipe',
-        'Archiver le dossier complété'
-      ]
+      id: 'mode-operatoire-accueil',
+      title: 'Mode Opératoire Synthétique',
+      icon: 'fa-list-check',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Lecture rapide du flux accueil chauffeur - Points clés à mémoriser'
+      ],
+      document: '03_Mode_Operatoire_Accueil.pdf',
+      documentPath: '/procedures',
+      description: 'Lecture rapide du flux accueil chauffeur - Points clés à mémoriser'
     },
     {
-      id: 'etiquette',
-      title: 'Rééditer une étiquette',
+      id: 'process-scan',
+      title: 'Process Scan',
       icon: 'fa-barcode',
       duration: '2-3 min',
       level: '🟢',
-      vigilance: ['Récupérer HU correct', 'Vérifier imprimante', 'Contrôler impression'],
-      document: 'Réediter une étiquette.docx',
-      checklist: [
-        'Récupérer le numéro HU (Handling Unit)',
-        'Accéder à la transaction MON',
-        'Rechercher le HU dans le système',
-        'Vérifier les informations du HU',
-        'Sélectionner l\'option "Imprimer étiquette"',
-        'Choisir l\'imprimante (contrôleur ou bureau)',
-        'Lancer l\'impression',
-        'Contrôler la qualité de l\'étiquette imprimée',
-        'Apposer l\'étiquette sur la palette'
-      ]
+      vigilance: [
+        'Allumer le scan, s\'identifier et connecter l\'imprimante'
+      ],
+      document: '04_Process_Scan.pdf',
+      documentPath: '/procedures',
+      description: 'Allumer le scan, s\'identifier et connecter l\'imprimante'
     },
     {
-      id: 'fermer-quai',
-      title: 'Fermer une porte de quai',
+      id: 'traitement-anomalie',
+      title: 'Traitement d\'une Anomalie',
+      icon: 'fa-exclamation-triangle',
+      duration: '10-15 min',
+      level: '🟡',
+      vigilance: [
+        'Utiliser le formulaire Teams pour signaler un problème'
+      ],
+      document: '05_Traitement_Anomalie.pdf',
+      documentPath: '/procedures',
+      description: 'Utiliser le formulaire Teams pour signaler un problème'
+    },
+    {
+      id: 'dlc-courte-abrand',
+      title: 'DLC Courte Abrand Crossdock',
+      icon: 'fa-calendar-times',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Traiter une palette avec DLC courte et tracer la modification'
+      ],
+      document: '06_DLC_Courte_Abrand.pdf',
+      documentPath: '/procedures',
+      description: 'Traiter une palette avec DLC courte et tracer la modification'
+    },
+    {
+      id: 'etiquettes-rouges',
+      title: 'Étiquettes Rouges - Traçabilité',
+      icon: 'fa-tag',
+      duration: '5 min',
+      level: '🟡',
+      vigilance: [
+        'Renseigner et tracer les anomalies avec étiquettes rouges'
+      ],
+      document: '07_Etiquettes_Rouges.pdf',
+      documentPath: '/procedures',
+      description: 'Renseigner et tracer les anomalies avec étiquettes rouges'
+    },
+    {
+      id: 'mode-operatoire-controleur',
+      title: 'Mode Opératoire Synthétique',
+      icon: 'fa-list-check',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Lecture rapide du flux terrain contrôleur'
+      ],
+      document: '08_Mode_Operatoire_Controleur.pdf',
+      documentPath: '/procedures',
+      description: 'Lecture rapide du flux terrain contrôleur'
+    },
+    {
+      id: 'anomalie-order-planning',
+      title: 'Anomalie et Order Planning',
+      icon: 'fa-clipboard-list',
+      duration: '5-10 min',
+      level: '🟡',
+      vigilance: [
+        'Gérer les anomalies dans l\'Order Planning système'
+      ],
+      document: '35_Anomalie_Order_Planning.pdf',
+      documentPath: '/procedures',
+      description: 'Gérer les anomalies dans l\'Order Planning système'
+    },
+    {
+      id: 'accueil-camion-controleur',
+      title: 'Accueil Camion',
+      icon: 'fa-handshake',
+      duration: '5 min',
+      level: '🟢',
+      vigilance: [
+        'Accueillir le chauffeur, vérifier documents et identifier anomalies'
+      ],
+      document: '09_Accueil_Camion.pdf',
+      documentPath: '/procedures',
+      description: 'Accueillir le chauffeur, vérifier documents et identifier anomalies'
+    },
+    {
+      id: 'dechargement-controle',
+      title: 'Déchargement et Contrôle',
+      icon: 'fa-truck-loading',
+      duration: '20-30 min',
+      level: '🟡',
+      vigilance: [
+        'Superviser le déchargement et effectuer les contrôles terrain'
+      ],
+      document: '10_Dechargement_Controle.pdf',
+      documentPath: '/procedures',
+      description: 'Superviser le déchargement et effectuer les contrôles terrain'
+    },
+    {
+      id: 'verification-conformite',
+      title: 'Vérification de Conformité',
+      icon: 'fa-clipboard-check',
+      duration: '15 min',
+      level: '🟡',
+      vigilance: [
+        'Vérifier la conformité physique et documentaire de la réception'
+      ],
+      document: '11_Verification_Conformite.pdf',
+      documentPath: '/procedures',
+      description: 'Vérifier la conformité physique et documentaire de la réception'
+    },
+    {
+      id: 'mode-operatoire-agent',
+      title: 'Mode Opératoire Synthétique',
+      icon: 'fa-list-check',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Lecture rapide du flux agent de quai - Points essentiels'
+      ],
+      document: '12_Mode_Operatoire_Agent.pdf',
+      documentPath: '/procedures',
+      description: 'Lecture rapide du flux agent de quai - Points essentiels'
+    },
+    {
+      id: 'chef-equipe-reception',
+      title: 'Chef Équipe Réception',
+      icon: 'fa-users',
+      duration: 'Référence',
+      level: '🔴',
+      vigilance: [
+        'Responsabilités et missions du chef d\'équipe réception'
+      ],
+      document: '13_Chef_Equipe_Reception.pdf',
+      documentPath: '/procedures',
+      description: 'Responsabilités et missions du chef d\'équipe réception'
+    },
+    {
+      id: 'pilotage-quotidien',
+      title: 'Pilotage Quotidien',
+      icon: 'fa-tachometer-alt',
+      duration: '30 min',
+      level: '🔴',
+      vigilance: [
+        'Piloter l\'activité quotidienne et suivre les KPIs'
+      ],
+      document: '14_Pilotage_Quotidien.pdf',
+      documentPath: '/procedures',
+      description: 'Piloter l\'activité quotidienne et suivre les KPIs'
+    },
+    {
+      id: 'supervision-terrain',
+      title: 'Supervision Terrain',
+      icon: 'fa-binoculars',
+      duration: 'Continu',
+      level: '🟡',
+      vigilance: [
+        'Superviser les opérations terrain et manager les équipes'
+      ],
+      document: '15_Supervision_Terrain.pdf',
+      documentPath: '/procedures',
+      description: 'Superviser les opérations terrain et manager les équipes'
+    },
+    {
+      id: 'gestion-ecarts',
+      title: 'Gestion des Écarts',
+      icon: 'fa-chart-line',
+      duration: '15-20 min',
+      level: '🔴',
+      vigilance: [
+        'Analyser et traiter les écarts de réception'
+      ],
+      document: '16_Gestion_Ecarts.pdf',
+      documentPath: '/procedures',
+      description: 'Analyser et traiter les écarts de réception'
+    },
+    {
+      id: 'controles-eop',
+      title: 'Contrôles EOP',
+      icon: 'fa-check-double',
+      duration: '30-45 min',
+      level: '🟡',
+      vigilance: [
+        'Effectuer les contrôles End of Period (fin de période)'
+      ],
+      document: '17_Controles_EOP.pdf',
+      documentPath: '/procedures',
+      description: 'Effectuer les contrôles End of Period (fin de période)'
+    },
+    {
+      id: 'flux-hazardous-analyse',
+      title: 'Flux Hazardous - Analyse Détaillée',
+      icon: 'fa-exclamation-circle',
+      duration: '20 min',
+      level: '🔴',
+      vigilance: [
+        'Analyse détaillée du flux matières dangereuses'
+      ],
+      document: '18_Flux_Hazardous_Analyse.pdf',
+      documentPath: '/procedures',
+      description: 'Analyse détaillée du flux matières dangereuses'
+    },
+    {
+      id: 'flux-hazardous-checkpoint',
+      title: 'Flux Hazardous - Checkpoint',
+      icon: 'fa-radiation',
+      duration: '15 min',
+      level: '🔴',
+      vigilance: [
+        'Points de contrôle spécifiques pour matières dangereuses'
+      ],
+      document: '19_Flux_Hazardous_Checkpoint.pdf',
+      documentPath: '/procedures',
+      description: 'Points de contrôle spécifiques pour matières dangereuses'
+    },
+    {
+      id: 'correction-etiquette-suppression',
+      title: 'Correction Étiquette - Suppression',
+      icon: 'fa-eraser',
+      duration: '5 min',
+      level: '🟢',
+      vigilance: [
+        'Procédure pour supprimer une étiquette incorrecte'
+      ],
+      document: '20_Correction_Etiquette_Suppression.pdf',
+      documentPath: '/procedures',
+      description: 'Procédure pour supprimer une étiquette incorrecte'
+    },
+    {
+      id: 'correction-etiquette-reedition',
+      title: 'Correction Étiquette - Réédition',
+      icon: 'fa-print',
+      duration: '5 min',
+      level: '🟢',
+      vigilance: [
+        'Procédure pour rééditer une étiquette corrigée'
+      ],
+      document: '21_Correction_Etiquette_Reedition.pdf',
+      documentPath: '/procedures',
+      description: 'Procédure pour rééditer une étiquette corrigée'
+    },
+    {
+      id: 'verification-dossier',
+      title: 'Vérification Dossier',
+      icon: 'fa-folder-open',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Vérifier la complétude et conformité du dossier de réception'
+      ],
+      document: '22_Verification_Dossier.pdf',
+      documentPath: '/procedures',
+      description: 'Vérifier la complétude et conformité du dossier de réception'
+    },
+    {
+      id: 'fermer-porte-quai',
+      title: 'Fermer Porte de Quai',
       icon: 'fa-door-closed',
       duration: '2 min',
       level: '🟢',
-      vigilance: ['Vérifier absence camion', 'RFUI transaction'],
-      document: 'Fermer une porte de quai.docx',
-      checklist: [
-        'Vérifier l\'absence de camion au quai',
-        'Vérifier que toutes les palettes sont déchargées',
-        'Fermer les portes du quai',
-        'Accéder à la transaction RFUI',
-        'Saisir le numéro de quai',
-        'Sélectionner l\'action "Fermer quai"',
-        'Valider la fermeture',
-        'Vérifier le statut "Quai fermé" dans le système'
-      ]
+      vigilance: [
+        'Procédure de fermeture sécurisée d\'un quai'
+      ],
+      document: '23_Fermer_Porte_Quai.pdf',
+      documentPath: '/procedures',
+      description: 'Procédure de fermeture sécurisée d\'un quai'
     },
     {
-      id: 'etetage-container',
-      title: 'Étêtage et container',
-      icon: 'fa-file-excel',
-      duration: '20-30 min',
-      level: '🔴',
-      vigilance: ['Filtrer containers uniquement', 'Trier par date appointment', 'Export Excel'],
-      document: 'Mettre en forme et renseigner le fichier étêtage et container.docx',
-      checklist: [
-        'Ouvrir le fichier modèle "Étêtage et container"',
-        'Accéder au portail Action',
-        'Filtrer les containers uniquement (exclure palettes)',
-        'Trier par date d\'appointment',
-        'Exporter les données en Excel',
-        'Copier les données dans le fichier modèle',
-        'Mettre en forme (couleurs, bordures)',
-        'Vérifier les informations (quantités, dates)',
-        'Ajouter commentaires si nécessaire',
-        'Enregistrer et partager avec le chef d\'équipe'
-      ]
+      id: 'cloture-livraisons',
+      title: 'Clôture Livraisons',
+      icon: 'fa-check-circle',
+      duration: '5-10 min',
+      level: '🟡',
+      vigilance: [
+        'Clôturer une livraison dans le système EWM'
+      ],
+      document: '24_Cloture_Livraisons.pdf',
+      documentPath: '/procedures',
+      description: 'Clôturer une livraison dans le système EWM'
     },
     {
-      id: 'charger-batterie',
-      title: 'Changement / Charge batterie',
-      icon: 'fa-battery-three-quarters',
+      id: 'livraison-ouverte-eop',
+      title: 'Livraison Ouverte EOP',
+      icon: 'fa-box-open',
       duration: '10-15 min',
+      level: '🟡',
+      vigilance: [
+        'Traiter les livraisons encore ouvertes en fin de période'
+      ],
+      document: '25_Livraison_Ouverte_EOP.pdf',
+      documentPath: '/procedures',
+      description: 'Traiter les livraisons encore ouvertes en fin de période'
+    },
+    {
+      id: 'cloture-tu-actif',
+      title: 'Clôture TU Actif',
+      icon: 'fa-clipboard-check',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Clôturer les Transportation Units encore actifs'
+      ],
+      document: '26_Cloture_TU_Actif.pdf',
+      documentPath: '/procedures',
+      description: 'Clôturer les Transportation Units encore actifs'
+    },
+    {
+      id: 'creer-packspec',
+      title: 'Créer Packspec',
+      icon: 'fa-cube',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Créer une spécification d\'emballage dans le système'
+      ],
+      document: '27_Creer_Packspec.pdf',
+      documentPath: '/procedures',
+      description: 'Créer une spécification d\'emballage dans le système'
+    },
+    {
+      id: 'procedures-operationnelles',
+      title: 'Procédures Opérationnelles',
+      icon: 'fa-cogs',
+      duration: 'Référence',
       level: '🟢',
-      vigilance: ['Sécurité électrique', 'Niveau charge > 20%', 'Brancher correctement'],
-      checklist: [
-        'Surveiller le niveau de batterie du chariot',
-        'Si niveau < 20% → aller à la zone de charge',
-        'Stationner le chariot sur zone de charge',
-        'Couper le contact du chariot',
-        'Ouvrir le compartiment batterie',
-        'Débrancher les câbles (respecter l\'ordre)',
-        'Soulever la batterie avec le palan',
-        'Installer la batterie chargée',
-        'Brancher les câbles (respecter polarité)',
-        'Vérifier le voyant de charge',
-        'Refermer le compartiment',
-        'Tester le chariot'
-      ]
+      vigilance: [
+        'Vue d\'ensemble des procédures opérationnelles standards'
+      ],
+      document: '28_Procedures_Operationnelles.pdf',
+      documentPath: '/procedures',
+      description: 'Vue d\'ensemble des procédures opérationnelles standards'
+    },
+    {
+      id: 'taches-ouvertes',
+      title: 'Tâches Ouvertes',
+      icon: 'fa-tasks',
+      duration: '15 min',
+      level: '🟡',
+      vigilance: [
+        'Gérer et suivre les tâches ouvertes dans le système'
+      ],
+      document: '29_Taches_Ouvertes.pdf',
+      documentPath: '/procedures',
+      description: 'Gérer et suivre les tâches ouvertes dans le système'
+    },
+    {
+      id: 'mouvement-adprod',
+      title: 'Mouvement ADPROD',
+      icon: 'fa-exchange-alt',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Créer un mouvement ADPROD pour ajustement de stock'
+      ],
+      document: '30_Mouvement_ADPROD.pdf',
+      documentPath: '/procedures',
+      description: 'Créer un mouvement ADPROD pour ajustement de stock'
+    },
+    {
+      id: 'fichier-ecart-gds',
+      title: 'Fichier Écart GDS',
+      icon: 'fa-file-alt',
+      duration: '15 min',
+      level: '🔴',
+      vigilance: [
+        'Renseigner le fichier d\'écart GDS pour suivi qualité'
+      ],
+      document: '31_Fichier_Ecart_GDS.pdf',
+      documentPath: '/procedures',
+      description: 'Renseigner le fichier d\'écart GDS pour suivi qualité'
+    },
+    {
+      id: 'retour-fournisseur',
+      title: 'Retour Fournisseur',
+      icon: 'fa-undo',
+      duration: '20 min',
+      level: '🔴',
+      vigilance: [
+        'Gérer un retour de marchandises vers le fournisseur'
+      ],
+      document: '32_Retour_Fournisseur.pdf',
+      documentPath: '/procedures',
+      description: 'Gérer un retour de marchandises vers le fournisseur'
+    },
+    {
+      id: 'creation-conditionnement-prd',
+      title: 'Création Conditionnement PRD',
+      icon: 'fa-box',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Créer un conditionnement produit dans le système'
+      ],
+      document: '33_Creation_Conditionnement_PRD.pdf',
+      documentPath: '/procedures',
+      description: 'Créer un conditionnement produit dans le système'
+    },
+    {
+      id: 'extraction-icpe',
+      title: 'Extraction ICPE',
+      icon: 'fa-database',
+      duration: '10 min',
+      level: '🟡',
+      vigilance: [
+        'Extraire les données ICPE (Installations Classées)'
+      ],
+      document: '34_Extraction_ICPE.pdf',
+      documentPath: '/procedures',
+      description: 'Extraire les données ICPE (Installations Classées)'
+    },
+    {
+      id: 'reception-ncg',
+      title: 'Réception NCG',
+      icon: 'fa-truck',
+      duration: '15 min',
+      level: '🟡',
+      vigilance: [
+        'Réception NCG pour flux hors normes ou non standardisés'
+      ],
+      document: '36_Reception_NCG.pdf',
+      documentPath: '/procedures',
+      description: 'Réception NCG pour flux hors normes ou non standardisés'
+    },
+    {
+      id: 'fichier-etetage-admin',
+      title: 'Fichier Étêtage et Container',
+      icon: 'fa-file-excel',
+      duration: '10 min',
+      level: '🟢',
+      vigilance: [
+        'Mettre en forme et renseigner le fichier quotidien étêtage'
+      ],
+      document: '37_Fichier_Etetage_Container.pdf',
+      documentPath: '/procedures',
+      description: 'Mettre en forme et renseigner le fichier quotidien étêtage'
+    },
+    {
+      id: 'chronogramme-journalier',
+      title: 'Chronogramme Journalier',
+      icon: 'fa-calendar-day',
+      duration: 'Référence',
+      level: '🟢',
+      vigilance: [
+        'Planning type d\'une journée de réception - horaires et jalons'
+      ],
+      document: '38_Chronogramme_Journalier.pdf',
+      documentPath: '/procedures',
+      description: 'Planning type d\'une journée de réception - horaires et jalons'
     }
   ]
 
@@ -229,10 +522,10 @@ export function ReceptionPage() {
           <div>
             <h1 class="text-4xl font-bold mb-3">
               <i class="fas fa-truck-loading mr-3"></i>
-              Réception
+              Réception - GXO Procédures
             </h1>
             <p class="text-xl opacity-90">
-              Réception marchandises, contrôle BL, déchargement
+              Manuel EWM + 38 procédures GXO opérationnelles
             </p>
           </div>
           <a href="/" class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-orange-50 transition-colors">
@@ -328,55 +621,30 @@ export function ReceptionPage() {
                 </ul>
               </div>
 
+              {/* Description */}
+              {process.description && (
+                <div class="mb-4 text-sm text-gray-700 bg-gray-50 p-3 rounded">
+                  <i class="fas fa-info-circle mr-2 text-blue-500"></i>
+                  {process.description}
+                </div>
+              )}
+
               {/* Actions */}
               <div class="flex flex-wrap gap-2 mt-4">
-                {process.checklist ? (
-                  <button 
-                    onclick={`showChecklistInteractive('${process.id}', ${JSON.stringify(process.checklist)})`}
-                    class="gxo-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 flex items-center"
-                  >
-                    <i class="fas fa-list-check mr-2"></i>
-                    Checklist interactive
-                  </button>
-                ) : (
-                  <button 
-                    onclick={`showChecklist('${process.id}')`}
-                    class="gxo-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 flex items-center"
-                  >
-                    <i class="fas fa-list-check mr-2"></i>
-                    Checklist
-                  </button>
-                )}
-                
                 {process.document && (
                   <a 
-                    href={`/static/documents/${process.document}`}
+                    href={`${process.documentPath || '/procedures'}/${process.document}`}
                     target="_blank"
-                    class="gxo-btn bg-gray-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-600 flex items-center"
+                    class="gxo-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 flex items-center"
                   >
                     <i class="fas fa-file-download mr-2"></i>
-                    Document
+                    Télécharger PDF
                   </a>
                 )}
-                
-                <button 
-                  onclick="showDecisionTree('root')"
-                  class="gxo-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 flex items-center"
-                >
-                  <i class="fas fa-sitemap mr-2"></i>
-                  Que faire si...
-                </button>
               </div>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Checklist Modal Container */}
-      <div id="modal-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div id="modal-content"></div>
-        </div>
       </div>
     </div>
   )

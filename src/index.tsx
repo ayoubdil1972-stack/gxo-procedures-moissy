@@ -82,15 +82,6 @@ app.use('/static/*', serveStatic({
   }
 }))
 
-// Serve procedures PDFs - GXO Procedures files
-app.use('/procedures/*', serveStatic({ 
-  root: './',
-  onNotFound: (path, c) => {
-    console.log('PDF non trouvé:', path)
-    return c.notFound()
-  }
-}))
-
 // Route de connexion (sans authentification)
 app.get('/login', loginRenderer, (c) => c.render(<LoginPage />))
 
