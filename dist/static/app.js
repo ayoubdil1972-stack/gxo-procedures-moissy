@@ -211,13 +211,20 @@ function openDocumentPreview(filename, type, title, basePath = '/static/document
   const documentUrl = `${basePath}${filename}`;
   
   if (type === 'pdf') {
-    // PDF: Use iframe for direct viewing
+    // PDF: Use iframe with embed fallback for better compatibility
+    // Add #view=FitH to fit width and improve viewing experience
+    const pdfUrl = `${documentUrl}#view=FitH`;
     contentEl.innerHTML = `
-      <iframe 
-        src="${documentUrl}" 
-        class="w-full h-full border-0"
-        title="${title}"
-      ></iframe>
+      <div class="w-full h-full flex flex-col">
+        <iframe 
+          src="${pdfUrl}" 
+          class="w-full h-full border-0"
+          title="${title}"
+          type="application/pdf"
+          onload="this.style.opacity='1'"
+          onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full\\'><div class=\\'text-center p-8\\'><i class=\\'fas fa-exclamation-triangle text-6xl text-red-300 mb-4\\'></i><p class=\\'text-gray-600 mb-4\\'>Impossible d\\'afficher l\\'aperçu</p><a href=\\'${documentUrl}\\' download class=\\'bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600\\'><i class=\\'fas fa-download mr-2\\'></i>Télécharger le PDF</a></div></div>'"
+        ></iframe>
+      </div>
     `;
   } else if (type === 'docx') {
     // Word: Use Microsoft Office Online Viewer
