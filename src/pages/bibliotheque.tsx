@@ -794,6 +794,78 @@ export function BibliothequePage() {
       description: 'Planning type d\'une journée de réception - horaires et jalons',
       keywords: 'GXO, chronogramme journalier - procédures administratives, procédure',
       level: '🟢'
+    },
+    
+    // Nouvelles Procédures Administrateur Avancé (Violet clair)
+    {
+      id: 138,
+      name: 'Gestion des Tâches Ouvertes',
+      file: '39_Gestion_Taches_Ouvertes.pdf',
+      category: 'Administrateur Avancé',
+      type: 'pdf',
+      description: 'Gérer et suivre les tâches ouvertes dans le système SAP',
+      keywords: 'admin, gestion tâches, ouvertes, suivi, SAP',
+      level: '🟡'
+    },
+    {
+      id: 139,
+      name: 'Analyse Stock DHMN',
+      file: '40_Analyse_Stock_DHMN.pdf',
+      category: 'Administrateur Avancé',
+      type: 'pdf',
+      description: 'Analyser et contrôler les stocks DHMN',
+      keywords: 'admin, analyse stock, DHMN, contrôle',
+      level: '🟡'
+    },
+    {
+      id: 140,
+      name: 'Gestion des Écarts GDS',
+      file: '41_Ecart_GDS.pdf',
+      category: 'Administrateur Avancé',
+      type: 'pdf',
+      description: 'Traiter les écarts GDS et résoudre les anomalies',
+      keywords: 'admin, écart GDS, anomalies, résolution',
+      level: '🔴'
+    },
+    {
+      id: 141,
+      name: 'Retour Fournisseur',
+      file: '42_Retour_Fournisseur.pdf',
+      category: 'Administrateur Avancé',
+      type: 'pdf',
+      description: 'Gérer les retours fournisseurs et créer les documents nécessaires',
+      keywords: 'admin, retour fournisseur, gestion retours',
+      level: '🟡'
+    },
+    {
+      id: 142,
+      name: 'Création Conditionnement PRD',
+      file: '43_Creation_Conditionnement_PRD.pdf',
+      category: 'Administrateur Avancé',
+      type: 'pdf',
+      description: 'Créer et configurer les conditionnements produits',
+      keywords: 'admin, conditionnement, PRD, création',
+      level: '🔴'
+    },
+    {
+      id: 143,
+      name: 'Extraction ICPE',
+      file: '44_Extraction_ICPE.pdf',
+      category: 'Administrateur Avancé',
+      type: 'pdf',
+      description: 'Extraire les données ICPE pour conformité réglementaire',
+      keywords: 'admin, extraction ICPE, conformité, réglementaire',
+      level: '🔴'
+    },
+    {
+      id: 144,
+      name: 'Chronogramme Journalier Admin',
+      file: '45_Chronogramme_Journalier.pdf',
+      category: 'Administrateur Avancé',
+      type: 'pdf',
+      description: 'Planning détaillé des tâches administratives journalières',
+      keywords: 'admin, chronogramme, planning, journalier',
+      level: '🟢'
     }
   ]
 
@@ -898,6 +970,13 @@ export function BibliothequePage() {
           >
             <i class="fas fa-file-pdf mr-2"></i>GXO Procédures ({documents.filter(d => d.category === 'GXO Procédures').length})
           </button>
+          <button 
+            onclick="filterByCategory('Administrateur Avancé')"
+            class="filter-btn bg-purple-400 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-500 transition-colors"
+            data-category="Administrateur Avancé"
+          >
+            <i class="fas fa-user-shield mr-2"></i>Admin Avancé ({documents.filter(d => d.category === 'Administrateur Avancé').length})
+          </button>
         </div>
       </div>
 
@@ -908,6 +987,7 @@ export function BibliothequePage() {
             'Réception': 'border-orange-500 bg-orange-50',
             'Accueil Chauffeur': 'border-blue-500 bg-blue-50',
             'Administrateur': 'border-purple-500 bg-purple-50',
+            'Administrateur Avancé': 'border-purple-300 bg-purple-100',
             'Contrôleur': 'border-green-500 bg-green-50',
             'Agent de Quai': 'border-yellow-500 bg-yellow-50',
             'Anomalies': 'border-red-500 bg-red-50',
@@ -918,6 +998,7 @@ export function BibliothequePage() {
             'Réception': 'fa-truck-loading',
             'Accueil Chauffeur': 'fa-truck',
             'Administrateur': 'fa-user-tie',
+            'Administrateur Avancé': 'fa-user-shield',
             'Contrôleur': 'fa-clipboard-check',
             'Agent de Quai': 'fa-hard-hat',
             'Anomalies': 'fa-exclamation-circle',
