@@ -1,6 +1,6 @@
 // auth.js - Système d'authentification sécurisé GXO
-// Dernière mise à jour: 2026-08-03 09:30:00 (5 utilisateurs GXO - FORCE RELOAD)
-// Version: 1.2.0
+// Dernière mise à jour: 2026-08-10 11:15:00 (10 utilisateurs GXO)
+// Version: 1.3.0
 
 // Configuration (À MODIFIER POUR LA PRODUCTION)
 const AUTH_CONFIG = {
@@ -17,7 +17,14 @@ const AUTH_CONFIG = {
     { username: 'rocky.gussie@gxo.com', password: 'GXOrg2026', role: 'user', name: 'Rocky Gussie' },
     { username: 'marius.dumitru@gxo.com', password: 'GXOmd2026', role: 'user', name: 'Marius Dumitru' },
     { username: 'hassan.mounaim@gxo.com', password: 'GXOhm2026', role: 'user', name: 'Hassan Mounaim' },
-    { username: 'gabriel.nguidjol@gxo.com', password: 'GXOgn2026', role: 'user', name: 'Gabriel Nguidjol' }
+    { username: 'gabriel.nguidjol@gxo.com', password: 'GXOgn2026', role: 'user', name: 'Gabriel Nguidjol' },
+    
+    // Nouveaux utilisateurs (ajoutés le 10 août 2026)
+    { username: 'brahim.lazaoui@gxo.com', password: 'GXObl2026', role: 'user', name: 'Brahim Lazaoui' },
+    { username: 'kevin.likoy@gxo.com', password: 'GXOkl2026', role: 'user', name: 'Kévin Likoy' },
+    { username: 'richard.dutrinus@gxo.com', password: 'GXOrd2026', role: 'user', name: 'Richard Dutrinus' },
+    { username: 'jeanpaul.lukusa@gxo.com', password: 'GXOjl2026', role: 'user', name: 'Jean-Paul Lukusa' },
+    { username: 'm.coquatrix@gxo.com', password: 'GXOmc2026', role: 'user', name: 'M. Coquatrix' }
   ],
   sessionDuration: 8 * 60 * 60 * 1000, // 8 heures
   maxAttempts: 5,
